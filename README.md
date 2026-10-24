@@ -2,6 +2,16 @@
 
 **Stellarator-Entwurf mit offenen Werkzeugen: vom benötigten Magnetfeld zur Spulengeometrie, geprüft mit Feldlinien, FEM und CAD.**
 
+> 🛠️ **Ein Hobbyprojekt, aus Neugier entstanden.**
+> Ich bin kein Fusionsforscher. Dieses Projekt ist privat und aus reiner Neugier entstanden: Wie funktioniert
+> ein Stellarator, und wie weit kommt man mit offenen Werkzeugen und KI-Unterstützung (Claude Code, Hermes)?
+> Es gibt keine Verbindung zu einem Forschungsinstitut oder Unternehmen. Die Ergebnisse sind nicht
+> begutachtet, enthalten vereinfachende Annahmen und können Fehler haben. Sie sind **keine**
+> Auslegung einer realen Anlage. Hinweise und Korrekturen sind willkommen.
+>
+> *A hobby project, born out of curiosity. Not affiliated with any research institution or company;
+> results are not peer-reviewed and may contain errors.*
+
 *English summary:* Open-source workflow for stellarator magnet design. Instead of starting from coils, the
 design question is inverted: *which magnetic field is needed, and which coil geometry produces it?*
 Stage 1 optimizes the plasma boundary (DESC, GPU), stage 2 finds coils that produce that field
@@ -41,7 +51,7 @@ Die Werkzeugkette ist für die Steuerung durch KI-Agenten gebaut (Hermes, PI, Cl
 - Lange Rechnungen laufen losgelöst.
 - Befunde und Übergaben stehen in `BEFUNDE.md` und `ERINNERUNGEN.md`.
 
-> **Hinweis:** Lern- und Forschungsprojekt. Die Ergebnisse sind keine Auslegung einer realen Anlage.
+> **Hinweis:** Hobby- und Lernprojekt (siehe oben). Die Ergebnisse sind keine Auslegung einer realen Anlage.
 > Die Leistungsbilanz ist eine 0-D-Abschätzung; Stützstruktur und Strukturmechanik sind noch nicht ausgelegt.
 
 ---
