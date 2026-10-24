@@ -85,6 +85,25 @@ Zur Einordnung: Das ist eine 0-D-Abschätzung (±30 %), kein Kraftwerksentwurf.
 
 ![1-GW-Auslegung mit HTS: Feldlinien und Spulen](docs/bilder/qa_1GW_HTS_feldlinien_3d.png)
 
+### Kompaktere Form A = 4,5 und Stützstruktur
+
+![Vergleich A = 6 und A = 4,5](docs/bilder/uebersicht_1GW_A6_A45.png)
+
+| 1 GW netto | A = 6, HTS | A = 6, Nb₃Sn | **A = 4,5, HTS** | **A = 4,5, Nb₃Sn** |
+|---|---|---|---|---|
+| R0 / B0 | 12,1 m / 7,5 T | 22,2 m / 4,8 T | **10,4 m / 6,5 T** | **12,4 m / 5,7 T** |
+| Feld am Leiter | 17,7 T | 11,6 T | 14,7 T | 10,9 T |
+| Spalt Wickelpakete | 0,58 m | 1,13 m | 0,55 m | 0,19 m |
+| Kraft je Spule (max.) | 2200 MN | 3000 MN | 1200 MN | 1300 MN |
+
+**Stützschale in ElmerFEM** (ein gekoppelter Lauf: Magnetfeld → Lorentzkraft J×B → Spannung),
+A = 6 mit HTS: Stahlschale 1,48 m dick (~51 kt), 99 % der Schale unter 587 MPa (zulässig ~667 MPa,
+netzkonvergiert), örtliche Spitzen bis ~1000 MPa auf der Torus-Innenseite, Verformung 36 mm.
+Elmer und Biot-Savart liefern dieselbe Kraft je Spule (2,9 % Abweichung).
+Die Schalengeometrie für A = 4,5 ist noch offen (Flächen durch die Spulen falten sich).
+
+![Spannungen in Stützschale und Wickelpaketen](docs/bilder/struktur_A6_HTS.png)
+
 ### Eigene kompakte Plasmaform `qa_nfp2` (Stufe 1 + 2)
 
 | | |
@@ -152,6 +171,8 @@ stellarator/                 Bestandspipeline (.venv)
   ansicht.py                 3D-Feldlinien + Spulen → ParaView (.vtm) und PNG
   cad.py                     Wickelpakete als STL/STEP (gmsh/OpenCASCADE), Spaltprüfung, Elmer-Netz
   elmer.py                   ElmerFEM-Magnetostatik (CoilSolver + WhitneyAV), Vergleich mit Biot-Savart
+  struktur.py                Stützschale: Elmer Magnetfeld → Lorentzkraft → Spannung (ein Lauf)
+  bericht.py                 Bericht (LaTeX/PDF) automatisch aus den Ergebnisdateien
   lauf.py                    Gesamtpipeline W7-X (Geometrie → PicoGK-Voxel → FFT-Solver → Feldlinien → Kräfte)
   voxelsolver.py, picogk_bruecke.py   FFT-Voxel-Feldlöser, Anbindung an PicoGK
   faelle/*.json              Falldateien (Eingabe)
@@ -232,10 +253,11 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 - [x] Inverse Kette Plasmaform → Spulen → Prüfung (an der Referenz precise QA verifiziert)
 - [x] Eigene Plasmaform optimieren (Stufe 1 `qa_nfp2`), Spulen dazu
 - [x] Größe (R0) und Feld (B0) aus 1 GW netto ableiten (Stufe 0), Wickelpakete aus Stromdichte
-- [ ] Kleineres Seitenverhältnis (A = 4–5) und Spulen näher am Plasma → kleinere Anlage
+- [x] Kleineres Seitenverhältnis (A = 4,5) → HTS 10,4 m, Nb₃Sn 12,4 m
+- [x] Stützschale in Elmer (A = 6): Spannungen aus Lorentzkräften
+- [ ] Robuste Schalengeometrie für beliebige Spulenformen (A = 4,5)
 - [ ] Stufe 0 genauer: Divertor-Wärmelast, Zyklotronstrahlung, Blanket-Dicke aus Neutronik
 - [ ] Studien-Runner (Agent wählt Ziele, numerischer Optimierer rechnet)
-- [ ] Gehäuse und Stützstruktur, Spannungen in Elmer aus den Lorentzkräften
 - [ ] Allgemeiner Weg STL → STEP
 
 ## Quellen und Danksagung

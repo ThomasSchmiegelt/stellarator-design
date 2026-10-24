@@ -1,9 +1,9 @@
 """struktur.py — Stuetzstruktur der Spulen: Lorentzkraefte -> Spannungen (ElmerFEM, ein Lauf).
 
 Konzept (v1): durchgehende Stuetzschale aus Stahl, in die alle Wickelpakete eingebettet sind
-(Spulen "in Nuten" einer Schale, wie in Kraftwerksstudien vorgeschlagen). Die Schalenmitte ist
-die Wicklungsflaeche durch alle Spulenmittellinien (periodischer Spline zwischen den Spulen),
-Dicke = Wickelpaketbreite + 2 x Deckung. Ports/Oeffnungen fehlen noch.
+(Spulen "in Nuten" einer Schale, wie in Kraftwerksstudien vorgeschlagen). Innen- und Aussenflaeche
+sind Wicklungsflaechen (periodischer Spline zwischen den Spulen) durch die um -/+ Dicke/2
+verschobenen Spulenkurven, Dicke = Wickelpaketbreite + 2 x Deckung. Ports/Oeffnungen fehlen noch.
 
 Ein Elmer-Lauf: CoilSolver -> WhitneyAV (B in Luft, Schale, Wickelpaket) -> Felder ->
 StressSolver mit Volumenlast J x B im Wickelpaket (MATC aus den Knotenfeldern). Lagerung
@@ -31,11 +31,14 @@ STAHL = {"E_Pa": 200e9, "nu": 0.3, "rho_kg_m3": 7900, "zul_MPa": 667}   # 316LN 
 WP = {"E_Pa": 100e9, "nu": 0.3, "rho_kg_m3": 7000}                       # verschmiert (Leiter, Cu, Stahl, Isolation)
 
 
-def wicklungsflaeche(spulen, n_th: int, n_ph: int) -> np.ndarray:
-    """Flaeche X(theta, phi) (n_th, n_ph, 3), die alle Spulenmittellinien enthaelt.
+def wicklungsflaeche(spulen, n_th: int, n_ph: int, art: str = "winkel") -> np.ndarray:
+    """Flaeche X(theta, phi) (n_th, n_ph, 3), die alle Spulenkurven enthaelt.
 
-    Je Spule: poloidaler Winkel um den Schwerpunkt in (R, Z); R, Z und phi-Abweichung auf ein
-    gemeinsames theta-Raster. Zwischen den Spulen periodischer kubischer Spline in phi.
+    Poloidaler Parameter je Spule: art="winkel" -> Winkel um den Schwerpunkt in R-Z (gleicht die
+    Spulen untereinander am besten ab, ValueError wenn nicht monoton); art="bogen" -> Bogenlaenge ab
+    dem aeussersten Punkt (immer monoton, auch fuer bohnenfoermige Kurven). Umlaufsinn einheitlich.
+    R, Z und phi-Abweichung auf ein gemeinsames Raster; zwischen den Spulen periodischer
+    kubischer Spline in phi.
     """
     from scipy.interpolate import CubicSpline
     th = np.linspace(0, 2 * np.pi, n_th, endpoint=False)
@@ -45,15 +48,20 @@ def wicklungsflaeche(spulen, n_th: int, n_ph: int) -> np.ndarray:
         ph = np.arctan2(s.punkte[:, 1], s.punkte[:, 0])
         phc = np.angle(np.exp(1j * ph).mean())
         dph = np.angle(np.exp(1j * (ph - phc)))
-        t = np.unwrap(np.arctan2(Z - Z.mean(), R - R.mean()))
-        if t[-1] < t[0]:
-            t, R, Z, dph = t[::-1], R[::-1], Z[::-1], dph[::-1]
-        if np.any(np.diff(t) <= 0):
-            raise ValueError(f"{s.name}: poloidaler Winkel nicht monoton, Wicklungsflaeche so nicht moeglich")
-        t0 = t[0]; tt = np.r_[t, t0 + 2 * np.pi]
-        werte = [np.r_[v, v[0]] for v in (R, Z, dph)]
-        x = (th - t0) % (2 * np.pi) + t0
-        reihen.append((phc, [CubicSpline(tt, v, bc_type="periodic")(x) for v in werte]))
+        P = s.punkte
+        if np.sum(R * np.roll(Z, -1) - np.roll(R, -1) * Z) < 0:          # Umlaufsinn vereinheitlichen
+            R, Z, dph, P = R[::-1], Z[::-1], dph[::-1], P[::-1]
+        i0 = int(np.argmax(R))
+        R, Z, dph, P = (np.roll(v, -i0, 0) for v in (R, Z, dph, P))
+        if art == "bogen":
+            bogen = np.r_[0, np.cumsum(np.linalg.norm(np.diff(np.vstack([P, P[:1]]), axis=0), axis=1))]
+            t, x = 2 * np.pi * bogen / bogen[-1], th
+        else:
+            w = np.unwrap(np.arctan2(Z - Z.mean(), R - R.mean()))
+            if np.any(np.diff(w) <= 0):
+                raise ValueError(f"{s.name}: poloidaler Winkel nicht monoton")
+            t = np.r_[w, w[0] + 2 * np.pi]; x = (th - w[0]) % (2 * np.pi) + w[0]
+        reihen.append((phc, [CubicSpline(t, np.r_[v, v[0]], bc_type="periodic")(x) for v in (R, Z, dph)]))
     reihen.sort(key=lambda r: r[0])
     phc = np.array([r[0] for r in reihen]); phc = np.unwrap(phc)
     W = np.array([np.stack(r[1]) for r in reihen])                         # (n_spulen, 3, n_th)
@@ -85,16 +93,42 @@ def torus_netz(X) -> tuple[np.ndarray, np.ndarray]:
     return kn, (tri if vol > 0 else tri[:, ::-1])
 
 
-def deckung(spulen, breite, hoehe, X, n, dicke) -> float:
-    """Kleinster Abstand der Wickelpaket-Ecken zur Schalenoberflaeche (normal zur Mittelflaeche)."""
+def flaechennormale(X, nv, k: int = 8):
+    """f(punkte) -> Normale der Wicklungsflaeche, gewichtetes Mittel der k naechsten Gitterpunkte
+    (stetig; der naechste Punkt allein gibt Spruenge und damit gezackte Schalenkurven)."""
     from scipy.spatial import cKDTree
-    baum = cKDTree(X.reshape(-1, 3)); nn = n.reshape(-1, 3); Xf = X.reshape(-1, 3)
+    baum, nf = cKDTree(X.reshape(-1, 3)), nv.reshape(-1, 3)
+
+    def f(P):
+        d, i = baum.query(P, k=k)
+        w = 1 / np.maximum(d, 1e-6) ** 2
+        n = np.einsum("pk,pkc->pc", w, nf[i])
+        return n / np.linalg.norm(n, axis=1, keepdims=True)
+    return f
+
+
+def schalenflaechen(spulen, dicke: float, n_th: int, n_ph: int, normale, art: str = "winkel") -> tuple[np.ndarray, np.ndarray]:
+    """Innen-/Aussenflaeche der Schale: Wicklungsflaechen durch die um -/+ dicke/2 entlang der
+    Schalennormale verschobenen Spulenkurven. Kein Flaechenversatz -> keine Faltungen auf der
+    Torus-Innenseite; das Wickelpaket ist an derselben Normale ausgerichtet (Spule in der Nut)."""
+    def verschoben(d):
+        return [sp.Spule(s.name, s.typ, s.punkte + d * sp.rahmen_aus_normale(s, normale)[1], s.strom) for s in spulen]
+    return (wicklungsflaeche(verschoben(-dicke / 2), n_th, n_ph, art),
+            wicklungsflaeche(verschoben(dicke / 2), n_th, n_ph, art))
+
+
+def deckung(spulen, breite, hoehe, h, Y_in, Y_aus, normale) -> float:
+    """Kleinster Abstand der Wickelpaket-Oberflaeche (Netzknoten) zu innerer und aeusserer Schalenflaeche."""
+    from scipy.spatial import cKDTree
     m = np.inf
-    for s in spulen:
-        ecken = sp.rohr_dreiecke(s, breite, hoehe).reshape(-1, 3)
-        _, k = baum.query(ecken)
-        m = min(m, dicke / 2 - np.abs(np.sum((ecken - Xf[k]) * nn[k], 1)).max())
-    return float(m)
+    for Y, vz in ((Y_in, 1.0), (Y_aus, -1.0)):
+        Yf, nf = Y.reshape(-1, 3), normalen(Y).reshape(-1, 3)
+        baum = cKDTree(Yf)
+        for s in spulen:
+            kn, _ = cad.rohr_netz(s, breite, hoehe, h, normale)
+            _, k = baum.query(kn)
+            m = min(m, float((vz * np.sum((kn - Yf[k]) * nf[k], 1)).min()))
+    return m
 
 
 def netz(spulen, breite, hoehe, ordner: Path, dicke: float, rand_m: float, h_wp: float, h_schale: float,
@@ -105,24 +139,31 @@ def netz(spulen, breite, hoehe, ordner: Path, dicke: float, rand_m: float, h_wp:
     umfang_pol = max(np.linalg.norm(np.diff(s.punkte, axis=0), axis=1).sum() for s in spulen)
     R_mittel = np.mean([np.hypot(*s.punkte[:, :2].T).mean() for s in spulen])
     n_th = int(np.ceil(umfang_pol / h_schale)); n_ph = int(np.ceil(2 * np.pi * R_mittel * 1.2 / h_schale))
-    X = wicklungsflaeche(spulen, n_th, n_ph); nv = normalen(X)
-    dk = deckung(spulen, breite, hoehe, X, nv, dicke)
+    for art in ("winkel", "bogen"):        # Winkel gleicht besser ab, Bogenlaenge geht immer
+        try:
+            X = wicklungsflaeche(spulen, n_th, n_ph, art); nv = normalen(X)
+            normale = flaechennormale(X, nv)
+            Y_in, Y_aus = schalenflaechen(spulen, dicke, n_th, n_ph, normale, art)
+            break
+        except ValueError:
+            continue
+    dk = deckung(spulen, breite, hoehe, h_wp, Y_in, Y_aus, normale)
     if dk < 0.05:
         raise SystemExit(f"ABBRUCH: Wickelpaket ragt aus der Schale (Deckung {dk:.3f} m) -> --deckung erhoehen")
     gmsh.initialize(); gmsh.option.setNumber("General.Verbosity", 1)
     try:
         t0 = time.time(); m = gmsh.model; geo = m.geo
-        versatz = [1]
+        n0 = [1]
 
         def diskret(kn, tri):
             f = m.addDiscreteEntity(2)
-            m.mesh.addNodes(2, f, np.arange(versatz[0], versatz[0] + len(kn)), kn.ravel())
-            m.mesh.addElementsByType(f, 2, [], (tri + versatz[0]).ravel())
-            versatz[0] += len(kn)
+            m.mesh.addNodes(2, f, np.arange(n0[0], n0[0] + len(kn)), kn.ravel())
+            m.mesh.addElementsByType(f, 2, [], (tri + n0[0]).ravel())
+            n0[0] += len(kn)
             return f
-        f_wp = [diskret(*cad.rohr_netz(s, breite, hoehe, h_wp)) for s in spulen]
-        f_in = diskret(*torus_netz(X - dicke / 2 * nv))
-        f_aus = diskret(*torus_netz(X + dicke / 2 * nv))
+        f_wp = [diskret(*cad.rohr_netz(s, breite, hoehe, h_wp, normale)) for s in spulen]
+        f_in = diskret(*torus_netz(Y_in))
+        f_aus = diskret(*torus_netz(Y_aus))
         P = X.reshape(-1, 3); lo, hi = P.min(0) - rand_m, P.max(0) + rand_m
         pk = [geo.addPoint(x, y, z, h_luft) for z in (lo[2], hi[2]) for y in (lo[1], hi[1]) for x in (lo[0], hi[0])]
         L = lambda a, b: geo.addLine(pk[a], pk[b])
@@ -170,7 +211,7 @@ def netz(spulen, breite, hoehe, ordner: Path, dicke: float, rand_m: float, h_wp:
     (ordner / "netz.msh").unlink()
     np.savez_compressed(ordner / "flaeche.npz", X=X, n=nv)
     return {"n_tet": n_tet, "t_netz_s": t_netz, "deckung_min_m": dk, "dicke_m": dicke,
-            "schale_n_theta_phi": [n_th, n_ph], "bodies": {"wickelpakete": [1, n], "schale": n + 1,
+            "schale_n_theta_phi": [n_th, n_ph], "parametrisierung": art, "bodies": {"wickelpakete": [1, n], "schale": n + 1,
                                                            "luft_innen": n + 2, "luft_aussen": n + 3}}
 
 
@@ -312,6 +353,7 @@ def main(argv=None):
     ap.add_argument("--dist_max", type=float, default=8.0)
     ap.add_argument("--rand", type=float, default=15.0)
     ap.add_argument("--n_punkte", type=int, default=160)
+    ap.add_argument("--name", help="Ergebnisordner (Standard: Fallname), z.B. fuer Netzstudien")
     ap.add_argument("--nur_netz", action="store_true")
     ap.add_argument("--nur_auswerten", action="store_true")
     a = ap.parse_args(argv)
@@ -324,7 +366,7 @@ def main(argv=None):
     for s in spulen:
         s.strom *= kz["strom"]["kalibrierfaktor"]
     b, h = c["wickel_breite_m"], c["wickel_hoehe_m"]
-    ordner = PROJEKT / "sim" / "stellarator" / "struktur" / fall["name"]; ordner.mkdir(parents=True, exist_ok=True)
+    ordner = PROJEKT / "sim" / "stellarator" / "struktur" / (a.name or fall["name"]); ordner.mkdir(parents=True, exist_ok=True)
     erg_pfad = ordner / "ergebnis.json"
     erg = json.loads(erg_pfad.read_text()) if erg_pfad.exists() else {}
     erg |= {"fall": fall["name"], "parameter": {k: (str(v) if isinstance(v, Path) else v) for k, v in vars(a).items()},

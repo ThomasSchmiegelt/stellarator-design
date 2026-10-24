@@ -6,6 +6,25 @@
 ---
 
 
+### B-019 | Kompaktere Form A=4,5 + Stuetzschale in Elmer (Lorentzkraft -> Spannung) (2026-10-24)
+- **Beobachtung:** A=4,5 (DESC qs 2,4e-5, Spulen B·n 0,27 %) verkleinert die 1-GW-Anlage deutlich;
+  HTS und Nb3Sn werden fast gleich gross. Erste Strukturrechnung (Elmer gekoppelt) fuer A=6 HTS.
+- **Messung (1 GW, Stufe 0 iteriert mit Stufe 3):**
+  A=4,5 HTS: R0 10,4 m, B0 6,5 T, Leiter 14,7 T, 22,8 MA, Paket 0,76 m, Spalt 0,55 m, F 1196 MN.
+  A=4,5 Nb3Sn: R0 12,4 m, B0 5,7 T, Leiter 10,9 T, 23,8 MA, Paket 1,26 m, Spalt 0,19 m, F 1307 MN
+  (ohne Spaltbedingung: R0 10,6 m und Pakete durchdringen sich, Spalt -0,03 m).
+  Struktur A=6 HTS (Schale 1,48 m, 316LN, Paket verschmiert E=100 GPa, 3-2-1-Lagerung):
+  grob 0,69 / mittel 1,45 Mio Tets: Schale 99 % < 588 / 587 MPa, Spitze 831 / 1013 MPa,
+  Paket 99 % 398 / 413 MPa, u_max 34 / 36 mm, Masse 50,7 kt. Lorentzkraft Elmer vs Biot-Savart +2,9 %.
+  Spitzen auf der Torus-Innenseite (Spulen draengen nach innen), Eckensingularitaet.
+- **Fundstelle:** `stellarator/struktur.py`, `sim/stellarator/struktur/qa_nfp2_1GW_HTS_{grob,mittel}/`,
+  `invers/stufe0_bilanz.py` (Spaltbedingung), Bericht v0.3 (lokal).
+- **Fehler unterwegs:** Elmer-Schluesselwort heisst `Stress Bodyforce i` (nicht Bodyload; wird still
+  ignoriert, Verformung 0). Schalenflaechen fuer A=4,5: Faltung/Verdrehung/gmsh-Haenger, siehe
+  Skill `stellarator-flaechen` – UNGELOEST, User hat Idee.
+- **Status:** ✅ Auslegung A=4,5 gesichert; ✅ Struktur A=6 (99-%-Werte netzkonvergiert);
+  ⚠ Struktur A=4,5 offen (Geometrie); ⚠ HTS-Querdruckgrenze gegen ~400 MPa im Paket pruefen.
+
 ### B-018 | Auslegung auf 1 GW netto: Stufe 0 (Leistungsbilanz) + eigene Form qa_nfp2 (2026-10-24)
 - **Beobachtung:** Eigene Plasmaform `qa_nfp2` (DESC, nfp=2, A=6) erreicht qs_fehler 1,3e-5
   (Referenz precise_QA 5,8e-5), iota 0,423→0,415. Spulen (Variante `mittel`, abstand_sp 0,18):

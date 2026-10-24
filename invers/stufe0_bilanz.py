@@ -10,6 +10,7 @@ Netzleistung folgt die Fusionsleistung; ein Raster ueber (R0, B0, T0) sucht fuer
   Einschluss           tau_E,noetig / tau_ISS04 <= H_max          (Zuendung ohne Fremdheizung)
   Leiterfeld           k_B * B0                 <= B_leiter_max   (Supraleiter)
   Spule-Plasma         d_noetig <= (d/R0)_Stufe2 * R0              (Blanket + Abschirmung)
+  Spalt Wickelpakete   (d_ss/R0)*R0 - k_spalt*Paketseite >= spalt_min (Paketseite aus I/j)
 
 Die Plasmaform kommt aus Stufe 1 (massstabsfrei: V/R0^3, S/R0^2, iota(2/3)); ohne --form ein
 Torus mit Seitenverhaeltnis --aspekt. Physik bewusst einfach: Bosch-Hale-Reaktivitaet,
@@ -135,7 +136,11 @@ def auslegung(a, form, gr, ausl, werte, k_B: dict):
     erg = {}
     for name, L in LEITER.items():
         kb = k_B[name]
-        ok = (m <= 1) & (kb * gr["B0"][None, :, None] <= L["B_max_T"])
+        n_sp = form.get("n_spulen", 16)
+        # Spalt zwischen Wickelpaketen: Mittellinienabstand ~ R0, Paketseite ~ sqrt(I/j) (k_spalt aus Stufe 3)
+        wp = np.sqrt(a.f_I * 2 * np.pi * gr["R0"][:, None] * gr["B0"][None, :] / (MU0 * n_sp * L["j_A_m2"]))
+        spalt = form.get("d_ss_R0", np.inf) * gr["R0"][:, None] - a.k_spalt * wp
+        ok = (m <= 1) & (kb * gr["B0"][None, :, None] <= L["B_max_T"]) & (spalt[..., None] >= a.spalt_min)
         if not ok.any():
             erg[name] = {"machbar": False}; continue
         iR = np.argmax(ok.any((1, 2)))
@@ -143,18 +148,19 @@ def auslegung(a, form, gr, ausl, werte, k_B: dict):
         iT = np.argmin(np.where(ok[iR, iB], m[iR, iB], 9))
         i = (iR, iB, iT)
         R0, B0 = float(gr["R0"][iR]), float(gr["B0"][iB])
-        n_sp = form.get("n_spulen", 16)
         I_spule = a.f_I * 2 * np.pi * R0 * B0 / (MU0 * n_sp)          # Ampere: Poloidalstrom je Spule
         A_wp = I_spule / L["j_A_m2"]
         erg[name] = {"machbar": True, "R0_m": R0, "B0_T": B0, "B_leiter_T": kb * B0, "k_B": kb,
                      **{k: float(np.asarray(v)[i]) for k, v in werte.items()},
                      "auslastung": {k: float(np.asarray(v)[i]) for k, v in ausl.items()}
-                     | {"leiterfeld": kb * B0 / L["B_max_T"]},
-                     "begrenzt_durch": max(ausl, key=lambda k: float(np.asarray(ausl[k])[i])),
+                     | {"leiterfeld": kb * B0 / L["B_max_T"],
+                        "spalt": a.spalt_min / spalt[iR, iB] if spalt[iR, iB] > 0 else 9.9},
+                     "spalt_schaetzung_m": float(spalt[iR, iB]),
                      "I_spule_MA": I_spule / 1e6, "wickelpaket_m": float(np.sqrt(A_wp)),
                      "magnetenergie_GJ": float(B0 ** 2 / (2 * MU0) * form["V_R3"] * R0 ** 3
                                                * (1 + form["d_sp_R0"] * form["aspekt"]) ** 2 / 1e9),
                      "leiter": L}
+        erg[name]["begrenzt_durch"] = [k for k, v in erg[name]["auslastung"].items() if v > 0.97]
         # B0 nicht ausgereizt? zusaetzlich: wie weit liesse sich B0 fuer dieses R0 noch anheben
         erg[name]["B0_max_leiter_T"] = L["B_max_T"] / kb
     return erg, m
@@ -207,6 +213,8 @@ def main(argv=None):
     ap.add_argument("--d_noetig", type=float, default=1.3, help="m Blanket+Abschirmung+Behaelter+halbes Wickelpaket")
     ap.add_argument("--k_B", default="2.0", help="B_max am Leiter / B0, Zahl oder je Leiter 'Nb3Sn=2.65,HTS=2.42' "
                     "(W7-X: 1,8; aus Stufe 3 B_max_oberflaeche_T / B0 nachziehen)")
+    ap.add_argument("--spalt_min", type=float, default=0.2, help="m Mindestspalt zwischen Wickelpaketen (Gehaeuse)")
+    ap.add_argument("--k_spalt", type=float, default=1.29, help="Spalt = d_ss/R0*R0 - k_spalt*Paketseite (aus Stufe 3)")
     ap.add_argument("--f_I", type=float, default=1.0, help="Spulenstrom / Ampere-Abschaetzung (aus Stufe 3, qa_nfp2: 1,09)")
     ap.add_argument("--f_DT", type=float, default=0.85, help="Brennstoff-Ionen je Elektron (Rest: He-Asche, Verunreinigung)")
     ap.add_argument("--f_ion", type=float, default=0.9, help="Ionen je Elektron (Druck)")
@@ -222,6 +230,9 @@ def main(argv=None):
     if a.spulen:
         sp = json.loads(a.spulen.read_text())
         form["d_sp_R0"] = sp["abstand_sp_min_m"] / sp["R0_m"]; form["n_spulen"] = len(sp["spulen"])
+        s2 = a.spulen.parent / "stufe2.json"
+        if s2.exists():
+            form["d_ss_R0"] = json.loads(s2.read_text())["abstand_ss_min_m"] / sp["R0_m"]
     leistung = bilanz(a, form)
     gr, ausl, werte = raster(a, form, leistung["P_fus_MW"])
     erg, m = auslegung(a, form, gr, ausl, werte, a.k_B)

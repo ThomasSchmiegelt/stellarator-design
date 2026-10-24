@@ -1,0 +1,14 @@
+{
+  "name": "qa_nfp2_A45",
+  "beschreibung": "Kompaktere Form (Stufe 1 DESC: nfp=2, A=4,5, iota 0,42; Stufe 2: 16 Spulen, Variante mittel), massstabsfrei",
+  "spulen": {
+    "quelle": "datei",
+    "datei": "invers/beispiele/qa_nfp2_A45/spulen.json",
+    "R0_m": 1.0,
+    "n_punkte": 160,
+    "B0_achse_T": 1.0,
+    "windungen": 1,
+    "wickel_breite_m": 0.04,
+    "wickel_hoehe_m": 0.04
+  }
+}

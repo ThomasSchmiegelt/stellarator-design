@@ -99,6 +99,9 @@
   HTS R0 12,1 m / B0 7,5 T; Nb3Sn R0 22,2 m / B0 4,8 T. Faelle `stellarator/faelle/qa_nfp2_1GW_{HTS,Nb3Sn}.json`.
   Ablauf: Stufe 0 → Falldateien → bewerte (B_max_oberflaeche/B0 = k_B) → Stufe 0 mit neuem
   `--k_B Leiter=..` bis B_Leiter ≤ Grenze (2–3 Iterationen).
+- **A=4,5 + Struktur (B-019)** ERLEDIGT bis auf Struktur A=4,5. Keine Jobs laufen.
+  OFFEN: Schalenflaechen (Skill `stellarator-flaechen`) – **User hat eine Idee, erst fragen.**
+  Bericht v0.3: `.venv/bin/python -m stellarator.bericht --version 0.3` (Skill `stellarator-bericht`), lokal.
 - Lange Laeufe IMMER losgeloest starten: `setsid nohup bash -c '...' > log 2>&1 < /dev/null &`.
 
 ## GitHub (2026-10-24)

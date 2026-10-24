@@ -1,0 +1,216 @@
+{
+  "name": "qa_nfp2_A45_1GW",
+  "annahmen": {
+    "name": "qa_nfp2_A45_1GW",
+    "form": "sim/invers/qa_nfp2_A45",
+    "aspekt": 6.0,
+    "spulen": "sim/invers/qa_nfp2_A45_spulen_mittel/spulen.json",
+    "fall_vorlage": "stellarator/faelle/qa_nfp2_A45.json",
+    "P_netz": 1000.0,
+    "eta_th": 0.35,
+    "M_blanket": 1.15,
+    "f_pumpe": 0.04,
+    "P_eigen": 60.0,
+    "wandlast_max": 2.0,
+    "beta_max": 0.05,
+    "sudo_max": 1.5,
+    "H_max": 1.3,
+    "d_noetig": 1.3,
+    "k_B": {
+      "Nb3Sn": 1.81,
+      "HTS": 2.26
+    },
+    "spalt_min": 0.2,
+    "k_spalt": 1.29,
+    "f_I": 1.08,
+    "f_DT": 0.85,
+    "f_ion": 0.9,
+    "Z_eff": 1.5,
+    "alpha_n": 0.5,
+    "alpha_T": 1.0
+  },
+  "form": {
+    "quelle": "sim/invers/qa_nfp2_A45",
+    "aspekt": 4.499992489852208,
+    "V_R3": 0.9747789969744551,
+    "S_R2": 11.350350319389486,
+    "iota_23": 0.4186238982085532,
+    "d_sp_R0": 0.24758280817966535,
+    "n_spulen": 16,
+    "d_ss_R0": 0.14759501633476743
+  },
+  "leistung": {
+    "P_netz_MW": 1000.0,
+    "P_fus_MW": 3053.0418828407005,
+    "P_th_MW": 3419.3548387096776,
+    "P_brutto_MW": 1196.774193548387,
+    "P_eigen_MW": 196.7741935483871,
+    "P_neutronen_MW": 2442.086372459844,
+    "P_alpha_MW": 610.9555103808565,
+    "Q_kraftwerk": 6.081967213114754
+  },
+  "auslegung": {
+    "Nb3Sn": {
+      "machbar": true,
+      "R0_m": 12.40000000000001,
+      "B0_T": 5.699999999999987,
+      "B_leiter_T": 10.316999999999977,
+      "k_B": 1.81,
+      "n_m_1e20": 1.6018261097193485,
+      "T0_keV": 14.0,
+      "beta_proz": 3.169436494176936,
+      "H_ISS04": 1.297839228986533,
+      "tau_E_s": 2.3697542709096426,
+      "n_durch_n_Sudo": 1.053546909679468,
+      "wandlast_MW_m2": 1.3992921054596206,
+      "P_brems_MW": 128.9510369238964,
+      "W_plasma_MJ": 1142.2321595721846,
+      "a_m": 2.755560154369782,
+      "V_m3": 1858.5370303274278,
+      "S_m2": 1745.22986510933,
+      "auslastung": {
+        "wandlast": 0.6996460527298103,
+        "beta": 0.6338872988353872,
+        "dichte_sudo": 0.7023646064529787,
+        "einschluss_H": 0.9983378684511792,
+        "spule_plasma": 0.42344906921542047,
+        "leiterfeld": 0.8597499999999981,
+        "spalt": 0.9833003793654348
+      },
+      "spalt_schaetzung_m": 0.20339664684058034,
+      "I_spule_MA": 23.854499999999963,
+      "wickelpaket_m": 1.261070973419021,
+      "magnetenergie_GJ": 107.38426753173835,
+      "leiter": {
+        "B_max_T": 12.0,
+        "j_A_m2": 15000000.0,
+        "bemerkung": "erprobt (ITER-TF 11,8 T); j niedrig, sonst dominiert das Eigenfeld des Wickelpakets"
+      },
+      "begrenzt_durch": [
+        "einschluss_H",
+        "spalt"
+      ],
+      "B0_max_leiter_T": 6.629834254143646,
+      "stufe2_abstand_sp_normiert": 0.10483870967741928
+    },
+    "HTS": {
+      "machbar": true,
+      "R0_m": 10.400000000000006,
+      "B0_T": 6.499999999999984,
+      "B_leiter_T": 14.689999999999962,
+      "k_B": 2.26,
+      "n_m_1e20": 2.0854409020469276,
+      "T0_keV": 14.0,
+      "beta_proz": 3.1731278521714894,
+      "H_ISS04": 1.2939141055500203,
+      "tau_E_s": 1.820207065583193,
+      "n_durch_n_Sudo": 0.9865852700566113,
+      "wandlast_MW_m2": 1.9892303451874198,
+      "P_brems_MW": 128.95103692389642,
+      "W_plasma_MJ": 877.3479482290653,
+      "a_m": 2.3111149681811067,
+      "V_m3": 1096.4938016526753,
+      "S_m2": 1227.6538905451682,
+      "auslastung": {
+        "wandlast": 0.9946151725937099,
+        "beta": 0.6346255704342979,
+        "dichte_sudo": 0.6577235133710743,
+        "einschluss_H": 0.9953185427307848,
+        "spule_plasma": 0.5048815825260783,
+        "leiterfeld": 0.7344999999999982,
+        "spalt": 0.35667204422110893
+      },
+      "spalt_schaetzung_m": 0.5607392091431073,
+      "I_spule_MA": 22.814999999999955,
+      "wickelpaket_m": 0.7552317525104455,
+      "magnetenergie_GJ": 82.38584937393107,
+      "leiter": {
+        "B_max_T": 20.0,
+        "j_A_m2": 40000000.0,
+        "bemerkung": "REBCO, kompakter, junge Technik"
+      },
+      "begrenzt_durch": [
+        "wandlast",
+        "einschluss_H"
+      ],
+      "B0_max_leiter_T": 8.849557522123895,
+      "stufe2_abstand_sp_normiert": 0.12499999999999993
+    }
+  },
+  "seitenverhaeltnis_empfindlichkeit": {
+    "A=4": {
+      "Nb3Sn": {
+        "R0_m": 11.800000000000008,
+        "B0_T": 5.349999999999988,
+        "begrenzt_durch": [
+          "einschluss_H",
+          "spalt"
+        ]
+      },
+      "HTS": {
+        "R0_m": 9.800000000000006,
+        "B0_T": 6.099999999999985,
+        "begrenzt_durch": [
+          "wandlast",
+          "einschluss_H"
+        ]
+      }
+    },
+    "A=5": {
+      "Nb3Sn": {
+        "R0_m": 13.000000000000009,
+        "B0_T": 6.049999999999986,
+        "begrenzt_durch": [
+          "einschluss_H",
+          "spalt"
+        ]
+      },
+      "HTS": {
+        "R0_m": 11.000000000000007,
+        "B0_T": 6.849999999999983,
+        "begrenzt_durch": [
+          "wandlast",
+          "einschluss_H"
+        ]
+      }
+    },
+    "A=6": {
+      "Nb3Sn": {
+        "R0_m": 14.40000000000001,
+        "B0_T": 6.599999999999984,
+        "begrenzt_durch": [
+          "einschluss_H",
+          "leiterfeld"
+        ]
+      },
+      "HTS": {
+        "R0_m": 12.000000000000007,
+        "B0_T": 7.54999999999998,
+        "begrenzt_durch": [
+          "wandlast",
+          "einschluss_H"
+        ]
+      }
+    },
+    "A=8": {
+      "Nb3Sn": {
+        "R0_m": 20.400000000000016,
+        "B0_T": 6.599999999999984,
+        "begrenzt_durch": [
+          "einschluss_H",
+          "leiterfeld"
+        ]
+      },
+      "HTS": {
+        "R0_m": 13.90000000000001,
+        "B0_T": 8.699999999999976,
+        "begrenzt_durch": [
+          "wandlast",
+          "einschluss_H",
+          "leiterfeld"
+        ]
+      }
+    }
+  },
+  "hinweis": "0-D-Abschaetzung (+-30 %). k_B und d/R0 nach Stufe 2/3 nachziehen und neu rechnen."
+}

@@ -216,6 +216,16 @@ def rahmen(s: Spule) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     return t, n, np.cross(t, n)
 
 
+def rahmen_aus_normale(s: Spule, normale) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Dreibein wie rahmen(), aber n = vorgegebene Richtung normale(punkte), senkrecht zu t
+    projiziert (Wickelpaket in der Nut einer Stuetzschale, stellarator/struktur.py)."""
+    t = s.tangenten()
+    r = normale(s.punkte)
+    n = r - np.sum(r * t, 1, keepdims=True) * t
+    n /= np.linalg.norm(n, axis=1, keepdims=True)
+    return t, n, np.cross(t, n)
+
+
 def rohr_dreiecke(s: Spule, breite: float, hoehe: float) -> np.ndarray:
     """Rechteckrohr (breite entlang n, hoehe entlang b) als Dreiecke (M,3,3), geschlossen."""
     t, n, b = rahmen(s)

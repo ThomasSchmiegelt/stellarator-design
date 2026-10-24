@@ -1,0 +1,14 @@
+{
+  "name": "qa_nfp2_A45_1GW_Nb3Sn",
+  "beschreibung": "qa_nfp2_A45 ausgelegt auf 1000 MW netto mit Nb3Sn: R0 12.4 m, B0 5.70 T (Stufe 0)",
+  "spulen": {
+    "quelle": "datei",
+    "datei": "invers/beispiele/qa_nfp2_A45/spulen.json",
+    "R0_m": 12.4,
+    "n_punkte": 160,
+    "B0_achse_T": 5.7,
+    "windungen": 1,
+    "wickel_breite_m": 1.261,
+    "wickel_hoehe_m": 1.261
+  }
+}

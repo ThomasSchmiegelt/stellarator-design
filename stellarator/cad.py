@@ -134,15 +134,17 @@ def neu_abtasten(P: np.ndarray, N: int) -> np.ndarray:
     return CubicSpline(s, Q, bc_type="periodic")(np.linspace(0, s[-1], N, endpoint=False))
 
 
-def rohr_netz(s: sp.Spule, breite: float, hoehe: float, h: float) -> tuple[np.ndarray, np.ndarray]:
+def rohr_netz(s: sp.Spule, breite: float, hoehe: float, h: float, normale=None) -> tuple[np.ndarray, np.ndarray]:
     """Wasserdichtes Rechteckrohr mit gemeinsamen Knoten, Kantenlaenge ~h.
 
     Rueckgabe (knoten (M,3), dreiecke (K,3) Indizes), Normalen nach aussen (wie
     spulen.rohr_dreiecke, aber unterteilt und indiziert -> direkt als gmsh-Flaeche nutzbar).
+    normale: optional f(punkte) -> Richtung der Breite (z.B. Normale einer Stuetzschale);
+    Standard ist der Rahmen von spulen.rahmen (vom Spulenschwerpunkt weg).
     """
     N = max(16, int(np.ceil(s.laenge() / h)))
     q = sp.Spule(s.name, s.typ, neu_abtasten(s.punkte, N), s.strom)
-    t, n, b = sp.rahmen(q)
+    t, n, b = sp.rahmen(q) if normale is None else sp.rahmen_aus_normale(q, normale)
     nb, nh = max(2, int(np.ceil(breite / h))), max(2, int(np.ceil(hoehe / h)))
     ecken = np.array([(-1, -1), (1, -1), (1, 1), (-1, 1)]) * [breite / 2, hoehe / 2]
     rand = np.concatenate([ecken[k] + np.linspace(0, 1, m, endpoint=False)[:, None] * (ecken[(k + 1) % 4] - ecken[k])
