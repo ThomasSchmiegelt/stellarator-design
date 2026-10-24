@@ -11,7 +11,8 @@ Die Aussenwand ist variabel: t_min + (t_max - t_min) * f, f = |dF/dl| / max (Lor
 Laenge, Biot-Savart, Feld gemittelt ueber 4 Punkte im Wickelpaket).
 Nur die Basisspulen werden modelliert, die anderen sind Symmetrie-Klone.
 Ausgabe sim/stellarator/gehaeuse/<name>/: gehaeuse.FCStd (parametrisch), gehaeuse.step, *.stl,
-pruefung.json, gehaeuse.png.
+pruefung.json, gehaeuse.png, gehaeuse_freecad.png (Screenshot aus FreeCAD).
+Braucht DISPLAY (z.B. DISPLAY=:1) fuer den Ansichtsschritt, sonst ist in der GUI alles ausgeblendet.
 """
 from __future__ import annotations
 import argparse, json, os, subprocess
@@ -23,6 +24,7 @@ from .lauf import PROJEKT
 
 FREECAD = Path.home() / "Applications" / "FreeCAD_1.1.4.AppImage"
 SKRIPT = Path(__file__).with_name("freecad_vss.py")
+ANSICHT = Path(__file__).with_name("freecad_ansicht.py")     # GUI-Ansicht nachtragen (sonst alles ausgeblendet)
 
 
 def kraft_je_laenge(spulen, s, breite, hoehe, seg) -> np.ndarray:
@@ -140,6 +142,13 @@ def main(argv=None):
     print(zeilen[-1])
     print(json.dumps(json.loads((ordner / "pruefung.json").read_text())["spulen"], indent=1))
     print("BILD", bild(ordner, name))
+    # freecadcmd speichert keine Ansicht -> in der GUI waere nur der Baum zu sehen; einmal per GUI nachtragen
+    if os.environ.get("DISPLAY"):
+        subprocess.run([str(FREECAD), str(ANSICHT)], env={**os.environ, "VSS_FCSTD": str(ordner / "gehaeuse.FCStd")},
+                       capture_output=True, timeout=600)
+        print("BILD", ordner / "gehaeuse_freecad.png")
+    else:
+        print("WARNUNG: kein DISPLAY -> Ansicht nicht gesetzt; spaeter: VSS_FCSTD=... <AppImage> stellarator/freecad_ansicht.py")
     if a.oeffnen:
         subprocess.Popen([str(FREECAD), str(ordner / "gehaeuse.FCStd")], start_new_session=True,
                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
