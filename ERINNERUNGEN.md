@@ -80,6 +80,7 @@
   Skill `stellarator-pipeline` v0.2 auch fuer PI verlinkt (`~/.pi/agent/skills/`).
 
 ## UEBERGABE / laufende Jobs (fuer Hermes, falls Claude-Sitzung endet) — 2026-10-24
+- ~~FEM W7-X ueber Rohrnetze~~ FERTIG (B-025: 99 % < 43 MPa, max 110 MPa, 264 t Stahl).
 - **Naechste Verbesserungsschleife (User-Wunsch):** Verguss-Schicht (Quarzsand-Epoxid, ~10 mm, E ~10–20 GPa) zwischen
   Wickelpaket und Gehaeuse in FreeCAD + Elmer (Details Skill stellarator-flaechen, Offen).
 - **FEM A45 mit Keil** (5. Versuch, ToleranceBoolean 1e-4): Ordner `sim/stellarator/gehaeuse_fem/A45_HTS_keil/`,

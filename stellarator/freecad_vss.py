@@ -145,20 +145,67 @@ for k, b in enumerate(E["basis"]):
         G.append(g); W.append(w)
     lg = doc.addObject("Part::Loft", f"Loft_G_{s}"); lg.Sections = G; lg.Solid = True; lg.Closed = True; lg.Ruled = False
     lw = doc.addObject("Part::Loft", f"Wickelpaket_{s}"); lw.Sections = W; lw.Solid = True; lw.Closed = True; lw.Ruled = False
-    cut = doc.addObject("Part::Cut", f"Gehaeuse_{s}"); cut.Base = lg; cut.Tool = lw
+    roh = "GehaeuseRoh_" if E["parameter"].get("nachbar_spiel") else "Gehaeuse_"   # Endname nach Nachbarschnitt
+    cut = doc.addObject("Part::Cut", f"{roh}{s}"); cut.Base = lg; cut.Tool = lw
     doc.recompute()
     lw.Visibility = True                      # Cut blendet das Tool aus; Wickelpaket soll sichtbar sein
     # Werkzeug fuer den Keil-Schnitt: Wickelpaket + keil_versatz. Schnitt mit dem WP selbst gaebe dieselbe
     # Flaeche wie die Gehaeuse-Innenseite -> OCC-Fuse ungueltig, gmsh "overlapping facets"
     off = doc.addObject("Part::Offset", f"WP_Versatz_{s}"); off.Source = lw; off.Join = 0
     off.setExpression("Value", "Parameter.keil_versatz"); off.Visibility = False
-    basis_obj.append((cut, lw, off))
+    basis_obj.append((cut, lw, off, lg))
+
+# ---------------------------------------------------------------- Nachbarschnitt (Idee User)
+# Jedes Basisgehaeuse minus die (ungeschnittenen) Aussenkoerper der Nachbarspulen, vergroessert um
+# nachbar_spiel. Gilt fuer alle Klone mit (Symmetrie) -> Kollisionen per Konstruktion ausgeschlossen,
+# auch wo der Loft zwischen den Stationen ausbeult. Beide Partner verlieren den Ueberlappbereich.
+platz = {b["name"]: (k, App.Placement()) for k, b in enumerate(E["basis"])}
+for kl in E["klone"]:
+    M = kl["matrix"]
+    platz[kl["name"]] = (kl["basis"], App.Placement(App.Matrix(M[0][0], M[0][1], M[0][2], 0, M[1][0], M[1][1],
+                                                                M[1][2], 0, M[2][0], M[2][1], M[2][2], 0, 0, 0, 0, 1)))
+nachbar_info = {}
+if E["parameter"].get("nachbar_spiel"):
+    lg_off = []
+    for k, b in enumerate(E["basis"]):
+        o_ = doc.addObject("Part::Offset", f"LoftG_Versatz_{b['name']}"); o_.Source = basis_obj[k][3]; o_.Join = 0
+        o_.setExpression("Value", "Parameter.nachbar_spiel"); o_.Visibility = False
+        lg_off.append(o_)
+    doc.recompute()
+    for k, o_ in enumerate(lg_off):                  # Offset einer Loft-Flaeche kann scheitern -> ohne Spiel
+        if o_.Shape.isNull() or not o_.Shape.isValid() or not o_.Shape.Solids:
+            print(f"NACHBARSCHNITT Offset {o_.Name} gescheitert -> Aussenkoerper ohne Spiel", flush=True)
+            nachbar_info.setdefault("offset_gescheitert", []).append(o_.Name)
+            lg_off[k] = basis_obj[k][3]
+    for k, b in enumerate(E["basis"]):
+        s = b["name"]; roh_k, lw_k, off_k, lg_k = basis_obj[k]
+        gk = lg_k.Shape; teil = roh_k; nachbarn = []
+        for m, (km, pm) in platz.items():
+            if m == s:
+                continue
+            sh = lg_off[km].Shape.copy(); sh.Placement = pm
+            if not gk.BoundBox.intersect(sh.BoundBox) or gk.common(sh).Volume < 1.0:   # mm^3
+                continue
+            wz = Draft.make_clone(lg_off[km]); wz.Label = f"Nachbar_{s}_{m}"; wz.Placement = pm; wz.Visibility = False
+            c_ = doc.addObject("Part::Cut", f"NS_{s}_{m}"); c_.Base = teil; c_.Tool = wz; c_.Visibility = False
+            teil = c_; nachbarn.append(m)
+            if lw_k.Shape.common(sh).Volume > 1.0:                  # Nachbar reicht bis ins eigene Wickelpaket
+                nachbar_info.setdefault("trifft_eigenes_wp", []).append([s, m])
+        fin = teil; fin.Label = f"Gehaeuse_{s}"                     # letzter Schnitt (oder Rohteil) = Gehaeuse
+        for o_ in doc.Objects:
+            if o_.Name.startswith(f"NS_{s}_") or o_ is roh_k:
+                o_.Visibility = o_ is fin
+        doc.recompute()
+        lw_k.Visibility = True
+        nachbar_info.setdefault("nachbarn", {})[s] = nachbarn
+        basis_obj[k] = (fin, lw_k, off_k, lg_k)
+        print(f"NACHBARSCHNITT {s}: {len(nachbarn)} Nachbarn", flush=True)
 
 # ---------------------------------------------------------------- Klone (Symmetrie)
 alle = [(b["name"], *basis_obj[k][:2]) for k, b in enumerate(E["basis"])]
 versatz_obj = {b["name"]: basis_obj[k][2] for k, b in enumerate(E["basis"])}
 for kl in E["klone"]:
-    cut, lw, off = basis_obj[kl["basis"]]
+    cut, lw, off, _ = basis_obj[kl["basis"]]
     M = kl["matrix"]
     pl = App.Placement(App.Matrix(M[0][0], M[0][1], M[0][2], 0, M[1][0], M[1][1], M[1][2], 0,
                                   M[2][0], M[2][1], M[2][2], 0, 0, 0, 0, 1))
@@ -251,7 +298,7 @@ for kl in E.get("verbinder_klone", []):
 doc.recompute()
 
 # ---------------------------------------------------------------- Pruefung
-pr = {"spulen": {}, "ueberlappung": [], "fehler": []}
+pr = {"spulen": {}, "ueberlappung": [], "fehler": [], "nachbarschnitt": nachbar_info}
 for k, b in enumerate(E["basis"]):
     cut, lw = basis_obj[k][:2]
     g, w = cut.Shape, lw.Shape

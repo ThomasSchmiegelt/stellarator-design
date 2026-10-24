@@ -6,6 +6,25 @@
 ---
 
 
+### B-025 | W7-X-Gehaeuse kollisionsfrei: CAD mit Nachbarschnitt, Rechnung ueber Rohrnetze (2026-10-24)
+- **Ursache der Restkollisionen:** nicht die Wandstaerke (echter WP-Spalt NPC5<->NPC5 108 mm, NPC5<->PCB 130 mm),
+  sondern (a) Loft-Ausbeulung zwischen den Stationen und (b) die ECKEN der Gehaeuse: freiraum prueft nur
+  geradeaus (seitlich / aussen), schraeg stehende Nachbarn greifen ueber die Ecke.
+- **CAD (Add-on, Idee User):** jedes Basisgehaeuse minus Aussenkoerper der Nachbarn (+ nachbar_spiel, Part::Offset;
+  bei NPC scheitert der Offset -> ohne Spiel). Aufbau 70/70 Spulen + Verbinder: **0 Kollisionen** (vorher 100).
+  Rest: NPC1 <-> NPC1_f reicht bis ins eigene Wickelpaket (Gehaeuse dort stellenweise offen).
+- **Rechenweg (Idee User: "den funktionierenden Weg von heute morgen parallel"):** `stellarator/gehaeuse_netz.py`,
+  zwei Rechteckrohre je Spule als eigene Dreiecksnetze auf der exakten Bahn (wie cad.elmer_netz, B-015), keine
+  Booleschen Operationen. Wandstaerken: Kraft + freiraum + `entflechten` (Oberflaechenpunkte fremder Gehaeuse inkl.
+  Zwischenringe gegen das eigene Rechteck, Wand mit dem kleinsten Verlust zurueck, Nachbarstationen mit).
+  W7-X: Entflechtung 4980 -> 40 -> 0 Punkte, pyvista-Kollisionstest 0 Kontakte. Waende min 3 mm (wand_min), Spiel 10 mm.
+- **FEM W7-X (Rohrnetz-Weg):** 3,02 Mio Tets, Netz 78 s, Elmer 55 min (~14 GB inkl. Swap). Stahl 33,4 m^3 = 264 t.
+  Kraft je Spule Elmer 2,42 MN vs Biot-Savart 2,39 MN (NPC3, +1 %). Planare Spulen stromlos (Standard) -> 0 MPa.
+  Gehaeuse von Mises: Mittel 11 MPa, 99 % < 43 MPa, max 110 MPa; Wickelpakete max 69 MPa; Verformung < 1 mm.
+  -> weit unter 667 MPa. Einschraenkung: je Gehaeuse eingespannter Flecken statt Verbindern/Tragring,
+  Verguss nicht modelliert, Waende stellenweise nur 3 mm. Bild docs/bilder/struktur_w7x_gehaeuse_netz.png.
+- **Status:** ✅ Kette laeuft durch (CAD-Add-on + Rechenweg).
+
 ### B-024 | Keil auf der Torus-Innenseite: CAD geht, Vernetzung scheitert -> vorerst ohne Keil (2026-10-24)
 - **Beobachtung:** Keil (Bachmann-Gewoelbe) in FreeCAD gueltig, trifft kein Wickelpaket. In gmsh aber
   "Invalid boundary mesh (overlapping facets)" (5 Versuche: AngleToleranceFacetOverlap, healShapes,

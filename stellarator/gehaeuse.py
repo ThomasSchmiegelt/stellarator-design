@@ -42,7 +42,7 @@ def wp_rand(s, br: float, ho: float) -> np.ndarray:
     return np.vstack([s.punkte + 0.5 * (en * br * n + eb * ho * b) for en, eb in q])
 
 
-def freiraum(spulen, k: int, idx, br: float, ho: float, spiel: float, fenster: float) -> dict:
+def freiraum(spulen, k: int, idx, br: float, ho: float, spiel: float, fenster: float, mit_innen: bool = False) -> dict:
     """Halber freier Platz [m] zur naechsten fremden Spule je Station: links (-b), rechts (+b), aussen (+n).
 
     Fremde Wickelpakete als Randpunkte (wp_rand); beruecksichtigt im Fenster |dt| < fenster (Bereich
@@ -51,7 +51,7 @@ def freiraum(spulen, k: int, idx, br: float, ho: float, spiel: float, fenster: f
     t, n, b = sp.rahmen(spulen[k])
     P = spulen[k].punkte
     Q = np.vstack([wp_rand(s, br, ho) for i, s in enumerate(spulen) if i != k])
-    out = {"links": [], "rechts": [], "aussen": []}
+    out = {"links": [], "rechts": [], "aussen": []} | ({"innen": []} if mit_innen else {})
     for i in idx:
         d = Q - P[i]
         dt, dn, db = d @ t[i], d @ n[i], d @ b[i]
@@ -63,6 +63,8 @@ def freiraum(spulen, k: int, idx, br: float, ho: float, spiel: float, fenster: f
         out["rechts"].append(frei(seitlich & (db > 0), db, 0.5 * ho))
         out["links"].append(frei(seitlich & (db < 0), -db, 0.5 * ho))
         out["aussen"].append(frei(oben & (dn > 0), dn, 0.5 * br))
+        if mit_innen:
+            out["innen"].append(frei(oben & (dn < 0), -dn, 0.5 * br))
     return out
 
 
@@ -208,7 +210,8 @@ def eingabe(fall: dict, a, ordner: Path) -> Path:
                                     for j, i in enumerate(idx)]})
     d = {"name": fall["name"], "ausgabe": str(ordner),
          "parameter": {"wand_innen": a.wand_innen * mm, "wand_seite": a.wand_seite * mm, "wp_breite": br * mm,
-                       "wp_hoehe": ho * mm, "t_min": a.t_min * mm, "t_max": a.t_max * mm},
+                       "wp_hoehe": ho * mm, "t_min": a.t_min * mm, "t_max": a.t_max * mm,
+                       "nachbar_spiel": a.nachbar_spiel * mm},
          "basis": basis, "klone": symmetrie(spulen, geo["nfp"], nb),
          "kraft_max_MN_m": fmax / 1e6, "spulen_namen": [s.name for s in spulen]}
     if a.verbinder:
@@ -258,6 +261,8 @@ def main(argv=None):
     ap.add_argument("--keil", type=int, default=0,
                     help="Skizzen im Keil auf der Torus-Innenseite (0 = kein Keil; Standard aus, B-024: gmsh scheitert)")
     ap.add_argument("--keil_spanne", type=float, default=1.0, help="m, Keil wo Abstand <= min + spanne")
+    ap.add_argument("--nachbar_spiel", type=float, default=0.005,
+                    help="m, Gehaeuse minus Nachbargehaeuse (+ Spiel) -> keine Kollisionen; 0 = aus")
     ap.add_argument("--keil_versatz", type=float, default=0.005,
                     help="m, Keil wird mit Wickelpaket + Versatz geschnitten -> ueberlappt die Gehaeusewand sauber")
     ap.add_argument("--keil_tiefe", type=float, default=0.755, help="m, Tiefe des Keils (Richtung n)")
@@ -270,6 +275,7 @@ def main(argv=None):
     p = eingabe(fall, a, ordner)
     r = subprocess.run([str(FREECAD), "freecadcmd", str(SKRIPT)], env={**os.environ, "VSS_EINGABE": str(p)},
                        capture_output=True, text=True)
+    print("\n".join(z for z in r.stdout.splitlines() if z.startswith("NACHBARSCHNITT")), flush=True)
     zeilen = [z for z in r.stdout.splitlines() if "VSS_FERTIG" in z]
     if not zeilen:
         print(r.stdout[-3000:], r.stderr[-3000:]); raise SystemExit("FreeCAD fehlgeschlagen")
