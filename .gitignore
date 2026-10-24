@@ -1,0 +1,27 @@
+# Whitelist: alles ignorieren, dann gezielt freigeben (Rechenergebnisse sind gross und reproduzierbar)
+/*
+!/README.md
+!/LICENSE
+!/.gitignore
+!/BEFUNDE.md
+!/ERINNERUNGEN.md
+!/requirements.txt
+!/requirements-opt.txt
+!/docs/
+!/stellarator/
+!/invers/
+!/forschung/
+!/picogk/
+!/sim/
+/sim/*
+!/sim/pipeline/
+
+# Build / Laufzeit
+__pycache__/
+*.pyc
+picogk/**/bin/
+picogk/**/obj/
+.env
+# Validierungsfall: Netze/Ergebnisse werden von run_validierung.sh erzeugt
+sim/pipeline/**/wire2d/
+sim/pipeline/**/*.vtu

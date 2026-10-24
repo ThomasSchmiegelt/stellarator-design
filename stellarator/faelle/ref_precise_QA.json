@@ -1,0 +1,14 @@
+{
+  "name": "ref_precise_QA",
+  "beschreibung": "Referenz kompakter QA-Stellarator (DESC precise_QA, nfp=2), Spulen aus invers/stufe2 (simsopt), Form massstabsfrei: R0 1 m, B0 1 T",
+  "spulen": {
+    "quelle": "datei",
+    "datei": "invers/beispiele/ref_precise_QA_spulen.json",
+    "R0_m": 1.0,
+    "n_punkte": 160,
+    "B0_achse_T": 1.0,
+    "windungen": 1,
+    "wickel_breite_m": 0.04,
+    "wickel_hoehe_m": 0.04
+  }
+}

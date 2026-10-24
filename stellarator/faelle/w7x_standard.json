@@ -1,0 +1,29 @@
+{
+  "name": "w7x_standard",
+  "beschreibung": "W7-X Standardkonfiguration (NPC gleich bestromt, PCA/PCB stromlos), B0=2.5 T",
+  "spulen": {
+    "quelle": "w7x",
+    "n_punkte": 160,
+    "stroeme_Awdg": {"NPC1": 1620000, "NPC2": 1620000, "NPC3": 1620000, "NPC4": 1620000,
+                     "NPC5": 1620000, "PCA": 0, "PCB": 0},
+    "B0_achse_T": 2.5,
+    "windungen_npc": 108,
+    "wickel_breite_m": 0.192,
+    "wickel_hoehe_m": 0.160
+  },
+  "voxel": {
+    "modus": "picogk",
+    "voxel_mm": 20,
+    "gehaeuse_mm": 60,
+    "stl_ausduennen": 0.95
+  },
+  "solver": {
+    "h_m": 0.05,
+    "rand_m": 0.3
+  },
+  "feldlinien": {
+    "n_linien": 14,
+    "dR_max_m": 0.6,
+    "umlaeufe": 150
+  }
+}

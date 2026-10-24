@@ -1,0 +1,19 @@
+
+***** ElmerGrid input file for structured grid generation (2D Planar, gerader Draht) *****
+Version = 210903
+Coordinate System = Cartesian 1D
+Subcell Divisions in 1D = 3
+Subcell Limits 1 = 0 0.001 0.002 0.005
+Material Structure in 1D
+  1    1    1   1
+  2    2    2   2
+End
+Materials Interval = 1 2
+Boundary Definitions
+  2        -2       1        1
+  5        -2       2        1
+End
+Element Ratios 1 = 1 0.2 10.0
+Element Divisions 1 = 40 20 60
+Revolve Blocks = 4
+Revolve Improve = 0.0

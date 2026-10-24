@@ -1,0 +1,92 @@
+ELMER SOLVER (v 26.2) STARTED AT: 2026/10/23 09:28:21
+ParCommInit: Initialize #PEs: 1
+MAIN: OMP_NUM_THREADS not set. Using only 1 thread per task.
+MAIN: 
+MAIN: =============================================================
+MAIN: ElmerSolver finite element software, Welcome!
+MAIN: This program is free software licensed under (L)GPL
+MAIN: Copyright April 1st 1995 -> , CSC - IT Center for Science Ltd.
+MAIN: Repository https://www.github.org/elmerCSC/elmerfem
+MAIN: Homepage https://www.elmerfem.org/,  Email elmeradm@csc.fi
+MAIN: Version: 26.2-unknown (Rev: unknown, Compiled: 2026-10-09)
+MAIN:  Running one task without MPI parallelization.
+MAIN:  Running with just one thread per task.
+MAIN:  HYPRE library linked in.
+MAIN:  MUMPS library linked in.
+MAIN:  Lua interpreter linked in.
+MAIN: =============================================================
+MAIN: 
+MAIN: 
+MAIN: -------------------------------------
+MAIN: Reading Model: case.sif
+LoadInputFile: Scanning input file: case.sif
+LoadInputFile: Scanning only size info
+LoadInputFile: First time visiting
+LoadInputFile: Reading base load of sif file
+LoadInputFile: Loading input file: case.sif
+LoadInputFile: Reading base load of sif file
+LoadInputFile: Number of BCs: 1
+LoadInputFile: Number of Body Forces: 1
+LoadInputFile: Number of Initial Conditions: 0
+LoadInputFile: Number of Materials: 2
+LoadInputFile: Number of Equations: 1
+LoadInputFile: Number of Solvers: 4
+LoadInputFile: Number of Bodies: 2
+ElmerMeshReader: Base mesh name: ./wire2d
+MapCoordinates: Scaling coordinates: 1.000E-03 1.000E-03 1.000E+00
+PrepareMesh: Preparing mesh for the future
+LoadMesh: Elapsed REAL time:     0.0015 (s)
+MAIN: -------------------------------------
+OptimizeBandwidth: Initial bandwidth for mgdynamics2d: 240
+OptimizeBandwidth: Optimized bandwidth for mgdynamics2d: 69
+OptimizeBandwidth: Initial bandwidth for mgdynamicscalc: 240
+OptimizeBandwidth: Optimized bandwidth for mgdynamicscalc: 69
+MAIN: Number of timesteps to be saved: 1
+MAIN: 
+MAIN: -------------------------------------
+MAIN:  Steady state iteration:            1
+MAIN: -------------------------------------
+MAIN: 
+ BC weight:           1   3.1383638291135788E-002
+ BF weight:           1   3.1286893008044758E-006
+ Body weight:           1   3.1286893008044758E-006
+ Body weight:           2   7.5088543219300078E-005
+ Mat weight:           1   3.1286893008044758E-006
+ Mat weight:           2   7.5088543219300078E-005
+MagnetoDynamics2D: ------------------------------------------------
+MagnetoDynamics2D: Solving equation for magnetic vector potential
+MagnetoDynamics2D: ------------------------------------------------
+      10 0.9089E-08 0.9089E-08
+BiCGStabl:       10 0.9089E-08 0.9089E-08
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.30317356E-06  2.0000000     ) :: mgdynamics2d
+ComputeChange: SS (ITER=1) (NRM,RELC): ( 0.30317356E-06  2.0000000     ) :: mgdynamics2d
+MagnetoDynamicsCalcFields: Computing postprocessed fields
+MagnetoDynamicsCalcFields: Eddy current power:    0.000000E+00
+MagnetoDynamicsCalcFields: ElectroMagnetic Field Energy:    1.848710E-07
+ComputeChange: SS (ITER=1) (NRM,RELC): (  0.0000000      0.0000000     ) :: mgdynamicscalc
+ResultOutputSolver: -------------------------------------
+ResultOutputSolver: Saving with prefix: wire
+CreateListForSaving: Field Variables for Saving
+ResultOutputSolver: Saving in unstructured VTK XML (.vtu) format
+VtuOutputSolver: Saving results in VTK XML format with prefix: wire
+VtuOutputSolver: Saving number of partitions: 1
+ResultOutputSolver: -------------------------------------
+ Checksums for file output:
+ RefResults:   41.000000000000000        6.0000000000000000        11214.000000000000        1315.0000000000000        2577197.0000000000       0.35106316188253328     
+ ThisResults:   41.000000000000000        6.0000000000000000        11214.000000000000        1315.0000000000000        2577197.0000000000       0.35106316188253328     
+ResultOutputSolver: Calculate Pseudonorm:   1.000000E+00
+SaveLine: -----------------------------------------
+SaveLine: Saving data on lines to file: f.dat
+SaveLine: ------------------------------------------
+CreateListForSaving: Field Variables for Saving
+SaveLine: Number of nodes in specified lines: 101
+SaveLine: All done
+CompareToReferenceSolution: Solver 1 PASSED:  Norm = 3.03173556E-07  RefNorm = 3.03173556E-07
+CompareToReferenceSolution: Relative Error to reference norm: 3.097149E-10
+CompareToReferenceSolution: Solver 3 PASSED:  Norm = 1.00000000E+00  RefNorm = 1.00000000E+00
+CompareToReferenceSolution: Relative Error to reference norm: 0.000000E+00
+CompareToReferenceSolution: PASSED all 2 tests!
+MAIN: *** Elmer Solver: ALL DONE ***
+MAIN: The end
+SOLVER TOTAL TIME(CPU,REAL):         0.12        0.44
+ELMER SOLVER FINISHED AT: 2026/10/23 09:28:21
