@@ -44,11 +44,11 @@ def wickelpaket(occ, s: sp.Spule, breite: float, hoehe: float, ruled: bool = Tru
 
 def ueberlapp(occ, vols, spulen, r_nachbar: float = 3.0) -> list[tuple]:
     """Paarweise Schnittvolumen (m3) benachbarter Spulen; leere Liste = kollisionsfrei."""
-    c = np.array([s.punkte.mean(0) for s in spulen])
+    r_nachbar = r_nachbar or max(1.0, 3 * np.hypot(breite, hoehe))
     out = []
     for i in range(len(vols)):
         for j in range(i + 1, len(vols)):
-            if np.linalg.norm(c[i] - c[j]) > r_nachbar:
+            if baeume[j].query(spulen[i].punkte)[0].min() > r_nachbar:
                 continue
             r, _ = occ.intersect([vols[i]], [vols[j]], removeObject=False, removeTool=False)
             if r:
@@ -65,7 +65,7 @@ def _rechteck_abstand(u, v, breite, hoehe):
     return np.where((du < 0) & (dv < 0), np.maximum(du, dv), aussen)
 
 
-def abstaende(spulen, breite, hoehe, r_nachbar: float = 3.0, n_rand: int = 6,
+def abstaende(spulen, breite, hoehe, r_nachbar: float | None = None, n_rand: int = 6,
               n_basis: int | None = 7) -> dict:
     """Minimaler Spalt (m) zwischen benachbarten Wickelpaketen, ohne CAD (B-015).
 
@@ -75,6 +75,8 @@ def abstaende(spulen, breite, hoehe, r_nachbar: float = 3.0, n_rand: int = 6,
     spulen fein abtasten (n_punkte ~500 reicht), Spalt < 0 = Durchdringung.
     n_basis: nur Paare mit einer der ersten n_basis Spulen (W7-X-Satz: 7 Basisspulen p0_n;
     die 10 Symmetriekopien bilden jedes Paar darauf ab). None = alle Paare.
+    r_nachbar: nur Paare, deren Mittellinien sich naeher kommen (Standard 3 x Diagonale, min. 1 m;
+    massstabsunabhaengig, frueher Schwerpunktabstand 3 m -> bei R0 > 10 m keine Paare).
     """
     from scipy.spatial import cKDTree
     s_ = np.linspace(-1, 1, n_rand, endpoint=False)
@@ -85,11 +87,11 @@ def abstaende(spulen, breite, hoehe, r_nachbar: float = 3.0, n_rand: int = 6,
     oberfl = [(s.punkte[:, None] + rand[:, :1] * n[:, None] + rand[:, 1:] * b[:, None]).reshape(-1, 3)
               for s, (t, n, b) in zip(spulen, rahmen)]
     baeume = [cKDTree(s.punkte) for s in spulen]
-    c = np.array([s.punkte.mean(0) for s in spulen])
+    r_nachbar = r_nachbar or max(1.0, 3 * np.hypot(breite, hoehe))
     paare = []
     for i in range(n_basis or len(spulen)):
         for j in range(i + 1, len(spulen)):
-            if np.linalg.norm(c[i] - c[j]) > r_nachbar:
+            if baeume[j].query(spulen[i].punkte)[0].min() > r_nachbar:
                 continue
             spalt = np.inf
             for a, b_ in ((i, j), (j, i)):
@@ -100,7 +102,7 @@ def abstaende(spulen, breite, hoehe, r_nachbar: float = 3.0, n_rand: int = 6,
                                                      breite, hoehe).min())
             paare.append((spulen[i].name, spulen[j].name, float(spalt)))
     paare.sort(key=lambda p: p[2])
-    return {"n_paare": len(paare), "spalt_min_m": paare[0][2], "engste": paare[:5],
+    return {"n_paare": len(paare), "spalt_min_m": paare[0][2] if paare else float("inf"), "engste": paare[:5],
             "durchdringungen": [p for p in paare if p[2] < 0]}
 
 

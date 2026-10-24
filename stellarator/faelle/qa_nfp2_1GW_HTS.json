@@ -1,0 +1,14 @@
+{
+  "name": "qa_nfp2_1GW_HTS",
+  "beschreibung": "qa_nfp2 ausgelegt auf 1000 MW netto mit HTS: R0 12.1 m, B0 7.50 T (Stufe 0)",
+  "spulen": {
+    "quelle": "datei",
+    "datei": "invers/beispiele/qa_nfp2/spulen.json",
+    "R0_m": 12.1,
+    "n_punkte": 160,
+    "B0_achse_T": 7.5,
+    "windungen": 1,
+    "wickel_breite_m": 0.879,
+    "wickel_hoehe_m": 0.879
+  }
+}

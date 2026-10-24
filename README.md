@@ -20,6 +20,8 @@ das gelingt, entscheidet die Form des Magnetfelds, also Flussflächen, Rotations
 und Einschlusseigenschaften. Die Spulen sind nur das Mittel dazu. Dieses Projekt baut deshalb
 einen durchgehenden, nachvollziehbaren Rechenweg auf:
 
+0. **Wie groß muss die Anlage sein?** Aus der Netzleistung (z. B. 1 GW) folgen über eine
+   Leistungsbilanz die Fusionsleistung, die Größe R0 und das Feld B0, je nach Supraleiter.
 1. **Welches Magnetfeld wird gebraucht?** Aus physikalischen Zielen wird eine Plasmaform optimiert.
    Ziele sind Quasisymmetrie, Seitenverhältnis und iota.
 2. **Welche Spulen erzeugen dieses Feld?** Spulenkurven werden so optimiert, dass das Feld
@@ -40,13 +42,47 @@ Die Werkzeugkette ist für die Steuerung durch KI-Agenten gebaut (Hermes, PI, Cl
 - Befunde und Übergaben stehen in `BEFUNDE.md` und `ERINNERUNGEN.md`.
 
 > **Hinweis:** Lern- und Forschungsprojekt. Die Ergebnisse sind keine Auslegung einer realen Anlage.
-> Querschnitte der Wickelpakete, Supraleiter und Strukturmechanik sind noch nicht ausgelegt.
+> Die Leistungsbilanz ist eine 0-D-Abschätzung; Stützstruktur und Strukturmechanik sind noch nicht ausgelegt.
 
 ---
 
 ## Ergebnisse
 
-### Kompakter quasi-axisymmetrischer Stellarator (inverse Kette)
+### Auslegung auf 1 GW ins Netz (Stufe 0 → 3)
+
+Ein Kraftwerk mit **1000 MW netto** braucht rund **3 GW Fusionsleistung**. 80 % davon tragen Neutronen
+ins Blanket (Wärme → Dampf → Turbine), 20 % die Alpha-Teilchen, die das Plasma heizen.
+Stufe 0 (`invers/stufe0_bilanz.py`, 0-D-Leistungsbilanz) sucht die kleinste Anlage, die Wandlast,
+Plasmadruck (β), Dichte (Sudo), Einschluss (ISS04) und das Leiterfeld der Supraleiter einhält.
+Stufe 3 prüft das Ergebnis mit den realen Spulen in voller Größe.
+
+![Auslegungsraum R0–B0](docs/bilder/qa_1GW_bilanz.png)
+
+| | HTS (Hochtemperatur-Supraleiter) | Nb₃Sn (erprobt) |
+|---|---|---|
+| großer Radius R0 / kleiner Radius a | **12,1 m** / 2,0 m | **22,2 m** / 3,7 m |
+| Feld auf der Achse B0 | **7,5 T** | **4,8 T** |
+| Feld am Leiter (Stufe 3) | 17,7 T (Grenze 20 T) | 11,6 T (Grenze 12 T) |
+| Strom je Spule, Wickelpaket | 31 MA, 0,88 × 0,88 m | 36 MA, 1,56 × 1,56 m |
+| Spalt zwischen Wickelpaketen | 0,58 m | 1,13 m |
+| Netto-Kraft je Spule (max.) | 2200 MN | 3000 MN |
+| begrenzt durch | Einschluss + Neutronen-Wandlast | Einschluss + Leiterfeld |
+
+Feldlinien und Flussflächen bleiben beim Hochskalieren intakt (12/12, iota 0,422 → 0,411).
+**Offen ist vor allem die Stützstruktur**: Die Kräfte sind etwa 1000-mal so groß wie bei W7-X.
+Ein kleineres Seitenverhältnis würde die Anlage verkleinern (HTS: A = 4 → R0 ≈ 10 m).
+Zur Einordnung: Das ist eine 0-D-Abschätzung (±30 %), kein Kraftwerksentwurf.
+
+![1-GW-Auslegung mit HTS: Feldlinien und Spulen](docs/bilder/qa_1GW_HTS_feldlinien_3d.png)
+
+### Eigene kompakte Plasmaform `qa_nfp2` (Stufe 1 + 2)
+
+| | |
+|---|---|
+| ![Flussflächen der optimierten Form](docs/bilder/qa_nfp2_stufe1_flaechen.png) | ![Spulen und Restfehler](docs/bilder/qa_nfp2_stufe2_spulen.png) |
+| **Stufe 1 (DESC):** nfp = 2, A = 6, Quasisymmetrie-Fehler 1,3·10⁻⁵ (Referenz precise QA: 5,8·10⁻⁵), iota 0,423 → 0,415 | **Stufe 2 (simsopt):** 16 Spulen, \|B·n\|/\|B\| 0,11 % Mittel, 0,40 % max. |
+
+### Referenzform precise QA (Verifikation der inversen Kette)
 
 Zielform: DESC-Referenz *precise QA* (nfp = 2, Seitenverhältnis 6, iota ≈ 0,42), skaliert auf R0 = 1 m und B0 = 1 T.
 
@@ -111,9 +147,10 @@ stellarator/                 Bestandspipeline (.venv)
   faelle/*.json              Falldateien (Eingabe)
   daten/W7-X.dat             W7-X-Spulenfilamente (aus simsopt, MIT), siehe daten/QUELLE.md
 invers/                      Inverser Entwurf (.venv-opt)
+  stufe0_bilanz.py           Stufe 0: Leistungsbilanz P_netz → R0, B0 (je Supraleiter), Falldateien
   stufe1_desc.py             Stufe 1: Plasmaform mit DESC (GPU)
   stufe2_spulen.py           Stufe 2: Spulenoptimierung mit simsopt
-  beispiele/                 Spulensatz zur Referenzform precise QA (Austauschformat spulen.json)
+  beispiele/                 precise QA (Referenz) und qa_nfp2 (eigene Form: wout, Spulen, 1-GW-Bilanz)
 picogk/StellaratorVoxel/     PicoGK-Headless-App (C#/.NET 9): Voxelkörper, Gehäuse, SDF
 sim/pipeline/gerader_draht/  Validierung ElmerFEM gegen analytischen Draht (2D)
 forschung/                   Recherche und Analysen
@@ -157,6 +194,11 @@ Referenzrechner: 32 GB RAM, RTX 3090 (24 GB).
 .venv-opt/bin/python invers/stufe1_desc.py --name qa_nfp2                     # Plasmaform (GPU, ~20–40 min)
 .venv-opt/bin/python invers/stufe2_spulen.py --wout sim/invers/qa_nfp2/wout_qa_nfp2.nc --name qa_nfp2_spulen
 .venv/bin/python -m stellarator.bewerte stellarator/faelle/ref_precise_QA.json --bild   # Prüfung des mitgelieferten Beispiel-Spulensatzes
+# Auslegung auf 1 GW netto (R0, B0 je Supraleiter) und Prüfung in voller Größe
+.venv-opt/bin/python invers/stufe0_bilanz.py --name qa_nfp2_1GW --form invers/beispiele/qa_nfp2 \
+    --spulen invers/beispiele/qa_nfp2/spulen.json --fall_vorlage stellarator/faelle/qa_nfp2.json \
+    --k_B Nb3Sn=2.5,HTS=2.42 --f_I 1.09
+.venv/bin/python -m stellarator.bewerte stellarator/faelle/qa_nfp2_1GW_HTS.json --bild
 
 # FEM: ElmerFEM mit allen 70 W7-X-Spulen (~12 min, ~10 GB RAM)
 .venv/bin/python -m stellarator.elmer sim/stellarator/elmer_w7x_70 --spulen 70 --B0 2.5 --h_spule 0.05 --h_luft 0.8
@@ -178,8 +220,10 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 - [x] W7-X: Geometrie, Feld, Feldlinien, Kräfte, Spalt, CAD/STL, ElmerFEM (70 Spulen)
 - [x] Bewertungsfunktion als Optimierungsschnittstelle
 - [x] Inverse Kette Plasmaform → Spulen → Prüfung (an der Referenz precise QA verifiziert)
-- [ ] Eigene Plasmaform optimieren (Stufe 1 `qa_nfp2`), Spulen dazu
-- [ ] Größe (R0) und Feld (B0) festlegen, Wickelpakete und Stromdichte auslegen
+- [x] Eigene Plasmaform optimieren (Stufe 1 `qa_nfp2`), Spulen dazu
+- [x] Größe (R0) und Feld (B0) aus 1 GW netto ableiten (Stufe 0), Wickelpakete aus Stromdichte
+- [ ] Kleineres Seitenverhältnis (A = 4–5) und Spulen näher am Plasma → kleinere Anlage
+- [ ] Stufe 0 genauer: Divertor-Wärmelast, Zyklotronstrahlung, Blanket-Dicke aus Neutronik
 - [ ] Studien-Runner (Agent wählt Ziele, numerischer Optimierer rechnet)
 - [ ] Gehäuse und Stützstruktur, Spannungen in Elmer aus den Lorentzkräften
 - [ ] Allgemeiner Weg STL → STEP

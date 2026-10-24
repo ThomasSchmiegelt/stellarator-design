@@ -1,0 +1,14 @@
+{
+  "name": "qa_nfp2",
+  "beschreibung": "Eigener kompakter QA-Stellarator (Stufe 1 DESC: nfp=2, A=6, iota 0,42; Stufe 2 simsopt: 16 Spulen, Variante mittel (abstand_sp 0,18, Spulen weiter auseinander)), massstabsfrei R0 ~1 m, B0 1 T",
+  "spulen": {
+    "quelle": "datei",
+    "datei": "invers/beispiele/qa_nfp2/spulen.json",
+    "R0_m": 1.04,
+    "n_punkte": 160,
+    "B0_achse_T": 1.0,
+    "windungen": 1,
+    "wickel_breite_m": 0.04,
+    "wickel_hoehe_m": 0.04
+  }
+}

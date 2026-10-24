@@ -6,6 +6,42 @@
 ---
 
 
+### B-018 | Auslegung auf 1 GW netto: Stufe 0 (Leistungsbilanz) + eigene Form qa_nfp2 (2026-10-24)
+- **Beobachtung:** Eigene Plasmaform `qa_nfp2` (DESC, nfp=2, A=6) erreicht qs_fehler 1,3e-5
+  (Referenz precise_QA 5,8e-5), iota 0,423→0,415. Spulen (Variante `mittel`, abstand_sp 0,18):
+  B·n 0,11 % Mittel / 0,40 % max. Neue Stufe 0 (`invers/stufe0_bilanz.py`) legt R0/B0 aus der
+  Netzleistung aus; Stufe 3 in voller Groesse bestaetigt die Auslegung.
+- **Messung (1000 MW netto → P_fus 3,05 GW, P_th 3,42 GW, eta 0,35, Eigenbedarf 197 MW):**
+
+  | | HTS (≤ 20 T, j 40 A/mm²) | Nb3Sn (≤ 12 T, j 15 A/mm²) |
+  |---|---|---|
+  | R0 / a / B0 | 12,1 m / 2,0 m / 7,5 T | 22,2 m / 3,7 m / 4,8 T |
+  | begrenzt durch | Einschluss (H_ISS04 1,3) + Wandlast 2,0 MW/m² | Einschluss + Leiterfeld |
+  | <β>, n, T0 | 2,5 %, 2,2e20, 14 keV | 2,5 %, 0,9e20, 14 keV |
+  | Stufe 3: Strom je Spule | 31,0 MA | 36,4 MA |
+  | Stufe 3: B am Leiter (×B0) | 17,7 T (2,36) | 11,6 T (2,41) |
+  | Stufe 3: Spalt Wickelpakete | 0,58 m (Paket 0,88 m) | 1,13 m (Paket 1,56 m) |
+  | Stufe 3: Netto-Kraft je Spule max. | 2200 MN | 3000 MN |
+  | Flussflaechen / iota / Spiegel | 12/12, 0,422→0,411, 0,08 % | gleich (Form skaliert) |
+
+- **Wichtige Lehren:**
+  1. Feld am Leiter ist NICHT ~2×B0 pauschal: erste Spulen (abstand_ss 0,10) gaben 3,5×B0 (eng
+     beieinanderliegende Wickelpakete). Variante `mittel` (Spulen weiter auseinander) 2,4×B0.
+     Spulennaeher ans Plasma (abstand_sp 0,12) ging nicht ohne B·n-Verlust (L14: 0,7 %).
+  2. Spulenstrom ist durch Ampere festgelegt (2πR0B0/µ0/N × 1,09), unabhaengig von der Spulenlage.
+  3. Bei Nb3Sn dominiert das Eigenfeld des Wickelpakets: mit j=20 A/mm² konvergiert die
+     Iteration k_B nicht (B_Leiter bleibt 12,3–12,5 T, egal wie klein B0) → j=15 A/mm².
+  4. Kraefte ~1000× W7-X (2 MN): Stuetzstruktur ist das Hauptproblem der Baubarkeit.
+  5. Bekannte Studien zum Vergleich (aus dem Gedaechtnis, ungeprueft): HELIAS 5-B R0 ≈ 22 m,
+     B0 ≈ 5–6 T (Nb3Sn); Stellaris (HTS) R0 ≈ 12–13 m, B0 ≈ 9 T; ARIES-CS R0 ≈ 8 m (A≈4,5).
+     Seitenverhaeltnis-Empfindlichkeit (HTS): A=4 → 9,9 m, A=5 → 11,1 m, A=8 → 15 m.
+- **Fundstelle:** `invers/stufe0_bilanz.py`, `invers/beispiele/qa_nfp2/` (bilanz_1GW.json, spulen.json),
+  Faelle `stellarator/faelle/qa_nfp2_1GW_{HTS,Nb3Sn}.json`, Bilder `docs/bilder/qa_1GW_*`.
+- **Fix nebenbei:** `cad.abstaende` filterte Nachbarpaare per Schwerpunktabstand 3 m → bei R0 > 10 m
+  keine Paare (IndexError). Jetzt Mittellinien-Abstand ≤ 3×Diagonale; W7-X unveraendert 68 mm.
+- **Status:** ✅ 0-D-Auslegung (±30 %), Stufe 3 gesichert. ⚠ Physik von Stufe 0 einfach (ISS04,
+  Sudo, keine Zyklotronstrahlung, kein Divertor); Kraefte/Struktur offen.
+
 ### B-017 | Inverse Kette funktioniert: Zielfeld (DESC) -> Spulen (simsopt) -> Pruefung (2026-10-24)
 - **Beobachtung:** Fuer den kompakten QA-Stellarator (nfp=2, A=6, iota 0,42) laeuft die Kette
   Plasmaform → Spulen → Feldlinien/Geometrie durch. Getestet mit der DESC-Referenzform

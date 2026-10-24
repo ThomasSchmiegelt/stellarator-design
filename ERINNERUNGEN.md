@@ -93,12 +93,12 @@
   `.venv/bin/python -m stellarator.lauf stellarator/faelle/w7x_standard.json --bericht`,
   Zahlen gegen `sim/stellarator/bewertung/bew_w7x_standard/kennzahlen.json` pruefen
   (13,48 kA/Wdg), Bericht v0.2 → v0.3 nachziehen.
-- **Stufe 1 `qa_nfp2` (DESC, GPU)** laeuft losgeloest seit 2026-10-24 13:05: `sim/invers/qa_nfp2/stufe1.log`
-  (Fortschritt `[k=1..4]`, Ende `ENDE 0`). Danach (Skill `stellarator-invers`):
-  1. Stufe 2: `.venv-opt/bin/python invers/stufe2_spulen.py --wout sim/invers/qa_nfp2/wout_qa_nfp2.nc --name qa_nfp2_spulen`
-  2. Falldatei wie `stellarator/faelle/ref_precise_QA.json` mit `datei` = `sim/invers/qa_nfp2_spulen/spulen.json`
-  3. `bewerte --bild` + `ansicht`; mit Referenz ref_precise_QA vergleichen (stufe1.json: qs_fehler vs. Referenz).
-  Wenn qs_fehler >> 1e-3: Stufe 1 mit mehr maxiter / hoeherem k_max wiederholen.
+- ~~Stufe 1/2/3 `qa_nfp2`~~ ERLEDIGT 2026-10-24 (B-018): qs 1,3e-5; Spulen Variante `mittel`
+  (abstand_sp 0,18) → `invers/beispiele/qa_nfp2/spulen.json`. Keine Jobs laufen.
+- **1-GW-Auslegung (User: "Anlage ca. 1 GW Netz")** ERLEDIGT (B-018, Stufe 0 `invers/stufe0_bilanz.py`):
+  HTS R0 12,1 m / B0 7,5 T; Nb3Sn R0 22,2 m / B0 4,8 T. Faelle `stellarator/faelle/qa_nfp2_1GW_{HTS,Nb3Sn}.json`.
+  Ablauf: Stufe 0 → Falldateien → bewerte (B_max_oberflaeche/B0 = k_B) → Stufe 0 mit neuem
+  `--k_B Leiter=..` bis B_Leiter ≤ Grenze (2–3 Iterationen).
 - Lange Laeufe IMMER losgeloest starten: `setsid nohup bash -c '...' > log 2>&1 < /dev/null &`.
 
 ## GitHub (2026-10-24)
@@ -125,6 +125,11 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
 6. **Abschlussformat:** LaTeX-PDF (v0.2 so gebaut) — passt?
 
 ## Naechste Schritte
+00. (2026-10-24, nach 1-GW-Auslegung) Vorschlaege an User:
+   a) Kleineres Seitenverhaeltnis A=4–5 (Stufe 1 neu, `--aspekt 4.5`) → HTS ~10–11 m.
+   b) Stuetzstruktur/Kraefte (2–3 GN je Spule!) → Elmer StressSolver.
+   c) Stufe 0 verfeinern (Divertor, Zyklotronstrahlung, Blanket-Neutronik).
+   User-Entscheidung Leiter (HTS oder Nb3Sn) steht noch aus.
 0. ~~Schnelle Bewertungsfunktion~~ ERLEDIGT (B-016, `stellarator/bewerte.py`, ~10 s).
    Naechster Schritt: Studien-Runner (scipy/optuna) ueber `bewerte()`; Ziele/Grenzen mit User klaeren.
 0b. Elmer mit allen 70 Spulen: STL-Weg (`cad.elmer_netz`), h_spule 0,05 (~3,5 Mio. Tets, ~12 GB).
