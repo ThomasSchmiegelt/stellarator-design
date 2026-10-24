@@ -6,6 +6,13 @@
 ---
 
 
+### B-023 | arXiv-Literatur: HTS-Dehnung, Fertigungstoleranzen (2026-10-24)
+- **Beobachtung:** CSX (Schmeling 2025), Gil 2025 (Toleranzen), Canis (Nash 2025), Details ANALYSE-003.
+  REBCO leidet unter Torsion und Biegung ueber die harte Achse; W7-X-Toleranz 2 mm lokal.
+- **Vergleich:** Unser Loft (40 Skizzen) weicht 15 mm (A45) bzw. bis 19 mm (W7-X-Modell) von der Bahn ab ->
+  fuer Spannungen ok, fuer Fertigung nicht.
+- **Status:** ⚠ Offen: Pruefgroesse HTS-Dehnung (Torsion/hard-way je Spule), Toleranzstudie +-2 mm mit bewerte.
+
 ### B-022 | Literatur des Users: DEMO-Spulenregeln und W7-X-Einschluss (2026-10-24)
 - **Beobachtung:** Von 33 PDFs sind 4 fuer das Projekt relevant (Details `forschung/ANALYSE-003-literatur-spulenstruktur.md`).
   Bachmann et al. 2024 (EU-DEMO, kleines A): TF-Innenschenkel als Keil/Gewoelbe, von Mises <= 660 MPa,

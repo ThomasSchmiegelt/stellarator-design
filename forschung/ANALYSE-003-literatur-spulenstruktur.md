@@ -52,3 +52,24 @@ Kräfte aus der Ebene heraus. Die Regeln unten sind deshalb Anhaltswerte, keine 
   Einzelverbindern; Seitenwand 0,1 m beibehalten; Außenwand iterativ auf ≤ 660 MPa auslegen.
 - Stufe 0 (Skill `stellarator-invers`): J_eng nach Bachmann als Option `--j_formel demo`; Empfindlichkeit
   β_max 3 % statt 5 % angeben.
+
+## Nachtrag: arXiv-Arbeiten zu Stellaratorspulen (2026-10-24)
+
+| Arbeit | Kern |
+|---|---|
+| Schmeling et al., *Experimental Results from Early Non-Planar NI-HTS Magnet Prototypes for CSX*, IEEE TPS, arXiv:2510.07042 | Nichtplanare HTS-Spulen (REBCO, ohne Isolation), gewickelt in 3D-gedruckte Aluminium-Spulenrahmen mit Kanälen (25 mm tief, 5 mm breit). REBCO verliert Leistung bei **Verdrillung (Torsion) und Biegung über die harte Achse**. Im Prototyp P2 verhinderte ein stark verdrillter Bereich weitere Windungen. Bei P3 wurde die Krümmung deshalb in konkave Abschnitte umverteilt. |
+| Gil et al., *Manufacturing Tolerances of Non-Planar Coils for an Optimized Tabletop Stellarator*, IEEE TAS, arXiv:2507.22516 | **W7-X: Toleranz 2 mm (lokal) bei 5 m großem Radius.** 3D-Scans von Spulenrahmen: CNC-gefrästes Aluminium weicht ≤ 0,5 mm ab, additiv gefertigt (Stahl, Ti) bis ~1 mm, und das auf kurzen Längenskalen. Die Abweichungen werden mit Gauß-Prozessen modelliert, daraus eine Statistik des Feldfehlers. Ablauf SIMSOPT → CAD → Rahmen wie bei uns. |
+| Nash et al., *Prototyping and Test of the "Canis" HTS Planar Coil Array*, arXiv:2503.18960 (Thea Energy) | Gegenentwurf: Stellaratorfeld aus vielen **planaren** HTS-Formspulen statt modularer Spulen. Stromdichte im Wickelpaket 180 A/mm² (Ziel > 200 A/mm² bei > 14 T), Feldregelung auf ≤ 1 % RMS, Positionstoleranz ±0,2 mm, Spannungen in der Halterung < 9 MPa (kleine Spulen). |
+
+### Folgerungen für dieses Projekt
+
+1. **Genauigkeit des Lofts:** W7-X verlangt ~2 mm. Unser Loft durch 40 Skizzen weicht bei A = 4,5 bis ~15 mm
+   und beim W7-X-Modell bis ~19 mm von der Spulenbahn ab. Für die Spannungsrechnung ist das ausreichend,
+   für eine Fertigung nicht. Für eine Fertigung würde man mehr Skizzen setzen oder die Bahn direkt als Sweep mit Leitkurve führen.
+2. **Prüfgröße HTS-Dehnung:** Für jede Spule entlang der Bahn die Verdrillung des Wickelpakets (Torsion
+   des Rahmens) und die Biegung über die harte Achse berechnen und gegen Grenzwerte prüfen. Das ist eine
+   Herstellbarkeitsprüfung, die unsere Bewertung noch nicht hat.
+3. **Toleranzstudie:** Spulenbahnen mit Störungen von ±2 mm (Längenskala wie bei Gil et al.) überlagern und mit
+   `stellarator.bewerte` den Einfluss auf Flussflächen und iota messen. Das geht schnell, ~10 s je Fall.
+4. **Stromdichte:** Die kleinen HTS-Spulen erreichen 180–200 A/mm² im Wickelpaket. Bei DEMO-Größe mit Stahl
+   rechnet Bachmann mit ~27 A/mm². Unsere 40 A/mm² liegen dazwischen und sind für große Spulen eher optimistisch.
