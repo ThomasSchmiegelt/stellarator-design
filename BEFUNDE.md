@@ -6,6 +6,23 @@
 ---
 
 
+### B-021 | Gehaeuse + Verbinder in Elmer: Kette laeuft, Stahl viel zu duenn (2026-10-24)
+- **Beobachtung:** Erste gekoppelte Rechnung (Magnetfeld -> J x B -> Spannung) fuer die
+  FreeCAD-Gehaeuse (B-020) mit 160 Verbindern. Kette STEP -> gmsh (OCC-Fragment) -> Elmer funktioniert.
+- **Messung (qa_nfp2_A45_1GW_HTS, Wand innen/seitlich 0,1 m, aussen 0,15-0,5 m, Verbinder 0,6x0,6 m):**
+  Netz 1,53 Mio Tets (h_stahl 0,25, h_wp 0,35; Geometrie 6,6 min, gesamt 7,5 min), Elmer 19 min, ~7 GB.
+  Stahl 652 m^3 = 5,1 kt. von Mises Stahl: Mittel 1153 MPa, 99 % < 5130 MPa (zulaessig ~667);
+  Wickelpakete Mittel 686, 99 % < 2363 MPa; Verformung bis 0,65 m. Hotspots auf der Torus-Innenseite
+  und an den Verbinder-Anschluessen. Kraft Elmer vs Biot-Savart je Spule +9 % (S1 1307 vs 1196 MN;
+  A6 mit feinerem Netz +2,9 %); Summe aller Kraefte 19 MN (~0, Gleichgewicht ok).
+  Feines Netz (h_stahl 0,2): 2,79 Mio Tets, ~12,7 GB -> mit laufendem Hermes zu knapp (jetzt --mit_swap).
+- **Bewertung:** Linear-elastisch, d.h. Spannung ~ 1/Querschnitt: Stahl muss etwa 3-5x mehr werden
+  (Groessenordnung 15-25 kt; Vollschale A6: 51 kt bei 99 % < 587 MPa). Wandstaerken/Verbinder
+  sind bisher nur geschaetzt, nicht ausgelegt.
+- **Fundstelle:** `stellarator/gehaeuse_fem.py`, `sim/stellarator/gehaeuse_fem/qa_nfp2_A45_1GW_HTS/`,
+  Bild `docs/bilder/struktur_A45_HTS_gehaeuse.png`.
+- **Status:** ✅ Kette. ⚠ Auslegung offen (Wanddicken, Verbinder innen breiter/dichter, Iteration).
+
 ### B-020 | Spulengehaeuse als Variable Section Sweep in FreeCAD, parametrisch (2026-10-24)
 - **Beobachtung:** Die durchgehende Stuetzschale scheitert bei A=4,5 an der Flaechenkonstruktion
   (B-019). Idee des Users (wie Creo "Variable Section Sweep"): je Spule eine geschlossene 3D-Kurve

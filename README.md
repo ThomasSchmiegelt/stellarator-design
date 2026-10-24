@@ -111,9 +111,17 @@ Gehäuses, 40 Skizzen senkrecht dazu, ein Loft hindurch. Alles wächst nur nach 
 „Parameter“ steuert Wandstärken und Wickelpaket. Die Außenwand ist dort dicker, wo die Lorentzkraft
 groß ist. 12 der 16 Gehäuse sind Symmetrie-Klone der 4 Basisspulen.
 A = 4,5 mit HTS: 16 gültige Volumenkörper, keine Überlappung, ~3,6 kt Stahl, Abweichung zwischen
-Loft und Spule ≤ 15 mm. Als Nächstes: Gehäuse verbinden und in Elmer rechnen.
+Loft und Spule ≤ 15 mm. Benachbarte Gehäuse sind durch 160 Verbinder gekoppelt (ebenfalls Lofts,
+5 eigene Paare, Rest Symmetrie-Klone).
 
-![Spulengehäuse A = 4,5 (FreeCAD, parametrisch)](docs/bilder/gehaeuse_A45_HTS.png)
+![Spulengehäuse mit Verbindern, A = 4,5 (FreeCAD, parametrisch)](docs/bilder/gehaeuse_A45_HTS_verbunden.png)
+
+Erste Elmer-Rechnung dazu (gleiche Kette wie oben, Geometrie als STEP aus FreeCAD): Sie läuft durch,
+aber die geschätzten Wandstärken (0,1 m, zusammen ~5 kt Stahl) sind viel zu dünn. Im Mittel 1150 MPa,
+99 % unter ~5100 MPa, Verformung bis 0,65 m. Am stärksten belastet sind die Torus-Innenseite und die
+Anschlüsse der Verbinder. Die Wandstärken müssen also noch ausgelegt werden.
+
+![Erste Spannungsrechnung Gehäuse + Verbinder, A = 4,5](docs/bilder/struktur_A45_HTS_gehaeuse.png)
 
 ### Eigene kompakte Plasmaform `qa_nfp2` (Stufe 1 + 2)
 
@@ -183,7 +191,8 @@ stellarator/                 Bestandspipeline (.venv)
   cad.py                     Wickelpakete als STL/STEP (gmsh/OpenCASCADE), Spaltprüfung, Elmer-Netz
   elmer.py                   ElmerFEM-Magnetostatik (CoilSolver + WhitneyAV), Vergleich mit Biot-Savart
   struktur.py                Stützschale: Elmer Magnetfeld → Lorentzkraft → Spannung (ein Lauf)
-  gehaeuse.py, freecad_vss.py  Spulengehäuse als parametrisches FreeCAD-Modell (Variable Section Sweep / Loft)
+  gehaeuse.py, freecad_vss.py  Spulengehäuse + Verbinder als parametrisches FreeCAD-Modell (Variable Section Sweep / Loft)
+  gehaeuse_fem.py            Gehäuse (STEP) → gmsh → Elmer: Lorentzkraft → Spannung
   bericht.py                 Bericht (LaTeX/PDF) automatisch aus den Ergebnisdateien
   lauf.py                    Gesamtpipeline W7-X (Geometrie → PicoGK-Voxel → FFT-Solver → Feldlinien → Kräfte)
   voxelsolver.py, picogk_bruecke.py   FFT-Voxel-Feldlöser, Anbindung an PicoGK
@@ -273,7 +282,8 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 - [x] Kleineres Seitenverhältnis (A = 4,5) → HTS 10,4 m, Nb₃Sn 12,4 m
 - [x] Stützschale in Elmer (A = 6): Spannungen aus Lorentzkräften
 - [x] Spulengehäuse für A = 4,5 als parametrisches FreeCAD-Modell (Variable Section Sweep)
-- [ ] Gehäuse verbinden, STEP → gmsh → Elmer-Spannungen für A = 4,5
+- [x] Gehäuse verbinden, STEP → gmsh → Elmer-Spannungen für A = 4,5 (Kette läuft)
+- [ ] Wandstärken und Verbinder auslegen (zulässige Spannung einhalten)
 - [ ] Stufe 0 genauer: Divertor-Wärmelast, Zyklotronstrahlung, Blanket-Dicke aus Neutronik
 - [ ] Studien-Runner (Agent wählt Ziele, numerischer Optimierer rechnet)
 - [ ] Allgemeiner Weg STL → STEP

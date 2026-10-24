@@ -234,7 +234,9 @@ def lagerknoten(ordner: Path, body_schale: int) -> list[int]:
     return out
 
 
-def schreibe_sif(spulen, breite, hoehe, ordner: Path, lager: list[int]) -> None:
+def schreibe_sif(spulen, breite, hoehe, ordner: Path, lager: list[int],
+                 luft: tuple = ("luft_innen", "luft_aussen")) -> None:
+    """Body 1..n Wickelpakete, n+1 Stahl, n+2.. Luftbereiche (Namen aus luft)."""
     n = len(spulen)
     loeser = re.search(r"(Solver 1\n.*?)Solver 4\n", elmer.KOPF, re.S).group(1)
     kopf = elmer.KOPF.split("Material 1")[0]
@@ -280,8 +282,8 @@ End
 """]
     S += elmer.spulen_bloecke(spulen, breite, hoehe, gleichung=1, gleichung_stromlos=1, material=1, kraft_zusatz=last)
     S.append(f'Body {n + 1}\n  Name = "schale"\n  Equation = 2\n  Material = 2\nEnd\n')
-    S.append(f'Body {n + 2}\n  Name = "luft_innen"\n  Equation = 3\n  Material = 3\nEnd\n')
-    S.append(f'Body {n + 3}\n  Name = "luft_aussen"\n  Equation = 3\n  Material = 3\nEnd\n')
+    for k, name in enumerate(luft, n + 2):
+        S.append(f'Body {k}\n  Name = "{name}"\n  Equation = 3\n  Material = 3\nEnd\n')
     for k, (knoten, fest) in enumerate(zip(lager, ((1, 2, 3), (2, 3), (3,))), 2):
         S.append(f"Boundary Condition {k}\n  Target Nodes(1) = {knoten}\n"
                  + "".join(f"  Displacement {c} = Real 0.0\n" for c in fest) + "End\n")
@@ -317,7 +319,7 @@ def auswerten(ordner: Path, spulen, breite, hoehe, kz: dict) -> dict:
     return erg
 
 
-def bild(ordner: Path, n: int, erg: dict) -> None:
+def bild(ordner: Path, n: int, erg: dict, titel: str = "Stuetzschale") -> None:
     import pyvista as pv
     m = pv.read(ordner / "erg" / "struktur_t0001.vtu")
     gid = m.cell_data["GeometryIds"]
@@ -332,7 +334,7 @@ def bild(ordner: Path, n: int, erg: dict) -> None:
     pl.subplot(0, 0)
     pl.add_mesh(halb, scalars="vonMises_MPa", cmap="turbo", clim=clim, scalar_bar_args=sb)
     pl.add_mesh(wp.clip(normal=(0, -1, 0), origin=(0, 0, 0)), scalars="vonMises_MPa", cmap="turbo", clim=clim, show_scalar_bar=False)
-    pl.add_text(f"Stuetzschale (Schnitt): max {erg['schale']['vonmises_max_MPa']:.0f} MPa, "
+    pl.add_text(f"{titel} (Schnitt): max {erg['schale']['vonmises_max_MPa']:.0f} MPa, "
                 f"99 % < {erg['schale']['vonmises_p99_MPa']:.0f} MPa", font_size=10, color="black")
     pl.view_isometric(); pl.camera.zoom(1.3)
     pl.subplot(0, 1)

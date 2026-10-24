@@ -102,7 +102,12 @@
 - **A=4,5 + Struktur (B-019)** ERLEDIGT bis auf Struktur A=4,5. Keine Jobs laufen.
   Schalenflaechen: durchgehende Schale bleibt ungeloest; **User-Idee umgesetzt (B-020):**
   Spulengehaeuse als Variable Section Sweep in FreeCAD, `.venv/bin/python -m stellarator.gehaeuse <fall> --oeffnen`.
-  OFFEN: Gehaeuse verbinden, STEP -> gmsh -> Elmer (Skill `stellarator-flaechen`).
+  Gehaeuse verbunden (160 Verbinder, 5 kanonische Paare + Klone, `--verbinder 10`).
+  ERLEDIGT (B-021): `stellarator.gehaeuse_fem` (STEP -> gmsh OCC-Fragment -> Elmer) laeuft; Stahl
+  viel zu duenn (99 % < 5130 MPa). NAECHSTER SCHRITT: Wandstaerken/Verbinder auslegen (Iteration).
+  Ordner `sim/stellarator/gehaeuse_fem/qa_nfp2_A45_1GW_HTS/` (netz.log, solve.log, ergebnis.json).
+  Erst `--nur_netz` (Zeile "NETZ" im Log), dann ohne Flag (losgeloest, ~10-30 min). Haengt gmsh
+  > 25 min: per PID beenden, h_stahl groesser (0.25-0.3).
   Bericht v0.3: `.venv/bin/python -m stellarator.bericht --version 0.3` (Skill `stellarator-bericht`), lokal.
 - Lange Laeufe IMMER losgeloest starten: `setsid nohup bash -c '...' > log 2>&1 < /dev/null &`.
 
@@ -148,3 +153,5 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
 ## Blockers
 - **Speicherplatz** — vor Installationen und grossen Laeufen freien Platz pruefen.
 - **Tavily Rate-Limit** (60 s Pause) — Websuchen einzeln.
+
+- **2026-10-24:** Research-Bericht Magnetspulen (Funktion/Bauweise/Material/Fertigungsverfahren, W7-X, zitiert) als `bericht/spulen_recherche.{tex,pdf}` (3 S., 0 Fehler, visuell gecheckt). Kanäle: write_file/execute_code/terminal-Heredocs >~15 Zeilen = abgeschnitten; **patch ≤~700 Zeichen + kurze printf/sed = zuverlässig.**

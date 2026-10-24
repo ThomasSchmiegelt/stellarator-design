@@ -50,14 +50,20 @@ def stationen(Q, m: int, verteilung: str) -> np.ndarray:
     return np.unique(idx)
 
 
-def symmetrie(spulen, nfp: int, n_basis: int) -> list[dict]:
-    """Je Nicht-Basisspule: Basisspule + Drehmatrix (Rz(2 pi j/nfp) [* diag(1,-1,-1)])."""
-    from scipy.spatial import cKDTree
+def kandidaten(nfp: int) -> list[np.ndarray]:
+    """Symmetrie-Abbildungen: Rz(2 pi j/nfp) und Rz * diag(1,-1,-1) (Stellaratorsymmetrie)."""
     kand = []
     for j in range(nfp):
         c, s_ = np.cos(2 * np.pi * j / nfp), np.sin(2 * np.pi * j / nfp)
         Rz = np.array([[c, -s_, 0], [s_, c, 0], [0, 0, 1]])
         kand += [Rz, Rz @ np.diag([1.0, -1.0, -1.0])]
+    return kand
+
+
+def symmetrie(spulen, nfp: int, n_basis: int) -> list[dict]:
+    """Je Nicht-Basisspule: Basisspule + Drehmatrix aus kandidaten()."""
+    from scipy.spatial import cKDTree
+    kand = kandidaten(nfp)
     klone = []
     for i, s in enumerate(spulen[n_basis:], n_basis):
         baum = cKDTree(s.punkte)
@@ -67,6 +73,52 @@ def symmetrie(spulen, nfp: int, n_basis: int) -> list[dict]:
             raise ValueError(f"{s.name}: keine Symmetrie-Abbildung gefunden ({best[0]:.3f} m)")
         klone.append({"name": s.name, "basis": best[1], "matrix": best[2].tolist()})
     return klone
+
+
+def permutationen(spulen, kand) -> list[list[int]]:
+    """Je Abbildung M: perm[i] = j mit M P_i = P_j (Spule i wird auf Spule j abgebildet)."""
+    from scipy.spatial import cKDTree
+    S = [s.punkte.mean(0) for s in spulen]
+    baum = cKDTree(np.array(S))
+    return [[int(baum.query(M @ c)[1]) for c in S] for M in kand]
+
+
+def verbinder(spulen, nfp: int, br: float, ho: float, a) -> tuple[list[dict], list[dict]]:
+    """Verbindungsstuecke zwischen toroidal benachbarten Gehaeusen.
+
+    Je Paar (a, b) a.verbinder Stationen gleichmaessig entlang Spule a; Partner = naechster Punkt
+    auf Spule b. Skizze A/B: Rechteck (x = n "nach aussen", y = t entlang der Spule) mittig auf
+    Hoehe des Wickelpakets, um wand_seite/2 in die Seitenwand eingelassen (Verschmelzen, ohne das
+    Wickelpaket zu beruehren). Gleichwertige Paare werden Symmetrie-Klone des ersten.
+    Rueckgabe: kanonische Paare (mit Skizzenlagen in mm) und Klone (Paar-Index + Matrix)."""
+    phi = [np.arctan2(*s.punkte.mean(0)[1::-1]) for s in spulen]
+    reihe = list(np.argsort(phi))
+    paare = [(int(reihe[i]), int(reihe[(i + 1) % len(reihe)])) for i in range(len(reihe))]
+    kand = kandidaten(nfp); perm = permutationen(spulen, kand)
+    rahmen = [sp.rahmen(s) for s in spulen]
+    versatz = 0.5 * ho + 0.5 * a.wand_seite                  # Mitte der Seitenwand
+    kanon, klone = [], []
+    for pa, pb in paare:
+        treffer = next(((k, M) for k, kp in enumerate(kanon) for M, pm in zip(kand, perm)
+                        if {pm[kp["a"]], pm[kp["b"]]} == {pa, pb}), None)
+        if treffer:
+            klone.append({"name": f"V_{spulen[pa].name}_{spulen[pb].name}", "kanon": treffer[0],
+                          "matrix": treffer[1].tolist(), "a": spulen[pa].name, "b": spulen[pb].name})
+            continue
+        Pa, Pb = spulen[pa].punkte, spulen[pb].punkte
+        ta, na, ba = rahmen[pa]; tb, nb_, bb = rahmen[pb]
+        st = []
+        for i in np.linspace(0, len(Pa), a.verbinder, endpoint=False).astype(int):
+            j = int(np.argmin(np.linalg.norm(Pb - Pa[i], axis=1)))
+            d = Pb[j] - Pa[i]
+            sa, sb = np.sign(ba[i] @ d), np.sign(bb[j] @ -d)
+            ya = ta[i]; yb = tb[j] * np.sign(tb[j] @ ta[i])      # gleiche Laufrichtung -> kein Verdrehen
+            ca = Pa[i] + sa * versatz * ba[i]; cb = Pb[j] + sb * versatz * bb[j]
+            st.append({"A": {"c": (ca * 1e3).tolist(), "x": na[i].tolist(), "y": ya.tolist()},
+                       "B": {"c": (cb * 1e3).tolist(), "x": nb_[j].tolist(), "y": yb.tolist()},
+                       "laenge_m": float(np.linalg.norm(cb - ca))})
+        kanon.append({"name": f"V_{spulen[pa].name}_{spulen[pb].name}", "a": pa, "b": pb, "stationen": st})
+    return kanon, klone
 
 
 def eingabe(fall: dict, a, ordner: Path) -> Path:
@@ -94,7 +146,10 @@ def eingabe(fall: dict, a, ordner: Path) -> Path:
          "parameter": {"wand_innen": a.wand_innen * mm, "wand_seite": a.wand_seite * mm, "wp_breite": br * mm,
                        "wp_hoehe": ho * mm, "t_min": a.t_min * mm, "t_max": a.t_max * mm},
          "basis": basis, "klone": symmetrie(spulen, geo["nfp"], nb),
-         "kraft_max_MN_m": fmax / 1e6}
+         "kraft_max_MN_m": fmax / 1e6, "spulen_namen": [s.name for s in spulen]}
+    if a.verbinder:
+        d["verbinder"], d["verbinder_klone"] = verbinder(spulen, geo["nfp"], br, ho, a)
+        d["parameter"] |= {"verb_breite": a.verb_breite * mm, "verb_tiefe": a.verb_tiefe * mm}
     ordner.mkdir(parents=True, exist_ok=True)
     p = ordner / "vss_eingabe.json"; p.write_text(json.dumps(d))
     return p
@@ -107,6 +162,8 @@ def bild(ordner: Path, titel: str) -> Path:
     ueber = {x["a"] for x in pr["ueberlappung"]} | {x["b"] for x in pr["ueberlappung"]}
     for st in sorted(ordner.glob("gehaeuse_*.stl")):
         pl.add_mesh(pv.read(st), color="#8a9bb0", smooth_shading=True)
+    for st in sorted(ordner.glob("verbinder_*.stl")):
+        pl.add_mesh(pv.read(st), color="#4a5866", smooth_shading=True)
     for st in sorted(ordner.glob("wp_*.stl")):
         pl.add_mesh(pv.read(st), color="#c87533", opacity=0.6)
     pl.add_text(f"{titel}: Spulengehaeuse (Variable Section Sweep, FreeCAD)  |  "
@@ -127,6 +184,9 @@ def main(argv=None):
     ap.add_argument("--wand_seite", type=float, default=0.10, help="m, Seitenwand")
     ap.add_argument("--t_min", type=float, default=0.15, help="m, Aussenwand bei kleiner Kraft")
     ap.add_argument("--t_max", type=float, default=0.50, help="m, Aussenwand bei max. Kraft")
+    ap.add_argument("--verbinder", type=int, default=10, help="Verbindungsstuecke je Nachbarpaar (0 = keine)")
+    ap.add_argument("--verb_breite", type=float, default=0.6, help="m, entlang der Spule")
+    ap.add_argument("--verb_tiefe", type=float, default=0.6, help="m, quer (Richtung n)")
     ap.add_argument("--name")
     ap.add_argument("--oeffnen", action="store_true", help="FreeCAD-GUI mit dem Modell starten")
     a = ap.parse_args(argv)

@@ -18,7 +18,10 @@ for o in d.Objects:
     if vo is None:
         continue
     gehaeuse, wp = o.Label.startswith("Gehaeuse_"), o.Label.startswith("Wickelpaket_")
-    vo.Visibility = gehaeuse or wp
+    verb = o.Label.startswith("V_") and o.TypeId != "Sketcher::SketchObject"
+    vo.Visibility = gehaeuse or wp or verb
+    if verb:
+        vo.ShapeColor = (0.29, 0.35, 0.40)
     if gehaeuse:
         vo.ShapeColor = (0.54, 0.61, 0.69); vo.Transparency = 0
     elif wp:
