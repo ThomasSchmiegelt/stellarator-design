@@ -35,10 +35,12 @@ def param(alias, wert, einheit="mm", text=""):
     zeile += 1
 for k, w in E["parameter"].items():
     param(k, w)
+if "keil_versatz" not in E["parameter"]:
+    param("keil_versatz", 5.0)                   # Keil-Schnitt mit vergroessertem WP (keine deckungsgleichen Flaechen)
 for k, b in enumerate(E["basis"]):
     for j, st in enumerate(b["stationen"]):
         param(f"f_{k}_{j}", round(st["f"], 3), "", f"Kraftfaktor {b['name']} Station {j}")
-        for q in ("links", "rechts", "aussen"):
+        for q in ("links", "rechts", "aussen", "innen"):
             if f"frei_{q}" in st:
                 param(f"{q[0]}_{k}_{j}", round(st[f"frei_{q}"], 1), "mm", f"Freiraum {q} {b['name']} Station {j}")
 doc.recompute()
@@ -129,8 +131,14 @@ for k, b in enumerate(E["basis"]):
             links, rechts = f"min({seite}; Parameter.l_{k}_{j})", f"min({seite}; Parameter.r_{k}_{j})"
         else:
             links = rechts = seite
-        rechteck(g, 0.0, f"Parameter.wand_innen + Parameter.wp_breite + {aussen}",
-                 f"Parameter.wp_hoehe / 2 + {links}", f"Parameter.wp_hoehe / 2 + {rechts}")
+        if "frei_innen" in st:                   # Innenwand je Station duenner: Innenflaeche rueckt nach aussen
+            innen = f"min(Parameter.wand_innen; Parameter.i_{k}_{j})"
+            rechteck(g, 0.0, f"{innen} + Parameter.wp_breite + {aussen}",
+                     f"Parameter.wp_hoehe / 2 + {links}", f"Parameter.wp_hoehe / 2 + {rechts}",
+                     x0_ausdruck=f"Parameter.wand_innen - {innen}")
+        else:
+            rechteck(g, 0.0, f"Parameter.wand_innen + Parameter.wp_breite + {aussen}",
+                     f"Parameter.wp_hoehe / 2 + {links}", f"Parameter.wp_hoehe / 2 + {rechts}")
         w = skizze(f"W_{s}_{j:02d}", kurve, u, st["n"], st["t"])
         rechteck(w, E["parameter"]["wand_innen"], "Parameter.wp_breite", "Parameter.wp_hoehe / 2",
                  "Parameter.wp_hoehe / 2", x0_ausdruck="Parameter.wand_innen")
@@ -140,17 +148,24 @@ for k, b in enumerate(E["basis"]):
     cut = doc.addObject("Part::Cut", f"Gehaeuse_{s}"); cut.Base = lg; cut.Tool = lw
     doc.recompute()
     lw.Visibility = True                      # Cut blendet das Tool aus; Wickelpaket soll sichtbar sein
-    basis_obj.append((cut, lw))
+    # Werkzeug fuer den Keil-Schnitt: Wickelpaket + keil_versatz. Schnitt mit dem WP selbst gaebe dieselbe
+    # Flaeche wie die Gehaeuse-Innenseite -> OCC-Fuse ungueltig, gmsh "overlapping facets"
+    off = doc.addObject("Part::Offset", f"WP_Versatz_{s}"); off.Source = lw; off.Join = 0
+    off.setExpression("Value", "Parameter.keil_versatz"); off.Visibility = False
+    basis_obj.append((cut, lw, off))
 
 # ---------------------------------------------------------------- Klone (Symmetrie)
-alle = [(b["name"], *basis_obj[k]) for k, b in enumerate(E["basis"])]
+alle = [(b["name"], *basis_obj[k][:2]) for k, b in enumerate(E["basis"])]
+versatz_obj = {b["name"]: basis_obj[k][2] for k, b in enumerate(E["basis"])}
 for kl in E["klone"]:
-    cut, lw = basis_obj[kl["basis"]]
+    cut, lw, off = basis_obj[kl["basis"]]
     M = kl["matrix"]
     pl = App.Placement(App.Matrix(M[0][0], M[0][1], M[0][2], 0, M[1][0], M[1][1], M[1][2], 0,
                                   M[2][0], M[2][1], M[2][2], 0, 0, 0, 0, 1))
     cg = Draft.make_clone(cut); cg.Label = f"Gehaeuse_{kl['name']}"; cg.Placement = pl
     cw = Draft.make_clone(lw); cw.Label = f"Wickelpaket_{kl['name']}"; cw.Placement = pl
+    co = Draft.make_clone(off); co.Label = f"WP_Versatz_{kl['name']}"; co.Placement = pl; co.Visibility = False
+    versatz_obj[kl["name"]] = co
     alle.append((kl["name"], cg, cw))
 doc.recompute()
 
@@ -190,10 +205,10 @@ for v in E.get("verbinder", []):
             sk.append(x)
         kl_ = doc.addObject("Part::Loft", f"KL_{v['name']}"); kl_.Sections = sk
         kl_.Solid = True; kl_.Ruled = False; kl_.Closed = False; kl_.Visibility = False
-        # schraege Skizzenebenen ragen ins Wickelpaket -> beide Wickelpakete herausschneiden
+        # schraege Skizzenebenen ragen ins Wickelpaket -> beide Wickelpakete (+ keil_versatz) herausschneiden
         teil = kl_
         for sn in (E["spulen_namen"][v["a"]], E["spulen_namen"][v["b"]]):
-            c_ = doc.addObject("Part::Cut", f"KC_{v['name']}_{sn}"); c_.Base = teil; c_.Tool = wp_obj[sn]
+            c_ = doc.addObject("Part::Cut", f"KC_{v['name']}_{sn}"); c_.Base = teil; c_.Tool = versatz_obj[sn]
             c_.Visibility = False; teil = c_
         keil_teil, keil_obj = teil, [kl_] + sk
     else:
@@ -238,7 +253,7 @@ doc.recompute()
 # ---------------------------------------------------------------- Pruefung
 pr = {"spulen": {}, "ueberlappung": [], "fehler": []}
 for k, b in enumerate(E["basis"]):
-    cut, lw = basis_obj[k]
+    cut, lw = basis_obj[k][:2]
     g, w = cut.Shape, lw.Shape
     # Loft weicht zwischen den Stationen von der Spule ab: Spulenmitte muss im Wickelpaket liegen
     rand = Part.Compound(w.Faces)                       # Abstand zur Oberflaeche, nicht zum Volumen

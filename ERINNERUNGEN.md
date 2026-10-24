@@ -80,6 +80,8 @@
   Skill `stellarator-pipeline` v0.2 auch fuer PI verlinkt (`~/.pi/agent/skills/`).
 
 ## UEBERGABE / laufende Jobs (fuer Hermes, falls Claude-Sitzung endet) — 2026-10-24
+- **Naechste Verbesserungsschleife (User-Wunsch):** Verguss-Schicht (Quarzsand-Epoxid, ~10 mm, E ~10–20 GPa) zwischen
+  Wickelpaket und Gehaeuse in FreeCAD + Elmer (Details Skill stellarator-flaechen, Offen).
 - **FEM A45 mit Keil** (5. Versuch, ToleranceBoolean 1e-4): Ordner `sim/stellarator/gehaeuse_fem/A45_HTS_keil/`,
   Log `lauf.log`. Fertig bei Zeile `FERTIG`; bei "overlapping facets" siehe Skill stellarator-flaechen
   (naechste Option: Stahl in FreeCAD vereinigen + Refine). Ergebnis mit B-021 (ohne Keil) vergleichen.

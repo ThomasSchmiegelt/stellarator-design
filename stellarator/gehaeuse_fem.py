@@ -22,7 +22,7 @@ from .lauf import PROJEKT
 
 
 def netz(spulen, quelle: Path, ordner: Path, h_stahl: float, h_wp: float, h_luft: float,
-         wachstum: float, rand_m: float) -> dict:
+         wachstum: float, rand_m: float, stahl_datei: str = "stahl.step") -> dict:
     ordner.mkdir(parents=True, exist_ok=True)
     n = len(spulen)
     P = np.vstack([s.punkte for s in spulen])
@@ -35,7 +35,7 @@ def netz(spulen, quelle: Path, ordner: Path, h_stahl: float, h_wp: float, h_luft
         # fast deckungsgleiche Flaechen (Keil- und Gehaeuseschnitt am selben Wickelpaket) zusammenfuehren
         gmsh.option.setNumber("Geometry.ToleranceBoolean", 1e-4)
         wp = occ.importShapes(str(quelle / "wp.step"))
-        stahl = occ.importShapes(str(quelle / "stahl.step"))
+        stahl = occ.importShapes(str(quelle / stahl_datei))
         wp = [x for x in wp if x[0] == 3]; stahl = [x for x in stahl if x[0] == 3]
         # Stahl vorab vereinigen: Gehaeuse, Verbinder und Keile ueberlappen -> sonst Doppelflaechen
         if len(stahl) > 1:
@@ -104,6 +104,8 @@ def main(argv=None):
     ap.add_argument("--rand", type=float, default=15.0)
     ap.add_argument("--mit_swap", action="store_true", help="halben freien Swap zum RAM zaehlen (Elmer wird langsamer)")
     ap.add_argument("--name")
+    ap.add_argument("--vereint", action="store_true",
+                    help="stahl_vereint.step nutzen (freecad_vereinigen.py; gegen gmsh 'overlapping facets' bei Keilen)")
     ap.add_argument("--nur_netz", action="store_true")
     ap.add_argument("--nur_auswerten", action="store_true")
     a = ap.parse_args(argv)
@@ -128,7 +130,8 @@ def main(argv=None):
     erg["geometrie"].pop("spulen", None)
     n = len(spulen)
     if not a.nur_auswerten:
-        erg["netz"] = netz(spulen, quelle, ordner, a.h_stahl, a.h_wp, a.h_luft, a.wachstum, a.rand)
+        erg["netz"] = netz(spulen, quelle, ordner, a.h_stahl, a.h_wp, a.h_luft, a.wachstum, a.rand,
+                           "stahl_vereint.step" if a.vereint else "stahl.step")
         lager = struktur.lagerknoten(ordner, n + 1)
         struktur.schreibe_sif(spulen, b, h, ordner, lager, luft=("luft",))
         erg["lagerknoten"] = lager

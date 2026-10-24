@@ -202,7 +202,9 @@ def eingabe(fall: dict, a, ordner: Path) -> Path:
                       "stationen": [{"punkt": (Q[i] * mm).tolist(), "n": n[i].tolist(), "b": b[i].tolist(),
                                      "t": t[i].tolist(), "f": float(fs[i]),
                                      **{f"frei_{q}": min(max(a.wand_min, fr[q][j]) * mm,
-                                                         korr.get(f"{q[0]}_{k}_{j}", 1e9)) for q in fr}}
+                                                         korr.get(f"{q[0]}_{k}_{j}", 1e9)) for q in fr},
+                                     # Innenwand: nur ueber die Reparatur (i_<k>_<j>), sonst wand_innen
+                                     "frei_innen": max(a.wand_min * mm, korr.get(f"i_{k}_{j}", a.wand_innen * mm))}
                                     for j, i in enumerate(idx)]})
     d = {"name": fall["name"], "ausgabe": str(ordner),
          "parameter": {"wand_innen": a.wand_innen * mm, "wand_seite": a.wand_seite * mm, "wp_breite": br * mm,
@@ -212,7 +214,7 @@ def eingabe(fall: dict, a, ordner: Path) -> Path:
     if a.verbinder:
         d["verbinder"], d["verbinder_klone"] = verbinder(spulen, geo["nfp"], br, ho, a)
         d["parameter"] |= {"verb_breite": a.verb_breite * mm, "verb_tiefe": a.verb_tiefe * mm,
-                           "keil_tiefe": a.keil_tiefe * mm}
+                           "keil_tiefe": a.keil_tiefe * mm, "keil_versatz": a.keil_versatz * mm}
     ordner.mkdir(parents=True, exist_ok=True)
     p = ordner / "vss_eingabe.json"; p.write_text(json.dumps(d))
     return p
@@ -253,8 +255,11 @@ def main(argv=None):
     ap.add_argument("--verbinder", type=int, default=10, help="Verbindungsstuecke je Nachbarpaar (0 = keine)")
     ap.add_argument("--verb_breite", type=float, default=0.6, help="m, entlang der Spule")
     ap.add_argument("--verb_tiefe", type=float, default=0.6, help="m, quer (Richtung n)")
-    ap.add_argument("--keil", type=int, default=8, help="Skizzen im Keil auf der Torus-Innenseite (0 = kein Keil)")
+    ap.add_argument("--keil", type=int, default=0,
+                    help="Skizzen im Keil auf der Torus-Innenseite (0 = kein Keil; Standard aus, B-024: gmsh scheitert)")
     ap.add_argument("--keil_spanne", type=float, default=1.0, help="m, Keil wo Abstand <= min + spanne")
+    ap.add_argument("--keil_versatz", type=float, default=0.005,
+                    help="m, Keil wird mit Wickelpaket + Versatz geschnitten -> ueberlappt die Gehaeusewand sauber")
     ap.add_argument("--keil_tiefe", type=float, default=0.755, help="m, Tiefe des Keils (Richtung n)")
     ap.add_argument("--name")
     ap.add_argument("--oeffnen", action="store_true", help="FreeCAD-GUI mit dem Modell starten")

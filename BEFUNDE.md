@@ -6,6 +6,16 @@
 ---
 
 
+### B-024 | Keil auf der Torus-Innenseite: CAD geht, Vernetzung scheitert -> vorerst ohne Keil (2026-10-24)
+- **Beobachtung:** Keil (Bachmann-Gewoelbe) in FreeCAD gueltig, trifft kein Wickelpaket. In gmsh aber
+  "Invalid boundary mesh (overlapping facets)" (5 Versuche: AngleToleranceFacetOverlap, healShapes,
+  occ.fuse des Stahls, ToleranceBoolean 1e-4). Ursache: Keil- und Gehaeuseschnitt am selben Wickelpaket ->
+  deckungsgleiche Flaechen; OCC-Fuse in FreeCAD ergibt ebenfalls einen ungueltigen Koerper.
+- **Versuch 6:** Keil mit Wickelpaket + 5 mm Versatz geschnitten (ueberlappt die Gehaeusewand, Idee User):
+  3 von 16 Keilpaaren scheitern im CAD, gmsh haengt > 60 min in Fuse/Fragment (ohne Keil 6,6 min) -> abgebrochen.
+- **Entscheidung (User):** Keil raus, `--keil` Standard 0. Code (Versatz-Schnitt, Fallback) bleibt als Option.
+- **Status:** ⏸ blockiert (Idee fuer spaeter: Keil und Gehaeuse in EINEM Loft/Sweep bauen statt nachtraeglich vereinigen).
+
 ### B-023 | arXiv-Literatur: HTS-Dehnung, Fertigungstoleranzen (2026-10-24)
 - **Beobachtung:** CSX (Schmeling 2025), Gil 2025 (Toleranzen), Canis (Nash 2025), Details ANALYSE-003.
   REBCO leidet unter Torsion und Biegung ueber die harte Achse; W7-X-Toleranz 2 mm lokal.

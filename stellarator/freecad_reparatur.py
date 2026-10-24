@@ -77,8 +77,8 @@ for it in range(E.get("max_iter", 6)):
                 j, seite = ort(k, c)
                 kolls.append({"a": a, "b": b, "art": art, "liter": round(s.Volume * 1e-6, 3),
                               "angepasst": wer, "station": j, "seite": seite})
-                if seite == "i":
-                    continue                     # Innenwand ist nicht je Station parametrisiert
+                if not tab.getCellFromAlias(f"{seite}_{k}_{j}"):
+                    continue                     # Wert nicht in der Tabelle (Innenwand bei alten Modellen)
                 for dj in (-1, 0, 1):
                     jj = (j + dj) % m_st[k]
                     aenderung[f"{seite}_{k}_{jj}"] = True
@@ -89,7 +89,9 @@ for it in range(E.get("max_iter", 6)):
         break
     for alias in aenderung:
         q, k, j = alias.split("_"); k, j = int(k), int(j)
-        if q == "a":
+        if q == "i":
+            soll = wert("wand_innen")
+        elif q == "a":
             f = wert(f"f_{k}_{j}")
             soll = wert("t_min") + (wert("t_max") - wert("t_min")) * f
         else:
@@ -101,7 +103,7 @@ for it in range(E.get("max_iter", 6)):
 korr = {}
 for k, b in enumerate(VSS["basis"]):
     for j in range(m_st[k]):
-        for q in ("l", "r", "a"):
+        for q in ("l", "r", "a", "i"):
             al = f"{q}_{k}_{j}"
             if tab.getCellFromAlias(al):
                 korr[al] = wert(al)
