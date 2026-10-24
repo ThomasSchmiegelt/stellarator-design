@@ -83,6 +83,17 @@ def permutationen(spulen, kand) -> list[list[int]]:
     return [[int(baum.query(M @ c)[1]) for c in S] for M in kand]
 
 
+def keil_bereich(dmin: np.ndarray, spanne: float) -> np.ndarray:
+    """Indizes (zyklisch zusammenhaengend) um den engsten Abstand mit dmin <= dmin.min() + spanne."""
+    i0 = int(np.argmin(dmin)); N = len(dmin); ok = dmin <= dmin.min() + spanne
+    lo = hi = i0
+    while ok[(lo - 1) % N] and (i0 - lo) < N // 2:
+        lo -= 1
+    while ok[(hi + 1) % N] and (hi - i0) < N // 2:
+        hi += 1
+    return np.arange(lo, hi + 1) % N
+
+
 def verbinder(spulen, nfp: int, br: float, ho: float, a) -> tuple[list[dict], list[dict]]:
     """Verbindungsstuecke zwischen toroidal benachbarten Gehaeusen.
 
@@ -107,8 +118,22 @@ def verbinder(spulen, nfp: int, br: float, ho: float, a) -> tuple[list[dict], li
             continue
         Pa, Pb = spulen[pa].punkte, spulen[pb].punkte
         ta, na, ba = rahmen[pa]; tb, nb_, bb = rahmen[pb]
+        # Keil (Bachmann 2024: Gewoelbe innen): zusammenhaengender Bereich um den engsten Abstand
+        dmin = np.array([np.linalg.norm(Pb - p, axis=1).min() for p in Pa])
+        bereich = keil_bereich(dmin, a.keil_spanne) if a.keil else np.array([], int)
+        keil = []
+        for i in bereich[np.linspace(0, len(bereich) - 1, a.keil).astype(int)] if len(bereich) else []:
+            j = int(np.argmin(np.linalg.norm(Pb - Pa[i], axis=1)))
+            d = Pb[j] - Pa[i]
+            ca = Pa[i] + np.sign(ba[i] @ d) * versatz * ba[i]; cb = Pb[j] + np.sign(bb[j] @ -d) * versatz * bb[j]
+            y = (cb - ca) / np.linalg.norm(cb - ca)
+            x = na[i] + nb_[j]; x -= (x @ y) * y; x /= np.linalg.norm(x)
+            keil.append({"c": (0.5 * (ca + cb) * 1e3).tolist(), "x": x.tolist(), "y": y.tolist(),
+                         "L": float(np.linalg.norm(cb - ca) * 1e3)})
         st = []
         for i in np.linspace(0, len(Pa), a.verbinder, endpoint=False).astype(int):
+            if i in set(bereich.tolist()):
+                continue                                         # dort sitzt der Keil
             j = int(np.argmin(np.linalg.norm(Pb - Pa[i], axis=1)))
             d = Pb[j] - Pa[i]
             sa, sb = np.sign(ba[i] @ d), np.sign(bb[j] @ -d)
@@ -117,7 +142,8 @@ def verbinder(spulen, nfp: int, br: float, ho: float, a) -> tuple[list[dict], li
             st.append({"A": {"c": (ca * 1e3).tolist(), "x": na[i].tolist(), "y": ya.tolist()},
                        "B": {"c": (cb * 1e3).tolist(), "x": nb_[j].tolist(), "y": yb.tolist()},
                        "laenge_m": float(np.linalg.norm(cb - ca))})
-        kanon.append({"name": f"V_{spulen[pa].name}_{spulen[pb].name}", "a": pa, "b": pb, "stationen": st})
+        kanon.append({"name": f"V_{spulen[pa].name}_{spulen[pb].name}", "a": pa, "b": pb, "stationen": st,
+                      "keil": keil})
     return kanon, klone
 
 
@@ -149,7 +175,8 @@ def eingabe(fall: dict, a, ordner: Path) -> Path:
          "kraft_max_MN_m": fmax / 1e6, "spulen_namen": [s.name for s in spulen]}
     if a.verbinder:
         d["verbinder"], d["verbinder_klone"] = verbinder(spulen, geo["nfp"], br, ho, a)
-        d["parameter"] |= {"verb_breite": a.verb_breite * mm, "verb_tiefe": a.verb_tiefe * mm}
+        d["parameter"] |= {"verb_breite": a.verb_breite * mm, "verb_tiefe": a.verb_tiefe * mm,
+                           "keil_tiefe": a.keil_tiefe * mm}
     ordner.mkdir(parents=True, exist_ok=True)
     p = ordner / "vss_eingabe.json"; p.write_text(json.dumps(d))
     return p
@@ -187,6 +214,9 @@ def main(argv=None):
     ap.add_argument("--verbinder", type=int, default=10, help="Verbindungsstuecke je Nachbarpaar (0 = keine)")
     ap.add_argument("--verb_breite", type=float, default=0.6, help="m, entlang der Spule")
     ap.add_argument("--verb_tiefe", type=float, default=0.6, help="m, quer (Richtung n)")
+    ap.add_argument("--keil", type=int, default=8, help="Skizzen im Keil auf der Torus-Innenseite (0 = kein Keil)")
+    ap.add_argument("--keil_spanne", type=float, default=1.0, help="m, Keil wo Abstand <= min + spanne")
+    ap.add_argument("--keil_tiefe", type=float, default=0.755, help="m, Tiefe des Keils (Richtung n)")
     ap.add_argument("--name")
     ap.add_argument("--oeffnen", action="store_true", help="FreeCAD-GUI mit dem Modell starten")
     a = ap.parse_args(argv)

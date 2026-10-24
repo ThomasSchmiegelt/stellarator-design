@@ -146,6 +146,7 @@ doc.recompute()
 
 # ---------------------------------------------------------------- Verbinder zwischen Nachbarn
 verbinder = []                                   # (Name, Objekt, Spule a, Spule b)
+wp_obj = {n: cw for n, _, cw in alle}
 kanon_obj = []
 for v in E.get("verbinder", []):
     lofts = []
@@ -159,6 +160,21 @@ for v in E.get("verbinder", []):
         lo = doc.addObject("Part::Loft", f"VL_{v['name']}_{j:02d}"); lo.Sections = sk
         lo.Solid = True; lo.Ruled = True; lo.Closed = False; lo.Visibility = False
         lofts.append(lo)
+    if v.get("keil"):                                # durchgehender Keil auf der Torus-Innenseite
+        sk = []
+        for j, k in enumerate(v["keil"]):
+            x = doc.addObject("Sketcher::SketchObject", f"K_{v['name']}_{j:02d}")
+            x.Placement = lage(k["c"], k["x"], k["y"])
+            rechteck_mitte(x, "Parameter.keil_tiefe", f"{k['L']:.1f} mm"); x.Visibility = False
+            sk.append(x)
+        kl_ = doc.addObject("Part::Loft", f"KL_{v['name']}"); kl_.Sections = sk
+        kl_.Solid = True; kl_.Ruled = False; kl_.Closed = False; kl_.Visibility = False
+        # schraege Skizzenebenen ragen ins Wickelpaket -> beide Wickelpakete herausschneiden
+        teil = kl_
+        for sn in (E["spulen_namen"][v["a"]], E["spulen_namen"][v["b"]]):
+            c_ = doc.addObject("Part::Cut", f"KC_{v['name']}_{sn}"); c_.Base = teil; c_.Tool = wp_obj[sn]
+            c_.Visibility = False; teil = c_
+        lofts.append(teil)
     comp = doc.addObject("Part::Compound", v["name"]); comp.Links = lofts
     kanon_obj.append(comp)
     verbinder.append((v["name"], comp, E["spulen_namen"][v["a"]], E["spulen_namen"][v["b"]]))

@@ -21,7 +21,7 @@ for o in d.Objects:
     verb = o.Label.startswith("V_") and o.TypeId != "Sketcher::SketchObject"
     vo.Visibility = gehaeuse or wp or verb
     if verb:
-        vo.ShapeColor = (0.29, 0.35, 0.40)
+        vo.ShapeColor = (0.20, 0.45, 0.65)
     if gehaeuse:
         vo.ShapeColor = (0.54, 0.61, 0.69); vo.Transparency = 0
     elif wp:
@@ -32,6 +32,11 @@ for _ in range(3):                         # erst nach dem Zeichnen stimmt die H
     Gui.updateGui(); v.fitAll()
 Gui.updateGui()
 v.saveImage(os.path.join(os.path.dirname(pfad), "gehaeuse_freecad.png"), 1600, 1000, "White")
+v.viewTop()                                      # von oben: Keile auf der Torus-Innenseite
+for _ in range(3):
+    Gui.updateGui(); v.fitAll()
+v.saveImage(os.path.join(os.path.dirname(pfad), "gehaeuse_freecad_oben.png"), 1600, 1000, "White")
+v.viewIsometric(); v.fitAll()
 d.save()
 App.closeDocument(d.Name)
 Gui.getMainWindow().close()
