@@ -6,6 +6,22 @@
 ---
 
 
+### B-020 | Spulengehaeuse als Variable Section Sweep in FreeCAD, parametrisch (2026-10-24)
+- **Beobachtung:** Die durchgehende Stuetzschale scheitert bei A=4,5 an der Flaechenkonstruktion
+  (B-019). Idee des Users (wie Creo "Variable Section Sweep"): je Spule eine geschlossene 3D-Kurve
+  durch Punkte als INNENSEITE des Gehaeuses, Skizzen normal zur Kurve, Loft hindurch. Alles waechst
+  nach aussen -> keine Faltung. Umgesetzt in FreeCAD 1.1.4 (AppImage), voll parametrisch
+  (Tabelle "Parameter", Skizzenmasse als Ausdruecke, 12 von 16 Spulen als Symmetrie-Klone).
+- **Messung (qa_nfp2_A45_1GW_HTS, WP 0,755 m, Wand innen/seitlich 0,1 m, aussen 0,15–0,5 m nach Kraft):**
+  16 Gehaeuse gueltig (isValid), 0 Ueberlappungen, je 27–29 m^3, gesamt ~3,6 kt Stahl.
+  Abweichung Loft <-> Spule: Spulenmitte 363–372 mm vom WP-Rand (Soll 377,5) bei 40 Stationen;
+  bei 20 Stationen bis ~370 mm Abweichung (Mitte am Rand), Kruemmungs-Verteilung hilft nicht.
+  Parametertest: t_max 700 mm, wand_seite 150 mm -> Gehaeuse + Klon gueltig, 29,4 -> 41,9 m^3.
+- **Fundstelle:** `stellarator/gehaeuse.py`, `stellarator/freecad_vss.py`,
+  `sim/stellarator/gehaeuse/qa_nfp2_A45_1GW_HTS/` (gehaeuse.FCStd, .step, pruefung.json),
+  Bild `docs/bilder/gehaeuse_A45_HTS.png`.
+- **Status:** ✅ Geometrie. ⚠ Offen: Gehaeuse verbinden, STEP -> gmsh -> Elmer-Spannungen.
+
 ### B-019 | Kompaktere Form A=4,5 + Stuetzschale in Elmer (Lorentzkraft -> Spannung) (2026-10-24)
 - **Beobachtung:** A=4,5 (DESC qs 2,4e-5, Spulen B·n 0,27 %) verkleinert die 1-GW-Anlage deutlich;
   HTS und Nb3Sn werden fast gleich gross. Erste Strukturrechnung (Elmer gekoppelt) fuer A=6 HTS.
@@ -288,7 +304,7 @@ s. w7x-eckdaten.md).
 ### B-004 | FreeCAD: Installation ueber Paketquelle nicht moeglich (2026-10-22)
 - **Beobachtung:** FreeCAD liess sich nicht ueber die Paketverwaltung installieren; Blender war vorhanden.
 - **Status:** ✅ AUFGELOST (2026-10-22, s. B-007: FreeCAD 1.1.1 aus dem Quellcode gebaut,
-  headless verifiziert).
+  headless verifiziert). Seit 2026-10-24 zusaetzlich FreeCAD 1.1.4 als AppImage (B-020).
 
 ### B-003 | gmsh-Versionen, Python-API-Einschränkungen (2026-10-22)
 - **Beobachtung:** System-gmsh 4.12.1 (CLI mit OCC-Booleschen OK); venv-gmsh

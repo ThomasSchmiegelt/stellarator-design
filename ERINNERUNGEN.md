@@ -100,7 +100,9 @@
   Ablauf: Stufe 0 → Falldateien → bewerte (B_max_oberflaeche/B0 = k_B) → Stufe 0 mit neuem
   `--k_B Leiter=..` bis B_Leiter ≤ Grenze (2–3 Iterationen).
 - **A=4,5 + Struktur (B-019)** ERLEDIGT bis auf Struktur A=4,5. Keine Jobs laufen.
-  OFFEN: Schalenflaechen (Skill `stellarator-flaechen`) – **User hat eine Idee, erst fragen.**
+  Schalenflaechen: durchgehende Schale bleibt ungeloest; **User-Idee umgesetzt (B-020):**
+  Spulengehaeuse als Variable Section Sweep in FreeCAD, `.venv/bin/python -m stellarator.gehaeuse <fall> --oeffnen`.
+  OFFEN: Gehaeuse verbinden, STEP -> gmsh -> Elmer (Skill `stellarator-flaechen`).
   Bericht v0.3: `.venv/bin/python -m stellarator.bericht --version 0.3` (Skill `stellarator-bericht`), lokal.
 - Lange Laeufe IMMER losgeloest starten: `setsid nohup bash -c '...' > log 2>&1 < /dev/null &`.
 

@@ -100,9 +100,20 @@ Zur Einordnung: Das ist eine 0-D-Abschätzung (±30 %), kein Kraftwerksentwurf.
 A = 6 mit HTS: Stahlschale 1,48 m dick (~51 kt), 99 % der Schale unter 587 MPa (zulässig ~667 MPa,
 netzkonvergiert), örtliche Spitzen bis ~1000 MPa auf der Torus-Innenseite, Verformung 36 mm.
 Elmer und Biot-Savart liefern dieselbe Kraft je Spule (2,9 % Abweichung).
-Die Schalengeometrie für A = 4,5 ist noch offen (Flächen durch die Spulen falten sich).
+Eine durchgehende Schale lässt sich für A = 4,5 nicht sauber bauen (Flächen durch die Spulen falten sich).
 
 ![Spannungen in Stützschale und Wickelpaketen](docs/bilder/struktur_A6_HTS.png)
+
+**Spulengehäuse als „Variable Section Sweep“ in FreeCAD** (Idee aus der CAD-Praxis, wie das
+gleichnamige Creo-Feature): Je Spule eine geschlossene 3D-Kurve durch Punkte als *Innenseite* des
+Gehäuses, 40 Skizzen senkrecht dazu, ein Loft hindurch. Alles wächst nur nach außen, deshalb
+überschneidet sich auf der engen Plasmaseite nichts. Das Modell ist parametrisch: Eine Tabelle
+„Parameter“ steuert Wandstärken und Wickelpaket. Die Außenwand ist dort dicker, wo die Lorentzkraft
+groß ist. 12 der 16 Gehäuse sind Symmetrie-Klone der 4 Basisspulen.
+A = 4,5 mit HTS: 16 gültige Volumenkörper, keine Überlappung, ~3,6 kt Stahl, Abweichung zwischen
+Loft und Spule ≤ 15 mm. Als Nächstes: Gehäuse verbinden und in Elmer rechnen.
+
+![Spulengehäuse A = 4,5 (FreeCAD, parametrisch)](docs/bilder/gehaeuse_A45_HTS.png)
 
 ### Eigene kompakte Plasmaform `qa_nfp2` (Stufe 1 + 2)
 
@@ -172,6 +183,7 @@ stellarator/                 Bestandspipeline (.venv)
   cad.py                     Wickelpakete als STL/STEP (gmsh/OpenCASCADE), Spaltprüfung, Elmer-Netz
   elmer.py                   ElmerFEM-Magnetostatik (CoilSolver + WhitneyAV), Vergleich mit Biot-Savart
   struktur.py                Stützschale: Elmer Magnetfeld → Lorentzkraft → Spannung (ein Lauf)
+  gehaeuse.py, freecad_vss.py  Spulengehäuse als parametrisches FreeCAD-Modell (Variable Section Sweep / Loft)
   bericht.py                 Bericht (LaTeX/PDF) automatisch aus den Ergebnisdateien
   lauf.py                    Gesamtpipeline W7-X (Geometrie → PicoGK-Voxel → FFT-Solver → Feldlinien → Kräfte)
   voxelsolver.py, picogk_bruecke.py   FFT-Voxel-Feldlöser, Anbindung an PicoGK
@@ -206,6 +218,8 @@ python3 -m venv .venv-opt && .venv-opt/bin/pip install -r requirements-opt.txt
 Systemwerkzeuge:
 - **ElmerFEM 9.0** (Ubuntu-PPA `elmer-csc-ubuntu`), für `stellarator.elmer`,
 - **ParaView** zum Ansehen,
+- **FreeCAD 1.1** (AppImage von github.com/FreeCAD/FreeCAD/releases, abgelegt als
+  `~/Applications/FreeCAD_1.1.4.AppImage`), für `stellarator.gehaeuse`,
 - optional **PicoGK** mit .NET 9, für `stellarator.lauf` im Voxelmodus.
 
 Referenzrechner: 32 GB RAM, RTX 3090 (24 GB).
@@ -231,6 +245,9 @@ Referenzrechner: 32 GB RAM, RTX 3090 (24 GB).
     --k_B Nb3Sn=2.5,HTS=2.42 --f_I 1.09
 .venv/bin/python -m stellarator.bewerte stellarator/faelle/qa_nfp2_1GW_HTS.json --bild
 
+# Spulengehäuse parametrisch in FreeCAD (~35 s; FreeCAD-AppImage unter ~/Applications)
+.venv/bin/python -m stellarator.gehaeuse stellarator/faelle/qa_nfp2_A45_1GW_HTS.json --oeffnen
+
 # FEM: ElmerFEM mit allen 70 W7-X-Spulen (~12 min, ~10 GB RAM)
 .venv/bin/python -m stellarator.elmer sim/stellarator/elmer_w7x_70 --spulen 70 --B0 2.5 --h_spule 0.05 --h_luft 0.8
 ```
@@ -255,7 +272,8 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 - [x] Größe (R0) und Feld (B0) aus 1 GW netto ableiten (Stufe 0), Wickelpakete aus Stromdichte
 - [x] Kleineres Seitenverhältnis (A = 4,5) → HTS 10,4 m, Nb₃Sn 12,4 m
 - [x] Stützschale in Elmer (A = 6): Spannungen aus Lorentzkräften
-- [ ] Robuste Schalengeometrie für beliebige Spulenformen (A = 4,5)
+- [x] Spulengehäuse für A = 4,5 als parametrisches FreeCAD-Modell (Variable Section Sweep)
+- [ ] Gehäuse verbinden, STEP → gmsh → Elmer-Spannungen für A = 4,5
 - [ ] Stufe 0 genauer: Divertor-Wärmelast, Zyklotronstrahlung, Blanket-Dicke aus Neutronik
 - [ ] Studien-Runner (Agent wählt Ziele, numerischer Optimierer rechnet)
 - [ ] Allgemeiner Weg STL → STEP
