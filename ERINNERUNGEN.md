@@ -80,6 +80,12 @@
   Skill `stellarator-pipeline` v0.2 auch fuer PI verlinkt (`~/.pi/agent/skills/`).
 
 ## UEBERGABE / laufende Jobs (fuer Hermes, falls Claude-Sitzung endet) — 2026-10-24
+- **FEM A45 mit Keil** (5. Versuch, ToleranceBoolean 1e-4): Ordner `sim/stellarator/gehaeuse_fem/A45_HTS_keil/`,
+  Log `lauf.log`. Fertig bei Zeile `FERTIG`; bei "overlapping facets" siehe Skill stellarator-flaechen
+  (naechste Option: Stahl in FreeCAD vereinigen + Refine). Ergebnis mit B-021 (ohne Keil) vergleichen.
+- **W7-X-Reparatur** (`stellarator.aufbau stellarator/faelle/w7x_standard.json --reparieren`):
+  Ausgabe `sim/stellarator/gehaeuse/w7x_standard/aufbau/{korrektur.json,reparatur.json}`. Danach neu bauen
+  (Befehl W7-X im Skill stellarator-flaechen, plus `--korrektur .../korrektur.json`) und `stellarator.aufbau` erneut.
 - ~~Elmer 70 Spulen~~ FERTIG 2026-10-24 (B-016: Achse 0,24 % vs. Biot-Savart). Vorgehen bleibt Muster:
   Ordner `sim/stellarator/elmer_w7x_70/`.
   Fertig, wenn `lauf.log` mit `ENDE 0` endet und `ergebnis.json` existiert.

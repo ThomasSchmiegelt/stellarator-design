@@ -35,6 +35,37 @@ def kraft_je_laenge(spulen, s, breite, hoehe, seg) -> np.ndarray:
     return np.linalg.norm(s.strom * np.cross(t, B), axis=1)
 
 
+def wp_rand(s, br: float, ho: float) -> np.ndarray:
+    """Randpunkte des Wickelpakets: 4 Ecken + 4 Kantenmitten je Mittellinienpunkt (N*8, 3)."""
+    t, n, b = sp.rahmen(s)
+    q = [(en, eb) for en in (-1, 0, 1) for eb in (-1, 0, 1) if (en, eb) != (0, 0)]
+    return np.vstack([s.punkte + 0.5 * (en * br * n + eb * ho * b) for en, eb in q])
+
+
+def freiraum(spulen, k: int, idx, br: float, ho: float, spiel: float, fenster: float) -> dict:
+    """Halber freier Platz [m] zur naechsten fremden Spule je Station: links (-b), rechts (+b), aussen (+n).
+
+    Fremde Wickelpakete als Randpunkte (wp_rand); beruecksichtigt im Fenster |dt| < fenster (Bereich
+    zwischen den Stationen, wo der Loft interpoliert), seitlich nur im Band der eigenen Pakettiefe.
+    Ergebnis: (Abstand - eigene Halbbreite - spiel) / 2, jede Spule bekommt die Haelfte des Spalts."""
+    t, n, b = sp.rahmen(spulen[k])
+    P = spulen[k].punkte
+    Q = np.vstack([wp_rand(s, br, ho) for i, s in enumerate(spulen) if i != k])
+    out = {"links": [], "rechts": [], "aussen": []}
+    for i in idx:
+        d = Q - P[i]
+        dt, dn, db = d @ t[i], d @ n[i], d @ b[i]
+        nah = np.abs(dt) < fenster
+        seitlich = nah & (np.abs(dn) < 0.5 * br)
+        oben = nah & (np.abs(db) < 0.5 * ho)
+        def frei(sel, a, halb):
+            return float(((a[sel].min() if sel.any() else 99.0) - halb - spiel) / 2)
+        out["rechts"].append(frei(seitlich & (db > 0), db, 0.5 * ho))
+        out["links"].append(frei(seitlich & (db < 0), -db, 0.5 * ho))
+        out["aussen"].append(frei(oben & (dn > 0), dn, 0.5 * br))
+    return out
+
+
 def stationen(Q, m: int, verteilung: str) -> np.ndarray:
     """Indizes der Skizzen-Stationen auf der Innenkurve. gleich: gleiche Bogenlaenge;
     kruemmung: Bogenlaenge gewichtet mit (1 + kappa*L/2pi). A45: 40 gleich -> Loft weicht
@@ -132,8 +163,6 @@ def verbinder(spulen, nfp: int, br: float, ho: float, a) -> tuple[list[dict], li
                          "L": float(np.linalg.norm(cb - ca) * 1e3)})
         st = []
         for i in np.linspace(0, len(Pa), a.verbinder, endpoint=False).astype(int):
-            if i in set(bereich.tolist()):
-                continue                                         # dort sitzt der Keil
             j = int(np.argmin(np.linalg.norm(Pb - Pa[i], axis=1)))
             d = Pb[j] - Pa[i]
             sa, sb = np.sign(ba[i] @ d), np.sign(bb[j] @ -d)
@@ -141,7 +170,8 @@ def verbinder(spulen, nfp: int, br: float, ho: float, a) -> tuple[list[dict], li
             ca = Pa[i] + sa * versatz * ba[i]; cb = Pb[j] + sb * versatz * bb[j]
             st.append({"A": {"c": (ca * 1e3).tolist(), "x": na[i].tolist(), "y": ya.tolist()},
                        "B": {"c": (cb * 1e3).tolist(), "x": nb_[j].tolist(), "y": yb.tolist()},
-                       "laenge_m": float(np.linalg.norm(cb - ca))})
+                       "laenge_m": float(np.linalg.norm(cb - ca)),
+                       "im_keil": bool(len(keil)) and i in set(bereich.tolist())})   # nur Ersatz, falls der Keil scheitert
         kanon.append({"name": f"V_{spulen[pa].name}_{spulen[pb].name}", "a": pa, "b": pb, "stationen": st,
                       "keil": keil})
     return kanon, klone
@@ -160,14 +190,20 @@ def eingabe(fall: dict, a, ordner: Path) -> Path:
     fmax = max(x.max() for x in f)
     mm = 1e3
     basis = []
+    korr = json.loads(Path(a.korrektur).read_text()) if a.korrektur else {}   # aus freecad_reparatur (mm)
     for k, s in enumerate(spulen[:nb]):
         t, n, b = sp.rahmen(s)
         Q = s.punkte - (0.5 * br + a.wand_innen) * n             # Innenseite (plasmaseitig)
         idx = stationen(Q, a.stationen, a.verteilung)
         fs = np.convolve(np.r_[f[k][-4:], f[k], f[k][:4]], np.ones(9) / 9, "valid") / fmax  # geglaettet
+        fenster = 0.5 * s.laenge() / len(idx) + 0.5 * np.hypot(br, ho)
+        fr = freiraum(spulen, k, idx, br, ho, a.spiel, fenster)
         basis.append({"name": s.name, "typ": s.typ, "kurve": (Q * mm).tolist(), "mitte": (s.punkte * mm).tolist(),
                       "stationen": [{"punkt": (Q[i] * mm).tolist(), "n": n[i].tolist(), "b": b[i].tolist(),
-                                     "t": t[i].tolist(), "f": float(fs[i])} for i in idx]})
+                                     "t": t[i].tolist(), "f": float(fs[i]),
+                                     **{f"frei_{q}": min(max(a.wand_min, fr[q][j]) * mm,
+                                                         korr.get(f"{q[0]}_{k}_{j}", 1e9)) for q in fr}}
+                                    for j, i in enumerate(idx)]})
     d = {"name": fall["name"], "ausgabe": str(ordner),
          "parameter": {"wand_innen": a.wand_innen * mm, "wand_seite": a.wand_seite * mm, "wp_breite": br * mm,
                        "wp_hoehe": ho * mm, "t_min": a.t_min * mm, "t_max": a.t_max * mm},
@@ -211,6 +247,9 @@ def main(argv=None):
     ap.add_argument("--wand_seite", type=float, default=0.10, help="m, Seitenwand")
     ap.add_argument("--t_min", type=float, default=0.15, help="m, Aussenwand bei kleiner Kraft")
     ap.add_argument("--t_max", type=float, default=0.50, help="m, Aussenwand bei max. Kraft")
+    ap.add_argument("--spiel", type=float, default=0.005, help="m, Mindestspalt zwischen Nachbargehaeusen")
+    ap.add_argument("--wand_min", type=float, default=0.005, help="m, duennste zulaessige Wand (Skizze bleibt gueltig)")
+    ap.add_argument("--korrektur", help="korrektur.json aus stellarator.aufbau --reparieren (Freimasse je Station, mm)")
     ap.add_argument("--verbinder", type=int, default=10, help="Verbindungsstuecke je Nachbarpaar (0 = keine)")
     ap.add_argument("--verb_breite", type=float, default=0.6, help="m, entlang der Spule")
     ap.add_argument("--verb_tiefe", type=float, default=0.6, help="m, quer (Richtung n)")

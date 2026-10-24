@@ -38,29 +38,33 @@ for k, w in E["parameter"].items():
 for k, b in enumerate(E["basis"]):
     for j, st in enumerate(b["stationen"]):
         param(f"f_{k}_{j}", round(st["f"], 3), "", f"Kraftfaktor {b['name']} Station {j}")
+        for q in ("links", "rechts", "aussen"):
+            if f"frei_{q}" in st:
+                param(f"{q[0]}_{k}_{j}", round(st[f"frei_{q}"], 1), "mm", f"Freiraum {q} {b['name']} Station {j}")
 doc.recompute()
 
 
-def rechteck(sk, x0, tiefe_ausdruck, breite_ausdruck, x0_ausdruck=None):
-    """Rechteck x in [x0, x0+tiefe], y symmetrisch; voll bestimmt, Masse per Ausdruck."""
+def rechteck(sk, x0, tiefe_ausdruck, links_ausdruck, rechts_ausdruck, x0_ausdruck=None):
+    """Rechteck x in [x0, x0+tiefe], y in [-links, +rechts] (y = b); voll bestimmt, Masse per Ausdruck.
+    Links/rechts getrennt: Seitenwaende passen sich dem Platz zur Nachbarspule an."""
     p = [V(x0, -1, 0), V(x0 + 1, -1, 0), V(x0 + 1, 1, 0), V(x0, 1, 0)]
     for i in range(4):
         sk.addGeometry(Part.LineSegment(p[i], p[(i + 1) % 4]), False)
-    c = [Sketcher.Constraint("Coincident", i, 2, (i + 1) % 4, 1) for i in range(4)]
-    c += [Sketcher.Constraint("Horizontal", 0), Sketcher.Constraint("Horizontal", 2),
-          Sketcher.Constraint("Vertical", 1),                           # linke Kante folgt aus Symmetric
-          Sketcher.Constraint("Symmetric", 0, 1, 2, 2, -1)]            # symmetrisch zur x-Achse
-    for x in c:
+    for x in [Sketcher.Constraint("Coincident", i, 2, (i + 1) % 4, 1) for i in range(4)] + [
+            Sketcher.Constraint("Horizontal", 0), Sketcher.Constraint("Horizontal", 2),
+            Sketcher.Constraint("Vertical", 1), Sketcher.Constraint("Vertical", 3)]:
         sk.addConstraint(x)
     if x0_ausdruck is None:
         sk.addConstraint(Sketcher.Constraint("PointOnObject", 0, 1, -2))  # Innenseite auf der Kurve
     else:
         i = sk.addConstraint(Sketcher.Constraint("DistanceX", -1, 1, 0, 1, x0)); sk.renameConstraint(i, "Versatz")
         sk.setExpression("Constraints.Versatz", x0_ausdruck)
-    i = sk.addConstraint(Sketcher.Constraint("Distance", 0, 1.0)); sk.renameConstraint(i, "Tiefe")
-    i = sk.addConstraint(Sketcher.Constraint("Distance", 3, 2.0)); sk.renameConstraint(i, "Breite")
+    i = sk.addConstraint(Sketcher.Constraint("DistanceX", 0, 1, 0, 2, 1.0)); sk.renameConstraint(i, "Tiefe")
+    i = sk.addConstraint(Sketcher.Constraint("DistanceY", 0, 1, -1, 1, 1.0)); sk.renameConstraint(i, "Links")
+    i = sk.addConstraint(Sketcher.Constraint("DistanceY", -1, 1, 2, 2, 1.0)); sk.renameConstraint(i, "Rechts")
     sk.setExpression("Constraints.Tiefe", tiefe_ausdruck)
-    sk.setExpression("Constraints.Breite", breite_ausdruck)
+    sk.setExpression("Constraints.Links", links_ausdruck)
+    sk.setExpression("Constraints.Rechts", rechts_ausdruck)
 
 
 def rechteck_mitte(sk, tiefe_ausdruck, breite_ausdruck):
@@ -118,12 +122,18 @@ for k, b in enumerate(E["basis"]):
     for j, st in enumerate(b["stationen"]):
         u = (e.Curve.parameter(V(*st["punkt"])) - u0) / (u1 - u0)
         g = skizze(f"G_{s}_{j:02d}", kurve, u, st["n"], st["t"])
-        rechteck(g, 0.0, f"Parameter.wand_innen + Parameter.wp_breite + Parameter.t_min + "
-                         f"(Parameter.t_max - Parameter.t_min) * Parameter.f_{k}_{j}",
-                 "Parameter.wp_hoehe + 2 * Parameter.wand_seite")
+        aussen = f"Parameter.t_min + (Parameter.t_max - Parameter.t_min) * Parameter.f_{k}_{j}"
+        seite = "Parameter.wand_seite"
+        if "frei_links" in st:                   # Wand <= halber Spalt zur Nachbarspule
+            aussen = f"min({aussen}; Parameter.a_{k}_{j})"
+            links, rechts = f"min({seite}; Parameter.l_{k}_{j})", f"min({seite}; Parameter.r_{k}_{j})"
+        else:
+            links = rechts = seite
+        rechteck(g, 0.0, f"Parameter.wand_innen + Parameter.wp_breite + {aussen}",
+                 f"Parameter.wp_hoehe / 2 + {links}", f"Parameter.wp_hoehe / 2 + {rechts}")
         w = skizze(f"W_{s}_{j:02d}", kurve, u, st["n"], st["t"])
-        rechteck(w, E["parameter"]["wand_innen"], "Parameter.wp_breite", "Parameter.wp_hoehe",
-                 x0_ausdruck="Parameter.wand_innen")
+        rechteck(w, E["parameter"]["wand_innen"], "Parameter.wp_breite", "Parameter.wp_hoehe / 2",
+                 "Parameter.wp_hoehe / 2", x0_ausdruck="Parameter.wand_innen")
         G.append(g); W.append(w)
     lg = doc.addObject("Part::Loft", f"Loft_G_{s}"); lg.Sections = G; lg.Solid = True; lg.Closed = True; lg.Ruled = False
     lw = doc.addObject("Part::Loft", f"Wickelpaket_{s}"); lw.Sections = W; lw.Solid = True; lw.Closed = True; lw.Ruled = False
@@ -147,6 +157,17 @@ doc.recompute()
 # ---------------------------------------------------------------- Verbinder zwischen Nachbarn
 verbinder = []                                   # (Name, Objekt, Spule a, Spule b)
 wp_obj = {n: cw for n, _, cw in alle}
+pr_keil_weg = []                                 # Paare, deren Keil nicht gebaut werden konnte
+pr_verb_weg = []                                 # Verbinder, die ein Wickelpaket treffen (entfernt)
+
+
+def trifft_wp(sh, paar=(), tol_m3=1e-6):
+    """True, wenn sh irgendein Wickelpaket oder ein Gehaeuse ausserhalb des Paars schneidet."""
+    for n_, cg, cw in alle:
+        for w in ([cw.Shape] + ([] if n_ in paar else [cg.Shape])):
+            if sh.BoundBox.intersect(w.BoundBox) and sh.common(w).Volume * 1e-9 > tol_m3:
+                return True
+    return False
 kanon_obj = []
 for v in E.get("verbinder", []):
     lofts = []
@@ -174,8 +195,35 @@ for v in E.get("verbinder", []):
         for sn in (E["spulen_namen"][v["a"]], E["spulen_namen"][v["b"]]):
             c_ = doc.addObject("Part::Cut", f"KC_{v['name']}_{sn}"); c_.Base = teil; c_.Tool = wp_obj[sn]
             c_.Visibility = False; teil = c_
-        lofts.append(teil)
-    comp = doc.addObject("Part::Compound", v["name"]); comp.Links = lofts
+        keil_teil, keil_obj = teil, [kl_] + sk
+    else:
+        keil_teil, keil_obj = None, []
+    doc.recompute()
+    paar = {E["spulen_namen"][v["a"]], E["spulen_namen"][v["b"]]}
+    weg = [lo for lo in lofts if trifft_wp(lo.Shape, paar)]   # z.B. W7-X: schraege planare Spulen
+    pr_verb_weg.extend(lo.Name for lo in weg)
+    ersatz = [lo for lo, st in zip(lofts, v["stationen"]) if st.get("im_keil") and lo not in weg]
+    normal = [lo for lo, st in zip(lofts, v["stationen"]) if not st.get("im_keil") and lo not in weg]
+    comp = doc.addObject("Part::Compound", v["name"])
+    comp.Links = normal + ([keil_teil] if keil_teil else ersatz)
+    if keil_teil:
+        doc.recompute()
+        try:
+            ok = keil_teil.Shape.isValid() and keil_teil.Shape.Volume > 0
+        except Exception:
+            ok = False
+        if not ok:                                   # Keil gescheitert (z.B. NPC <-> planare Spule): Einzelverbinder
+            pr_keil_weg.append(v["name"])
+            comp.Links = normal + ersatz
+            for o in [keil_teil, keil_teil.Base] + keil_obj:
+                if doc.getObject(o.Name):
+                    doc.removeObject(o.Name)
+    for lo in ersatz + weg:
+        if lo not in comp.Links and doc.getObject(lo.Name):
+            skizzen = [x.Name for x in lo.Sections]
+            doc.removeObject(lo.Name)
+            for x in skizzen:
+                doc.removeObject(x)
     kanon_obj.append(comp)
     verbinder.append((v["name"], comp, E["spulen_namen"][v["a"]], E["spulen_namen"][v["b"]]))
 doc.recompute()
@@ -212,6 +260,8 @@ for i in range(len(form)):
         if v > 1e-6:
             pr["ueberlappung"].append({"a": form[i][0], "b": form[j][0], "volumen_m3": v})
 pr["n_spulen"] = len(form)
+pr["keil_entfallen"] = pr_keil_weg
+pr["verbinder_entfernt"] = pr_verb_weg
 pr["verbinder"] = {"n_paare": len(verbinder), "n_stuecke": sum(len(o.Shape.Solids) for _, o, _, _ in verbinder),
                    "volumen_m3": sum(o.Shape.Volume for _, o, _, _ in verbinder) * 1e-9,
                    "trifft_wickelpaket": [], "trifft_fremdes_gehaeuse": []}

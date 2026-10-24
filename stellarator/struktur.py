@@ -280,7 +280,8 @@ Boundary Condition 1
   AV {e} = Real 0.0
 End
 """]
-    S += elmer.spulen_bloecke(spulen, breite, hoehe, gleichung=1, gleichung_stromlos=1, material=1, kraft_zusatz=last)
+    # stromlose Spulen (z.B. W7-X PCA/PCB): Magnetik + Spannung ohne CoilSolver (Equation 2)
+    S += elmer.spulen_bloecke(spulen, breite, hoehe, gleichung=1, gleichung_stromlos=2, material=1, kraft_zusatz=last)
     S.append(f'Body {n + 1}\n  Name = "schale"\n  Equation = 2\n  Material = 2\nEnd\n')
     for k, name in enumerate(luft, n + 2):
         S.append(f'Body {k}\n  Name = "{name}"\n  Equation = 3\n  Material = 3\nEnd\n')

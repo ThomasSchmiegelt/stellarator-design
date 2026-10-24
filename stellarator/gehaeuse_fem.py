@@ -32,9 +32,15 @@ def netz(spulen, quelle: Path, ordner: Path, h_stahl: float, h_wp: float, h_luft
     try:
         t0 = time.time(); m = gmsh.model; occ = m.occ
         gmsh.option.setString("Geometry.OCCTargetUnit", "M")
+        # fast deckungsgleiche Flaechen (Keil- und Gehaeuseschnitt am selben Wickelpaket) zusammenfuehren
+        gmsh.option.setNumber("Geometry.ToleranceBoolean", 1e-4)
         wp = occ.importShapes(str(quelle / "wp.step"))
         stahl = occ.importShapes(str(quelle / "stahl.step"))
         wp = [x for x in wp if x[0] == 3]; stahl = [x for x in stahl if x[0] == 3]
+        # Stahl vorab vereinigen: Gehaeuse, Verbinder und Keile ueberlappen -> sonst Doppelflaechen
+        if len(stahl) > 1:
+            stahl, _ = occ.fuse(stahl[:1], stahl[1:])
+            stahl = [x for x in stahl if x[0] == 3]
         lo, hi = P.min(0) - rand_m, P.max(0) + rand_m
         box = occ.addBox(*lo, *(hi - lo))
         occ.synchronize()
@@ -74,6 +80,7 @@ def netz(spulen, quelle: Path, ordner: Path, h_stahl: float, h_wp: float, h_luft
         for k in ("MeshSizeExtendFromBoundary", "MeshSizeFromPoints", "MeshSizeFromCurvature"):
             gmsh.option.setNumber(f"Mesh.{k}", 0)
         gmsh.option.setNumber("Mesh.MshFileVersion", 2.2)
+        gmsh.option.setNumber("Mesh.AngleToleranceFacetOverlap", 0.01)   # Standard 0,1 Grad: zu streng bei Splittern
         t_geo = time.time() - t0
         m.mesh.generate(3)
         n_tet = sum(len(x) for x in m.mesh.getElements(3)[1])
