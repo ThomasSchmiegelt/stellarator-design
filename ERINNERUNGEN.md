@@ -141,6 +141,5 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
 4. Elmer StressSolver: Gehaeuse (PicoGK-STL) mit Kraeften aus `spulen_kraefte.vtp`.
 
 ## Blockers
-- **Sudo** (FreeCAD) — Passwort nötig oder Blender.
-- **Disk ~99 %** — bei jeder Installation `df -h /` prüfen.
+- **Speicherplatz** — vor Installationen und grossen Laeufen freien Platz pruefen.
 - **Tavily Rate-Limit** (60 s Pause) — Websuchen einzeln.

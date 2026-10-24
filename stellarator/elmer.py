@@ -102,16 +102,14 @@ KB_PRO_TET = 3.5   # gemessener Elmer-Spitzenbedarf je Tetraeder (B-015)
 NORMAL_VZ = -1.0   # Konvention Coil Normal <-> Stromrichtung, per Test bestimmt (B-016)
 
 
-def schreibe_sif(spulen, breite, hoehe, pfad: Path) -> None:
-    """case.sif: Body i = Spule i (Component k, Body Force k), Body n+1 = Luft.
-    Stromlose Spulen (z.B. PCA/PCB im Standardfall) bekommen keine Component (J=0 stoert
-    die CoilSolver-Normierung) und nur die Luft-Gleichung."""
-    n = len(spulen)
-    S = [KOPF]
-    k = 0
+def spulen_bloecke(spulen, breite, hoehe, gleichung: int = 1, gleichung_stromlos: int = 2,
+                   material: int = 1, kraft_zusatz: str = "") -> list[str]:
+    """Body/Component/Body Force je Spule (Body i = Spule i). kraft_zusatz: weitere Zeilen je
+    Body Force (z.B. Lorentz-Last fuer den StressSolver, stellarator/struktur.py)."""
+    S, k = [], 0
     for i, s in enumerate(spulen, 1):
         if s.strom == 0:
-            S.append(f'Body {i}\n  Name = "{s.name}"\n  Equation = 2\n  Material = 1\nEnd\n')
+            S.append(f'Body {i}\n  Name = "{s.name}"\n  Equation = {gleichung_stromlos}\n  Material = {material}\nEnd\n')
             continue
         k += 1
         # CoilSolver ignoriert das Vorzeichen von J und waehlt die Richtung selbst (B-016):
@@ -120,7 +118,7 @@ def schreibe_sif(spulen, breite, hoehe, pfad: Path) -> None:
         c = s.punkte.mean(0)
         A = 0.5 * np.cross(s.punkte - c, np.roll(s.punkte, -1, 0) - c).sum(0)
         nrm = np.sign(s.strom) * NORMAL_VZ * A / np.linalg.norm(A)
-        S.append(f'Body {i}\n  Name = "{s.name}"\n  Equation = 1\n  Material = 1\n'
+        S.append(f'Body {i}\n  Name = "{s.name}"\n  Equation = {gleichung}\n  Material = {material}\n'
                  f'  Body Force = {k}\nEnd\n')
         S.append(f'Component {k}\n  Name = "{s.name}"\n  Master Bodies(1) = {i}\n'
                  f'  Coil Type = "test"\n  Desired Current Density = Real {J:.6e}\n'
@@ -128,7 +126,16 @@ def schreibe_sif(spulen, breite, hoehe, pfad: Path) -> None:
                  f'  Coil Normal(3) = Real {nrm[0]:.6f} {nrm[1]:.6f} {nrm[2]:.6f}\n'
                  f'  Coil Closed = Logical True\nEnd\n')   # "unlisted keyword"-Warnung, wird aber benoetigt
         S.append(f'Body Force {k}\n' + "".join(
-            f'  Current Density {c} = Equals "CoilCurrent e {c}"\n' for c in (1, 2, 3)) + "End\n")
+            f'  Current Density {c} = Equals "CoilCurrent e {c}"\n' for c in (1, 2, 3)) + kraft_zusatz + "End\n")
+    return S
+
+
+def schreibe_sif(spulen, breite, hoehe, pfad: Path) -> None:
+    """case.sif: Body i = Spule i (Component k, Body Force k), Body n+1 = Luft.
+    Stromlose Spulen (z.B. PCA/PCB im Standardfall) bekommen keine Component (J=0 stoert
+    die CoilSolver-Normierung) und nur die Luft-Gleichung."""
+    n = len(spulen)
+    S = [KOPF] + spulen_bloecke(spulen, breite, hoehe)
     S.append(f'Body {n + 1}\n  Name = "luft"\n  Equation = 2\n  Material = 1\nEnd\n')
     pfad.write_text("".join(S))
 

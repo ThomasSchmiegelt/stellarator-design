@@ -244,7 +244,7 @@ s. w7x-eckdaten.md).
   venv-bin aus PATH streichen, sonst 0-Knoten-Mesh ohne Warnung).
 - **Messung:** FreeCADCmd -c Test; sed ema_axial_em3d.py.
 - **Fundstelle:** ~/freecad_1.1_quellcode, ~/ai-workspace/cae_orchestrator.
-- **Status:** ✅ gesichert · B-004 damit aufgelöst (kein Sudo mehr nötig).
+- **Status:** ✅ gesichert · B-004 damit aufgelöst.
 
 ### B-006 | Elmer-Doku: 2D-Planar, 3D-Solver (2026-10-22)
 - **Beobachtung:** Elmer 9.0 MagnetoDynamics: 2D Axisymmetric → MagnetoDynamics2D
@@ -266,15 +266,10 @@ s. w7x-eckdaten.md).
 - **Fundstelle:** forschung/ANALYSE-001 (dort komplett).
 - **Status:** ✅ gesichert.
 
-### B-004 | FreeCAD: sudo-Blockade + Disk knapp (2026-10-22)
-- **Beobachtung:** `sudo -n true` → SUDO: password needed; `apt-get install
-  freecad` → „Unable to fetch"...; Disk 49 G frei (~99 % belegt). Blender 4.0.2
-  vorhanden (kein Sudo nötig).
-- **Messung:** `df -h /` = 49 G frei; `which blender` → /usr/bin/blender;
-  `apt-cache policy freecad` → 1.0.2 (installierbar, Sudo nötig).
-- **Fundstelle:** Shell-Aufrufe am 2026-10-22.
-- **Status:** ✅ AUFGELOST (2026-10-22, s. B-007: FreeCAD 1.1.1 unter
-  ~/freecad_1.1_quellcode per pixi-Build vorhanden, headless verifiziert).
+### B-004 | FreeCAD: Installation ueber Paketquelle nicht moeglich (2026-10-22)
+- **Beobachtung:** FreeCAD liess sich nicht ueber die Paketverwaltung installieren; Blender war vorhanden.
+- **Status:** ✅ AUFGELOST (2026-10-22, s. B-007: FreeCAD 1.1.1 aus dem Quellcode gebaut,
+  headless verifiziert).
 
 ### B-003 | gmsh-Versionen, Python-API-Einschränkungen (2026-10-22)
 - **Beobachtung:** System-gmsh 4.12.1 (CLI mit OCC-Booleschen OK); venv-gmsh

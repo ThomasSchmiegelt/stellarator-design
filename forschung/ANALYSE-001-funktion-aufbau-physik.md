@@ -162,7 +162,7 @@ toroidal windet — für W7-X: iota/2pi zwischen 5/6 (achsen-nah) und
 
 ## 6. Zu klären (User)
 
-1. **Modellierer:** FreeCAD (sudo-Passwort) oder Blender (sofort)? → **OFFEN**
+1. **Modellierer:** FreeCAD oder Blender? → **ERLEDIGT** (FreeCAD/gmsh, s. BEFUNDE B-007)
 2. **Spulengeometrie:** offene W7-X-Daten oder parametrisch generieren? → **OFFEN**
 3. **Sim-Scope:** Nur Magnetostatik (Spulenfeld) oder auch Plasma-Physik
    (VMEC, NCSX)? → **OFFEN**
