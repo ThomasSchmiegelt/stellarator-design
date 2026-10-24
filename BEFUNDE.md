@@ -6,6 +6,15 @@
 ---
 
 
+### B-022 | Literatur des Users: DEMO-Spulenregeln und W7-X-Einschluss (2026-10-24)
+- **Beobachtung:** Von 33 PDFs sind 4 fuer das Projekt relevant (Details `forschung/ANALYSE-003-literatur-spulenstruktur.md`).
+  Bachmann et al. 2024 (EU-DEMO, kleines A): TF-Innenschenkel als Keil/Gewoelbe, von Mises <= 660 MPa,
+  Seitenwand 100 mm, Wickelpaket traegt ~65 MPa, J_eng-Formeln fuer LTS/HTS.
+- **Messung/Vergleich:** J_eng nach Bachmann: Nb3Sn bei 10,9 T ~32 A/mm^2 (wir: 15, konservativ),
+  HTS bei 14,7 T ~27 A/mm^2 (wir: 40, optimistisch -> WP ~1,5x groesser). W7-X (Grulke 2026):
+  Einschluss bis 30-40 % ueber ISS04 (H <= 1,3 gedeckt), <beta> max. 2,8 % (unsere Grenze 5 % ist Annahme).
+- **Status:** ⚠ Tokamak-Regeln nur als Anhalt; Keil innen + J_eng-Option noch umzusetzen.
+
 ### B-021 | Gehaeuse + Verbinder in Elmer: Kette laeuft, Stahl viel zu duenn (2026-10-24)
 - **Beobachtung:** Erste gekoppelte Rechnung (Magnetfeld -> J x B -> Spannung) fuer die
   FreeCAD-Gehaeuse (B-020) mit 160 Verbindern. Kette STEP -> gmsh (OCC-Fragment) -> Elmer funktioniert.
