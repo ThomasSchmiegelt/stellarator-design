@@ -101,6 +101,10 @@
   Wenn qs_fehler >> 1e-3: Stufe 1 mit mehr maxiter / hoeherem k_max wiederholen.
 - Lange Laeufe IMMER losgeloest starten: `setsid nohup bash -c '...' > log 2>&1 < /dev/null &`.
 
+## GitHub (2026-10-24)
+Oeffentlich, MIT: https://github.com/ThomasSchmiegelt/stellarator-design (README mit Bildern,
+Projektbeschreibung). Bericht bewusst NICHT im Repo (User). Updates: siehe Skill-Abschnitt GitHub.
+
 ## Neue Richtung (User, 2026-10-24): INVERS entwerfen
 Frage umdrehen: Welches Magnetfeld wird gebraucht? → welche Geometrie (Spulen) folgt daraus?
 User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlaubt.
