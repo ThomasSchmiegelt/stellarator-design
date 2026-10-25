@@ -6,6 +6,18 @@
 ---
 
 
+### B-026 | 3D-Anschauungsmodelle: Torus mit Schichten, CICC-Leiter, Blender-Render (2026-10-25)
+- **torus3d.py:** W7-X-artiger Torus, 70 Spulen mit Gehaeuse, Verguss, Grundisolierung, 108 Leitern je Spule
+  (Windungsisolation, Al-Mantel, Kabel), eindeutige Farben; Bilder w7x_torus3d_{schnitt,sektor,detail,geschlossen}.png,
+  glTF torus3d.glb (169 MB) fuer Blender.
+- **leiter3d.py:** CICC-Leiterstueck (Al 16 mm, 243 Straenge verdrillt, Bohrung r 5,60 mm aus 37 % Hohlraum),
+  Strang 12-fach vergroessert mit NbTi-Filamenten (symbolisch). Strom: NbTi; Cu nur Stabilisator; Al/He stromlos.
+- **blender_szene.py (Blender 4.0, Cycles CPU):** Fallstricke: Paket ohne OpenImageDenoise -> Denoiser aus;
+  glTF-Farben kommen als sRGB-Werte -> linearisieren; Import liegt um 90 Grad um z gedreht -> Wurzel zurueckdrehen;
+  weisser Hintergrund + Sonne 2-3 ueberstrahlt Metallflaechen -> Sonne 1,0, Alu metallisch 0,7/Rauheit 0,55, AgX.
+  Flacher Torus fuellt Bounding-Kugel schlecht -> --zoom 1.9. Render Leiter ~1 min, Torus wenige Minuten.
+- Status: ✅ Bilder in docs/bilder (w7x_leiter3d*.png, w7x_torus3d_blender.png); .blend in sim/ (nicht im Repo).
+
 ### B-025 | W7-X-Gehaeuse kollisionsfrei: CAD mit Nachbarschnitt, Rechnung ueber Rohrnetze (2026-10-24)
 - **Ursache der Restkollisionen:** nicht die Wandstaerke (echter WP-Spalt NPC5<->NPC5 108 mm, NPC5<->PCB 130 mm),
   sondern (a) Loft-Ausbeulung zwischen den Stationen und (b) die ECKEN der Gehaeuse: freiraum prueft nur

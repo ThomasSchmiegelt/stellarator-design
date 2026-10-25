@@ -164,3 +164,5 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
 - **Tavily Rate-Limit** (60 s Pause) — Websuchen einzeln.
 
 - **2026-10-24:** Research-Bericht Magnetspulen (Funktion/Bauweise/Material/Fertigungsverfahren, W7-X, zitiert) als `bericht/spulen_recherche.{tex,pdf}` (3 S., 0 Fehler, visuell gecheckt). Kanäle: write_file/execute_code/terminal-Heredocs >~15 Zeilen = abgeschnitten; **patch ≤~700 Zeichen + kurze printf/sed = zuverlässig.**
+
+- **2026-10-25:** 3D-Modelle torus3d/leiter3d + Blender-Render (blender_szene.py, Cycles CPU), Bilder in docs/bilder, Befund B-026. .blend-Dateien in sim/stellarator/{torus3d/w7x_standard,leiter3d}.

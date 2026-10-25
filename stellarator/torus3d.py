@@ -24,9 +24,9 @@ from . import spulen as sp, cad
 from .gehaeuse_netz import waende, entflechten
 from .lauf import PROJEKT
 
-SCHICHTEN = {1: ("Supraleiterkabel (NbTi/Cu + He)", "#c2813f"), 2: ("Aluminiummantel", "#d4d8de"),
+SCHICHTEN = {1: ("Kabel: NbTi-Supraleiter in Cu + Helium", "#1fa3a3"), 2: ("Aluminiummantel", "#d4d8de"),
              3: ("Windungsisolation", "#a8d08d"), 4: ("Grundisolierung", "#4f8f3a"),
-             5: ("Wickelpaket (homogen)", "#b87333"), 6: ("Verguss (Quarzsand-Epoxid)", "#efe2bd"),
+             5: ("Wickelpaket (homogen dargestellt)", "#8a5a44"), 6: ("Verguss (Quarzsand-Epoxid)", "#efe2bd"),
              7: ("Gehaeuse (Stahl)", "#8b939e")}
 NL, NW = 12, 9                       # Lagen (entlang n) x Windungen (entlang b) = 108
 NK = 16                              # Punkte auf dem Kabelkreis
@@ -173,6 +173,16 @@ def bilder(mb, ordner: Path, titel: str) -> None:
     fl_pfad = PROJEKT / "sim" / "stellarator" / "bewertung" / titel / "feldlinien.vtm"
     fl = pv.read(fl_pfad)["feldlinien"] if fl_pfad.exists() else None
     teile = {k: schnitt(mb[name]) for k, (name, _) in SCHICHTEN.items()}
+    # glTF mit Farben fuer Blender (stellarator/blender_szene.py): Schnittmodell + Feldlinien
+    pl = pv.Plotter(off_screen=True)
+    for k, m in teile.items():
+        if m.n_points:
+            pl.add_mesh(m.triangulate(), color=SCHICHTEN[k][1])
+    if fl is not None:
+        for key in fl.keys():
+            if fl[key] is not None and fl[key].n_points > 1:
+                pl.add_mesh(fl[key].tube(radius=0.012, n_sides=8).triangulate(), color="#7b2cbf")
+    pl.export_gltf(str(ordner / "torus3d.glb")); pl.close()
     ganz = {k: mb[name].extract_surface(algorithm="dataset_surface") for k, (name, _) in SCHICHTEN.items() if k == 7}
 
     def szene(datei, oberfl, kamera, zoom, text, legende=True, linien=True, einpassen=True):
