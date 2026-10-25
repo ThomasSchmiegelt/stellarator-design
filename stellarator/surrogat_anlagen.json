@@ -1,0 +1,45 @@
+{
+  "_hinweis": "Parameterbereiche des Surrogats je Anlage. Wandstaerken in m, E-Module in GPa. Aenderungen hier -> neuer DOE (doe.json loeschen).",
+  "w7x": {
+    "titel": "angelehnt an W7-X (70 Spulen, B0 Standard 2,5 T)",
+    "fall": "stellarator/faelle/w7x_standard.json",
+    "stationen": 64,
+    "r_lager_m": 0.25,
+    "verbinder_je_paar": 2,
+    "spiel_m": 0.01,
+    "last": {"art": "B0", "ref": 2.5, "bereich": [1.5, 3.0],
+             "hinweis": "linear-elastisch: Last ~ I^2 ~ B0^2 -> gerechnet bei ref, Vorhersage skaliert (B0/ref)^2"},
+    "parameter": {
+      "wand_innen_m":    [0.02, 0.08],
+      "wand_seite_m":    [0.02, 0.08],
+      "t_min_m":         [0.02, 0.10],
+      "t_zusatz_m":      [0.00, 0.15],
+      "verguss_m":       [0.002, 0.02],
+      "E_verguss_GPa":   [3.0, 20.0],
+      "E_verbinder_GPa": [1.0, 200.0],
+      "r_lager_m":       [0.25, 1.00]
+    }
+  },
+  "qa_1gw": {
+    "titel": "qa_nfp2_A45, HTS, 16 Spulen, ausgelegt nach elektrischer Netzleistung (Stufe 0)",
+    "fall": "stellarator/faelle/qa_nfp2_A45_1GW_HTS.json",
+    "stationen": 96,
+    "r_lager_m": 0.8,
+    "verbinder_je_paar": 6,
+    "verbinder_halb": 2,
+    "spiel_m": 0.02,
+    "last": {"art": "P_netz", "bereich": [600.0, 1400.0], "leiter": "HTS",
+             "stufe0": ["--form", "sim/invers/qa_nfp2_A45", "--spulen", "sim/invers/qa_nfp2_A45_spulen_mittel/spulen.json",
+                        "--k_B", "Nb3Sn=1.81,HTS=2.26", "--spalt_min", "0.2", "--k_spalt", "1.29", "--f_I", "1.08"]},
+    "parameter": {
+      "wand_innen_m":    [0.10, 0.60],
+      "wand_seite_m":    [0.08, 0.40],
+      "t_min_m":         [0.15, 0.80],
+      "t_zusatz_m":      [0.00, 0.60],
+      "verguss_m":       [0.005, 0.05],
+      "E_verguss_GPa":   [3.0, 20.0],
+      "E_verbinder_GPa": [1.0, 200.0],
+      "r_lager_m":       [1.0, 4.0]
+    }
+  }
+}

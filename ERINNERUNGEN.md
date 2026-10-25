@@ -167,3 +167,15 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
 
 - **2026-10-25:** 3D-Modelle torus3d/leiter3d + Blender-Render (blender_szene.py, Cycles CPU), Bilder in docs/bilder, Befund B-026. .blend-Dateien in sim/stellarator/{torus3d/w7x_standard,leiter3d}.
 - **2026-10-25:** Projektbericht von Anfang an: `bericht/projektbericht/projektbericht.{tex,pdf}` (de, Maschinenbau) und `project_report_en.{tex,pdf}` (en, IT). Alle Zitate gegen Volltext/Crossref/arXiv geprueft; Hermes-Literaturliste der Spulen-Recherche hatte unvollstaendige/falsche Angaben -> vor Veroeffentlichung korrigieren.
+- **2026-10-25:** Fusions-Surrogat gebaut (stellarator/hexmodell.py, surrogat.py, surrogat_waechter.py, surrogat_anlagen.json, elmer_udf/lorentz.f90; Skill `stellarator-surrogat`, auch fuer PI verlinkt). **UEBERGABE:** autonomer 4-h-Lauf seit 11:15 (`surrogat_waechter --anlage beide --stunden 4 --n 150`), PI prueft alle 20 min und darf nur `sim/surrogat/<anlage>/steuerung.json` aendern. Danach: `validierung.json/png` ansehen, Vorhersage + `--pruefen`, Bild oeffnen, Befund B-027 ergaenzen. Bei Absturz: denselben Befehl neu starten (fortsetzbar).
+- **2026-10-25 (Bericht):** Orchestrierung Claude (Chef) + PI (lokale Aufsicht ueber steuerung.json) + autonomer Lauf ist Berichtsstoff; Ablauf/Fehler stehen in B-027 und sim/surrogat/*.log. User-Pause 12:12–13:22 per sim/surrogat/zeitplan_pause.sh.
+- **2026-10-25 (Idee, nur notiert):** PicoGK-Gitter (LEAP71 LatticeLibrary/HelixHeatX) als homogenisierte Stuetzfuellung fuer 1 GW (Einheitszelle -> E-Modul -> Surrogat-Parameter Gitterdichte) und als Gyroid-Waermetauscher im Plasmagefaess. Erst nach Abschluss des Surrogat-Laufs.
+- **2026-10-25 15:15 NEUSTART nach Absturz:** `.venv/bin/python -m stellarator.neustart` (Ziel in sim/surrogat/auftrag.json, Stand sim/neustart_stand.md). Offen: qa_1gw Probe 40 nachrechnen (von Claude versehentlich per kill abgebrochen): `.venv/bin/python -m stellarator.surrogat probe --anlage qa_1gw --nr 40` NACH dem Lauf; Gitterzelle gyroid_0.95 nach dem Lauf; danach Stufe 2 (Gyroid-Fuellung im Hex-Modell).
+- **2026-10-25 (User, Anforderungen Gitter):** Plasmagefaess/Waermetauscher braucht Oberflaeche + Stroemungsgeschwindigkeit (Wasser sieden), Stuetzstruktur muss Kraefte in allen Komponenten tragen -> Waermetauscher-Kennzahlen (Gyroid S_v ~550 m2/m3, D_h ~5 mm bei 10-mm-Zelle) und voller Steifigkeitstensor/Schub fuer Stuetzgitter.
+
+## 2026-10-25 17:15 Surrogat abgeschlossen, Bericht geschrieben (Claude)
+- Lauf fertig 16:27, Training automatisch; qa_1gw Probe 40 nachgerechnet + neu trainiert (79 Proben). Ergebnisse B-027.
+- Neu: `stellarator/surrogat_auswertung.py` (Lastkurve + Empfindlichkeit, sim/surrogat/auswertung.png).
+- Bericht `bericht/surrogat/surrogat_bericht.{tex,pdf}` (8 S.), Verweis-Kasten im Projektbericht; auf GitHub.
+- GyroidGefaess (PicoGK) 2x gestartet -> beide Male Claude-Sitzung abgestuerzt (sim/gyroid_gefaess/PROBLEM.md). Ursache offen.
+- Offen: Gitterzelle gyroid_0.95 + kennlinie.json; Plasmagefaess + Torus-Gesamtbild; Stufe 2 Gitterfuellung.

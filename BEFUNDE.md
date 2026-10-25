@@ -6,6 +6,31 @@
 ---
 
 
+### B-027 | Surrogat-Rechenmodell: Hex-Netz fester Topologie, J x B per UDF, Elmer MUMPS (2026-10-25)
+- **Beobachtung:** `stellarator/hexmodell.py` baut Wickelpaket, Verguss, Stahlgehaeuse und Verbinder
+  als strukturiertes Hex-Netz direkt im Elmer-Format (kein gmsh, keine Luft). W7-X: 545 000 Knoten,
+  1-GW-Anlage (qa_nfp2_A45 HTS): 191 000 Knoten. Lorentzkraft aus Biot-Savart (4x4 Teilfilamente)
+  als Knotenlast ueber Fortran-UDF `elmer_udf/lorentz.f90` (prueft die Knotenreihenfolge).
+  Nettokraft NPC3 2,36 MN (bewerte 2,39 MN, -1,3 %). Laufzeit je Probe: W7-X ~95 s, 1 GW ~45 s.
+- **Loeser:** CG/ILU0 konvergiert nicht (Residuum steigt), MUMPS direkt geht (W7-X ~10 GB RAM).
+- **Ergebnis Referenzprobe W7-X** (Waende 5/5/6–13,5 cm, ein Lagerflecken r = 0,25 m):
+  Stahl von Mises p99 470 MPa, max 1490 MPa, u_max 30 mm. Handrechnung (Kastenquerschnitt,
+  2,4 MN, Einspannung an einem Flecken) gibt dieselbe Groessenordnung (~1000 MPa, cm).
+  **Widerspruch offen:** das Tet-Modell aus gehaeuse_netz (B-025) gab 110 MPa / 0,76 mm bei
+  aehnlichen Waenden — dort Lagerung/Last pruefen.
+- **1-GW-Anlage:** 1,2 GN Nettokraft je Spule; selbst mit 3-m-Lager und doppelten Waenden
+  ~1 GPa (p99), 19 cm Verformung -> Einzelgehaeuse mit punktuellen Verbindern reichen nicht,
+  durchgehende Stuetzstruktur noetig (Modellaussage, linear-elastisch).
+- **Fehler unterwegs:** Jacobi-Pruefung hob das Vorzeichen doppelt auf -> umgestuelpte Verbinder
+  unentdeckt (negatives Volumen). Behoben; Verbinder nur zwischen echten Seitennachbarn.
+- **Status:** ✅ Modell laeuft; DOE/Training laufen autonom (`surrogat_waechter`, PI-Aufsicht).
+- **Surrogat fertig (2026-10-25 16:27):** W7-X 78, 1 GW 79 Proben; GP + POD, 5-fach-Kreuzvalidierung:
+  Stahl p99 R2 0,992/0,981, Masse 0,996/0,998, u_max 0,984/0,981; Maxima einzelner Elemente nur R2 0,4-0,7 (~15 %).
+  Gegenprobe 1 GW (1000 MW, Waende 0,5/0,3 m, Lager 3,5 m): p99 -0,9 %, Masse +0,6 %, u_max -3,1 %, Maxima -15..-17 %.
+  Hebel W7-X: Seitenwand (+50/-20 %), Innenwand; 1 GW: Innenwand, Seitenwand, E_Verbinder. 1 GW p99 3,1-3,7 GPa
+  ueber den ganzen Bereich -> durchgehende Stuetzstruktur noetig. `rechne_probe` Standard jetzt MUMPS (iterativ hing
+  bei --pruefen). Auswertung `stellarator/surrogat_auswertung.py`, Bericht `bericht/surrogat/surrogat_bericht.pdf`.
+
 ### B-026 | 3D-Anschauungsmodelle: Torus mit Schichten, CICC-Leiter, Blender-Render (2026-10-25)
 - **torus3d.py:** W7-X-artiger Torus, 70 Spulen mit Gehaeuse, Verguss, Grundisolierung, 108 Leitern je Spule
   (Windungsisolation, Al-Mantel, Kabel), eindeutige Farben; Bilder w7x_torus3d_{schnitt,sektor,detail,geschlossen}.png,

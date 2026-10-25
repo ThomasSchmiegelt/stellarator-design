@@ -17,6 +17,7 @@
 /bericht/*
 !/bericht/projektbericht/
 !/bericht/v0.3/
+!/bericht/surrogat/
 /sim/*
 !/sim/pipeline/
 
