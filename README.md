@@ -27,6 +27,7 @@ Wie das Projekt entstanden ist, mit allen Irrwegen (Recherche, falsches erstes M
 Netzerzeugung, parametrisches FreeCAD-Modell, paralleler Rechenweg, 3D-Modell):
 
 - **Deutsch, für Maschinenbauer:** [Spulengehäuse eines Stellarators (PDF)](bericht/projektbericht/projektbericht.pdf)
+- **Für KI-interessierte Maschinenbauer (wenig Zahlen, was alles geht):** [Was KI-Agenten im Maschinenbau heute schon können (PDF)](bericht/projektbericht/ki_im_maschinenbau.pdf)
 - **English, for IT folks:** [Two AI Agents, One Stellarator (PDF)](bericht/projektbericht/project_report_en.pdf)
 - Ältere Fachauslegung (1 GW, v0.3): [bericht/v0.3/bericht_v0.3.pdf](bericht/v0.3/bericht_v0.3.pdf)
 

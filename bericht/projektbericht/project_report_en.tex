@@ -46,9 +46,9 @@ Greifswald) with 50 non-planar and 20 planar superconducting coils \cite{bosch20
 \begin{table}[H]\centering\small
 \begin{tabularx}{\linewidth}{@{}lX@{}}\toprule
 Human & Goal and direction, reviews results \emph{as images}, decides, supplies the key design ideas when stuck. \\
-Hermes & Local agent running open-weight models: literature research, project bookkeeping, writing reusable
+Hermes & Hermes Agent \cite{hermes}, run locally with open-weight models: literature research, project bookkeeping, writing reusable
   \emph{skills}, long-running jobs overnight. \\
-Claude Code & Coding agent: simulation pipeline, debugging, post-processing, figures. \\\bottomrule
+Claude Code & Coding agent \cite{claudecode}: simulation pipeline, debugging, post-processing, figures. \\\bottomrule
 \end{tabularx}\end{table}
 The agents never talk directly. They coordinate through files in the repository: an append-only findings log
 (\texttt{BEFUNDE.md}; every entry has observation, measurement, location, status), a handover file for decisions
@@ -61,7 +61,7 @@ to do the research first.
 \begin{table}[H]\centering\small
 \begin{tabularx}{\linewidth}{@{}lX@{}}\toprule
 Physics data & simsopt \cite{simsopt} (coil Fourier coefficients), DESC \cite{desc} (plasma shape optimisation) \\
-Geometry & Python + gmsh/OpenCASCADE \cite{gmsh} (direct meshing), FreeCAD 1.1 headless \cite{freecad} (parametric CAD), PicoGK \cite{picogk} (voxels, optional) \\
+Geometry & Python + gmsh/OpenCASCADE \cite{gmsh} (direct meshing), FreeCAD 1.1 headless \cite{freecad} (parametric CAD) \\
 Solver & ElmerFEM 9.0 \cite{elmer}: magnetostatics and linear elasticity in one coupled run \\
 Own code & Biot-Savart (numba), FFT field solver, field-line tracer, collision checks \\
 Visualisation & PyVista/VTK \cite{pyvista}, ParaView \cite{paraview}, Blender 4.0 \cite{blender} via glTF \\
@@ -264,6 +264,7 @@ wall thickness; wedge and casing in one body; wall sizing for the 1\,GW design; 
 \bibitem{paraview} J. Ahrens, B. Geveci, C. Law: ParaView: An end-user tool for large data visualization. In:
   \emph{Visualization Handbook}, Elsevier (2005).
 \bibitem{blender} Blender, version 4.0. Blender Foundation. \url{https://www.blender.org}
-\bibitem{picogk} LEAP 71: PicoGK. \url{https://github.com/leap71/PicoGK}
+\bibitem{hermes} Nous Research: Hermes Agent. \url{https://github.com/NousResearch/hermes-agent} (MIT licence).
+\bibitem{claudecode} Anthropic: Claude Code. \url{https://www.anthropic.com/claude-code}
 \end{thebibliography}
 \end{document}

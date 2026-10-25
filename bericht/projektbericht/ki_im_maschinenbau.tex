@@ -1,0 +1,188 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}\usepackage[T1]{fontenc}\usepackage[german]{babel}
+\usepackage{graphicx,float,booktabs,xcolor,tabularx,enumitem}
+\usepackage[margin=2.2cm]{geometry}\usepackage[hidelinks]{hyperref}
+\hypersetup{pdfauthor={Thomas Schmiegelt},pdftitle={Was KI-Agenten im Maschinenbau heute schon können}}
+\newcommand{\bild}[3]{\begin{figure}[H]\centering\includegraphics[width=#2\linewidth]{bilder/#1}\caption{#3}\end{figure}}
+\newcommand{\zwei}[3]{\begin{figure}[H]\centering\includegraphics[width=0.49\linewidth]{bilder/#1}\hfill
+  \includegraphics[width=0.49\linewidth]{bilder/#2}\caption{#3}\end{figure}}
+\newcommand{\kasten}[2]{\par\smallskip\noindent\fcolorbox{gray}{gray!8}{\parbox{0.96\linewidth}{\textbf{#1} #2}}\par\smallskip}
+\newcommand{\zitat}[1]{\par\smallskip\noindent\hspace*{1em}\parbox{0.92\linewidth}{\itshape „#1“}\par\smallskip}
+\title{\textbf{Was KI-Agenten im Maschinenbau heute schon können}\\[2pt]\large Ein Selbstversuch:
+  vier Tage, ein Rechner, zwei Agenten -- und die Spulen eines Fusionsreaktors}
+\author{Thomas Schmiegelt \textbar{} Hobbyprojekt \texttt{stellarator-design}}
+\date{25.10.2026}
+\begin{document}\maketitle
+
+\kasten{Hobbyprojekt, aus Neugier entstanden.}{Ich bin kein Fusionsforscher. Keine Verbindung zu einem
+Forschungsinstitut oder Unternehmen, nichts davon ist begutachtet. Das technische Modell ist an Wendelstein~7-X
+\emph{angelehnt} und stark vereinfacht. Dieser Text handelt nicht von den Ergebnissen, sondern von der
+Arbeitsweise. Die Zahlen stehen in den beiden technischen Berichten im selben Ordner.}
+
+\section*{Worum es geht}
+Kann man als Ingenieur mit KI-Agenten ein Thema bearbeiten, von dem man wenig weiß und für das man eigentlich
+ein Team bräuchte -- Physik, CAD, Vernetzung, FEM, Auswertung, Dokumentation? Ich habe es an einem bewusst
+schwierigen Bauteil ausprobiert: den dreidimensional verwundenen Magnetspulen eines Stellarators, also eines
+Fusionsreaktors, der sein Plasma allein mit äußeren Spulen einschließt \cite{bosch2013}. Nach vier Tagen stand
+eine durchgängige Kette von der Spulenbahn bis zur Spannung im Gehäuse. Interessanter als das Ergebnis ist, was
+unterwegs alles ging -- und was nicht.
+
+\bild{w7x_torus3d_blender.png}{0.92}{Ergebnis nach vier Tagen: 70 Spulen mit Gehäusen und Magnetfeldlinien,
+gerechnet mit freier Software, gerendert in Blender. Gebaut habe ich davon selbst keine Zeile Code.}
+
+%======================================================================
+\section{Das Team}
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}lX@{}}\toprule
+\textbf{Ich} & Ziel, Richtung, Entscheidungen. Ich schaue mir Bilder an, stelle Fragen und bringe Ideen aus der
+  Konstruktionspraxis ein. \\
+\textbf{Hermes Agent} \cite{hermes} & Läuft lokal auf meinem Rechner mit offenen Sprachmodellen. Recherche,
+  Literatur, Projektordner pflegen, lange Rechenläufe über Nacht. \\
+\textbf{Claude Code} \cite{claudecode} & Programmiert: Geometrie, Vernetzung, FEM-Eingabe, Auswertung, Bilder.
+  Sucht Fehler. \\
+\textbf{Freie Software} & FreeCAD \cite{freecad}, gmsh \cite{gmsh}, ElmerFEM \cite{elmer}, ParaView
+  \cite{paraview}, Blender \cite{blender}, Fachbibliotheken aus der Fusionsforschung \cite{simsopt,desc}. \\\bottomrule
+\end{tabularx}\end{table}
+Die Agenten bedienen diese Programme nicht über die Oberfläche, sondern über Skripte: FreeCAD ohne Fenster,
+Elmer über Eingabedateien, Blender im Hintergrund. Ich öffne das Ergebnis dann in der gewohnten Oberfläche und
+kann dort weiterarbeiten.
+
+%======================================================================
+\section{Was die Agenten konkret gemacht haben}
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}p{3.6cm}X@{}}\toprule
+Recherche & Grundlagen erarbeitet; 33 PDFs aus meiner Sammlung gesichtet und die vier relevanten ausgewertet;
+  gezielt auf arXiv gesucht, mit Pausen, um nicht gesperrt zu werden. \\
+Werkzeuge einrichten & FEM-Löser installiert und geprüft, FreeCAD eingerichtet, Python-Umgebungen für
+  unterschiedliche Bibliotheken getrennt. \\
+Validierung & Zuerst einen Fall mit bekannter Lösung gerechnet (gerader Leiter), bevor es ans eigentliche
+  Bauteil ging. \\
+Daten finden & Die echten Spulenbahnen von W7-X in einer frei verfügbaren Forschungsbibliothek gefunden
+  \cite{simsopt}. \\
+Parametrisches CAD & Ein FreeCAD-Modell erzeugt, das ich in der Oberfläche weiterbearbeiten kann:
+  Parametertabelle, Skizzenmaße als Ausdrücke, Symmetrien als Klone, Verbinder. \\
+Vernetzung und FEM & Netze erzeugt, Magnetfeld und Spannung in einem gekoppelten Lauf gerechnet, die Kraft mit
+  einer zweiten Methode gegengeprüft. \\
+Prüfroutinen & Kollisionsprüfung Spule für Spule, mit Video des Aufbaus. \\
+Auswertung & Bilder in pyvista, ParaView und Blender; Querschnitte, Schnittmodelle, Detailmodell des Leiters. \\
+Dokumentation & Befund-Protokoll, Berichte als PDF, Veröffentlichung auf GitHub. \\\bottomrule
+\end{tabularx}\end{table}
+
+\zwei{freecad_gui_w7x.png}{aufbau_schritt35.png}{Links: von einem Agenten per Skript erzeugtes, parametrisches
+FreeCAD-Modell, geöffnet in der normalen Oberfläche. Rechts: automatische Aufbauprüfung, Spule für Spule, mit
+Kollisionszähler.}
+
+%======================================================================
+\section{So sieht die Zusammenarbeit aus}
+Der Umgangston ist der eines Gesprächs mit einem Kollegen. Ich schreibe, was ich will, oft knapp und mit
+Tippfehlern -- der Agent setzt es um, zeigt ein Bild, und ich entscheide, wie es weitergeht. Einige meiner
+tatsächlichen Anweisungen aus dem Projekt (Rechtschreibung korrigiert):
+\zitat{Lass das erst sein. Mach erst die Recherche zur Funktion, zum Aufbau und zur Physik.}
+\zitat{Du kannst natürlich ein Logiksystem bauen, in dem du die benachbarten Spulen mit einem kleinen Offset
+abziehst.}
+\zitat{Wir können das auch parallel machen: den funktionierenden Weg für die Berechnung von heute Morgen und den
+parallelen CAD-Weg als Add-on.}
+\zitat{Supraleitungskabel und Kupferkabel kann man nicht unterscheiden. Durch was fließt der Strom?}
+Die zweite Anweisung wurde in wenigen Minuten zu einer Konstruktionslogik in FreeCAD: Jedes Gehäuse zieht die
+Hüllen seiner Nachbarn ab. Danach war das Modell kollisionsfrei. Die letzte Frage führte zu einem eigenen
+3D-Detailmodell des Leiters, das die Antwort zeigt.
+\zwei{w7x_spule_querschnitt.png}{w7x_leiter3d_blender.png}{Aus Fragen werden Bilder: Schichtaufbau einer Spule und
+ein Leiterstück, in dem der Strom im türkisfarbenen Supraleiter fließt.}
+
+\kasten{Was dabei auffällt:}{Die Ideen, die das Projekt aus Sackgassen geholt haben, kamen aus der
+Konstruktionserfahrung: ein \emph{Variable Section Sweep} wie in Creo, Nachbarn abziehen, CAD und Rechnung
+trennen. Die Agenten haben sie schnell umgesetzt, getestet und dokumentiert. Erfahrung wird also nicht
+überflüssig -- sie wird zum Hebel.}
+
+%======================================================================
+\section{Wo es hakt}
+\subsection{Plausibel heißt nicht richtig}
+Das erste Spulenmodell sah gut aus und lieferte Zahlen in der richtigen Größenordnung. Es war trotzdem kein
+Stellarator: Ein Teil der Spulen umschloss das Plasma gar nicht. Erst eine einfache geometrische Prüfung deckte
+es auf. Später fanden sich ein Vorzeichenfehler und eine falsche Stromrichtung, die der Löser ohne Warnung selbst
+gewählt hatte.
+\zwei{v01_spulen_iso.png}{w7x_wickelpakete.png}{Links das erste, falsche Modell -- rechts die echten Spulen. Den
+Unterschied sieht man erst, wenn man weiß, worauf man achten muss.}
+
+\subsection{Quellen sind nicht automatisch korrekt}
+Eine vom Agenten erstellte Literaturliste enthielt Einträge ohne Autoren und mit falschen Zeitschriften. Für die
+Veröffentlichung wurde jede Quelle einzeln gegen Volltext und Verlagsdaten geprüft.
+
+\subsection{Ein gültiges CAD-Modell ist noch kein Rechenmodell}
+Das parametrische FreeCAD-Modell war schön und gültig, aber der Vernetzer scheiterte an Flächen, die mehrere
+Boolesche Operationen gemeinsam erzeugt hatten. Die Lösung war ein zweiter Weg, der das Rechenmodell ohne
+CAD-Kern direkt aus den Daten erzeugt. Das kennt jeder Berechner: CAD-Modell und FE-Modell sind zwei verschiedene
+Dinge.
+\bild{freecad_und_elmer.png}{0.92}{Zwei Wege nebeneinander: parametrisches CAD für die Konstruktion (links),
+direkt erzeugtes Rechenmodell für die Spannung (rechts).}
+
+\subsection{Gedächtnis und Ressourcen}
+Agenten vergessen: Lange Sitzungen werden zusammengefasst, Details gehen verloren. Deshalb steht alles Wichtige in
+Dateien -- ein Befund-Protokoll, eine Übergabedatei, kurze Anleitungen („Skills“), die der Agent vor der nächsten
+Aufgabe liest. Und Rechenzeit bleibt Rechenzeit: Große FEM-Läufe brauchen Speicher, laufen über Nacht und müssen
+so gestartet werden, dass sie ein Sitzungsende überleben.
+
+%======================================================================
+\section{Meine Arbeitsregeln}
+\begin{enumerate}[itemsep=1pt]
+\item \textbf{Erst verstehen, dann bauen.} Recherche vor Werkzeug.
+\item \textbf{Ergebnisse als Bild zeigen lassen.} Ein Bild entlarvt Fehler schneller als jede Tabelle.
+\item \textbf{Alles zweimal rechnen lassen}, mit unabhängiger Methode. Einfache Prüfungen (Abstände, Umlaufsinn,
+  Gleichgewicht der Kräfte) automatisch einbauen.
+\item \textbf{Mit einem bekannten Fall anfangen}, bevor das eigentliche Bauteil gerechnet wird.
+\item \textbf{Den funktionierenden Weg nicht aufgeben}, während man den eleganten erkundet.
+\item \textbf{Befunde und Entscheidungen aufschreiben lassen} -- auch die Fehlschläge mit Ursache.
+\item \textbf{Quellen selbst prüfen}, bevor etwas veröffentlicht wird.
+\item \textbf{Die Verantwortung bleibt beim Ingenieur.} Kein Ergebnis ohne eigene Plausibilitätsprüfung
+  weitergeben.
+\end{enumerate}
+
+%======================================================================
+\section{Was man damit alles machen kann}
+Aus diesem Selbstversuch lassen sich Anwendungen ableiten, die in jedem Konstruktions- oder Berechnungsbüro
+denkbar sind:
+\begin{itemize}[itemsep=1pt]
+\item \textbf{Einarbeitung in fremde Themen:} Grundlagen, Normen- und Literaturlage in Stunden statt Wochen --
+  mit Prüfpflicht.
+\item \textbf{CAD automatisieren:} parametrische Modelle per Skript erzeugen, Varianten durchspielen, Klone und
+  Symmetrien konsequent nutzen; das Ergebnis bleibt im gewohnten CAD-Programm bearbeitbar.
+\item \textbf{Berechnungsketten aufbauen:} Geometrie, Netz, Löser und Auswertung verbinden, auch zwischen
+  Programmen, die nichts voneinander wissen.
+\item \textbf{Variantenstudien über Nacht:} Parameter ändern, rechnen, auswerten, vergleichen -- der Agent startet
+  und überwacht, der Ingenieur bewertet am Morgen.
+\item \textbf{Prüfroutinen:} Kollisionen, Abstände, Massen, Kräftegleichgewicht automatisch nach jedem Schritt.
+\item \textbf{Visualisierung und Kommunikation:} Schnittbilder, Explosions- und Detailmodelle, Renderings für
+  Präsentationen, Berichte als PDF.
+\item \textbf{Wissen sichern:} Befund-Protokolle und Anleitungen, die auch der nächste Kollege -- oder der nächste
+  Agent -- lesen kann.
+\end{itemize}
+
+\section*{Fazit}
+KI-Agenten ersetzen keine Ingenieurserfahrung. Sie verschieben die Arbeit: weniger Tippen, Suchen und
+Formatieren, mehr Fragen stellen, Ergebnisse beurteilen und Entscheidungen treffen. Wer sauber prüft, kann mit
+einem einzigen Rechner und freier Software Dinge ausprobieren, für die früher ein Team und Wochen nötig gewesen
+wären. Wer nicht prüft, bekommt sehr schnell sehr überzeugende falsche Ergebnisse.
+
+\medskip\noindent Technische Berichte, Programmcode und Befundprotokoll:
+\url{https://github.com/ThomasSchmiegelt/stellarator-design}
+
+\begin{thebibliography}{99}\small
+\bibitem{bosch2013} H.-S. Bosch, R.\,C. Wolf, T. Andreeva et al.: Technical challenges in the construction of
+  the steady-state stellarator Wendelstein 7-X. \emph{Nucl.\ Fusion} 53 (2013) 126001.
+  doi:10.1088/0029-5515/53/12/126001
+\bibitem{hermes} Nous Research: Hermes Agent. \url{https://github.com/NousResearch/hermes-agent} (MIT-Lizenz).
+\bibitem{claudecode} Anthropic: Claude Code. \url{https://www.anthropic.com/claude-code}
+\bibitem{simsopt} M. Landreman, B. Medasani, F. Wechsung, A. Giuliani, R. Jorge, C. Zhu: SIMSOPT: A flexible
+  framework for stellarator optimization. \emph{J.\ Open Source Softw.} 6(65) (2021) 3525.
+  doi:10.21105/joss.03525
+\bibitem{desc} D.\,W. Dudt, E. Kolemen: DESC: A stellarator equilibrium solver. \emph{Phys.\ Plasmas} 27 (2020)
+  102513.
+\bibitem{freecad} FreeCAD, Version 1.1. \url{https://www.freecad.org}
+\bibitem{gmsh} C. Geuzaine, J.-F. Remacle: Gmsh: A 3-D finite element mesh generator with built-in pre- and
+  post-processing facilities. \emph{Int.\ J.\ Numer.\ Meth.\ Eng.} 79 (2009) 1309--1331.
+\bibitem{elmer} ElmerFEM, Version 9.0. CSC -- IT Center for Science, Finnland. \url{https://www.elmerfem.org}
+\bibitem{paraview} J. Ahrens, B. Geveci, C. Law: ParaView: An end-user tool for large data visualization. In:
+  \emph{Visualization Handbook}, Elsevier (2005).
+\bibitem{blender} Blender, Version 4.0. Blender Foundation. \url{https://www.blender.org}
+\end{thebibliography}
+\end{document}

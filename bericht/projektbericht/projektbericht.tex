@@ -50,8 +50,8 @@ dazwischen Platz finden. Ziel des Projekts war eine nachvollziehbare Rechenkette
 (ElmerFEM \cite{elmer}, gmsh \cite{gmsh}, FreeCAD \cite{freecad}) für genau diese Frage.
 
 \subsection{Arbeitsweise}
-Gearbeitet wurde mit zwei KI-Agenten: \emph{Hermes} (lokal betrieben; Recherche, Projektpflege, lange
-Rechenläufe) und \emph{Claude Code} (Programmierung, Fehlersuche, Auswertung). Der Mensch gab Ziel und Richtung
+Gearbeitet wurde mit zwei KI-Agenten: \emph{Hermes Agent} \cite{hermes} (lokal betrieben; Recherche, Projektpflege, lange
+Rechenläufe) und \emph{Claude Code} \cite{claudecode} (Programmierung, Fehlersuche, Auswertung). Der Mensch gab Ziel und Richtung
 vor, prüfte die Ergebnisse an Bildern und brachte an mehreren Sackgassen die entscheidende konstruktive Idee ein.
 Jeder Befund wird mit Beobachtung, Messung, Fundstelle und Status protokolliert; das Protokoll liegt mit dem
 Programmcode im Repository.
@@ -255,8 +255,7 @@ Toleranzstudie mit $\pm\SI{2}{mm}$.
 
 \subsection*{Software und Daten}
 ElmerFEM 9.0 \cite{elmer}, gmsh \cite{gmsh}, FreeCAD 1.1 \cite{freecad}, simsopt \cite{simsopt}, DESC
-\cite{desc}, PyVista \cite{pyvista}, ParaView \cite{paraview}, Blender 4.0 \cite{blender}, PicoGK
-\cite{picogk}. Programmcode, Befundprotokoll und Abbildungen:
+\cite{desc}, PyVista \cite{pyvista}, ParaView \cite{paraview}, Blender 4.0 \cite{blender}. Programmcode, Befundprotokoll und Abbildungen:
 \url{https://github.com/ThomasSchmiegelt/stellarator-design} (MIT-Lizenz).
 
 \begin{thebibliography}{99}\small
@@ -289,6 +288,7 @@ ElmerFEM 9.0 \cite{elmer}, gmsh \cite{gmsh}, FreeCAD 1.1 \cite{freecad}, simsopt
 \bibitem{paraview} J. Ahrens, B. Geveci, C. Law: ParaView: An end-user tool for large data visualization. In:
   \emph{Visualization Handbook}, Elsevier (2005).
 \bibitem{blender} Blender, Version 4.0. Blender Foundation. \url{https://www.blender.org}
-\bibitem{picogk} LEAP 71: PicoGK. \url{https://github.com/leap71/PicoGK}
+\bibitem{hermes} Nous Research: Hermes Agent. \url{https://github.com/NousResearch/hermes-agent} (MIT-Lizenz).
+\bibitem{claudecode} Anthropic: Claude Code. \url{https://www.anthropic.com/claude-code}
 \end{thebibliography}
 \end{document}
