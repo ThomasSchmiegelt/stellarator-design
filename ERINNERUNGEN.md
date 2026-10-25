@@ -179,3 +179,21 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
 - Bericht `bericht/surrogat/surrogat_bericht.{tex,pdf}` (8 S.), Verweis-Kasten im Projektbericht; auf GitHub.
 - GyroidGefaess (PicoGK) 2x gestartet -> beide Male Claude-Sitzung abgestuerzt (sim/gyroid_gefaess/PROBLEM.md). Ursache offen.
 - Offen: Gitterzelle gyroid_0.95 + kennlinie.json; Plasmagefaess + Torus-Gesamtbild; Stufe 2 Gitterfuellung.
+- **2026-10-25 17:40 Absturz-Ursache + Watchdog:** systemd-oomd beendete 2x die ganze Terminal-Sitzung (journalctl: vte-spawn-*.scope oom-kill). Ausloeser: doppelte STL-Skalierung in gyroid_gefaess.py (Plasma 1000x zu gross). Neu `stellarator/speicherwaechter.py`: schwere Programme in eigener `systemd-run --user`-Einheit mit MemoryMax/MemorySwapMax=0, Waechter (RAM-Reserve 4 GB, PSI avg10 > 30 %) beendet frueh. setsid schuetzt NICHT (gleiche cgroup).
+- **Gyroid-Plasmagefaess (1 GW):** `python -m stellarator.gyroid_gefaess --sektoren 0:30 --teil 10 --voxel 0.025 --halbdicke 0.015 --zelle 0.40 --name detail`; Wand 0,45 m (Haeute 20/30 mm), Kerndichte 24 %, Stahl 33 % der Wand. Gesamtbild `gesamtbild()` -> sim/gyroid_gefaess/detail/gesamt_{schraeg,detail}.png + gesamt.vtm (ParaView). Offen: Kollisionspruefung Gefaess/Spulen, Stroemung.
+- **2026-10-25 abends Gesamtszene + Kuehlsegment:** `python -m stellarator.gesamtszene` (Gyroid-Sektor `sim/gyroid_gefaess/dick`: Wand 0,9 m, Zelle 0,6 m, 0..20 Grad geschlossen, 20..40 ohne Aussenhaut; Spulen mit Spannung, Stuetzstruktur silber getrennt, Feldlinien |B|) -> PLY + `blender -b -P stellarator/blender_gesamt.py -- <abs. Ordner> --ansicht alle` (uebersicht/schnitt/gyroid, CPU, ~3 GB) ueber speicherwaechter; Legende `gesamtszene.legende`. Abstand Plasma->Stahlgehaeuse min 1,25 m.
+- **Kuehlsegment:** `python -m stellarator.kuehlsegment` (picogk/KuehlSegment): 1,0 x 0,4 m, Kern 0,2 m, Zelle 100 mm, Kerndichte 24 %, Verteilkammern 60 mm, Rohre D 100 mm; segment.stl + wasser.stl (ein zusammenhaengender Fluidraum) fuer FluidX3D. v_Kern/v_Rohr nur 0,10 -> fuer Sieden mehr Rohre/engere Zellen. FluidX3D liegt in ~/ai-workspace/FluidX3D, braucht GPU (Hermes) -> erst fragen.
+
+## 2026-10-25 abends: Gefaess-Torus allein, geschnitten (Blender)
+- stellarator/thorus_schnitt.py + blender_thorus.py: nur Plasmagefaess in Einbaulage auf Hallenboden, ohne Spulen und Verbinder,
+  Tortenstueck 40..100 Grad herausgeschnitten; Schnittflaechen orange, Gyroid-Kern (PicoGK dick 0..40 + neu dick2 100..140) sichtbar.
+- Bilder sim/thorus_schnitt/blender_uebersicht.png, blender_detail.png; thorus.blend. 64 Proben, 321 s, Spitze 4,7 GB (Waechter 6 GB).
+- Horizontaler Schnitt (User-Wunsch): gyroid_gefaess.py --z_band=-1.0:0 --name band (36 x 10 Grad, je ~25 s, 0,5 GB),
+  thorus_schnitt.py --horizontal --teile band -> sim/thorus_schnitt/horizontal/blender_*.png (509 s, Spitze 2,5 GB).
+- Gemeint war (User): senkrechter Schnitt durch nur EIN Segment. gyroid_gefaess.py --ebene 20:11.1 --sektoren 0:40 --name ebene
+  (Keil hinter senkrechter Ebene laengs zum Ring abgeschnitten), thorus_schnitt.py --ebene --teile ebene
+  -> sim/thorus_schnitt/ebene/blender_*.png (365 s, Spitze 1,4 GB). Rest des Rings geschlossen, keine Spulen/Verbinder.
+- Lieblingsbild des Users: sim/thorus_schnitt/blender_uebersicht.png (Tortenschnitt 40..100). Davon Variante mit Spulen
+  (Spannung), Feldlinien, ohne Verbinder: thorus_schnitt.py --spulen -> sim/thorus_schnitt/spulen/thorus_*.png
+  (Spulen 2, 3, 15 ueber dem Ausschnitt weggelassen; 495 s, Spitze 5,0 GB).
+  Weite Ansicht (ganze Anlage): blender_thorus.py --ansicht weit -> sim/thorus_schnitt/spulen/thorus_weit.png (136 s).

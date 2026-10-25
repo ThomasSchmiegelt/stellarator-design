@@ -259,6 +259,26 @@ Weitere Bilder: [Querschnitt (SVG)](docs/bilder/w7x_spule_querschnitt.svg),
 [Schnitt](docs/bilder/w7x_torus3d_schnitt.png), [Sektor](docs/bilder/w7x_torus3d_sektor.png),
 [geschlossen](docs/bilder/w7x_torus3d_geschlossen.png).
 
+### Plasmagefäß mit Gyroid-Kühlkern (PicoGK, Blender)
+
+Idee aus Neugier: die Wand des Plasmagefäßes der 1-GW-Auslegung als 0,9 m dicke Doppelhaut mit Gyroid-Kern
+(Zelle 0,6 m, rund 25 % Stahl), in dem Kühlwasser durch zwei getrennte Kanalnetze laufen könnte. Erzeugt mit
+PicoGK (Voxel 30 mm, je 10°-Segment ein Lauf), gerendert in Blender. Spulengehäuse farbig nach Vergleichsspannung
+aus dem Surrogat (1000 MW), Feldlinien nach Biot-Savart; drei Spulen über dem Ausschnitt ausgeblendet,
+Verbinder weggelassen. Reine Darstellung, keine Auslegung der Kühlung.
+
+![1-GW-Stellarator mit aufgeschnittenem Plasmagefäß, Spulen und Feldlinien](docs/bilder/gyroid_gefaess_1GW_gesamt.jpg)
+
+| | |
+|---|---|
+| ![Gefäß allein, Tortenschnitt](docs/bilder/gyroid_gefaess_1GW_schnitt.jpg) | ![Schnittfläche mit Gyroid-Filamenten](docs/bilder/gyroid_gefaess_1GW_detail.jpg) |
+| Gefäß allein in Einbaulage, Schnittflächen orange | Schnittfläche: Gyroid-Filamente zwischen Innen- und Außenhaut |
+
+Dazu ein geschlossenes Kühlsegment (1,0 × 0,4 m, Gyroid-Kern 0,2 m, je ein Ein- und Austrittsrohr) als
+Fluidgebiet für eine spätere Strömungsrechnung: [Bild](docs/bilder/gyroid_kuehlsegment.jpg).
+Skripte: `stellarator/gyroid_gefaess.py`, `thorus_schnitt.py`, `blender_thorus.py`, `kuehlsegment.py`;
+schwere Läufe über `stellarator/speicherwaechter.py` (eigene systemd-Einheit mit Speichergrenze).
+
 ---
 
 ## Aufbau
