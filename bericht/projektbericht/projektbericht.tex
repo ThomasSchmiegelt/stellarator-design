@@ -1,0 +1,294 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}\usepackage[T1]{fontenc}\usepackage[german]{babel}
+\usepackage{graphicx,float,booktabs,amsmath,siunitx,xcolor,tabularx}
+\usepackage[margin=2.2cm]{geometry}\usepackage[hidelinks]{hyperref}
+\sisetup{output-decimal-marker={,}}
+\hypersetup{pdfauthor={Thomas Schmiegelt},pdftitle={Spulengehäuse eines Stellarators -- vom Datensatz zur Spannungsrechnung}}
+\newcommand{\bild}[3]{\begin{figure}[H]\centering\includegraphics[width=#2\linewidth]{bilder/#1}\caption{#3}\end{figure}}
+\newcommand{\zwei}[4]{\begin{figure}[H]\centering\includegraphics[width=0.49\linewidth]{bilder/#1}\hfill
+  \includegraphics[width=0.49\linewidth]{bilder/#2}\caption{#3}\label{#4}\end{figure}}
+\newcommand{\kasten}[2]{\par\smallskip\noindent\fcolorbox{gray}{gray!8}{\parbox{0.96\linewidth}{\textbf{#1} #2}}\par\smallskip}
+\title{\textbf{Spulengehäuse eines Stellarators}\\[2pt]\large Vom offenen Datensatz zur Spannungsrechnung --
+  ein Projektbericht mit Irrwegen}
+\author{Thomas Schmiegelt \textbar{} Hobbyprojekt \texttt{stellarator-design}}
+\date{25.10.2026}
+\begin{document}\maketitle
+
+\kasten{Hobbyprojekt, aus Neugier entstanden.}{Keine Verbindung zu einem Forschungsinstitut oder Unternehmen,
+nicht begutachtet. Alle Zahlen sind Abschätzungen mit vereinfachten Modellen und können Fehler enthalten. Das
+W7-X-Modell ist \emph{angelehnt an} Wendelstein~7-X: Die Spulenbahnen stammen aus öffentlichen Daten
+\cite{simsopt}; Gehäuse, Verbinder, Verguss, Lagerung und Wandstärken sind eigene, vereinfachte Annahmen und
+entsprechen nicht der realen Anlage. Rechnungen, Programmcode und Textentwurf entstanden mit Unterstützung von
+KI-Agenten; alle Abbildungen sind eigene Rechnungen und Darstellungen.}
+
+\begin{abstract}
+Die supraleitenden Spulen eines Stellarators sind dreidimensional gekrümmte Bauteile, auf die im Betrieb große
+magnetische Kräfte wirken. Der Bericht beschreibt, wie in vier Tagen eine durchgängige Rechenkette entstand:
+Spulenbahn $\to$ Magnetfeld $\to$ Lorentzkraft $\to$ Gehäusegeometrie $\to$ Vergleichsspannung. Er zeigt auch die
+Irrwege: ein falsches Ersatzmodell mit plausiblen Zahlen und ein parametrisches CAD-Modell, das gültig, aber
+schwer vernetzbar war. Entscheidend war ein zweiter, paralleler Weg, der die Gehäuse ohne Boolesche Operationen
+direkt als Netz erzeugt. Für ein W7-X-ähnliches Spulensystem (70 Spulen, \SI{2,5}{T} auf der Achse) ergeben sich
+mit \SI{33}{m^3} Stahl Vergleichsspannungen von 99\,\% unter \SI{43}{MPa} und Verformungen unter \SI{1}{mm}
+-- unter stark vereinfachter Lagerung.
+\end{abstract}
+
+\tableofcontents
+
+%======================================================================
+\section{Worum es geht}
+\kasten{Der Stellarator in fünf Sätzen.}{Ein Fusionsplasma (über 100 Mio.\ Grad) wird von einem Magnetfeld in
+einem ringförmigen Vakuumgefäß gehalten. Damit die Teilchen nicht nach außen driften, müssen die Feldlinien
+schraubenförmig um den Ring laufen. Beim Tokamak erzeugt das ein großer Strom im Plasma selbst; beim
+Stellarator ausschließlich die äußeren Spulen, die dafür räumlich verwunden sein müssen. Das macht den
+Stellarator im Dauerbetrieb einfacher, die Spulen aber zu anspruchsvollen 3D-Bauteilen mit engen Toleranzen.
+Referenz ist Wendelstein~7-X (IPP Greifswald) mit 50 nichtplanaren und 20 planaren supraleitenden Spulen
+\cite{bosch2013}.}
+
+Für den Maschinenbau sind die Spulen interessant, weil sich hier Konstruktion, Fertigung und Festigkeit
+treffen: Die Bahn ist durch die Physik vorgegeben, die Kräfte durch Strom und Feld, und die Struktur muss
+dazwischen Platz finden. Ziel des Projekts war eine nachvollziehbare Rechenkette mit freier Software
+(ElmerFEM \cite{elmer}, gmsh \cite{gmsh}, FreeCAD \cite{freecad}) für genau diese Frage.
+
+\subsection{Arbeitsweise}
+Gearbeitet wurde mit zwei KI-Agenten: \emph{Hermes} (lokal betrieben; Recherche, Projektpflege, lange
+Rechenläufe) und \emph{Claude Code} (Programmierung, Fehlersuche, Auswertung). Der Mensch gab Ziel und Richtung
+vor, prüfte die Ergebnisse an Bildern und brachte an mehreren Sackgassen die entscheidende konstruktive Idee ein.
+Jeder Befund wird mit Beobachtung, Messung, Fundstelle und Status protokolliert; das Protokoll liegt mit dem
+Programmcode im Repository.
+
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}lX@{}}\toprule
+Datum & Schritt \\\midrule
+22.10. & Projekt angelegt, Recherche zu Funktion, Aufbau und Physik, FEM-Software eingerichtet. \\
+23.10. & Validierung am geraden Leiter; parametrisches Ersatzmodell und Bericht v0.1 -- \emph{falsch}; Neustart mit
+  echten Spulenbahnen. \\
+24.10. & Wickelpakete direkt als Netz, Magnetostatik mit 70 Spulen; Auslegung einer 1-GW-Anlage;
+  parametrisches FreeCAD-Gehäuse; Keil und Kollisionen; paralleler Rechenweg und Spannungsrechnung. \\
+25.10. & 3D-Schnittmodell mit Leiteraufbau, Visualisierung, dieser Bericht. \\\bottomrule
+\end{tabularx}\end{table}
+
+%======================================================================
+\section{Recherche: Aufbau einer W7-X-Spule}
+Der Ausgangspunkt war Literaturarbeit. W7-X hat einen großen Radius von \SI{5,5}{m}, fünf Feldperioden und
+\SI{2,5}{T} auf der Plasmaachse \cite{bosch2013}. Jede Spule ist aus einem Kabel-in-Rohr-Leiter (CICC)
+gewickelt: 243 NbTi-Stränge von \SI{0,57}{mm} Durchmesser, jeder mit 144 Filamenten in einer Kupfermatrix
+(Cu\,:\,Nicht-Cu = 2,6), in einem koextrudierten Aluminiummantel von \SI{16}{mm} $\times$ \SI{16}{mm} mit \SI{37}{\%} Hohlraum
+für das Kühlhelium \cite{rummel2005,maix2006}. Die nichtplanaren Spulen haben 108 Windungen.
+
+Für die Struktur wichtig waren zwei weitere Quellen. Bachmann et al.\ legen für den EU-DEMO die Innenschenkel
+der Toroidalfeldspulen als Gewölbe aus, das sich gegenseitig abstützt (\emph{wedged}), mit einer zulässigen
+Vergleichsspannung von \SI{660}{MPa} \cite{bachmann2024}. Gil et al.\ nennen für die Spulen von W7-X
+Fertigungstoleranzen von \SI{2}{mm} \cite{gil2025}; Schmeling et al.\ zeigen, dass Hochtemperatur-Supraleiter
+(REBCO-Band) auf Torsion und Biegung über die harte Achse empfindlich reagieren \cite{schmeling2025}.
+
+%======================================================================
+\section{Erste Rechnungen und das falsche Ersatzmodell}
+\subsection{Validierung am geraden Leiter}
+Vor jeder Spulenrechnung wurde ElmerFEM an einem Fall mit exakter Lösung geprüft: dem unendlich langen Leiter,
+$B=\mu_0 I/2\pi r$. Die ersten Läufe lieferten überall null, weil das Netzformat falsch eingelesen und die
+Stromdichte mit falschen Schlüsselwörtern angegeben war. Mit dem offiziellen Elmer-Testfall als Vorlage stimmte
+das Ergebnis: innerhalb des Leiters \SI{0,09}{\%}, außerhalb \SI{2}{\%} Abweichung (Abb.~\ref{fig:valid}).
+
+\subsection{Das Ersatzmodell (Bericht v0.1)}
+Weil die echten Spulenbahnen zunächst als nicht verfügbar galten, wurde ein parametrisches Ersatzmodell aus
+Ellipsen und Bändern gebaut und der Strom auf \SI{2,5}{T} kalibriert. Der Vergleich mit W7-X sah gut aus:
+Amperewindungen je Spule $0{,}90\times$ des realen Werts.
+\zwei{v01_spulen_iso.png}{v01_feld_verteilung.png}{Bericht v0.1: Ersatzmodell und Feldverteilung. Plausible
+Zahlen -- aber kein Stellarator.}{fig:v01}
+
+Eine einfache topologische Prüfung zeigte den Fehler: 20 der 50 „nichtplanaren“ Spulen umschlossen die
+Plasmaachse gar nicht, die „planaren“ Spulen lagen als waagrechte Bänder über und unter dem Plasma. Die gute
+Stromübereinstimmung war Zufall. Die echten Bahnen waren sehr wohl verfügbar: als Fourier-Koeffizienten der
+sieben W7-X-Basisspulen in der freien Software simsopt \cite{simsopt}.
+
+Später fanden sich zwei weitere Fehler, die Zahlen rückwirkend änderten: ein Vorzeichenfehler in der Formel der
+magnetischen Achse (Kalibrierstrom \SI{12,18}{kA} statt richtig \SI{13,49}{kA} je Windung) und eine vom Löser
+selbst gewählte, für 25 gespiegelte Spulen falsche Stromrichtung (\SI{1,38}{T} statt \SI{2,50}{T}).
+\kasten{Lehre:}{Plausible Zahlen beweisen nichts. Jede Geometrie wird unabhängig geprüft (Umlaufzahl um die
+Achse, Abstände, Feld mit einer zweiten Methode), bevor ein Ergebnis weitergegeben wird.}
+
+%======================================================================
+\section{Neustart: Netz direkt aus den Bahndaten}
+\subsection{Magnetfeld}
+Mit den echten Bahnen (7 Basisspulen, über Dreh- und Spiegelsymmetrie 70 Spulen) zeigte das Feld die bekannten
+bohnenförmigen Flussflächen (Abb.~\ref{fig:feld}). Kalibriert auf \SI{2,5}{T} im Mittel auf der Achse ergibt
+sich ein Strom von \SI{13,5}{kA} je Windung.
+\zwei{w7x_feldlinien_3d.png}{w7x_poincare_bewertung.png}{Feldlinien auf Flussflächen (links), Poincaré-Schnitt
+und Verdrillung der Feldlinien über dem Radius (rechts).}{fig:feld}
+
+\subsection{Wickelpakete als Volumennetz}
+Der ursprüngliche Plan war eine CAD-Modellierung. Robuster war der direkte Weg: an jedem Bahnpunkt ein
+Rechteckquerschnitt (Wickelpaket \SI{192}{mm} $\times$ \SI{160}{mm}, Annahme), je zwei Hälften als Regelfläche,
+vernetzt mit gmsh/OpenCASCADE. Sweeps und glatte Lofts scheiterten dagegen an Selbstdurchdringungen der
+Oberfläche. Volumenfehler unter \SI{0,4}{\%}; kleinster Spalt zwischen zwei Wickelpaketen \SI{68}{mm}, geprüft
+über Mittellinienabstände in \SI{1,5}{s} statt über \SI{45}{min} Boolesche Schnittprüfung.
+
+Die Magnetostatik mit allen 70 Spulen (3,3 Mio.\ Tetraeder, \SI{680}{s}, \SI{10}{GB} RAM) traf das Feld der
+Linienleiterrechnung (Biot-Savart) auf der Achse im Median auf \SI{0,24}{\%} (Abb.~\ref{fig:elmer}).
+\zwei{w7x_wickelpakete.png}{elmer_70_spulen_vergleich.png}{70 Wickelpakete direkt aus den Bahndaten (links);
+FEM gegen Biot-Savart entlang einer Spulennormalen (rechts).}{fig:elmer}
+\zwei{validierung_draht.png}{w7x_voxelsolver_validierung.png}{Validierungen: FEM am geraden Leiter (links),
+eigener FFT-Feldlöser gegen Biot-Savart (rechts).}{fig:valid}
+
+\subsection{Abstecher: Auslegung auf 1\,GW}
+Auf dieselbe Kette setzte eine Studie auf, die vom Ziel her rechnet: \SI{1}{GW} elektrische Leistung $\to$
+Plasmagröße und Feld $\to$ eigene Plasmaform (DESC \cite{desc}) $\to$ Spulen (simsopt \cite{simsopt}). Mit
+Hochtemperatur-Supraleiter ergibt sich ein großer Radius von etwa \SI{10}{m}. Die Kraft je Spule liegt dann bei
+rund \SI{1}{GN}, etwa das Tausendfache von W7-X -- ab hier ist die Tragstruktur die eigentliche
+Konstruktionsaufgabe.
+\zwei{uebersicht_1GW_A6_A45.png}{struktur_A6_HTS.png}{1-GW-Auslegung (links) und erste Stützschale mit
+gekoppelter Rechnung Feld $\to$ Kraft $\to$ Spannung (rechts).}{fig:gw}
+
+%======================================================================
+\section{Parametrisches CAD-Modell der Gehäuse}
+\subsection{Konstruktionsidee: Variable Section Sweep}
+Eine durchgehende Stützschale ließ sich für die kompakte Form nicht sauber konstruieren. Die Idee aus der
+Praxis mit Creo war ein \emph{Variable Section Sweep}: je Spule eine geschlossene Leitkurve als Innenkontur des
+Gehäuses, Skizzen senkrecht zur Kurve, ein Loft hindurch; alle Wände wachsen nach außen. In FreeCAD wurde das voll
+parametrisch umgesetzt: Parametertabelle, Skizzenmaße als Ausdrücke, Wandstärke je Station nach der
+Linienlast, Symmetrien als Klone und Verbinder zwischen benachbarten Spulen.
+\zwei{freecad_gui_w7x.png}{gehaeuse_A45_HTS_verbunden.png}{Parametrisches FreeCAD-Modell: W7-X-ähnliche
+Gehäuse mit Verbindern (links), kompakte 1-GW-Form (rechts).}{fig:fc}
+
+\subsection{Was nicht funktionierte}
+\begin{enumerate}\itemsep1pt
+\item \textbf{Wandstärken geschätzt statt ausgelegt.} Die erste gekoppelte Rechnung der 1-GW-Form lief durch,
+  ergab aber 99\,\% der Vergleichsspannungen unter \SI{5130}{MPa} -- weit über dem Zulässigen. Bei linearer
+  Elastizität heißt das: etwa drei- bis fünfmal mehr Stahlquerschnitt.
+\item \textbf{Gewölbe (Keil) auf der Innenseite.} In Anlehnung an \cite{bachmann2024} sollten sich die Gehäuse
+  innen über Keile abstützen. Das CAD-Modell war gültig, die Vernetzung scheiterte jedoch an deckungsgleichen
+  Teilflächen, die aus mehreren Booleschen Schnitten am selben Wickelpaket entstanden. Nach sechs Versuchen
+  (Toleranzen, Vereinigen in FreeCAD, bewusste Überlappung) wurde der Keil vorerst herausgenommen.
+\item \textbf{Kollisionen.} Zwischen den Skizzenstationen beult ein Loft aus, und an den Ecken greifen schräg
+  stehende Nachbarn über. Eine schrittweise Aufbauprüfung (Spule für Spule, mit Kollisionszählung) fand rund
+  100 Durchdringungen.
+\item \textbf{Lösung im CAD: Nachbarschnitt.} Von jedem Gehäuse werden die Hüllen der Nachbarn plus ein Spiel
+  abgezogen. Ergebnis: 0 Kollisionen in allen 70 Aufbauschritten. Die Vernetzung des gesamten Verbunds blieb
+  trotzdem aufwendig.
+\end{enumerate}
+\zwei{struktur_A45_HTS_gehaeuse.png}{gehaeuse_A45_HTS_keil_oben.png}{Erste Spannungsrechnung der FreeCAD-Gehäuse
+mit zu dünnen Wänden (links); Gehäuse mit Keil auf der Innenseite -- im CAD gültig, nicht vernetzbar
+(rechts).}{fig:keil}
+\kasten{Lehre:}{Ein gültiger Volumenkörper ist noch kein vernetzbarer. Je mehr Boolesche Operationen auf
+dieselben Flächen treffen, desto eher entstehen Splitterflächen, an denen der Vernetzer scheitert.}
+
+%======================================================================
+\section{Paralleler Rechenweg ohne CAD-Kern}
+Der Ausweg war, beide Wege zu trennen: das CAD-Modell als Konstruktionsstand, die Rechnung direkt aus den
+Bahndaten -- wie bei den Wickelpaketen. Jedes Gehäuse besteht aus zwei Rechteckrohren auf der exakten Bahn
+(Außenkontur und Wickelpaket als Aussparung), jeweils als eigenes Oberflächennetz, ganz ohne Boolesche
+Operationen. Die Wandstärken folgen aus der Linienlast und dem freien Platz zum Nachbarn. Eine Entflechtung
+prüft Oberflächenpunkte fremder Gehäuse (auch zwischen den Stationen) gegen den eigenen Querschnitt und nimmt die
+Wand mit dem geringsten Verlust zurück: 4980 $\to$ 40 $\to$ 0 Berührpunkte.
+
+\subsection{Modell und Annahmen}
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}lX@{}}\toprule
+Werkstoff Gehäuse & Austenitischer Stahl (316LN), $E=\SI{200}{GPa}$, $\nu=0{,}3$; Vergleichswert
+  \SI{667}{MPa} (Annahme: $\tfrac23 R_{p0,2}$ bei \SI{4}{K}) \\
+Wickelpaket & homogenisiert (Leiter, Kupfer, Stahl, Isolation), $E=\SI{100}{GPa}$, $\nu=0{,}3$ \\
+Last & Lorentzkraft $\vec J\times\vec B$ als Volumenlast, im selben Lauf aus der Magnetostatik (gekoppelt) \\
+Lagerung & je Gehäuse ein fest eingespannter Bereich ($r=\SI{0,25}{m}$) am äußersten Bahnpunkt; keine
+  Verbinder, kein Tragring \\
+Rechnung & linear-elastisch, statisch; Tetraeder, ElmerFEM \\
+Nicht modelliert & Verguss, Abkühlung, Vorspannung, Kontakt, Ermüdung \\\bottomrule
+\end{tabularx}\end{table}
+
+\subsection{Ergebnis W7-X-ähnlich}
+\begin{table}[H]\centering\small
+\begin{tabular}{@{}ll@{}}\toprule
+Netz & 3,02 Mio.\ Tetraeder, Erzeugung \SI{78}{s} \\
+Lösung & \SI{55}{min}, rund \SI{14}{GB} RAM \\
+Stahl & \SI{33,4}{m^3} $\approx$ \SI{264}{t} \\
+Resultierende Kraft je Spule & FEM \SI{2,42}{MN}, Biot-Savart \SI{2,39}{MN} (+1\,\%) \\
+Vergleichsspannung Gehäuse & Mittel \SI{11}{MPa}, 99\,\% $<$ \SI{43}{MPa}, Maximum \SI{110}{MPa} \\
+Wickelpakete & Maximum \SI{69}{MPa} \\
+Verformung & unter \SI{1}{mm} \\\bottomrule
+\end{tabular}\end{table}
+Die Spannungen liegen weit unter dem Vergleichswert. Das ist wegen der vereinfachten Lagerung
+(Einspannbereiche statt Abstützung über Nachbarn und Tragring) und stellenweise nur \SI{3}{mm} dünner Wände
+\emph{kein} Festigkeitsnachweis, aber ein durchgängiger, reproduzierbarer Rechenweg, auf dem sich aufbauen lässt.
+\zwei{aufbau_schritt35.png}{struktur_w7x_gehaeuse_netz.png}{Schrittweise Aufbauprüfung im CAD-Ast, Schritt 35/70,
+0 Kollisionen (links); Vergleichsspannung im Rechenweg ohne CAD-Kern (rechts).}{fig:aufbau}
+\zwei{w7x_feldlinien_spannung.png}{w7x_feldlinien_spannung_geschlossen.png}{Gehäusespannung mit
+Magnetfeldlinien auf Flussflächen, aufgeschnitten und geschlossen.}{fig:fls}
+\bild{freecad_und_elmer.png}{0.95}{Beide Wege nebeneinander: parametrisches CAD-Modell (links) und
+Spannungsrechnung aus dem Rechenweg (rechts).}
+
+%======================================================================
+\section{Schichtaufbau im 3D-Modell}
+Zum Schluss sollte der innere Aufbau sichtbar werden. Von innen nach außen: Kabel (NbTi-Stränge in Kupfer,
+Helium), Aluminiummantel, Windungsisolation, Grundisolierung, Verguss (Quarzsand-Epoxid, eigene Annahme),
+Stahlgehäuse; $12\times9=108$ Leiter je Spule.
+\zwei{w7x_spule_querschnitt.png}{w7x_torus3d_detail.png}{Schichtaufbau einer Spule (schematisch, links) und im
+3D-Schnittmodell (rechts).}{fig:quer}
+\zwei{w7x_torus3d_schnitt.png}{w7x_torus3d_sektor.png}{3D-Modell aller 70 Spulen, aufgeschnitten und als
+Sektor.}{fig:torus}
+
+\subsection{Wo fließt der Strom?}
+Im Betrieb fast vollständig im supraleitenden NbTi, ohne Widerstand. Das Kupfer ist Stabilisator: Es übernimmt
+den Strom nur kurzzeitig, wenn der Supraleiter örtlich normalleitend wird (Quench). Aluminiummantel und Helium
+tragen keinen Strom; der Mantel gibt dem Leiter Form und Festigkeit und schließt das Helium ein.
+\zwei{w7x_leiter3d.png}{w7x_leiter3d_blender.png}{Leiterstück: aufgeschnittener Aluminiummantel, verdrillte
+Stränge, daneben ein Strang zwölffach vergrößert mit NbTi-Filamenten (türkis, Anzahl symbolisch).}{fig:leiter}
+\bild{w7x_torus3d_blender.png}{0.95}{Gesamtes Spulensystem mit Feldlinien (gerendert in Blender \cite{blender}).}
+
+%======================================================================
+\section{Fazit für die Praxis}
+\begin{itemize}\itemsep1pt
+\item \textbf{Prüfen statt glauben.} Der folgenreichste Fehler sah plausibel aus. Jede Größe wird mit einer
+  zweiten Methode gegengerechnet: FEM gegen Biot-Savart, Kraft aus der FEM gegen Kraft aus dem Linienmodell.
+\item \textbf{CAD und Berechnungsmodell trennen.} Das parametrische CAD-Modell ist für Konstruktion und
+  Weitergabe richtig; für die Rechnung war ein direkt erzeugtes, „defeaturetes“ Netz robuster. Beide parallel zu
+  führen hat das Projekt vorangebracht.
+\item \textbf{Konstruktive Ideen kamen vom Menschen} (Variable Section Sweep, Nachbarschnitt, paralleler Weg);
+  die KI-Agenten haben sie schnell umgesetzt, getestet und dokumentiert.
+\item \textbf{Quellen selbst prüfen.} Eine von einem KI-Agenten erstellte Literaturliste enthielt unvollständige
+  und falsch zugeordnete Angaben. Für diesen Bericht wurden alle Quellen einzeln gegen Volltext oder
+  Verlagsdaten geprüft.
+\end{itemize}
+
+\subsection*{Offene Punkte}
+Verguss zwischen Wickelpaket und Gehäuse; Verbinder und Tragring statt Einspannbereichen; Mindestwandstärke;
+Keil und Gehäuse aus einem Stück; Auslegung der Wandstärken für die 1-GW-Form; Dehnungsnachweis für HTS-Leiter;
+Toleranzstudie mit $\pm\SI{2}{mm}$.
+
+\subsection*{Software und Daten}
+ElmerFEM 9.0 \cite{elmer}, gmsh \cite{gmsh}, FreeCAD 1.1 \cite{freecad}, simsopt \cite{simsopt}, DESC
+\cite{desc}, PyVista \cite{pyvista}, ParaView \cite{paraview}, Blender 4.0 \cite{blender}, PicoGK
+\cite{picogk}. Programmcode, Befundprotokoll und Abbildungen:
+\url{https://github.com/ThomasSchmiegelt/stellarator-design} (MIT-Lizenz).
+
+\begin{thebibliography}{99}\small
+\bibitem{bosch2013} H.-S. Bosch, R.\,C. Wolf, T. Andreeva et al.: Technical challenges in the construction of
+  the steady-state stellarator Wendelstein 7-X. \emph{Nucl.\ Fusion} 53 (2013) 126001.
+  doi:10.1088/0029-5515/53/12/126001
+\bibitem{rummel2005} Th. Rummel, K. Rieße, H. Ehmler: Manufacture and test of the non-planar coils for
+  WENDELSTEIN 7-X. \emph{Fusion Eng.\ Des.} 75--79 (2005) 117--121. doi:10.1016/j.fusengdes.2005.06.118
+\bibitem{maix2006} R.\,K. Maix, V. Bagnato, M. Fricke et al.: Design, production and QA test results of the
+  NbTi CIC conductors for the W7-X magnet system. \emph{J.\ Phys.: Conf.\ Ser.} 43 (2006) 753--758.
+  doi:10.1088/1742-6596/43/1/184
+\bibitem{bachmann2024} C. Bachmann, M. Siccinio, A. Ciula et al.: Re-design of EU DEMO with a low aspect ratio.
+  \emph{Fusion Eng.\ Des.} 204 (2024) 114518.
+\bibitem{gil2025} P.\,F. Gil, V. Brack, T. Schuler, P. Huslage, E.\,V. Stenson: Manufacturing tolerances of
+  non-planar coils for an optimized tabletop stellarator. arXiv:2507.22516 (2025).
+\bibitem{schmeling2025} D. Schmeling, M. Russo, B.\,T. Gebreamlak et al.: Experimental results from early
+  non-planar NI-HTS magnet prototypes for the Columbia Stellarator eXperiment (CSX). \emph{IEEE Trans.\ Plasma
+  Sci.} (2026), doi:10.1109/TPS.2026.3681798; arXiv:2510.07042.
+\bibitem{simsopt} M. Landreman, B. Medasani, F. Wechsung, A. Giuliani, R. Jorge, C. Zhu: SIMSOPT: A flexible
+  framework for stellarator optimization. \emph{J.\ Open Source Softw.} 6(65) (2021) 3525.
+  doi:10.21105/joss.03525. W7-X-Spulendaten: \texttt{simsopt/configs/W7-X.dat}, Spulensatz \texttt{w7x\_v001}.
+\bibitem{desc} D.\,W. Dudt, E. Kolemen: DESC: A stellarator equilibrium solver. \emph{Phys.\ Plasmas} 27 (2020)
+  102513.
+\bibitem{gmsh} C. Geuzaine, J.-F. Remacle: Gmsh: A 3-D finite element mesh generator with built-in pre- and
+  post-processing facilities. \emph{Int.\ J.\ Numer.\ Meth.\ Eng.} 79 (2009) 1309--1331.
+\bibitem{elmer} ElmerFEM, Version 9.0. CSC -- IT Center for Science, Finnland. \url{https://www.elmerfem.org}
+\bibitem{freecad} FreeCAD, Version 1.1. \url{https://www.freecad.org}
+\bibitem{pyvista} C.\,B. Sullivan, A. Kaszynski: PyVista: 3D plotting and mesh analysis through a streamlined
+  interface for the Visualization Toolkit (VTK). \emph{J.\ Open Source Softw.} 4(37) (2019) 1450.
+\bibitem{paraview} J. Ahrens, B. Geveci, C. Law: ParaView: An end-user tool for large data visualization. In:
+  \emph{Visualization Handbook}, Elsevier (2005).
+\bibitem{blender} Blender, Version 4.0. Blender Foundation. \url{https://www.blender.org}
+\bibitem{picogk} LEAP 71: PicoGK. \url{https://github.com/leap71/PicoGK}
+\end{thebibliography}
+\end{document}

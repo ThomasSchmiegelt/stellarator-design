@@ -1,0 +1,269 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}\usepackage[T1]{fontenc}\usepackage[english]{babel}
+\usepackage{graphicx,float,booktabs,amsmath,siunitx,xcolor,tabularx}
+\usepackage[margin=2.2cm]{geometry}\usepackage[hidelinks]{hyperref}
+\hypersetup{pdfauthor={Thomas Schmiegelt},pdftitle={Two AI agents, one stellarator -- project report}}
+\newcommand{\bild}[3]{\begin{figure}[H]\centering\includegraphics[width=#2\linewidth]{bilder/#1}\caption{#3}\end{figure}}
+\newcommand{\zwei}[4]{\begin{figure}[H]\centering\includegraphics[width=0.49\linewidth]{bilder/#1}\hfill
+  \includegraphics[width=0.49\linewidth]{bilder/#2}\caption{#3}\label{#4}\end{figure}}
+\newcommand{\kasten}[2]{\par\smallskip\noindent\fcolorbox{gray}{gray!8}{\parbox{0.96\linewidth}{\textbf{#1} #2}}\par\smallskip}
+\title{\textbf{Two AI Agents, One Stellarator}\\[2pt]\large Building an engineering simulation pipeline from an
+  open dataset -- including the dead ends}
+\author{Thomas Schmiegelt \textbar{} hobby project \texttt{stellarator-design}}
+\date{25 October 2026}
+\begin{document}\maketitle
+
+\kasten{Hobby project, driven by curiosity.}{Not affiliated with any research institute or company, not peer
+reviewed. All numbers are estimates from simplified models and may contain errors. The W7-X model is
+\emph{inspired by} Wendelstein~7-X: coil paths come from public data \cite{simsopt}; casings, connectors, potting,
+supports and wall thicknesses are my own simplified assumptions and do not describe the real device. Code,
+computations and the draft text were produced with the help of AI agents; all figures are my own computations
+and renderings.}
+
+\begin{abstract}
+A stellarator confines a fusion plasma with twisted 3D superconducting coils that carry large magnetic forces.
+In four days, a human and two AI agents built an end-to-end pipeline from a public coil dataset to a
+structural analysis of the coil casings: coil path $\to$ magnetic field $\to$ Lorentz force $\to$ casing
+geometry $\to$ stress. This report is mostly about \emph{how} it was built: the division of labour between a local
+agent (Hermes) and a coding agent (Claude Code), a first model that was wrong while looking right, a fully
+parametric CAD model that broke the mesher, and a second, CAD-free code path that finally worked. For a
+W7-X-like system of 70 coils the result is 99\,\% of casing stresses below 43\,MPa -- under strongly simplified
+supports.
+\end{abstract}
+
+\tableofcontents
+
+%======================================================================
+\section{Setup}
+\kasten{Stellarator in five sentences.}{A fusion plasma (over 100 million degrees) is held by a magnetic field
+inside a ring-shaped vacuum vessel. To keep particles from drifting out, field lines must wind helically around
+the ring. A tokamak gets this twist from a large current in the plasma itself; a stellarator gets it entirely
+from external coils, which therefore have to be twisted in 3D. This makes steady-state operation easier but turns
+each coil into a demanding 3D part with tight tolerances. The reference device is Wendelstein~7-X (IPP
+Greifswald) with 50 non-planar and 20 planar superconducting coils \cite{bosch2013}.}
+
+\subsection{Agents and responsibilities}
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}lX@{}}\toprule
+Human & Goal and direction, reviews results \emph{as images}, decides, supplies the key design ideas when stuck. \\
+Hermes & Local agent running open-weight models: literature research, project bookkeeping, writing reusable
+  \emph{skills}, long-running jobs overnight. \\
+Claude Code & Coding agent: simulation pipeline, debugging, post-processing, figures. \\\bottomrule
+\end{tabularx}\end{table}
+The agents never talk directly. They coordinate through files in the repository: an append-only findings log
+(\texttt{BEFUNDE.md}; every entry has observation, measurement, location, status), a handover file for decisions
+and running jobs (\texttt{ERINNERUNGEN.md}), and skills -- short Markdown playbooks an agent loads before a task.
+Long simulations are started detached (\texttt{setsid nohup}) so they survive a session ending or a context
+compaction. The very first human intervention was a stop: Hermes started building tooling right away and was told
+to do the research first.
+
+\subsection{Tool chain}
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}lX@{}}\toprule
+Physics data & simsopt \cite{simsopt} (coil Fourier coefficients), DESC \cite{desc} (plasma shape optimisation) \\
+Geometry & Python + gmsh/OpenCASCADE \cite{gmsh} (direct meshing), FreeCAD 1.1 headless \cite{freecad} (parametric CAD), PicoGK \cite{picogk} (voxels, optional) \\
+Solver & ElmerFEM 9.0 \cite{elmer}: magnetostatics and linear elasticity in one coupled run \\
+Own code & Biot-Savart (numba), FFT field solver, field-line tracer, collision checks \\
+Visualisation & PyVista/VTK \cite{pyvista}, ParaView \cite{paraview}, Blender 4.0 \cite{blender} via glTF \\
+Hardware & one workstation, 32\,GB RAM, one GPU (reserved for the local agent) \\\bottomrule
+\end{tabularx}\end{table}
+
+%======================================================================
+\section{Research phase}
+Hermes collected the basics: W7-X has a major radius of 5.5\,m, five field periods and 2.5\,T on axis
+\cite{bosch2013}. Each coil is wound from a cable-in-conduit conductor: 243 NbTi strands of 0.57\,mm, each with
+144 filaments in copper, inside a co-extruded 16\,mm $\times$ 16\,mm aluminium jacket with 37\,\% void for
+helium cooling \cite{rummel2005,maix2006}. From a set of 33 PDFs supplied by the user, four were relevant; the most
+useful one sizes coil structures for EU-DEMO with a 660\,MPa stress limit and wedged inner legs
+\cite{bachmann2024}. A rate-limited arXiv search added work on HTS strain sensitivity \cite{schmeling2025} and on
+manufacturing tolerances (W7-X: 2\,mm) \cite{gil2025}.
+
+\kasten{Lesson -- verify citations.}{The bibliography an agent produced during research contained entries
+without authors and with wrong venues or years. For this report every reference was checked individually
+against full text or publisher metadata (Crossref, arXiv API). Treat agent-written references as unverified
+until checked.}
+
+%======================================================================
+\section{First results -- and why they were wrong}
+\subsection{Validating the solver}
+Before simulating coils, ElmerFEM was tested on a case with an exact answer: an infinite straight wire,
+$B=\mu_0 I/2\pi r$. The first runs returned zero everywhere -- silently. Root causes: a mesh format the
+converter misread, and wrong keywords in the solver input file, which Elmer ignores without an error. Starting
+from Elmer's own regression test instead of hand-written input fixed it: 0.09\,\% error inside the wire, 2\,\%
+outside (Fig.~\ref{fig:valid}).
+
+\subsection{The surrogate model (report v0.1)}
+Hermes believed the real coil paths were unavailable (the URLs it tried returned 404) and generated a
+parametric surrogate: ellipses and bands, current calibrated to 2.5\,T. Compared with W7-X the ampere-turns per
+coil matched to $0.90\times$. A report was written.
+\zwei{v01_spulen_iso.png}{v01_feld_verteilung.png}{Report v0.1: the surrogate coil set and its field. Plausible
+numbers -- but not a stellarator.}{fig:v01}
+
+A topological check by the coding agent -- does each coil actually encircle the plasma axis? -- failed for 20 of
+50 coils; the ``planar'' coils were horizontal bands above and below the plasma. The good match was a
+coincidence. And the data had been available all along: simsopt ships the Fourier coefficients of the seven W7-X
+base coils in its package data \cite{simsopt}. Two more bugs surfaced later and changed published numbers: a sign
+error in the axis formula (calibration current 12.18\,kA instead of 13.49\,kA per turn), and Elmer choosing the
+current direction itself, so 25 mirrored coils ran backwards (1.38\,T instead of 2.50\,T on axis). The latter is
+now caught by an automated check.
+\kasten{Lesson -- plausible is not correct.}{Agents are good at producing numbers that look right. Every geometry
+gets an independent invariant check (winding number around the axis, clearances), and every field or force is
+computed by a second, independent method before it goes into a report.}
+
+%======================================================================
+\section{Restart: mesh directly from the data}
+With the real coil paths (7 base coils, 70 by symmetry) the expected physics appeared immediately: bean-shaped
+flux surfaces and the characteristic island chain (Fig.~\ref{fig:feld}). A custom FFT voxel solver matched exact
+Biot-Savart to 1.3\,\% but destroyed the flux surfaces during field-line tracing, because a Cartesian grid breaks
+the device's symmetry -- so field lines are always traced with Biot-Savart.
+\zwei{w7x_feldlinien_3d.png}{w7x_poincare_bewertung.png}{Field lines on flux surfaces (left), Poincaré section
+and rotational transform (right).}{fig:feld}
+
+The plan had been to model coils in CAD. Generating the mesh directly was faster and more robust: a rectangle
+at every path point, two ruled half-surfaces per coil, meshed by gmsh. Sweeps and smooth lofts failed with
+self-intersecting surfaces. A clearance check on centre lines replaced boolean intersection tests (1.5\,s
+instead of more than 45\,min). Elmer with all 70 coils (3.3\,M tetrahedra, 680\,s, 10\,GB) matched Biot-Savart
+on the axis to a median of 0.24\,\%.
+\zwei{w7x_wickelpakete.png}{elmer_70_spulen_vergleich.png}{70 winding packs meshed straight from the path data
+(left); FEM vs.\ Biot-Savart along a coil normal (right).}{fig:elmer}
+\zwei{validierung_draht.png}{w7x_voxelsolver_validierung.png}{Validation: FEM on a straight wire (left), FFT
+voxel solver vs.\ Biot-Savart (right).}{fig:valid}
+
+A side study ran the pipeline backwards from a target of 1\,GW net electric power: plasma size and field
+$\to$ own plasma shape (DESC) $\to$ coils (simsopt). With high-temperature superconductors the device ends up at
+about 10\,m major radius with forces of roughly 1\,GN per coil -- about a thousand times W7-X. From here on, the
+support structure is the real problem.
+\zwei{uebersicht_1GW_A6_A45.png}{struktur_A6_HTS.png}{1\,GW sizing study (left) and a first support shell with
+coupled field $\to$ force $\to$ stress analysis (right).}{fig:gw}
+
+%======================================================================
+\section{The parametric CAD branch}
+A continuous support shell could not be constructed cleanly. The human proposed a technique from commercial CAD
+(Creo's \emph{Variable Section Sweep}): per coil a closed guide curve as the casing's inner contour, sketches
+normal to it, a loft through them; all walls grow outwards. The agent implemented it in headless FreeCAD as a
+fully parametric model: spreadsheet parameters, sketch dimensions as expressions, symmetric coils as clones,
+connectors between neighbours.
+\zwei{freecad_gui_w7x.png}{gehaeuse_A45_HTS_verbunden.png}{Parametric FreeCAD model: W7-X-like casings with
+connectors (left), compact 1\,GW design (right).}{fig:fc}
+
+What went wrong:
+\begin{enumerate}\itemsep1pt
+\item \textbf{Estimated, not designed, walls.} The first coupled run worked but gave stresses up to eight times
+  the allowable value.
+\item \textbf{Wedges break the mesher.} Inner wedges (after \cite{bachmann2024}) produced a valid CAD solid, but
+  gmsh failed with ``overlapping facets'': several boolean cuts on the same winding pack created coincident
+  faces. Six attempts later (tolerances, fusing in FreeCAD, deliberate overlap; the last one hung gmsh for over an
+  hour) the wedge was disabled.
+\item \textbf{Collisions.} A loft bulges between sketch stations and corners of tilted neighbours overlap. An
+  incremental assembly check (add coils one by one, count collisions, render a video) found about 100.
+\item \textbf{Fix in CAD (human idea): subtract the neighbours.} Each casing minus its neighbours' envelopes plus
+  a gap: 0 collisions in all 70 steps. Meshing the whole assembly stayed fragile.
+\end{enumerate}
+\zwei{struktur_A45_HTS_gehaeuse.png}{gehaeuse_A45_HTS_keil_oben.png}{First stress run of the CAD casings (left);
+casings with inner wedges -- valid in CAD, not meshable (right).}{fig:keil}
+\kasten{Lesson -- valid is not meshable.}{The more boolean operations meet on the same faces, the more sliver
+faces appear, and the mesher fails far away from where the problem was created. Keep the analysis model separate
+from the design model.}
+
+%======================================================================
+\section{The parallel branch: no CAD kernel}
+The human's suggestion: \emph{``keep this morning's working approach for the analysis and run the CAD path in
+parallel as an add-on.''} Each casing became two rectangular tubes on the exact coil path (outer contour and
+winding-pack cavity) as separate surface meshes -- no boolean operations at all. Wall thicknesses follow from load
+and available space; a disentangling step tests surface points of foreign casings (including intermediate rings
+between stations) against the local cross-section and shrinks the cheapest wall: 4980 $\to$ 40 $\to$ 0 contact
+points.
+
+\begin{table}[H]\centering\small
+\begin{tabular}{@{}ll@{}}\toprule
+Model & steel casings ($E$ = 200\,GPa), homogenised winding packs ($E$ = 100\,GPa), linear elastic \\
+Load & Lorentz force $\vec J\times\vec B$ from the magnetostatic solution in the same run \\
+Supports & one clamped patch per casing (simplification; no connectors, no support ring) \\
+Mesh / run time & 3.02\,M tetrahedra in 78\,s; solve 55\,min, about 14\,GB RAM \\
+Force per coil & FEM 2.42\,MN vs.\ Biot-Savart 2.39\,MN (+1\,\%) \\
+Casing von Mises & mean 11\,MPa, 99\,\% below 43\,MPa, max 110\,MPa; deformation below 1\,mm \\\bottomrule
+\end{tabular}\end{table}
+Because of the simplified supports and walls as thin as 3\,mm in places this is \emph{not} a strength proof --
+but it is a reproducible end-to-end pipeline.
+\zwei{aufbau_schritt35.png}{struktur_w7x_gehaeuse_netz.png}{Incremental collision check in the CAD branch, step
+35/70 (left); von Mises stress from the CAD-free branch (right).}{fig:aufbau}
+\zwei{w7x_feldlinien_spannung.png}{w7x_feldlinien_spannung_geschlossen.png}{Casing stress with magnetic field
+lines on flux surfaces, cut open and closed.}{fig:fls}
+\bild{freecad_und_elmer.png}{0.95}{Both branches side by side: parametric CAD (left), stress analysis from the
+CAD-free pipeline (right).}
+
+%======================================================================
+\section{Visualisation: from mesh to Blender}
+A 3D cut-away model shows each coil's layers: cable (NbTi strands in copper, helium), aluminium jacket, turn
+insulation, ground insulation, potting (an assumption), steel casing; $12\times9=108$ conductors per coil. A
+separate conductor model answers the question ``where does the current flow?'': almost entirely in the
+superconducting NbTi; copper only takes over briefly during a quench; jacket and helium carry none.
+\zwei{w7x_spule_querschnitt.png}{w7x_torus3d_detail.png}{Coil layers (schematic, left) and in the 3D model
+(right).}{fig:quer}
+\zwei{w7x_leiter3d.png}{w7x_leiter3d_blender.png}{Conductor: opened jacket, twisted strands, one strand
+magnified with NbTi filaments (count symbolic). PyVista (left), Blender Cycles (right).}{fig:leiter}
+\bild{w7x_torus3d_blender.png}{0.95}{The full coil system with field lines, rendered in Blender.}
+
+Getting PyVista's glTF export into Blender needed three fixes, each found by measuring instead of guessing:
+colours arrived as sRGB values in a linear slot (washed out; fixed by linearising), the scene was rotated by
+$90^\circ$ about the vertical axis (fixed at the root node), and the distribution's Blender build lacks the
+denoiser (render fails; denoising disabled). Rendering runs on the CPU because the GPU is reserved for the local
+agent.
+
+%======================================================================
+\section{Takeaways for working with coding agents}
+\begin{itemize}\itemsep1pt
+\item \textbf{Verification is the job.} The most expensive error looked plausible. Independent checks
+  (invariants, second methods, regression tests from upstream projects) caught every major bug.
+\item \textbf{Silent failure is the default in scientific tools.} Wrong keywords ignored, current directions
+  chosen by the solver, meshers hanging for an hour. Every pipeline stage now asserts on its output.
+\item \textbf{Prefer the boring path.} Direct mesh generation from data beat a CAD kernel with booleans. Keeping a
+  working path alive while exploring the elegant one saved the project.
+\item \textbf{Humans supplied the decisive ideas} (research first, variable section sweep, neighbour subtraction,
+  the parallel branch); agents supplied speed in implementing, testing and documenting them.
+\item \textbf{Files are the shared memory.} A findings log, a handover file and skills let two agents work on one
+  project across sessions and context compactions.
+\item \textbf{References need checking} like any other agent output.
+\end{itemize}
+
+\subsection*{Open items}
+Potting layer between winding pack and casing; connectors and support ring instead of clamped patches; minimum
+wall thickness; wedge and casing in one body; wall sizing for the 1\,GW design; HTS strain check; tolerance study
+($\pm$2\,mm).
+
+\subsection*{Code and data}
+\url{https://github.com/ThomasSchmiegelt/stellarator-design} (MIT licence): pipeline code, findings log, figures.
+
+\begin{thebibliography}{99}\small
+\bibitem{bosch2013} H.-S. Bosch, R.\,C. Wolf, T. Andreeva et al.: Technical challenges in the construction of
+  the steady-state stellarator Wendelstein 7-X. \emph{Nucl.\ Fusion} 53 (2013) 126001.
+  doi:10.1088/0029-5515/53/12/126001
+\bibitem{rummel2005} Th. Rummel, K. Rieße, H. Ehmler: Manufacture and test of the non-planar coils for
+  WENDELSTEIN 7-X. \emph{Fusion Eng.\ Des.} 75--79 (2005) 117--121. doi:10.1016/j.fusengdes.2005.06.118
+\bibitem{maix2006} R.\,K. Maix, V. Bagnato, M. Fricke et al.: Design, production and QA test results of the
+  NbTi CIC conductors for the W7-X magnet system. \emph{J.\ Phys.: Conf.\ Ser.} 43 (2006) 753--758.
+  doi:10.1088/1742-6596/43/1/184
+\bibitem{bachmann2024} C. Bachmann, M. Siccinio, A. Ciula et al.: Re-design of EU DEMO with a low aspect ratio.
+  \emph{Fusion Eng.\ Des.} 204 (2024) 114518.
+\bibitem{gil2025} P.\,F. Gil, V. Brack, T. Schuler, P. Huslage, E.\,V. Stenson: Manufacturing tolerances of
+  non-planar coils for an optimized tabletop stellarator. arXiv:2507.22516 (2025).
+\bibitem{schmeling2025} D. Schmeling, M. Russo, B.\,T. Gebreamlak et al.: Experimental results from early
+  non-planar NI-HTS magnet prototypes for the Columbia Stellarator eXperiment (CSX). \emph{IEEE Trans.\ Plasma
+  Sci.} (2026), doi:10.1109/TPS.2026.3681798; arXiv:2510.07042.
+\bibitem{simsopt} M. Landreman, B. Medasani, F. Wechsung, A. Giuliani, R. Jorge, C. Zhu: SIMSOPT: A flexible
+  framework for stellarator optimization. \emph{J.\ Open Source Softw.} 6(65) (2021) 3525.
+  doi:10.21105/joss.03525. W7-X coil data: \texttt{simsopt/configs/W7-X.dat}, coil set \texttt{w7x\_v001}.
+\bibitem{desc} D.\,W. Dudt, E. Kolemen: DESC: A stellarator equilibrium solver. \emph{Phys.\ Plasmas} 27 (2020)
+  102513.
+\bibitem{gmsh} C. Geuzaine, J.-F. Remacle: Gmsh: A 3-D finite element mesh generator with built-in pre- and
+  post-processing facilities. \emph{Int.\ J.\ Numer.\ Meth.\ Eng.} 79 (2009) 1309--1331.
+\bibitem{elmer} ElmerFEM, version 9.0. CSC -- IT Center for Science, Finland. \url{https://www.elmerfem.org}
+\bibitem{freecad} FreeCAD, version 1.1. \url{https://www.freecad.org}
+\bibitem{pyvista} C.\,B. Sullivan, A. Kaszynski: PyVista: 3D plotting and mesh analysis through a streamlined
+  interface for the Visualization Toolkit (VTK). \emph{J.\ Open Source Softw.} 4(37) (2019) 1450.
+\bibitem{paraview} J. Ahrens, B. Geveci, C. Law: ParaView: An end-user tool for large data visualization. In:
+  \emph{Visualization Handbook}, Elsevier (2005).
+\bibitem{blender} Blender, version 4.0. Blender Foundation. \url{https://www.blender.org}
+\bibitem{picogk} LEAP 71: PicoGK. \url{https://github.com/leap71/PicoGK}
+\end{thebibliography}
+\end{document}

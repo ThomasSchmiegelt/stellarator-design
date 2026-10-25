@@ -13,6 +13,10 @@
 !/forschung/
 !/picogk/
 !/sim/
+!/bericht/
+/bericht/*
+!/bericht/projektbericht/
+!/bericht/v0.3/
 /sim/*
 !/sim/pipeline/
 
@@ -25,3 +29,9 @@ picogk/**/obj/
 # Validierungsfall: Netze/Ergebnisse werden von run_validierung.sh erzeugt
 sim/pipeline/**/wire2d/
 sim/pipeline/**/*.vtu
+
+# Berichte: nur Projektbericht (de/en, Quellen geprueft) und v0.3; v0.1/v0.2/Spulen-Recherche mit ungeprueften Zitaten lokal
+bericht/**/*.aux
+bericht/**/*.log
+bericht/**/*.out
+bericht/**/*.toc

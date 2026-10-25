@@ -21,6 +21,17 @@ Validated on the real Wendelstein 7-X coil set. Documentation is in German.
 
 ![W7-X: Feldlinien in den 70 Wickelpaketen](docs/bilder/w7x_feldlinien_3d.png)
 
+## Projektbericht / Project report
+
+Wie das Projekt entstanden ist, mit allen Irrwegen (Recherche, falsches erstes Modell, direkte
+Netzerzeugung, parametrisches FreeCAD-Modell, paralleler Rechenweg, 3D-Modell):
+
+- **Deutsch, für Maschinenbauer:** [Spulengehäuse eines Stellarators (PDF)](bericht/projektbericht/projektbericht.pdf)
+- **English, for IT folks:** [Two AI Agents, One Stellarator (PDF)](bericht/projektbericht/project_report_en.pdf)
+- Ältere Fachauslegung (1 GW, v0.3): [bericht/v0.3/bericht_v0.3.pdf](bericht/v0.3/bericht_v0.3.pdf)
+
+![W7-X-ähnliches Spulensystem in Blender](docs/bilder/w7x_torus3d_blender.png)
+
 ---
 
 ## Worum geht es?
