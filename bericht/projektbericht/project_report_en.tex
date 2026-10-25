@@ -204,6 +204,10 @@ superconducting NbTi; copper only takes over briefly during a quench; jacket and
 magnified with NbTi filaments (count symbolic). PyVista (left), Blender Cycles (right).}{fig:leiter}
 \bild{w7x_torus3d_blender.png}{0.95}{The full coil system with field lines, rendered in Blender.}
 
+\bild{gyroid_gefaess_1GW_gesamt.jpg}{1.0}{Later step: the 1\,GW design with casing stress from the surrogate
+model (1000\,MW), field lines, and a cut-open plasma vessel whose wall has a gyroid cooling core built with
+PicoGK. A rendering, not a cooling design.}
+
 Getting PyVista's glTF export into Blender needed three fixes, each found by measuring instead of guessing:
 colours arrived as sRGB values in a linear slot (washed out; fixed by linearising), the scene was rotated by
 $90^\circ$ about the vertical axis (fixed at the root node), and the distribution's Blender build lacks the

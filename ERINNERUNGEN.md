@@ -197,3 +197,6 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
   (Spannung), Feldlinien, ohne Verbinder: thorus_schnitt.py --spulen -> sim/thorus_schnitt/spulen/thorus_*.png
   (Spulen 2, 3, 15 ueber dem Ausschnitt weggelassen; 495 s, Spitze 5,0 GB).
   Weite Ansicht (ganze Anlage): blender_thorus.py --ansicht weit -> sim/thorus_schnitt/spulen/thorus_weit.png (136 s).
+  Frei schwebend ohne Boden: blender_thorus.py --ansicht weit --ohne_boden -> thorus_weit_frei.png (74 s).
+  HQ: --proben 1024 --hq (2560x1440, kein OIDN im Ubuntu-Blender, clamp indirect 5) -> thorus_weit_frei_hq.png.
+- HQ-Bild in README (docs/bilder/gyroid_gefaess_1GW_gesamt.jpg) und in Surrogat-Bericht (Abb. 6), Projektbericht de/en eingebaut.

@@ -3,7 +3,7 @@
   blender -b -P stellarator/blender_thorus.py -- <ordner> [--proben 64] [--ansicht uebersicht|detail|alle]
 
 Gefaess Stahl, Schnittflaechen (40 und 100 Grad) orange wie in einer Schnittzeichnung, Plasma leuchtend im Ausschnitt,
-Hallenboden als Bezug. Cycles auf der CPU (GPU nutzt Hermes).
+Hallenboden als Bezug (--ohne_boden: frei schwebend). Cycles auf der CPU (GPU nutzt Hermes).
 """
 import json, math, sys
 from pathlib import Path
@@ -14,6 +14,8 @@ arg = sys.argv[sys.argv.index("--") + 1:]
 O = Path(arg[0])
 proben = int(arg[arg.index("--proben") + 1]) if "--proben" in arg else 64
 ansicht = arg[arg.index("--ansicht") + 1] if "--ansicht" in arg else "alle"
+hq = "--hq" in arg                              # hohe Qualitaet: 2560x1440, Ausreisser gekappt, Datei *_hq.png
+frei = "--ohne_boden" in arg                    # frei schwebend: kein Hallenboden
 skala = json.loads((O / "skala.json").read_text())
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -62,9 +64,10 @@ for name, m in MAT.items():
         o.data.use_auto_smooth = True; o.data.auto_smooth_angle = math.radians(35)
 
 sc = bpy.context.scene
-bpy.ops.mesh.primitive_plane_add(size=80, location=(0, 0, skala["z_boden"]))
-boden = bpy.context.active_object; boden.name = "Boden"
-boden.data.materials.append(mat("Boden", (0.35, 0.36, 0.38), rau=0.8))
+if not frei:
+    bpy.ops.mesh.primitive_plane_add(size=80, location=(0, 0, skala["z_boden"]))
+    boden = bpy.context.active_object; boden.name = "Boden"
+    boden.data.materials.append(mat("Boden", (0.35, 0.36, 0.38), rau=0.8))
 for name, ort, staerke in (("Sonne", (0.5, -0.7, 1.3), 3.0), ("Fuell", (-1, 0.6, 0.4), 0.8)):
     l = bpy.data.lights.new(name, "SUN"); l.energy = staerke
     lo = bpy.data.objects.new(name, l); sc.collection.objects.link(lo)
@@ -73,7 +76,10 @@ welt = bpy.data.worlds.new("Welt"); sc.world = welt; welt.use_nodes = True
 welt.node_tree.nodes["Background"].inputs["Color"].default_value = (0.03, 0.035, 0.05, 1)
 
 sc.render.engine = "CYCLES"; sc.cycles.device = "CPU"; sc.cycles.samples = proben; sc.cycles.use_denoising = False
-sc.render.resolution_x, sc.render.resolution_y = 1920, 1080
+sc.render.resolution_x, sc.render.resolution_y = (2560, 1440) if hq else (1920, 1080)
+if hq:
+    # Ubuntu-Blender 4.0 hat kein OIDN -> statt Entrauschen viele Proben, helle Ausreisser kappen
+    sc.cycles.sample_clamp_indirect = 5.0
 sc.view_settings.view_transform = "AgX" if "AgX" in [i.identifier for i in sc.view_settings.bl_rna.properties["view_transform"].enum_items] else "Filmic"
 cam = bpy.data.cameras.new("Kamera"); cam.clip_start = 0.1; cam.clip_end = 500
 co = bpy.data.objects.new("Kamera", cam); sc.collection.objects.link(co); sc.camera = co
@@ -91,14 +97,14 @@ ansichten = {   # (Kamera, Ziel, Linse, Kameralicht W)
     "detail": (polar(19, 63, 6.0), polar(10.4, 40, -0.5), 40, 6000),     # auf die Schnittflaeche bei 40 Grad
 }
 ansichten = skala.get("ansichten", ansichten)
-bpy.ops.wm.save_as_mainfile(filepath=str(O / "thorus.blend"))
+bpy.ops.wm.save_as_mainfile(filepath=str(O / ("thorus_frei.blend" if frei else "thorus.blend")))
 for k, (pos, ziel, linse, w) in ansichten.items():
     if ansicht not in (k, "alle") or (ansicht == "alle" and k == "weit"):
         continue
     co.location = Vector(pos); cam.lens = linse
     co.rotation_euler = (Vector(ziel) - Vector(pos)).to_track_quat("-Z", "Y").to_euler()
     lo.location = Vector(pos) + Vector((0, 0, 2.0)); licht.energy = w
-    sc.render.filepath = str(O / f"blender_{k}.png")
+    sc.render.filepath = str(O / f"blender_{k}{'_frei' if frei else ''}{'_hq' if hq else ''}.png")
     bpy.ops.render.render(write_still=True)
     print("BILD", sc.render.filepath, flush=True)
 print("BLENDER_FERTIG")

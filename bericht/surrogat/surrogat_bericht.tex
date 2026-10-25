@@ -197,6 +197,17 @@ für die zweite Aufgabe: Die Wand des Plasmagefäßes muss Wärme abführen und 
 über der relativen Dichte ($E_s$ = \SI{200}{GPa}). Nur Druck in einer Richtung; der volle Steifigkeitstensor
 (Schub, Querrichtungen) steht noch aus.}
 
+Als erste Anschauung dieser zweiten Aufgabe wurde die Gefäßwand der 1-GW-Anlage als \SI{0,9}{m} dicke Doppelhaut
+mit Gyroid-Kern (Zelle \SI{0,6}{m}, rund 25\,\% Stahl) in PicoGK gebaut, je \ang{10}-Segment ein Lauf, und mit
+den Spulengehäusen aus dem Surrogat in Blender \cite{blender} gerendert (Abb.~\ref{fig:gyroidgefaess}). Das ist eine
+Darstellung, keine Auslegung: Strömung, Wärmeübergang und Festigkeit des Kerns sind nicht gerechnet.
+
+\begin{figure}[H]\centering\includegraphics[width=\linewidth]{bilder/gyroid_gefaess_1GW_gesamt.jpg}
+\caption{1-GW-Anlage frei im Raum: Spulengehäuse farbig nach Vergleichsspannung (Surrogat, \SI{1000}{MW}),
+Plasmagefäß mit herausgeschnittenem Sektor; die Schnittflächen zeigen den Gyroid-Kern aus PicoGK. Feldlinien
+(Biot-Savart) im Plasma, Farbe $|B|$. Drei Spulen über dem Ausschnitt und alle Verbinder ausgeblendet.}
+\label{fig:gyroidgefaess}\end{figure}
+
 %======================================================================
 \section{Arbeitsweise: ein lokaler Agent als Aufsicht}
 Der Rechenlauf dauerte mehrere Stunden. Damit dabei keine Rechenzeit eines großen Cloud-Modells verbraucht wird,
@@ -262,6 +273,7 @@ ElmerFEM \cite{elmer} mit MUMPS \cite{mumps}, scikit-learn \cite{sklearn}, PicoG
   12 (2011) 2825--2830.
 \bibitem{gibson1997} L.\,J. Gibson, M.\,F. Ashby: \emph{Cellular Solids: Structure and Properties}, 2.\ Aufl.
   Cambridge University Press (1997).
+\bibitem{blender} Blender, Version 4.0. Blender Foundation. \url{https://www.blender.org}
 \bibitem{picogk} LEAP 71: PicoGK. \url{https://github.com/LEAP71/PicoGK} (Apache-2.0-Lizenz).
 \bibitem{pyvista} C.\,B. Sullivan, A. Kaszynski: PyVista: 3D plotting and mesh analysis through a streamlined
   interface for the Visualization Toolkit (VTK). \emph{J.\ Open Source Softw.} 4(37) (2019) 1450.
