@@ -8,19 +8,22 @@
   \includegraphics[width=0.49\linewidth]{bilder/#2}\caption{#3}\end{figure}}
 \newcommand{\kasten}[2]{\par\smallskip\noindent\fcolorbox{gray}{gray!8}{\parbox{0.96\linewidth}{\textbf{#1} #2}}\par\smallskip}
 \newcommand{\zitat}[1]{\par\smallskip\noindent\hspace*{1em}\parbox{0.92\linewidth}{\itshape „#1“}\par\smallskip}
-\title{\textbf{Was KI-Agenten im Maschinenbau heute schon können}\\[2pt]\large Ein Selbstversuch:
+\title{\textbf{Was KI-Agenten im Maschinenbau heute schon können}\\[2pt]\large Ein Konstrukteur im Selbstversuch:
   vier Tage, ein Rechner, zwei Agenten -- und die Spulen eines Fusionsreaktors}
 \author{Thomas Schmiegelt \textbar{} Hobbyprojekt \texttt{stellarator-design}}
 \date{25.10.2026}
 \begin{document}\maketitle
 
-\kasten{Hobbyprojekt, aus Neugier entstanden.}{Ich bin kein Fusionsforscher. Keine Verbindung zu einem
+\kasten{Hobbyprojekt, aus Neugier entstanden.}{Ich bin Konstrukteur in der Mechanikentwicklung -- kein
+Berechnungsingenieur und kein Fusionsforscher. Keine Verbindung zu einem
 Forschungsinstitut oder Unternehmen, nichts davon ist begutachtet. Das technische Modell ist an Wendelstein~7-X
 \emph{angelehnt} und stark vereinfacht. Dieser Text handelt nicht von den Ergebnissen, sondern von der
 Arbeitsweise. Die Zahlen stehen in den beiden technischen Berichten im selben Ordner.}
 
 \section*{Worum es geht}
-Kann man als Ingenieur mit KI-Agenten ein Thema bearbeiten, von dem man wenig weiß und für das man eigentlich
+Mein Alltag ist Konstruktion: Bauteile, Baugruppen, Zeichnungen, Toleranzen. Berechnungen mache ich nicht selbst;
+dafür gibt es Kollegen, denen ich ein Modell übergebe und von denen ich Ergebnisse zurückbekomme. Die Frage war:
+Wie weit kommt ein Konstrukteur mit KI-Agenten bei einem Thema, von dem er wenig weiß und für das man eigentlich
 ein Team bräuchte -- Physik, CAD, Vernetzung, FEM, Auswertung, Dokumentation? Ich habe es an einem bewusst
 schwierigen Bauteil ausprobiert: den dreidimensional verwundenen Magnetspulen eines Stellarators, also eines
 Fusionsreaktors, der sein Plasma allein mit äußeren Spulen einschließt \cite{bosch2013}. Nach vier Tagen stand
@@ -34,8 +37,8 @@ gerechnet mit freier Software, gerendert in Blender. Gebaut habe ich davon selbs
 \section{Das Team}
 \begin{table}[H]\centering\small
 \begin{tabularx}{\linewidth}{@{}lX@{}}\toprule
-\textbf{Ich} & Ziel, Richtung, Entscheidungen. Ich schaue mir Bilder an, stelle Fragen und bringe Ideen aus der
-  Konstruktionspraxis ein. \\
+\textbf{Ich} (Konstrukteur) & Ziel, Richtung, Entscheidungen. Ich schaue mir Bilder an, stelle Fragen und bringe
+  Ideen aus der Konstruktionspraxis ein. Berechnet habe ich selbst nichts. \\
 \textbf{Hermes Agent} \cite{hermes} & Läuft lokal auf meinem Rechner mit offenen Sprachmodellen. Recherche,
   Literatur, Projektordner pflegen, lange Rechenläufe über Nacht. \\
 \textbf{Claude Code} \cite{claudecode} & Programmiert: Geometrie, Vernetzung, FEM-Eingabe, Auswertung, Bilder.
@@ -61,8 +64,8 @@ Daten finden & Die echten Spulenbahnen von W7-X in einer frei verfügbaren Forsc
   \cite{simsopt}. \\
 Parametrisches CAD & Ein FreeCAD-Modell erzeugt, das ich in der Oberfläche weiterbearbeiten kann:
   Parametertabelle, Skizzenmaße als Ausdrücke, Symmetrien als Klone, Verbinder. \\
-Vernetzung und FEM & Netze erzeugt, Magnetfeld und Spannung in einem gekoppelten Lauf gerechnet, die Kraft mit
-  einer zweiten Methode gegengeprüft. \\
+Vernetzung und FEM & Den Teil, den sonst die Berechnung übernimmt: Netze erzeugt, Magnetfeld und Spannung in
+  einem Lauf gerechnet und die Kraft mit einer zweiten Methode gegengeprüft. \\
 Prüfroutinen & Kollisionsprüfung Spule für Spule, mit Video des Aufbaus. \\
 Auswertung & Bilder in pyvista, ParaView und Blender; Querschnitte, Schnittmodelle, Detailmodell des Leiters. \\
 Dokumentation & Befund-Protokoll, Berichte als PDF, Veröffentlichung auf GitHub. \\\bottomrule
@@ -111,8 +114,9 @@ Veröffentlichung wurde jede Quelle einzeln gegen Volltext und Verlagsdaten gepr
 \subsection{Ein gültiges CAD-Modell ist noch kein Rechenmodell}
 Das parametrische FreeCAD-Modell war schön und gültig, aber der Vernetzer scheiterte an Flächen, die mehrere
 Boolesche Operationen gemeinsam erzeugt hatten. Die Lösung war ein zweiter Weg, der das Rechenmodell ohne
-CAD-Kern direkt aus den Daten erzeugt. Das kennt jeder Berechner: CAD-Modell und FE-Modell sind zwei verschiedene
-Dinge.
+CAD-Kern direkt aus den Daten erzeugt. Für mich als Konstrukteur war das die wichtigste Erkenntnis: Was ich
+konstruiere und was die Berechnung braucht, sind zwei verschiedene Modelle. Die Kollegen aus der Berechnung
+wissen das längst -- jetzt verstehe ich besser, warum sie mein CAD-Modell oft erst einmal vereinfachen.
 \bild{freecad_und_elmer.png}{0.92}{Zwei Wege nebeneinander: parametrisches CAD für die Konstruktion (links),
 direkt erzeugtes Rechenmodell für die Spannung (rechts).}
 
@@ -133,21 +137,25 @@ so gestartet werden, dass sie ein Sitzungsende überleben.
 \item \textbf{Den funktionierenden Weg nicht aufgeben}, während man den eleganten erkundet.
 \item \textbf{Befunde und Entscheidungen aufschreiben lassen} -- auch die Fehlschläge mit Ursache.
 \item \textbf{Quellen selbst prüfen}, bevor etwas veröffentlicht wird.
-\item \textbf{Die Verantwortung bleibt beim Ingenieur.} Kein Ergebnis ohne eigene Plausibilitätsprüfung
+\item \textbf{Berechnung bleibt Fachaufgabe.} Was der Agent rechnet, ist für mich als Konstrukteur eine
+  Vorabschätzung und ein Gesprächsanlass -- kein Nachweis. Belastbare Ergebnisse prüft ein Berechnungsingenieur.
+\item \textbf{Die Verantwortung bleibt beim Menschen.} Kein Ergebnis ohne eigene Plausibilitätsprüfung
   weitergeben.
 \end{enumerate}
 
 %======================================================================
 \section{Was man damit alles machen kann}
-Aus diesem Selbstversuch lassen sich Anwendungen ableiten, die in jedem Konstruktions- oder Berechnungsbüro
-denkbar sind:
+Aus Sicht eines Konstrukteurs lassen sich aus diesem Selbstversuch Anwendungen ableiten, die in jeder
+Entwicklungsabteilung denkbar sind:
 \begin{itemize}[itemsep=1pt]
 \item \textbf{Einarbeitung in fremde Themen:} Grundlagen, Normen- und Literaturlage in Stunden statt Wochen --
   mit Prüfpflicht.
 \item \textbf{CAD automatisieren:} parametrische Modelle per Skript erzeugen, Varianten durchspielen, Klone und
   Symmetrien konsequent nutzen; das Ergebnis bleibt im gewohnten CAD-Programm bearbeitbar.
-\item \textbf{Berechnungsketten aufbauen:} Geometrie, Netz, Löser und Auswertung verbinden, auch zwischen
-  Programmen, die nichts voneinander wissen.
+\item \textbf{Früher Blick auf die Mechanik:} grobe Vorabschätzungen von Kräften, Verformungen und Kollisionen
+  schon in der Konzeptphase -- als Grundlage für ein besseres Gespräch mit der Berechnung, nicht als Ersatz.
+\item \textbf{Bessere Übergabe an die Berechnung:} ein vereinfachtes, sauber vernetzbares Modell gleich mitliefern
+  und wissen, warum Splitterflächen und überlappende Boolesche Operationen Probleme machen.
 \item \textbf{Variantenstudien über Nacht:} Parameter ändern, rechnen, auswerten, vergleichen -- der Agent startet
   und überwacht, der Ingenieur bewertet am Morgen.
 \item \textbf{Prüfroutinen:} Kollisionen, Abstände, Massen, Kräftegleichgewicht automatisch nach jedem Schritt.
@@ -158,10 +166,12 @@ denkbar sind:
 \end{itemize}
 
 \section*{Fazit}
-KI-Agenten ersetzen keine Ingenieurserfahrung. Sie verschieben die Arbeit: weniger Tippen, Suchen und
-Formatieren, mehr Fragen stellen, Ergebnisse beurteilen und Entscheidungen treffen. Wer sauber prüft, kann mit
-einem einzigen Rechner und freier Software Dinge ausprobieren, für die früher ein Team und Wochen nötig gewesen
-wären. Wer nicht prüft, bekommt sehr schnell sehr überzeugende falsche Ergebnisse.
+KI-Agenten ersetzen keine Ingenieurserfahrung -- weder die des Konstrukteurs noch die des Berechners. Sie
+verschieben die Arbeit: weniger Tippen, Suchen und Formatieren, mehr Fragen stellen, Ergebnisse beurteilen und
+Entscheidungen treffen. Als Konstrukteur konnte ich in Bereiche hineinschauen, die sonst Fachkollegen vorbehalten
+sind, und dabei viel über deren Arbeit lernen. Wer sauber prüft und die Fachleute einbindet, kann mit einem
+einzigen Rechner und freier Software Dinge ausprobieren, für die früher ein Team und Wochen nötig gewesen wären.
+Wer nicht prüft, bekommt sehr schnell sehr überzeugende falsche Ergebnisse.
 
 \medskip\noindent Technische Berichte, Programmcode und Befundprotokoll:
 \url{https://github.com/ThomasSchmiegelt/stellarator-design}
