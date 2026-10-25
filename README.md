@@ -1,37 +1,74 @@
 # stellarator-design
 
-**Stellarator-Entwurf mit offenen Werkzeugen: vom benötigten Magnetfeld zur Spulengeometrie, geprüft mit Feldlinien, FEM und CAD.**
+**Stellarator-Spulen mit offenen Werkzeugen und KI-Agenten: vom benötigten Magnetfeld über die Spulenbahn und ein
+parametrisches FreeCAD-Gehäuse bis zur Spannungsrechnung in ElmerFEM.**
+
+*Stellarator coils with open tools and AI agents: from the required magnetic field via coil paths and parametric
+FreeCAD casings to structural analysis in ElmerFEM.*
 
 > 🛠️ **Ein Hobbyprojekt, aus Neugier entstanden.**
 > Ich bin kein Fusionsforscher. Dieses Projekt ist privat und aus reiner Neugier entstanden: Wie funktioniert
-> ein Stellarator, und wie weit kommt man mit offenen Werkzeugen und KI-Unterstützung (Claude Code, Hermes)?
+> ein Stellarator, und wie weit kommt man mit offenen Werkzeugen und KI-Unterstützung (Claude Code, Hermes Agent)?
 > Es gibt keine Verbindung zu einem Forschungsinstitut oder Unternehmen. Die Ergebnisse sind nicht
 > begutachtet, enthalten vereinfachende Annahmen und können Fehler haben. Sie sind **keine**
 > Auslegung einer realen Anlage. Hinweise und Korrekturen sind willkommen.
 >
 > *A hobby project, born out of curiosity. Not affiliated with any research institution or company;
-> results are not peer-reviewed and may contain errors.*
+> results are not peer-reviewed, contain simplifying assumptions and may contain errors. They are **not** the
+> design of a real device. Feedback and corrections are welcome.*
 
-*English summary:* Open-source workflow for stellarator magnet design. Instead of starting from coils, the
-design question is inverted: *which magnetic field is needed, and which coil geometry produces it?*
-Stage 1 optimizes the plasma boundary (DESC, GPU), stage 2 finds coils that produce that field
-(simsopt), stage 3 independently verifies field lines, rotational transform, forces and coil
-clearances, builds the winding-pack geometry (STL/STEP) and runs 3-D magnetostatics in ElmerFEM.
-Validated on the real Wendelstein 7-X coil set. Documentation is in German.
+![W7-X-ähnliches Spulensystem mit Gehäusen und Feldlinien (Blender)](docs/bilder/w7x_torus3d_blender.png)
 
-![W7-X: Feldlinien in den 70 Wickelpaketen](docs/bilder/w7x_feldlinien_3d.png)
+### Vorstellung (Deutsch)
+
+Ein Stellarator hält ein Fusionsplasma allein mit äußeren, räumlich verwundenen Magnetspulen. Diese Spulen sind
+anspruchsvolle 3D-Bauteile: Ihre Bahn gibt die Physik vor, die Kräfte entstehen aus Strom und Magnetfeld, und die
+Tragstruktur muss dazwischen Platz finden. Das Projekt baut dafür eine durchgängige, nachvollziehbare Kette mit
+freier Software auf:
+
+- **Physik:** Plasmaform (DESC) und Spulen (simsopt) entwerfen oder die öffentlichen Spulenbahnen von
+  Wendelstein 7-X übernehmen; Feldlinien, Flussflächen, Kräfte und Abstände unabhängig prüfen.
+- **Konstruktion:** Spulengehäuse als voll parametrisches FreeCAD-Modell (Variable Section Sweep, Parametertabelle,
+  Symmetrie-Klone, Verbinder, kollisionsfrei per Nachbarschnitt).
+- **Berechnung:** Magnetfeld → Lorentzkraft → Spannung in einem gekoppelten ElmerFEM-Lauf, mit einem robusten
+  Rechenweg, der das Netz direkt aus den Bahndaten erzeugt (ohne CAD-Kern).
+- **Anschauung:** 3D-Schnittmodell mit Verguss, Isolierung und Supraleitern, Leiterdetail, ParaView und Blender.
+
+Gebaut wurde das in wenigen Tagen mit zwei KI-Agenten: [Hermes Agent](https://github.com/NousResearch/hermes-agent)
+(lokal; Recherche, Projektpflege, lange Läufe) und [Claude Code](https://www.anthropic.com/claude-code)
+(Programmierung). Die Irrwege sind offen dokumentiert, in `BEFUNDE.md` und in den Berichten unten.
+
+### About (English)
+
+A stellarator confines a fusion plasma using only external, three-dimensionally twisted magnet coils. These
+coils are demanding 3D parts: physics dictates their path, current and field create large forces, and the
+support structure has to fit in between. This project builds a transparent end-to-end pipeline with open
+software:
+
+- **Physics:** design a plasma shape (DESC) and coils (simsopt), or use the public Wendelstein 7-X coil paths;
+  independently check field lines, flux surfaces, forces and clearances.
+- **Design:** coil casings as a fully parametric FreeCAD model (variable section sweep, spreadsheet parameters,
+  symmetry clones, connectors, collision-free via neighbour subtraction).
+- **Analysis:** magnetic field → Lorentz force → stress in one coupled ElmerFEM run, using a robust path that
+  meshes directly from the coil data (no CAD kernel).
+- **Visualisation:** 3D cut-away model with potting, insulation and superconductors, conductor detail, ParaView
+  and Blender.
+
+It was built in a few days with two AI agents: [Hermes Agent](https://github.com/NousResearch/hermes-agent)
+(local; research, bookkeeping, long runs) and [Claude Code](https://www.anthropic.com/claude-code) (coding).
+Dead ends are documented openly in `BEFUNDE.md` (German) and in the reports below. Code and most documentation are
+in German; the English report gives the full story.
 
 ## Projektbericht / Project report
 
 Wie das Projekt entstanden ist, mit allen Irrwegen (Recherche, falsches erstes Modell, direkte
-Netzerzeugung, parametrisches FreeCAD-Modell, paralleler Rechenweg, 3D-Modell):
+Netzerzeugung, parametrisches FreeCAD-Modell, paralleler Rechenweg, 3D-Modell). Alle Quellen einzeln geprüft.
+*How the project came about, including the dead ends. All references individually verified.*
 
 - **Deutsch, für Maschinenbauer:** [Spulengehäuse eines Stellarators (PDF)](bericht/projektbericht/projektbericht.pdf)
 - **Für KI-interessierte Maschinenbauer (wenig Zahlen, was alles geht):** [Was KI-Agenten im Maschinenbau heute schon können (PDF)](bericht/projektbericht/ki_im_maschinenbau.pdf)
 - **English, for IT folks:** [Two AI Agents, One Stellarator (PDF)](bericht/projektbericht/project_report_en.pdf)
 - Ältere Fachauslegung (1 GW, v0.3): [bericht/v0.3/bericht_v0.3.pdf](bericht/v0.3/bericht_v0.3.pdf)
-
-![W7-X-ähnliches Spulensystem in Blender](docs/bilder/w7x_torus3d_blender.png)
 
 ---
 
@@ -187,7 +224,40 @@ entspricht der Netzweite von 5 cm.
 
 Weitere Bilder: [Voxel-FFT-Solver gegen Biot-Savart](docs/bilder/w7x_voxelsolver_validierung.png),
 [Poincaré Biot-Savart/Voxel](docs/bilder/w7x_poincare_biotsavart_voxel.png),
-[PicoGK-Gehäuse](docs/bilder/w7x_picogk_gehaeuse.png).
+[PicoGK-Gehäuse](docs/bilder/w7x_picogk_gehaeuse.png) (frühe Voxel-Variante, heute nicht mehr nötig).
+
+### W7-X: Spulengehäuse und Spannung (zwei Wege)
+
+Die Gehäuse entstehen auf zwei parallelen Wegen: als **parametrisches FreeCAD-Modell** (Konstruktionsstand,
+kollisionsfrei per Nachbarschnitt) und als **Rechenmodell ohne CAD-Kern** (zwei Rechteckrohre je Spule direkt auf
+der Bahn, Wände nach Kraft und Freiraum, automatische Entflechtung). Der zweite Weg ist robust vernetzbar und
+liefert die Spannungen.
+
+| | |
+|---|---|
+| ![Gehäusespannung mit Feldlinien](docs/bilder/w7x_feldlinien_spannung.png) | ![Gehäusespannung, geschlossen](docs/bilder/w7x_feldlinien_spannung_geschlossen.png) |
+| Vergleichsspannung im Gehäuse (Elmer) mit Feldlinien, aufgeschnitten | geschlossenes Modell |
+
+| Kennzahl (Rechenweg ohne CAD-Kern) | Wert |
+|---|---|
+| Netz / Lösung | 3,02 Mio. Tetraeder in 78 s / 55 min, ~14 GB |
+| Stahl | 33,4 m³ ≈ 264 t |
+| Kraft je Spule Elmer / Biot-Savart | 2,42 / 2,39 MN (+1 %) |
+| von Mises Gehäuse | Mittel 11 MPa, 99 % < 43 MPa, max. 110 MPa; Verformung < 1 mm |
+
+Vereinfachungen: je Gehäuse ein eingespannter Bereich statt Verbinder und Tragring, kein Verguss, Wände
+stellenweise nur 3 mm. Das ist ein durchgängiger Rechenweg, **kein** Festigkeitsnachweis.
+
+### 3D-Modell: Schichten und Leiter
+
+| | |
+|---|---|
+| ![Schnittmodell Detail](docs/bilder/w7x_torus3d_detail.png) | ![CICC-Leiter in Blender](docs/bilder/w7x_leiter3d_blender.png) |
+| Gehäuse, Verguss, Grundisolierung, 108 Leiter je Spule (Windungsisolation, Al-Mantel, Kabel) | CICC-Leiter: Strom im NbTi (türkis), Kupfer als Stabilisator, Al-Mantel und Helium stromlos |
+
+Weitere Bilder: [Querschnitt (SVG)](docs/bilder/w7x_spule_querschnitt.svg),
+[Schnitt](docs/bilder/w7x_torus3d_schnitt.png), [Sektor](docs/bilder/w7x_torus3d_sektor.png),
+[geschlossen](docs/bilder/w7x_torus3d_geschlossen.png).
 
 ---
 
@@ -205,6 +275,11 @@ stellarator/                 Bestandspipeline (.venv)
   struktur.py                Stützschale: Elmer Magnetfeld → Lorentzkraft → Spannung (ein Lauf)
   gehaeuse.py, freecad_vss.py  Spulengehäuse + Verbinder als parametrisches FreeCAD-Modell (Variable Section Sweep / Loft)
   gehaeuse_fem.py            Gehäuse (STEP) → gmsh → Elmer: Lorentzkraft → Spannung
+  freecad_*.py, aufbau.py    FreeCAD: Ansicht, Reparatur über die Parametertabelle, Vereinigen; Aufbauprüfung mit Video
+  gehaeuse_netz.py           Gehäuse OHNE CAD-Kern (Rechteckrohre, Entflechtung) → Elmer-Spannung (robuster Weg)
+  torus3d.py, leiter3d.py    3D-Schnittmodell (Schichten, 108 Leiter je Spule) und CICC-Leiterdetail, glTF-Export
+  blender_szene.py           glTF → Blender (Materialien, Licht, Kamera, Cycles-Render)
+  paraview_feldlinien.py     ParaView: Gehäusespannung + Feldlinien; bild_querschnitt.py: Querschnitt als SVG
   bericht.py                 Bericht (LaTeX/PDF) automatisch aus den Ergebnisdateien
   lauf.py                    Gesamtpipeline W7-X (Geometrie → PicoGK-Voxel → FFT-Solver → Feldlinien → Kräfte)
   voxelsolver.py, picogk_bruecke.py   FFT-Voxel-Feldlöser, Anbindung an PicoGK
@@ -295,7 +370,12 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 - [x] Stützschale in Elmer (A = 6): Spannungen aus Lorentzkräften
 - [x] Spulengehäuse für A = 4,5 als parametrisches FreeCAD-Modell (Variable Section Sweep)
 - [x] Gehäuse verbinden, STEP → gmsh → Elmer-Spannungen für A = 4,5 (Kette läuft)
+- [x] W7-X-Gehäuse kollisionsfrei (CAD: Nachbarschnitt) und Spannungsrechnung über den Rechenweg ohne CAD-Kern
+- [x] 3D-Schnittmodell mit Verguss, Isolierung und Supraleitern; Leiterdetail; ParaView und Blender
+- [x] Projektberichte (de/en, drei Zielgruppen) mit geprüften Quellen
 - [ ] Wandstärken und Verbinder auslegen (zulässige Spannung einhalten)
+- [ ] Verguss (Quarzsand-Epoxid) zwischen Wickelpaket und Gehäuse in Geometrie und Rechnung
+- [ ] Verbinder und Tragring im Rechenweg statt eingespannter Bereiche; Keil und Gehäuse aus einem Stück
 - [ ] Stufe 0 genauer: Divertor-Wärmelast, Zyklotronstrahlung, Blanket-Dicke aus Neutronik
 - [ ] Studien-Runner (Agent wählt Ziele, numerischer Optimierer rechnet)
 - [ ] Allgemeiner Weg STL → STEP
@@ -304,7 +384,11 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 
 - W7-X-Spulenfilamente und Referenzachse: [simsopt](https://github.com/hiddenSymmetries/simsopt) (MIT), Spulensatz `w7x_v001` (IPP).
 - Plasmaform-Optimierung: [DESC](https://github.com/PlasmaControl/DESC). Spulenoptimierung: simsopt.
-- FEM: [ElmerFEM](https://www.elmerfem.org). Netze/CAD: [gmsh](https://gmsh.info). Voxel: [PicoGK](https://github.com/leap71/PicoGK).
+- FEM: [ElmerFEM](https://www.elmerfem.org). Netze: [gmsh](https://gmsh.info). CAD: [FreeCAD](https://www.freecad.org).
+- Visualisierung: [PyVista](https://pyvista.org), [ParaView](https://www.paraview.org), [Blender](https://www.blender.org).
+- KI-Agenten: [Hermes Agent](https://github.com/NousResearch/hermes-agent) (Nous Research, MIT), [Claude Code](https://www.anthropic.com/claude-code) (Anthropic).
+- Frühe Voxel-Variante (heute optional): [PicoGK](https://github.com/leap71/PicoGK).
+- Fachliteratur: siehe Literaturverzeichnisse der [Projektberichte](bericht/projektbericht/).
 
 ## Lizenz
 
