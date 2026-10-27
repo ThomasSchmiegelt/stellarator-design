@@ -5,8 +5,10 @@
 \sisetup{output-decimal-marker={,}}
 \hypersetup{pdfauthor={Thomas Schmiegelt},pdftitle={Spulengehäuse eines Stellarators -- vom Datensatz zur Spannungsrechnung}}
 \newcommand{\bild}[3]{\begin{figure}[H]\centering\includegraphics[width=#2\linewidth]{bilder/#1}\caption{#3}\end{figure}}
-\newcommand{\zwei}[4]{\begin{figure}[H]\centering\includegraphics[width=0.49\linewidth]{bilder/#1}\hfill
-  \includegraphics[width=0.49\linewidth]{bilder/#2}\caption{#3}\label{#4}\end{figure}}
+\newcommand{\zwei}[4]{\begin{figure}[H]\centering
+  \includegraphics[width=0.9\linewidth,height=0.4\textheight,keepaspectratio]{bilder/#1}\par\medskip
+  \includegraphics[width=0.9\linewidth,height=0.4\textheight,keepaspectratio]{bilder/#2}\caption{#3}\label{#4}\end{figure}}
+\usepackage{titlesec}\newcommand{\sectionbreak}{\clearpage}
 \newcommand{\kasten}[2]{\par\smallskip\noindent\fcolorbox{gray}{gray!8}{\parbox{0.96\linewidth}{\textbf{#1} #2}}\par\smallskip}
 \title{\textbf{Spulengehäuse eines Stellarators}\\[2pt]\large Vom offenen Datensatz zur Spannungsrechnung --
   ein Projektbericht mit Irrwegen}
@@ -21,7 +23,14 @@ W7-X-Modell ist \emph{angelehnt an} Wendelstein~7-X: Die Spulenbahnen stammen au
 entsprechen nicht der realen Anlage. Rechnungen, Programmcode und Textentwurf entstanden mit Unterstützung von
 KI-Agenten; alle Abbildungen sind eigene Rechnungen und Darstellungen.}
 
-\begin{abstract}
+\noindent{\Large\bfseries Einleitung und Beweggrund}\par\medskip
+Ich bin kein Fusionsforscher. Dieses Projekt ist privat und aus Neugier entstanden: Wie funktioniert ein
+Stellarator, und wie weit kommt man als Einzelner mit freier Software und KI-Unterstützung an ein so
+anspruchsvolles Bauteil heran? Die Spulen eines Stellarators sind dafür ein gutes Beispiel, weil sich hier
+Konstruktion, Fertigung und Festigkeit treffen. Die Bahn gibt die Physik vor, die Kräfte entstehen aus Strom und
+Feld, und die Struktur muss dazwischen Platz finden. Später kam das Plasmagefäß dazu, mit einem Kühlkern aus
+Gyroid-Filamenten.
+
 Die supraleitenden Spulen eines Stellarators sind dreidimensional gekrümmte Bauteile, auf die im Betrieb große
 magnetische Kräfte wirken. Der Bericht beschreibt, wie in vier Tagen eine durchgängige Rechenkette entstand:
 Spulenbahn $\to$ Magnetfeld $\to$ Lorentzkraft $\to$ Gehäusegeometrie $\to$ Vergleichsspannung. Er zeigt auch die
@@ -31,8 +40,8 @@ direkt als Netz erzeugt. Für ein W7-X-ähnliches Spulensystem (70 Spulen, \SI{2
 mit \SI{33}{m^3} Stahl Vergleichsspannungen von 99\,\% unter \SI{43}{MPa} und Verformungen unter \SI{1}{mm}
 -- unter stark vereinfachter Lagerung. Eine Fortsetzung (Abschnitt~\ref{sec:kuehlung}) rechnet die Strömung
 im Gyroid-Kühlkern des Plasmagefäßes der 1-GW-Form mit FluidX3D und nennt Verbesserungsvorschläge.
-\end{abstract}
 
+\clearpage
 \tableofcontents
 
 %======================================================================
@@ -114,8 +123,8 @@ Achse, Abstände, Feld mit einer zweiten Methode), bevor ein Ergebnis weitergege
 Mit den echten Bahnen (7 Basisspulen, über Dreh- und Spiegelsymmetrie 70 Spulen) zeigte das Feld die bekannten
 bohnenförmigen Flussflächen (Abb.~\ref{fig:feld}). Kalibriert auf \SI{2,5}{T} im Mittel auf der Achse ergibt
 sich ein Strom von \SI{13,5}{kA} je Windung.
-\zwei{w7x_feldlinien_3d.png}{w7x_poincare_bewertung.png}{Feldlinien auf Flussflächen (links), Poincaré-Schnitt
-und Verdrillung der Feldlinien über dem Radius (rechts).}{fig:feld}
+\zwei{w7x_feldlinien_3d.png}{w7x_poincare_bewertung.png}{Feldlinien auf Flussflächen (oben), Poincaré-Schnitt
+und Verdrillung der Feldlinien über dem Radius (unten).}{fig:feld}
 
 \subsection{Wickelpakete als Volumennetz}
 Der ursprüngliche Plan war eine CAD-Modellierung. Robuster war der direkte Weg: an jedem Bahnpunkt ein
@@ -126,10 +135,10 @@ Oberfläche. Volumenfehler unter \SI{0,4}{\%}; kleinster Spalt zwischen zwei Wic
 
 Die Magnetostatik mit allen 70 Spulen (3,3 Mio.\ Tetraeder, \SI{680}{s}, \SI{10}{GB} RAM) traf das Feld der
 Linienleiterrechnung (Biot-Savart) auf der Achse im Median auf \SI{0,24}{\%} (Abb.~\ref{fig:elmer}).
-\zwei{w7x_wickelpakete.png}{elmer_70_spulen_vergleich.png}{70 Wickelpakete direkt aus den Bahndaten (links);
-FEM gegen Biot-Savart entlang einer Spulennormalen (rechts).}{fig:elmer}
-\zwei{validierung_draht.png}{w7x_voxelsolver_validierung.png}{Validierungen: FEM am geraden Leiter (links),
-eigener FFT-Feldlöser gegen Biot-Savart (rechts).}{fig:valid}
+\zwei{w7x_wickelpakete.png}{elmer_70_spulen_vergleich.png}{70 Wickelpakete direkt aus den Bahndaten (oben);
+FEM gegen Biot-Savart entlang einer Spulennormalen (unten).}{fig:elmer}
+\zwei{validierung_draht.png}{w7x_voxelsolver_validierung.png}{Validierungen: FEM am geraden Leiter (oben),
+eigener FFT-Feldlöser gegen Biot-Savart (unten).}{fig:valid}
 
 \subsection{Abstecher: Auslegung auf 1\,GW}
 Auf dieselbe Kette setzte eine Studie auf, die vom Ziel her rechnet: \SI{1}{GW} elektrische Leistung $\to$
@@ -137,8 +146,8 @@ Plasmagröße und Feld $\to$ eigene Plasmaform (DESC \cite{desc}) $\to$ Spulen (
 Hochtemperatur-Supraleiter ergibt sich ein großer Radius von etwa \SI{10}{m}. Die Kraft je Spule liegt dann bei
 rund \SI{1}{GN}, etwa das Tausendfache von W7-X -- ab hier ist die Tragstruktur die eigentliche
 Konstruktionsaufgabe.
-\zwei{uebersicht_1GW_A6_A45.png}{struktur_A6_HTS.png}{1-GW-Auslegung (links) und erste Stützschale mit
-gekoppelter Rechnung Feld $\to$ Kraft $\to$ Spannung (rechts).}{fig:gw}
+\zwei{uebersicht_1GW_A6_A45.png}{struktur_A6_HTS.png}{1-GW-Auslegung (oben) und erste Stützschale mit
+gekoppelter Rechnung Feld $\to$ Kraft $\to$ Spannung (unten).}{fig:gw}
 
 %======================================================================
 \section{Parametrisches CAD-Modell der Gehäuse}
@@ -149,7 +158,7 @@ Gehäuses, Skizzen senkrecht zur Kurve, ein Loft hindurch; alle Wände wachsen n
 parametrisch umgesetzt: Parametertabelle, Skizzenmaße als Ausdrücke, Wandstärke je Station nach der
 Linienlast, Symmetrien als Klone und Verbinder zwischen benachbarten Spulen.
 \zwei{freecad_gui_w7x.png}{gehaeuse_A45_HTS_verbunden.png}{Parametrisches FreeCAD-Modell: W7-X-ähnliche
-Gehäuse mit Verbindern (links), kompakte 1-GW-Form (rechts).}{fig:fc}
+Gehäuse mit Verbindern (oben), kompakte 1-GW-Form (unten).}{fig:fc}
 
 \subsection{Was nicht funktionierte}
 \begin{enumerate}\itemsep1pt
@@ -168,8 +177,8 @@ Gehäuse mit Verbindern (links), kompakte 1-GW-Form (rechts).}{fig:fc}
   trotzdem aufwendig.
 \end{enumerate}
 \zwei{struktur_A45_HTS_gehaeuse.png}{gehaeuse_A45_HTS_keil_oben.png}{Erste Spannungsrechnung der FreeCAD-Gehäuse
-mit zu dünnen Wänden (links); Gehäuse mit Keil auf der Innenseite -- im CAD gültig, nicht vernetzbar
-(rechts).}{fig:keil}
+mit zu dünnen Wänden (oben); Gehäuse mit Keil auf der Innenseite -- im CAD gültig, nicht vernetzbar
+(unten).}{fig:keil}
 \kasten{Lehre:}{Ein gültiger Volumenkörper ist noch kein vernetzbarer. Je mehr Boolesche Operationen auf
 dieselben Flächen treffen, desto eher entstehen Splitterflächen, an denen der Vernetzer scheitert.}
 
@@ -210,10 +219,10 @@ Die Spannungen liegen weit unter dem Vergleichswert. Das ist wegen der vereinfac
 (Einspannbereiche statt Abstützung über Nachbarn und Tragring) und stellenweise nur \SI{3}{mm} dünner Wände
 \emph{kein} Festigkeitsnachweis, aber ein durchgängiger, reproduzierbarer Rechenweg, auf dem sich aufbauen lässt.
 \zwei{aufbau_schritt35.png}{struktur_w7x_gehaeuse_netz.png}{Schrittweise Aufbauprüfung im CAD-Ast, Schritt 35/70,
-0 Kollisionen (links); Vergleichsspannung im Rechenweg ohne CAD-Kern (rechts).}{fig:aufbau}
+0 Kollisionen (oben); Vergleichsspannung im Rechenweg ohne CAD-Kern (unten).}{fig:aufbau}
 \zwei{w7x_feldlinien_spannung.png}{w7x_feldlinien_spannung_geschlossen.png}{Gehäusespannung mit
 Magnetfeldlinien auf Flussflächen, aufgeschnitten und geschlossen.}{fig:fls}
-\bild{freecad_und_elmer.png}{0.95}{Beide Wege nebeneinander: parametrisches CAD-Modell (links) und
+\bild{freecad_und_elmer.png}{1.0}{Beide Wege nebeneinander: parametrisches CAD-Modell (links) und
 Spannungsrechnung aus dem Rechenweg (rechts).}
 
 %======================================================================
@@ -221,8 +230,8 @@ Spannungsrechnung aus dem Rechenweg (rechts).}
 Zum Schluss sollte der innere Aufbau sichtbar werden. Von innen nach außen: Kabel (NbTi-Stränge in Kupfer,
 Helium), Aluminiummantel, Windungsisolation, Grundisolierung, Verguss (Quarzsand-Epoxid, eigene Annahme),
 Stahlgehäuse; $12\times9=108$ Leiter je Spule.
-\zwei{w7x_spule_querschnitt.png}{w7x_torus3d_detail.png}{Schichtaufbau einer Spule (schematisch, links) und im
-3D-Schnittmodell (rechts).}{fig:quer}
+\zwei{w7x_spule_querschnitt.png}{w7x_torus3d_detail.png}{Schichtaufbau einer Spule (schematisch, oben) und im
+3D-Schnittmodell (unten).}{fig:quer}
 \zwei{w7x_torus3d_schnitt.png}{w7x_torus3d_sektor.png}{3D-Modell aller 70 Spulen, aufgeschnitten und als
 Sektor.}{fig:torus}
 
@@ -232,7 +241,7 @@ den Strom nur kurzzeitig, wenn der Supraleiter örtlich normalleitend wird (Quen
 tragen keinen Strom; der Mantel gibt dem Leiter Form und Festigkeit und schließt das Helium ein.
 \zwei{w7x_leiter3d.png}{w7x_leiter3d_blender.png}{Leiterstück: aufgeschnittener Aluminiummantel, verdrillte
 Stränge, daneben ein Strang zwölffach vergrößert mit NbTi-Filamenten (türkis, Anzahl symbolisch).}{fig:leiter}
-\bild{w7x_torus3d_blender.png}{0.95}{Gesamtes Spulensystem mit Feldlinien (gerendert in Blender \cite{blender}).}
+\bild{w7x_torus3d_blender.png}{1.0}{Gesamtes Spulensystem mit Feldlinien (gerendert in Blender \cite{blender}).}
 
 %======================================================================
 \section{Fazit für die Praxis}
@@ -316,7 +325,7 @@ das schief: Bei $z=\SI{1,906}{m}$ wurde eine ganze Gitterlage zu Stahl und sperr
 erst, als die Gitterzellen Lage für Lage mit dem Netz verglichen wurden. Seit f10 schreibt PicoGK die Belegung
 der Voxel direkt in eine Datei, und FluidX3D liest sie ein. Ein Abgleich mit dem Netz ergibt 100\,\%
 Übereinstimmung. Die Zahlen von f6 bis f9 sind dadurch verfälscht.
-\bild{kuehl_gitterfehler_f9.png}{0.9}{Fehler im Rechengitter (f9): Wasser in der plasmanahen Schicht,
+\bild{kuehl_gitterfehler_f9.png}{1.0}{Fehler im Rechengitter (f9): Wasser in der plasmanahen Schicht,
 abgewickelt über den Umfang (waagerecht) und den Weg vom Eintritt zum Austritt (senkrecht), Farbe = Geschwindigkeit
 in Umfangsrichtung. Die dunklen Blöcke bei etwa $\pm\ang{50}$ werden nicht durchströmt, weil dort eine Gitterlage
 fälschlich Stahl ist. Unten vergrößert.}
@@ -332,12 +341,12 @@ je Sektor (Streuung 8\,\%) und Querschnitt der Kernmitte.}
 innen ein. Fast der ganze Durchfluss läuft durch die feine Gyroid-Schicht an der Plasmaseite (rechts vergrößert,
 \SIrange{0,1}{1}{m/s}). Im groben, dichten Gyroid dahinter steht das Wasser in abgeschlossenen Poren; er trägt
 nur.}
-\bild{kuehl_gesamt.jpg}{0.82}{Gesamtbild der 1-GW-Anlage, ergänzt um die Kühlung: Gyroid-Filamente an der
+\bild{kuehl_gesamt.jpg}{1.0}{Gesamtbild der 1-GW-Anlage, ergänzt um die Kühlung: Gyroid-Filamente an der
 Plasmaseite mit Wasserbahnen (links), Durchfluss je Umfangssektor vor und nach dem Abgleich (Mitte),
 Erkenntnisse (rechts).}
 \zwei{kuehl_durchsichtig.jpg}{kuehl_gyroid_nah.jpg}{Bilder aus den Strömungsfilmen (Blender \cite{blender}):
-das Segment durchsichtig, Eintritt innen rechts, Austritt außen links (links); die untere Hälfte ohne
-Innenhaut, Blick auf die Filamente der Plasmaseite (rechts). Farbe = Geschwindigkeit.}{fig:kuehlfilm}
+das Segment durchsichtig, Eintritt innen rechts, Austritt außen links (oben); die untere Hälfte ohne
+Innenhaut, Blick auf die Filamente der Plasmaseite (unten). Farbe = Geschwindigkeit.}{fig:kuehlfilm}
 
 \subsection{Reicht das? Eine grobe Wärmeabschätzung}
 Die Strömungsrechnung enthält keine Wärme. Eine eindimensionale Abschätzung für Druckwasser bei

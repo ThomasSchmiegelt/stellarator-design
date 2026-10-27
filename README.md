@@ -341,6 +341,40 @@ Skripte: `stellarator/kuehlung_segment.py` (Auslegung, Geometrie über `picogk/S
 `blender_stroemung.py` (Filme, Schnitt mit `picogk/StlSchnitt`), `gesamtbild_kuehlung.py`; Skizzen:
 `skizze.py`/`skizze.html`, `draufsicht.py`, `modell_ansicht.py`.
 
+### Doppeltes Filament, Platz zu den Spulen, Flüssigblei (grobe Abschätzungen)
+
+Aus den Vorschlägen oben: Die Plasmaseite bekommt eigene feine Kanäle (innen, Kühlung), dahinter trägt ein
+**trockener** Gyroid (außen, Steifigkeit). Beides ist getrennt.
+
+![Wandstück mit doppeltem Filament: Innenhaut, Kühlkanäle, Rückwand, trockener Gyroid, Außenhaut](docs/bilder/wandstueck_doppeltes_filament.png)
+
+- **Wasser 60 → 150 °C bei 2 MPa** (`stellarator/erstwand_kanal.py`, 1D + Elmer-Querschnitt):
+  - Kanäle 6×6 mm, je 3 hintereinander geschaltet, 1–2 m/s, Druckverlust 49 kPa.
+  - Stahl höchstens 300 °C, Kanalwand 202 °C, also unter der Siedetemperatur von 212 °C.
+  - Nachteil: Wärme mit 150 °C lässt sich kaum verstromen.
+- **Platz zu den Spulen** (`stellarator/gefaess_abstand.py`):
+  - Vom Plasmarand zum Spulengehäuse mindestens 1,25 m, zu den Verbindern 1,70 m, im gerechneten Segment 1,88 m.
+  - Wand mit Spalt (1,05 m) plus 5 cm Sicherheitsabstand passt überall.
+
+![Abstand Plasmarand zu Spulengehäuse und Verbindern, abgewickelt über den Torus](docs/bilder/gefaess_abstand.png)
+
+- **Flüssiges Blei oder Bleilithium statt Wasser** (`stellarator/blei_kanal.py`):
+  - Wärmetauscher Blei → Wasser **nicht** in der Wand:
+    - Blei erstarrt bei 327 °C am kalten Wasser.
+    - Ein Leck direkt am Plasma wäre gefährlich.
+    - Das Blei bringt die Wärme stattdessen zu einem Dampferzeuger außerhalb der Spulen.
+  - Im Magnetfeld (6 T) bremsen induzierte Ströme das Metall, wenn es quer zum Feld fließt:
+    - Toroidal laufende Kanäle liegen fast entlang des Feldes: 247 kPa mit Stahlwand, 27 kPa mit isolierender Schicht.
+    - Poloidal sind es 21 MPa, durch einen Gyroid 14 MPa. **Ein Gyroid eignet sich für Flüssigmetall nicht.**
+  - Variante b5:
+    - Kanäle 10×10 mm, Innenhaut 3 mm, Blei 340 → 420 °C.
+    - Stahl höchstens 537 °C.
+    - Pumpleistung etwa 0,2 % der Wärme.
+  - Nicht enthalten: Zusatzverluste in Kehren und Verteilern, Korrosion. Die Stoffwerte sind nicht an Quellen
+    geprüft.
+
+![Druckverlust Flüssigmetall je Kanalrichtung](docs/bilder/blei_druckverlust.png)
+
 ---
 
 ## Aufbau

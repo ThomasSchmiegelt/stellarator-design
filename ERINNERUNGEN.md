@@ -309,3 +309,26 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
   Abschnitt Kuehlung + FluidX3D und 7 Referenzen + PicoGK + sketch-to-prompt. fluidx3d/ (README, LICENSE, setup, defines
   geaendert) im Repo freigegeben (.gitignore). README Abschnitt Kuehlung, Filme docs/filme/ (komprimiert).
   GyroidTest-STLs nach sim/kuehlung_segment/gyroidtest/ verschoben (nicht ins Repo).
+- Gepusht 7d18a78 (User: "alle nach github"). User findet Gyroid-Film super. Zwischendateien der Filme geloescht
+  (Einzelbilder, npz, .blend, stahl_ganz/stahl_unten.stl; neu erzeugbar), Filme + Legenden + Standbild bleiben.
+- REGEL (User 2026-10-27): Austrittsdurchmesser immer groesser als Eintrittsdurchmesser (f11: d_ein 300, d_aus 400 mm).
+- Erstwand-Kanaele (User-Wahl): stellarator/erstwand_kanal.py (1D Gnielinski + Elmer-Querschnitt). k1-k4 bei
+  290->300 C/15,5 MPa: 10x10 mm, Steg 4, Haut 5 -> Stahl max ~437 C. User-Vorgabe danach: Wasser max 150 C, Eintritt 60 C
+  (dT 90 K -> nur 35 l/s je Segment) -> Kanaele in Reihe (--durchgaenge): n3 6x6 mm, 3 Durchgaenge, 1,5 MPa:
+  v 1-2 m/s, 49 kPa, Stahl max 300 C, Kanalwand 202 C (= Sieden 198 C -> Druck auf 2 MPa). Doppeltes Filament
+  (innen Kuehlung, aussen Steifigkeit) = dieses Konzept; Kollision mit Spulen noch pruefen (Abstand Plasma->Gehaeuse min 1,25 m).
+- Schnitt-Werkzeug (User-Wunsch): stellarator/schnitt_werkzeug.py/.html, Port 8766, Skill cae/stroemung-schnitte.
+- Bericht neu gegliedert (User): S.1 Einleitung/Beweggrund, Inhaltsverzeichnis eigene Seite, jedes Kapitel neue
+  Seite (titlesec \sectionbreak), Bildpaare untereinander 0,9 Breite statt nebeneinander.
+
+## 2026-10-27 Doppeltes Filament, Abstand, Name im Gesamtbild
+- Erstwandkanäle n5 (60→150 °C, 2 MPa): 6×6 mm, 3 Durchgänge, 1–2 m/s, Δp 49 kPa, Stahl ≤ 300 °C, Kanalwand 202 °C (< 212 °C Sieden). stellarator/erstwand_kanal.py
+- Abstand Plasmarand → Gehäuse min 1,25 m (Verbinder 1,70 m), Segment 85–95° ≥ 1,88 m; Wand 1,05 m + 5 cm passt überall. stellarator/gefaess_abstand.py
+- Wandstück doppeltes Filament: picogk/WandStueck + stellarator/blender_wandstueck.py, Bild sim/wandstueck/d1/wandstueck_beschriftet.png
+- Gesamtbild Kühlung: "© Thomas Schmiegelt" + Repo-Link unten links (direkt ins JPG gestempelt, Filmbilder sind gelöscht; Skript angepasst)
+- Blei/Bleilithium statt Wasser in den Erstwandkanälen (stellarator/blei_kanal.py, sim/blei/b1..b5), Idee des Users "Gyroid im Gyroid, Blei gibt Wärme an Wasser ab":
+  - Wärmetauscher Blei→Wasser IN der Wand verworfen: Blei friert bei 327 °C am 60–150-°C-Wasser fest, Leck Blei/Wasser am Plasma gefährlich. Stattdessen Dampferzeuger außerhalb der Spulen.
+  - MHD bei 6 T (dp = σ v B_quer² k_p L): Kanäle toroidal (fast entlang B, Steigung ~6° geschätzt) 247 kPa mit Stahlwand, 27 kPa isoliert; poloidal 21 MPa; Gyroid 14 MPa -> Gyroid für Flüssigmetall ungeeignet.
+  - b5 (empfohlen): 10×10 mm, Steg 4, Innenhaut 3 mm, Blei 340→420 °C, 0,87 m/s, 103 l/s, Stahl max 537 °C, Kanalwand 478 °C, Pumpe 0,2 % der Wärme. b1 (20 mm, 350→500 °C): Stahl 711 °C zu heiß.
+  - Grob: Nu = 5, keine 3D-MHD in Kehren/Verteilern, Stoffwerte ungeprüft, Korrosionsgrenze Stahl/Blei nicht geprüft.
+- Name auf Bildern: "Thomas Schmiegelt · privates Hobbyprojekt, nicht kommerziell" + FluidX3D-Nennung, kein ©-Zeichen (User fand © zu gewerblich).

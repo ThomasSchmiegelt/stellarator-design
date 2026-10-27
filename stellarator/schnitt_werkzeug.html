@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schnitt-Werkzeug</title>
+<style>
+  :root { --bg:#16181d; --panel:#21242b; --rand:#363a44; --text:#e6e8ec; --leise:#9aa1ad; --akzent:#e2483d; --gruen:#1f9d55; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:14px/1.4 system-ui, sans-serif; height:100vh;
+         display:grid; grid-template-columns:minmax(0,1fr) minmax(420px,46%); }
+  #ansicht { position:relative; overflow:hidden; }
+  #ansicht canvas { display:block; }
+  #ansicht.zeichnen { cursor:crosshair; }
+  #info { position:absolute; left:10px; bottom:10px; background:#000a; padding:4px 8px; border-radius:6px; font:12px monospace; color:var(--leise); }
+  #hilfe { position:absolute; left:10px; top:10px; background:#000a; padding:6px 10px; border-radius:6px; font-size:12px; color:var(--leise); max-width:480px; }
+  .laden { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--leise); font-size:16px; pointer-events:none; }
+  aside { background:var(--panel); border-left:1px solid var(--rand); padding:12px; display:flex; flex-direction:column; gap:10px; overflow:auto; }
+  .zeile { display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  .zeile label.k { color:var(--leise); min-width:72px; }
+  button, select, input[type=number] { background:#2c3039; color:var(--text); border:1px solid var(--rand); border-radius:6px; padding:5px 10px; font:inherit; cursor:pointer; }
+  input[type=number] { width:90px; cursor:text; }
+  input[type=range] { flex:1; min-width:140px; }
+  button:hover { border-color:#5a606d; }
+  button.an { background:#3b4250; border-color:#7a8291; }
+  textarea { min-height:56px; resize:vertical; background:#15171c; color:var(--text); border:1px solid var(--rand); border-radius:6px; padding:8px; font:inherit; }
+  #weiter { background:var(--gruen); border-color:var(--gruen); color:#fff; font-weight:600; padding:9px; flex:1; }
+  #ende { background:var(--akzent); border-color:var(--akzent); color:#fff; font-weight:600; padding:9px; flex:1; }
+  #status { color:var(--leise); font-size:12px; min-height:1.4em; }
+  #ergebnis { position:relative; background:#fff; border-radius:6px; min-height:120px; display:flex; align-items:center; justify-content:center; color:#555; }
+  #ergebnis img { width:100%; display:block; border-radius:6px; user-select:none; -webkit-user-drag:none; }
+  #rahmen { position:absolute; border:2px dashed var(--akzent); pointer-events:none; display:none; }
+  #verlauf { display:flex; gap:6px; flex-wrap:wrap; }
+  #verlauf img { height:54px; border:1px solid var(--rand); border-radius:4px; cursor:pointer; background:#fff; }
+  .klein { font-size:12px; color:var(--leise); }
+</style>
+</head>
+<body>
+<div id="ansicht">
+  <div id="hilfe">Drehen: linke Maus · Verschieben: rechte Maus · Zoom: Rad. Schnitt-Art „Linie“: mit gedrückter Maus über das
+    Bauteil ziehen – die Schnittebene enthält die Linie und die Blickrichtung (wie ein Messerschnitt).</div>
+  <div id="info">–</div>
+  <div class="laden" id="laden">Lade Modell …</div>
+</div>
+<aside>
+  <div class="zeile"><label class="k" for="modell">Modell</label><select id="modell"></select>
+    <button id="aufschneiden" class="an" title="Wasserraum an der Ebene aufschneiden">Vorschau aufgeschnitten</button></div>
+  <div class="zeile"><label class="k">Schnitt</label>
+    <button data-typ="phi" class="an">Winkel φ</button><button data-typ="z">Höhe z</button><button data-typ="linie">Linie ziehen</button></div>
+  <div class="zeile" id="regler"><label class="k" id="regler_name">φ [°]</label>
+    <input type="range" id="schieber" step="0.01"><input type="number" id="zahl" step="0.01"></div>
+  <div class="zeile"><label class="k">Größe</label>
+    <select id="groesse"><option value="v">Geschwindigkeit |v|</option><option value="vn">v senkrecht zur Ebene</option><option value="p">Druck</option></select>
+    <select id="skala"><option value="log">logarithmisch</option><option value="lin">linear</option></select>
+    <label><input type="checkbox" id="stromlinien" checked> Stromlinien</label></div>
+  <div class="zeile"><label class="k">Ausschnitt</label><span id="ausschnitt_text" class="klein">ganzer Schnitt – Rechteck im Ergebnisbild ziehen</span>
+    <button id="ausschnitt_weg">zurücksetzen</button></div>
+  <textarea id="text" placeholder="Bemerkung zum Schnitt (optional), z. B. „hier steht das Wasser – warum?“"></textarea>
+  <div class="zeile"><button id="weiter">Senden und nächster Schnitt</button><button id="ende">Senden und beenden</button></div>
+  <div id="status"></div>
+  <div id="ergebnis"><span>Noch kein Schnitt gerechnet.</span><div id="rahmen"></div></div>
+  <div id="verlauf"></div>
+</aside>
+
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+               "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { STLLoader } from "three/addons/loaders/STLLoader.js";
+import { Line2 } from "three/addons/lines/Line2.js";
+import { LineMaterial } from "three/addons/lines/LineMaterial.js";
+import { LineGeometry } from "three/addons/lines/LineGeometry.js";
+
+const $ = id => document.getElementById(id);
+const box = $("ansicht");
+const renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.localClippingEnabled = true;
+renderer.setPixelRatio(window.devicePixelRatio); box.appendChild(renderer.domElement);
+const szene = new THREE.Scene(); szene.background = new THREE.Color(0x16181d);
+const kamera = new THREE.PerspectiveCamera(35, 1, 0.05, 500); kamera.up.set(0, 0, 1);
+const steuerung = new OrbitControls(kamera, renderer.domElement); steuerung.enableDamping = true;
+szene.add(new THREE.HemisphereLight(0xffffff, 0x404050, 1.3));
+const sonne = new THREE.DirectionalLight(0xffffff, 1.4); szene.add(sonne);
+const schnittEbene = new THREE.Plane();
+const matWasser = new THREE.MeshStandardMaterial({ color: 0x2a7fd4, roughness: 0.5, side: THREE.DoubleSide, clippingPlanes: [schnittEbene] });
+const matEbene = new THREE.MeshBasicMaterial({ color: 0xe2483d, transparent: true, opacity: 0.28, side: THREE.DoubleSide, depthWrite: false });
+let wasser = null, ebeneObj = null, linieObj = null, bb = new THREE.Box3(), mitte = new THREE.Vector3(), groesse = 10;
+let typ = "phi", linie = null, ausschnitt = null, letztes = null, fallInfo = null;
+const modellWahl = $("modell"), loader = new STLLoader();
+
+function groesseAnpassen() {
+  const w = box.clientWidth, h = box.clientHeight;
+  renderer.setSize(w, h); kamera.aspect = w / h; kamera.updateProjectionMatrix();
+  if (linieObj) linieObj.material.resolution.set(w, h);
+}
+window.addEventListener("resize", groesseAnpassen);
+
+async function ladeModell(name) {
+  $("laden").style.display = "flex"; $("laden").textContent = "Lade Modell (beim ersten Mal ~20 s) …";
+  if (wasser) szene.remove(wasser);
+  const r = await fetch(`/netz?modell=${name}`);
+  const g = loader.parse(await r.arrayBuffer()); g.scale(0.001, 0.001, 0.001); g.computeVertexNormals();
+  wasser = new THREE.Mesh(g, matWasser); szene.add(wasser);
+  g.computeBoundingBox(); bb.copy(g.boundingBox); bb.getCenter(mitte); groesse = bb.getSize(new THREE.Vector3()).length();
+  fallInfo = await (await fetch(`/fall?modell=${name}`)).json();
+  // Reglerbereiche: phi ueber die Ecken des Wasserraums, z ueber die Hoehe
+  const phis = [];
+  for (const x of [bb.min.x, bb.max.x]) for (const y of [bb.min.y, bb.max.y]) phis.push(Math.atan2(y, x) * 180 / Math.PI);
+  bereiche.phi = [Math.min(...phis), Math.max(...phis), 90]; bereiche.z = [bb.min.z, bb.max.z, 0];
+  setzeTyp(typ);
+  $("laden").style.display = "none";
+  const eR = new THREE.Vector3(mitte.x, mitte.y, 0).normalize(), eP = new THREE.Vector3(0, 0, 1).cross(eR);
+  kamera.position.copy(mitte).addScaledVector(eP, -groesse * 1.1).addScaledVector(eR, groesse * 0.3).add(new THREE.Vector3(0, 0, groesse * 0.4));
+  steuerung.target.copy(mitte); kamera.lookAt(mitte); steuerung.update();
+  sonne.position.copy(kamera.position).add(new THREE.Vector3(0, 0, groesse));
+}
+
+// --- Ebene ------------------------------------------------------------------------------------------------
+const bereiche = { phi: [85, 95, 90], z: [-3, 3, 0] };
+function ebeneAusBrowser() {
+  if (typ === "phi") return { typ, wert: +$("zahl").value };
+  if (typ === "z") return { typ, wert: +$("zahl").value };
+  if (!linie) return null;
+  return { typ: "linie", p1: linie.p1.toArray(), p2: linie.p2.toArray(), blick: linie.blick.toArray() };
+}
+function zeigeEbene() {
+  if (ebeneObj) { szene.remove(ebeneObj); ebeneObj.geometry.dispose(); ebeneObj = null; }
+  const e = ebeneAusBrowser(); if (!e) { schnittEbene.set(new THREE.Vector3(0, 0, 1), 1e9); return; }
+  let p0, e1, e2, n, b1, b2;
+  const L = groesse;
+  if (e.typ === "phi") {
+    const ph = e.wert * Math.PI / 180; e1 = new THREE.Vector3(Math.cos(ph), Math.sin(ph), 0); e2 = new THREE.Vector3(0, 0, 1);
+    const Rm = Math.hypot(mitte.x, mitte.y); p0 = e1.clone().multiplyScalar(Rm); b1 = L * 0.75; b2 = (bb.max.z - bb.min.z) * 1.1;
+  } else if (e.typ === "z") {
+    e1 = new THREE.Vector3(1, 0, 0); e2 = new THREE.Vector3(0, 1, 0); p0 = new THREE.Vector3(mitte.x, mitte.y, e.wert); b1 = (bb.max.x - bb.min.x) * 1.1; b2 = (bb.max.y - bb.min.y) * 1.1;
+  } else {
+    e1 = linie.p2.clone().sub(linie.p1); const l = e1.length(); e1.normalize();
+    n = new THREE.Vector3().crossVectors(e1, linie.blick).normalize(); e2 = new THREE.Vector3().crossVectors(n, e1);
+    p0 = linie.p1.clone().addScaledVector(e1, l / 2); b1 = l; b2 = L * 0.8;
+  }
+  n = new THREE.Vector3().crossVectors(e1, e2).normalize();
+  const g = new THREE.PlaneGeometry(b1, b2);
+  const m = new THREE.Matrix4().makeBasis(e1, e2, n).setPosition(p0); g.applyMatrix4(m);
+  ebeneObj = new THREE.Mesh(g, matEbene); ebeneObj.renderOrder = 5; szene.add(ebeneObj);
+  // Vorschau: Wasser auf einer Seite wegschneiden (Blick auf die Schnittflaeche)
+  const seite = n.dot(kamera.position.clone().sub(p0)) > 0 ? -1 : 1;
+  if ($("aufschneiden").classList.contains("an")) schnittEbene.setFromNormalAndCoplanarPoint(n.clone().multiplyScalar(seite), p0);
+  else schnittEbene.set(new THREE.Vector3(0, 0, 1), 1e9);
+}
+function setzeTyp(t) {
+  typ = t; document.querySelectorAll("[data-typ]").forEach(b => b.classList.toggle("an", b.dataset.typ === t));
+  $("regler").style.display = t === "linie" ? "none" : "flex";
+  steuerung.enabled = true; box.classList.toggle("zeichnen", t === "linie");
+  if (t !== "linie") {
+    const [a, b, s] = bereiche[t]; $("schieber").min = $("zahl").min = a.toFixed(2); $("schieber").max = $("zahl").max = b.toFixed(2);
+    $("schieber").value = $("zahl").value = Math.min(Math.max(s, a), b).toFixed(2);
+    $("regler_name").textContent = t === "phi" ? "φ [°]" : "z [m]";
+  }
+  zeigeEbene();
+}
+document.querySelectorAll("[data-typ]").forEach(b => b.onclick = () => setzeTyp(b.dataset.typ));
+$("schieber").oninput = () => { $("zahl").value = $("schieber").value; zeigeEbene(); };
+$("zahl").onchange = () => { $("schieber").value = $("zahl").value; zeigeEbene(); };
+$("aufschneiden").onclick = ev => { ev.target.classList.toggle("an"); zeigeEbene(); };
+steuerung.addEventListener("end", zeigeEbene);
+
+// Linie ziehen (nur im Modus "linie"; Drehen mit rechter Maus bleibt moeglich ueber Umschalten)
+const strahl = new THREE.Raycaster(), maus = new THREE.Vector2();
+function treffer(ev) {
+  const r = renderer.domElement.getBoundingClientRect();
+  maus.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
+  strahl.setFromCamera(maus, kamera);
+  const t = wasser ? strahl.intersectObject(wasser)[0] : null;
+  if (t) return t.point.clone();
+  const e = new THREE.Plane().setFromNormalAndCoplanarPoint(kamera.getWorldDirection(new THREE.Vector3()), steuerung.target);
+  const p = new THREE.Vector3(); strahl.ray.intersectPlane(e, p); return p;
+}
+let ziehen = false;
+box.addEventListener("pointerdown", ev => {
+  if (typ !== "linie" || ev.button !== 0 || !wasser) return;
+  steuerung.enabled = false; ziehen = true; const p = treffer(ev);
+  linie = { p1: p, p2: p.clone(), blick: kamera.getWorldDirection(new THREE.Vector3()) };
+  box.setPointerCapture(ev.pointerId);
+});
+box.addEventListener("pointermove", ev => {
+  if (!wasser) return;
+  const p = treffer(ev);
+  $("info").textContent = `x ${p.x.toFixed(2)}  y ${p.y.toFixed(2)}  z ${p.z.toFixed(2)} m   R ${Math.hypot(p.x, p.y).toFixed(2)} m  φ ${(Math.atan2(p.y, p.x) * 180 / Math.PI).toFixed(2)}°`;
+  if (ziehen) { linie.p2 = p; zeichneLinie(); }
+});
+box.addEventListener("pointerup", () => {
+  if (!ziehen) return; ziehen = false; steuerung.enabled = true;
+  if (linie.p1.distanceTo(linie.p2) < groesse * 0.01) { linie = null; zeichneLinie(); }
+  zeigeEbene();
+});
+function zeichneLinie() {
+  if (linieObj) { szene.remove(linieObj); linieObj.geometry.dispose(); linieObj = null; }
+  if (!linie) return;
+  const g = new LineGeometry(); g.setPositions([...linie.p1.toArray(), ...linie.p2.toArray()]);
+  const m = new LineMaterial({ color: 0xffd23f, linewidth: 4, depthTest: false }); m.resolution.set(box.clientWidth, box.clientHeight);
+  linieObj = new Line2(g, m); linieObj.computeLineDistances(); linieObj.renderOrder = 10; szene.add(linieObj);
+}
+window.addEventListener("keydown", ev => {
+  if (ev.target.tagName === "TEXTAREA" || ev.target.tagName === "INPUT") return;
+  if (ev.key === "l") setzeTyp("linie");
+});
+
+// --- Ausschnitt: Rechteck im Ergebnisbild ------------------------------------------------------------------
+const erg = $("ergebnis"), rahmen = $("rahmen");
+let start = null;
+function bildKoord(ev) {
+  const img = erg.querySelector("img"); if (!img || !letztes) return null;
+  const r = img.getBoundingClientRect(); const fx = (ev.clientX - r.left) / r.width, fy = 1 - (ev.clientY - r.top) / r.height;
+  const [ax0, ay0, ax1, ay1] = letztes.achsen_bild, [u0, u1, v0, v1] = letztes.bereich;
+  return { px: [ev.clientX - erg.getBoundingClientRect().left, ev.clientY - erg.getBoundingClientRect().top],
+           u: u0 + (fx - ax0) / (ax1 - ax0) * (u1 - u0), v: v0 + (fy - ay0) / (ay1 - ay0) * (v1 - v0) };
+}
+erg.addEventListener("pointerdown", ev => { start = bildKoord(ev); if (start) { erg.setPointerCapture(ev.pointerId); rahmen.style.display = "block"; } });
+erg.addEventListener("pointermove", ev => {
+  if (!start) return; const k = bildKoord(ev);
+  Object.assign(rahmen.style, { left: Math.min(start.px[0], k.px[0]) + "px", top: Math.min(start.px[1], k.px[1]) + "px",
+    width: Math.abs(k.px[0] - start.px[0]) + "px", height: Math.abs(k.px[1] - start.px[1]) + "px" });
+});
+erg.addEventListener("pointerup", ev => {
+  if (!start) return; const k = bildKoord(ev);
+  if (Math.abs(k.px[0] - start.px[0]) > 8 && Math.abs(k.px[1] - start.px[1]) > 8) {
+    ausschnitt = { ebene: letztes.ebene, b: [Math.min(start.u, k.u), Math.max(start.u, k.u), Math.min(start.v, k.v), Math.max(start.v, k.v)] };
+    $("ausschnitt_text").textContent = `gesetzt: ${ausschnitt.b.map(x => x.toFixed(2)).join(" … ")} m (gilt für dieselbe Ebene)`;
+  } else rahmen.style.display = "none";
+  start = null;
+});
+$("ausschnitt_weg").onclick = () => { ausschnitt = null; rahmen.style.display = "none"; $("ausschnitt_text").textContent = "ganzer Schnitt – Rechteck im Ergebnisbild ziehen"; };
+
+// --- Senden ------------------------------------------------------------------------------------------------
+async function senden(aktion) {
+  const e = ebeneAusBrowser(), st = $("status");
+  if (!e) { st.textContent = "Bitte erst eine Linie über das Bauteil ziehen."; return; }
+  const gleicheEbene = ausschnitt && JSON.stringify(ausschnitt.ebene) === JSON.stringify(e);
+  const daten = { modell: modellWahl.value, ebene: e, groesse: $("groesse").value, skala: $("skala").value,
+                  stromlinien: $("stromlinien").checked, ausschnitt: gleicheEbene ? ausschnitt.b : null,
+                  text: $("text").value, aktion,
+                  kamera: { position_m: kamera.position.toArray(), ziel_m: steuerung.target.toArray() } };
+  st.textContent = "Rechne Schnitt …"; $("weiter").disabled = $("ende").disabled = true;
+  try {
+    const r = await fetch("/schnitt", { method: "POST", body: JSON.stringify(daten) }); const a = await r.json();
+    if (!r.ok) throw new Error(a.fehler || r.status);
+    letztes = { ...a, ebene: e }; rahmen.style.display = "none";
+    const url = `/bild?ordner=${a.ordner}&t=${Date.now()}`;
+    erg.querySelector("span, img")?.remove(); const img = document.createElement("img"); img.src = url; erg.prepend(img);
+    const th = document.createElement("img"); th.src = url; th.title = a.beschreibung;
+    th.onclick = () => { erg.querySelector("img").src = url; letztes = { ...a, ebene: e }; }; $("verlauf").prepend(th);
+    $("text").value = "";
+    st.textContent = aktion === "ende" ? `Gesendet und beendet (${a.ordner}). Claude wird benachrichtigt.`
+                                       : `Gesendet (${a.ordner}). Nächsten Schnitt festlegen – oder Rechteck im Bild ziehen für einen Ausschnitt.`;
+  } catch (ex) { st.textContent = "Fehler: " + ex.message; }
+  $("weiter").disabled = $("ende").disabled = false;
+}
+$("weiter").onclick = () => senden("weiter");
+$("ende").onclick = () => senden("ende");
+
+// --- Start -------------------------------------------------------------------------------------------------
+const liste = (await (await fetch("/modelle")).json()).sort((a, b) => a.localeCompare(b, "de", { numeric: true }));
+for (const n of liste) { const o = document.createElement("option"); o.value = o.textContent = n; modellWahl.appendChild(o); }
+modellWahl.value = liste[liste.length - 1];
+modellWahl.onchange = () => { linie = null; zeichneLinie(); ladeModell(modellWahl.value); };
+groesseAnpassen();
+await ladeModell(modellWahl.value);
+renderer.setAnimationLoop(() => { steuerung.update(); renderer.render(szene, kamera); });
+</script>
+</body>
+</html>

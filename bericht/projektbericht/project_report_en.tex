@@ -4,8 +4,10 @@
 \usepackage[margin=2.2cm]{geometry}\usepackage[hidelinks]{hyperref}
 \hypersetup{pdfauthor={Thomas Schmiegelt},pdftitle={Two AI agents, one stellarator -- project report}}
 \newcommand{\bild}[3]{\begin{figure}[H]\centering\includegraphics[width=#2\linewidth]{bilder/#1}\caption{#3}\end{figure}}
-\newcommand{\zwei}[4]{\begin{figure}[H]\centering\includegraphics[width=0.49\linewidth]{bilder/#1}\hfill
-  \includegraphics[width=0.49\linewidth]{bilder/#2}\caption{#3}\label{#4}\end{figure}}
+\newcommand{\zwei}[4]{\begin{figure}[H]\centering
+  \includegraphics[width=0.9\linewidth,height=0.4\textheight,keepaspectratio]{bilder/#1}\par\medskip
+  \includegraphics[width=0.9\linewidth,height=0.4\textheight,keepaspectratio]{bilder/#2}\caption{#3}\label{#4}\end{figure}}
+\usepackage{titlesec}\newcommand{\sectionbreak}{\clearpage}
 \newcommand{\kasten}[2]{\par\smallskip\noindent\fcolorbox{gray}{gray!8}{\parbox{0.96\linewidth}{\textbf{#1} #2}}\par\smallskip}
 \title{\textbf{Two AI Agents, One Stellarator}\\[2pt]\large Building an engineering simulation pipeline from an
   open dataset -- including the dead ends}
@@ -20,7 +22,13 @@ supports and wall thicknesses are my own simplified assumptions and do not descr
 computations and the draft text were produced with the help of AI agents; all figures are my own computations
 and renderings.}
 
-\begin{abstract}
+\noindent{\Large\bfseries Introduction and motivation}\par\medskip
+I am not a fusion researcher. This is a private project, driven by curiosity: how does a stellarator work, and
+how far can one person get with open software and AI assistance on such a demanding part? Stellarator coils are a
+good example because design, manufacturing and strength meet here. Physics dictates the path, current and field
+create the forces, and the structure has to fit in between. Later the plasma vessel was added, with a cooling
+core of gyroid filaments.
+
 A stellarator confines a fusion plasma with twisted 3D superconducting coils that carry large magnetic forces.
 In four days, a human and two AI agents built an end-to-end pipeline from a public coil dataset to a
 structural analysis of the coil casings: coil path $\to$ magnetic field $\to$ Lorentz force $\to$ casing
@@ -30,8 +38,8 @@ parametric CAD model that broke the mesher, and a second, CAD-free code path tha
 W7-X-like system of 70 coils the result is 99\,\% of casing stresses below 43\,MPa -- under strongly simplified
 supports. A follow-up (Section~\ref{sec:cooling}) computes the flow through the gyroid cooling core of the
 1\,GW plasma vessel with FluidX3D and suggests improvements.
-\end{abstract}
 
+\clearpage
 \tableofcontents
 
 %======================================================================
@@ -66,7 +74,7 @@ Geometry & Python + gmsh/OpenCASCADE \cite{gmsh} (direct meshing), FreeCAD 1.1 h
 Solver & ElmerFEM 9.0 \cite{elmer}: magnetostatics and linear elasticity in one coupled run \\
 Own code & Biot-Savart (numba), FFT field solver, field-line tracer, collision checks \\
 Visualisation & PyVista/VTK \cite{pyvista}, ParaView \cite{paraview}, Blender 4.0 \cite{blender} via glTF \\
-Hardware & one workstation, 32\,GB RAM, one GPU (reserved for the local agent) \\\bottomrule
+Hardware & one workstation with one GPU (reserved for the local agent) \\\bottomrule
 \end{tabularx}\end{table}
 
 %======================================================================
@@ -117,8 +125,8 @@ With the real coil paths (7 base coils, 70 by symmetry) the expected physics app
 flux surfaces and the characteristic island chain (Fig.~\ref{fig:feld}). A custom FFT voxel solver matched exact
 Biot-Savart to 1.3\,\% but destroyed the flux surfaces during field-line tracing, because a Cartesian grid breaks
 the device's symmetry -- so field lines are always traced with Biot-Savart.
-\zwei{w7x_feldlinien_3d.png}{w7x_poincare_bewertung.png}{Field lines on flux surfaces (left), Poincaré section
-and rotational transform (right).}{fig:feld}
+\zwei{w7x_feldlinien_3d.png}{w7x_poincare_bewertung.png}{Field lines on flux surfaces (top), Poincaré section
+and rotational transform (bottom).}{fig:feld}
 
 The plan had been to model coils in CAD. Generating the mesh directly was faster and more robust: a rectangle
 at every path point, two ruled half-surfaces per coil, meshed by gmsh. Sweeps and smooth lofts failed with
@@ -126,16 +134,16 @@ self-intersecting surfaces. A clearance check on centre lines replaced boolean i
 instead of more than 45\,min). Elmer with all 70 coils (3.3\,M tetrahedra, 680\,s, 10\,GB) matched Biot-Savart
 on the axis to a median of 0.24\,\%.
 \zwei{w7x_wickelpakete.png}{elmer_70_spulen_vergleich.png}{70 winding packs meshed straight from the path data
-(left); FEM vs.\ Biot-Savart along a coil normal (right).}{fig:elmer}
-\zwei{validierung_draht.png}{w7x_voxelsolver_validierung.png}{Validation: FEM on a straight wire (left), FFT
-voxel solver vs.\ Biot-Savart (right).}{fig:valid}
+(top); FEM vs.\ Biot-Savart along a coil normal (bottom).}{fig:elmer}
+\zwei{validierung_draht.png}{w7x_voxelsolver_validierung.png}{Validation: FEM on a straight wire (top), FFT
+voxel solver vs.\ Biot-Savart (bottom).}{fig:valid}
 
 A side study ran the pipeline backwards from a target of 1\,GW net electric power: plasma size and field
 $\to$ own plasma shape (DESC) $\to$ coils (simsopt). With high-temperature superconductors the device ends up at
 about 10\,m major radius with forces of roughly 1\,GN per coil -- about a thousand times W7-X. From here on, the
 support structure is the real problem.
-\zwei{uebersicht_1GW_A6_A45.png}{struktur_A6_HTS.png}{1\,GW sizing study (left) and a first support shell with
-coupled field $\to$ force $\to$ stress analysis (right).}{fig:gw}
+\zwei{uebersicht_1GW_A6_A45.png}{struktur_A6_HTS.png}{1\,GW sizing study (top) and a first support shell with
+coupled field $\to$ force $\to$ stress analysis (bottom).}{fig:gw}
 
 %======================================================================
 \section{The parametric CAD branch}
@@ -145,7 +153,7 @@ normal to it, a loft through them; all walls grow outwards. The agent implemente
 fully parametric model: spreadsheet parameters, sketch dimensions as expressions, symmetric coils as clones,
 connectors between neighbours.
 \zwei{freecad_gui_w7x.png}{gehaeuse_A45_HTS_verbunden.png}{Parametric FreeCAD model: W7-X-like casings with
-connectors (left), compact 1\,GW design (right).}{fig:fc}
+connectors (top), compact 1\,GW design (bottom).}{fig:fc}
 
 What went wrong:
 \begin{enumerate}\itemsep1pt
@@ -160,8 +168,8 @@ What went wrong:
 \item \textbf{Fix in CAD (human idea): subtract the neighbours.} Each casing minus its neighbours' envelopes plus
   a gap: 0 collisions in all 70 steps. Meshing the whole assembly stayed fragile.
 \end{enumerate}
-\zwei{struktur_A45_HTS_gehaeuse.png}{gehaeuse_A45_HTS_keil_oben.png}{First stress run of the CAD casings (left);
-casings with inner wedges -- valid in CAD, not meshable (right).}{fig:keil}
+\zwei{struktur_A45_HTS_gehaeuse.png}{gehaeuse_A45_HTS_keil_oben.png}{First stress run of the CAD casings (top);
+casings with inner wedges -- valid in CAD, not meshable (bottom).}{fig:keil}
 \kasten{Lesson -- valid is not meshable.}{The more boolean operations meet on the same faces, the more sliver
 faces appear, and the mesher fails far away from where the problem was created. Keep the analysis model separate
 from the design model.}
@@ -187,10 +195,10 @@ Casing von Mises & mean 11\,MPa, 99\,\% below 43\,MPa, max 110\,MPa; deformation
 Because of the simplified supports and walls as thin as 3\,mm in places this is \emph{not} a strength proof --
 but it is a reproducible end-to-end pipeline.
 \zwei{aufbau_schritt35.png}{struktur_w7x_gehaeuse_netz.png}{Incremental collision check in the CAD branch, step
-35/70 (left); von Mises stress from the CAD-free branch (right).}{fig:aufbau}
+35/70 (top); von Mises stress from the CAD-free branch (bottom).}{fig:aufbau}
 \zwei{w7x_feldlinien_spannung.png}{w7x_feldlinien_spannung_geschlossen.png}{Casing stress with magnetic field
 lines on flux surfaces, cut open and closed.}{fig:fls}
-\bild{freecad_und_elmer.png}{0.95}{Both branches side by side: parametric CAD (left), stress analysis from the
+\bild{freecad_und_elmer.png}{1.0}{Both branches side by side: parametric CAD (left), stress analysis from the
 CAD-free pipeline (right).}
 
 %======================================================================
@@ -199,11 +207,11 @@ A 3D cut-away model shows each coil's layers: cable (NbTi strands in copper, hel
 insulation, ground insulation, potting (an assumption), steel casing; $12\times9=108$ conductors per coil. A
 separate conductor model answers the question ``where does the current flow?'': almost entirely in the
 superconducting NbTi; copper only takes over briefly during a quench; jacket and helium carry none.
-\zwei{w7x_spule_querschnitt.png}{w7x_torus3d_detail.png}{Coil layers (schematic, left) and in the 3D model
-(right).}{fig:quer}
+\zwei{w7x_spule_querschnitt.png}{w7x_torus3d_detail.png}{Coil layers (schematic, top) and in the 3D model
+(bottom).}{fig:quer}
 \zwei{w7x_leiter3d.png}{w7x_leiter3d_blender.png}{Conductor: opened jacket, twisted strands, one strand
-magnified with NbTi filaments (count symbolic). PyVista (left), Blender Cycles (right).}{fig:leiter}
-\bild{w7x_torus3d_blender.png}{0.95}{The full coil system with field lines, rendered in Blender.}
+magnified with NbTi filaments (count symbolic). PyVista (top), Blender Cycles (bottom).}{fig:leiter}
+\bild{w7x_torus3d_blender.png}{1.0}{The full coil system with field lines, rendered in Blender.}
 
 \bild{gyroid_gefaess_1GW_gesamt.jpg}{1.0}{Later step: the 1\,GW design with casing stress from the surrogate
 model (1000\,MW), field lines, and a cut-open plasma vessel whose wall has a gyroid cooling core built with
@@ -287,7 +295,7 @@ ray test whether it is inside. On nearly horizontal faces of the very fine gyroi
 $z=\SI{1.906}{m}$ a whole lattice layer became steel and blocked the band. It was found only by comparing the
 lattice with the mesh layer by layer. Since f10, PicoGK writes its voxel occupancy to a file that FluidX3D reads
 directly; it matches the mesh 100\,\%. The numbers of f6 to f9 are therefore distorted.
-\bild{kuehl_gitterfehler_f9.png}{0.9}{Lattice error (f9): water in the plasma-side layer, unrolled over the
+\bild{kuehl_gitterfehler_f9.png}{1.0}{Lattice error (f9): water in the plasma-side layer, unrolled over the
 circumference (horizontal) and the path from inlet to outlet (vertical), colour = toroidal speed. The dark blocks
 at about $\pm\ang{50}$ carry no flow because one lattice layer there was wrongly set to steel. Zoom below.
 Labels in German.}
@@ -303,12 +311,12 @@ sector (spread 8\,\%), and cross-section at mid core. Labels in German.}
 Almost all the flow passes through the fine gyroid layer on the plasma side (zoom on the right,
 \SIrange{0.1}{1}{m/s}). In the coarse dense gyroid behind it the water sits in closed pores; it only carries
 load. Labels in German.}
-\bild{kuehl_gesamt.jpg}{0.82}{Overview of the 1\,GW device extended by the cooling results: gyroid filaments on
+\bild{kuehl_gesamt.jpg}{1.0}{Overview of the 1\,GW device extended by the cooling results: gyroid filaments on
 the plasma side with water paths (left), flow per circumferential sector before and after balancing (middle),
 findings (right). Labels in German.}
 \zwei{kuehl_durchsichtig.jpg}{kuehl_gyroid_nah.jpg}{Frames from the flow films (Blender \cite{blender}): the
-segment rendered transparent, inlet inboard right, outlet outboard left (left); the lower half without the inner
-skin, looking at the plasma-side filaments (right). Colour = speed.}{fig:coolfilm}
+segment rendered transparent, inlet inboard right, outlet outboard left (top); the lower half without the inner
+skin, looking at the plasma-side filaments (bottom). Colour = speed.}{fig:coolfilm}
 
 \subsection{Is it enough? A rough heat estimate}
 The flow computation contains no heat. A one-dimensional estimate for pressurised water at \SI{300}{\celsius}
