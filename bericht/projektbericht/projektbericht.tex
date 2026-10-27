@@ -11,7 +11,7 @@
 \title{\textbf{Spulengehäuse eines Stellarators}\\[2pt]\large Vom offenen Datensatz zur Spannungsrechnung --
   ein Projektbericht mit Irrwegen}
 \author{Thomas Schmiegelt \textbar{} Hobbyprojekt \texttt{stellarator-design}}
-\date{25.10.2026}
+\date{25.10.2026, ergänzt 27.10.2026}
 \begin{document}\maketitle
 
 \kasten{Hobbyprojekt, aus Neugier entstanden.}{Keine Verbindung zu einem Forschungsinstitut oder Unternehmen,
@@ -29,7 +29,8 @@ Irrwege: ein falsches Ersatzmodell mit plausiblen Zahlen und ein parametrisches 
 schwer vernetzbar war. Entscheidend war ein zweiter, paralleler Weg, der die Gehäuse ohne Boolesche Operationen
 direkt als Netz erzeugt. Für ein W7-X-ähnliches Spulensystem (70 Spulen, \SI{2,5}{T} auf der Achse) ergeben sich
 mit \SI{33}{m^3} Stahl Vergleichsspannungen von 99\,\% unter \SI{43}{MPa} und Verformungen unter \SI{1}{mm}
--- unter stark vereinfachter Lagerung.
+-- unter stark vereinfachter Lagerung. Eine Fortsetzung (Abschnitt~\ref{sec:kuehlung}) rechnet die Strömung
+im Gyroid-Kühlkern des Plasmagefäßes der 1-GW-Form mit FluidX3D und nennt Verbesserungsvorschläge.
 \end{abstract}
 
 \tableofcontents
@@ -262,8 +263,129 @@ der größte Hebel; bei 1~GW reichen Einzelgehäuse mit Verbindern grundsätzlic
 (Surrogat, \SI{1000}{MW}), Feldlinien und aufgeschnittenem Plasmagefäß, dessen Wand einen Gyroid-Kühlkern aus
 PicoGK hat. Darstellung in Blender, keine Auslegung der Kühlung.}
 
-\subsection*{Software und Daten}
-ElmerFEM 9.0 \cite{elmer}, gmsh \cite{gmsh}, FreeCAD 1.1 \cite{freecad}, simsopt \cite{simsopt}, DESC
+%======================================================================
+\section{Fortsetzung: Kühlung des Plasmagefäßes}\label{sec:kuehlung}
+\kasten{Stand 27.10.2026.}{Strömungsrechnung mit kaltem Wasser, Wärme nur grob abgeschätzt. Die Zahlen zeigen
+Tendenzen; sie sind keine Auslegung.}
+
+\subsection{Aufgabe und Aufbau}
+Die Wand des Plasmagefäßes der 1-GW-Form ist \SI{0,9}{m} dick und hat einen Kern aus Gyroid-Filamenten, gebaut
+mit PicoGK \cite{picogk}. Untersucht wurde ein \ang{10}-Segment (\ang{85}--\ang{95}). Angenommen ist eine
+Wärmestromdichte von \SI{0,5}{MW/m^2} auf \SI{26,7}{m^2} Plasmaseite, also \SI{13,3}{MW}. Bei \SI{10}{K}
+Erwärmung braucht das Segment \SI{319}{l/s} Wasser.
+
+Der Aufbau entstand Schritt für Schritt aus Vorgaben des Nutzers:
+\begin{itemize}\itemsep1pt
+\item Das Wasser fließt \emph{durch die Filamente}, nicht durch Bohrungen in einem Lochblech.
+\item Der Eintritt liegt innen am Torus, der Austritt außen.
+\item Der Kern liegt zwischen zwei schrägen Ebenen. Davor und dahinter laufen die Verteil- und Sammelkammern
+  keilförmig aus (Z-Verteiler). Diese Form kam aus einer Skizze des Nutzers in einem Bildschirmfoto.
+\item Der Gyroid ist abgestuft: An der Plasmaseite liegt eine \SI{130}{mm} dicke Schicht mit \SI{100}{mm}
+  Zellgröße, dahinter ein dichter, grober Gyroid als Tragstruktur.
+\end{itemize}
+Die Strömung wurde mit FluidX3D \cite{fluidx3d} gerechnet, einem Lattice-Boltzmann-Löser für die GPU
+\cite{lehmann2023,lehmann2022ep,lehmann2022fp,lehmann2022iwocl,lehmann2021,lehmann2019,lehmann2022plic}. Das
+Gitter hat \SI{8}{mm} Zellweite und 259~Mio.\ Zellen. Gerechnet wurden \SI{40}{s} physikalische Zeit mit
+LES-Turbulenzmodell, in rund \SI{15}{min}. FluidX3D steht unter einer eigenen Lizenz: nur nicht kommerziell,
+der Quelltext ist einsehbar, aber es ist keine Open-Source-Lizenz. Die beiden geänderten Dateien
+(\texttt{setup.cpp}, \texttt{defines.hpp}) liegen als „geänderte Fassung“ mit der Originallizenz im Ordner
+\texttt{fluidx3d/} des Repositorys.
+
+\subsection{Verlauf}
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}lXl@{}}\toprule
+Variante & Änderung & Ergebnis \\\midrule
+a, b & Kammer mit Lochblech; Bohrungen lagen neben der Platte (Hinweis des Nutzers) & instabil, Strahlen \\
+f1 & Wasser durch die Filamente, Kammern offen & Streuung 141\,\% \\
+f2 & Gyroid zur Plasmaseite feiner & Streuung 40\,\% \\
+f4, f5 & Z-Verteiler nach Skizze, außen dichter & Streuung 20\,\%, \SI{7,9}{kPa} \\
+f6--f9 & dünnere vordere Schicht, Wanddicke nach Radius & Einbrüche bei $\pm\ang{52}$, Ursache gesucht \\
+f10 & Gitterzellen direkt aus PicoGK & Einbrüche weg, Streuung 36\,\% \\
+f11 & Wanddicke vorn \SIrange{4,9}{5,8}{mm} nach Radius & \textbf{Streuung 8\,\%}, \SI{22}{kPa}, \SI{288}{l/s} \\\bottomrule
+\end{tabularx}\caption{Varianten des Kühlsegments. Streuung = Standardabweichung des Durchflusses über 24
+Umfangssektoren, bezogen auf den Mittelwert.}\end{table}
+
+\subsection{Ein Fehler im Rechengitter}
+Bei f6 bis f9 bekamen zwei Bänder bei $\pm\ang{52}$ des Umfangs fast kein Wasser. Das sah nach einem
+Konstruktionsfehler aus. Drei Vermutungen wurden nacheinander geprüft und verworfen: Schichtdicke, Lage der
+Schicht zum Gyroid, ungenaue Versatzflächen in PicoGK. Zwei Zwischenbefunde waren eigene Messfehler.
+
+Die eigentliche Ursache lag in der Umwandlung des Wassernetzes in Gitterzellen. FluidX3D entscheidet für jede
+Zelle mit einem Strahltest, ob sie innen liegt. An fast waagerechten Flächen des sehr feinen Gyroid-Netzes ging
+das schief: Bei $z=\SI{1,906}{m}$ wurde eine ganze Gitterlage zu Stahl und sperrte das Band. Gefunden wurde das
+erst, als die Gitterzellen Lage für Lage mit dem Netz verglichen wurden. Seit f10 schreibt PicoGK die Belegung
+der Voxel direkt in eine Datei, und FluidX3D liest sie ein. Ein Abgleich mit dem Netz ergibt 100\,\%
+Übereinstimmung. Die Zahlen von f6 bis f9 sind dadurch verfälscht.
+\bild{kuehl_gitterfehler_f9.png}{0.9}{Fehler im Rechengitter (f9): Wasser in der plasmanahen Schicht,
+abgewickelt über den Umfang (waagerecht) und den Weg vom Eintritt zum Austritt (senkrecht), Farbe = Geschwindigkeit
+in Umfangsrichtung. Die dunklen Blöcke bei etwa $\pm\ang{50}$ werden nicht durchströmt, weil dort eine Gitterlage
+fälschlich Stahl ist. Unten vergrößert.}
+
+Danach ließ sich die Verteilung in einem Schritt abgleichen. Die Wand der vorderen Filamente ist jetzt je nach
+Radius verschieden dick: innen \SI{5,8}{mm}, oben und unten \SI{4,9}{mm}, außen \SI{5,2}{mm}. Damit sank die
+Streuung von 36\,\% auf 8\,\%.
+\bild{kuehl_auswertung_f11.png}{0.95}{Auswertung der FluidX3D-Rechnung f11: Druckverlust über der Zeit (stationär
+nach etwa \SI{5}{s}), Durchfluss über den Umfang an Kerneintritt und -austritt, Durchfluss durch den Gyroid-Kern
+je Sektor (Streuung 8\,\%) und Querschnitt der Kernmitte.}
+\bild{kuehl_schnitt_f11.png}{1.0}{Querschnitt durch das Strömungsfeld f11 bei $\varphi=\ang{90}$, jede
+\SI{8}{mm}-Gitterzelle mit Wasser als Punkt, Farbe = Geschwindigkeit (logarithmisch). Links tritt das Wasser
+innen ein. Fast der ganze Durchfluss läuft durch die feine Gyroid-Schicht an der Plasmaseite (rechts vergrößert,
+\SIrange{0,1}{1}{m/s}). Im groben, dichten Gyroid dahinter steht das Wasser in abgeschlossenen Poren; er trägt
+nur.}
+\bild{kuehl_gesamt.jpg}{0.82}{Gesamtbild der 1-GW-Anlage, ergänzt um die Kühlung: Gyroid-Filamente an der
+Plasmaseite mit Wasserbahnen (links), Durchfluss je Umfangssektor vor und nach dem Abgleich (Mitte),
+Erkenntnisse (rechts).}
+\zwei{kuehl_durchsichtig.jpg}{kuehl_gyroid_nah.jpg}{Bilder aus den Strömungsfilmen (Blender \cite{blender}):
+das Segment durchsichtig, Eintritt innen rechts, Austritt außen links (links); die untere Hälfte ohne
+Innenhaut, Blick auf die Filamente der Plasmaseite (rechts). Farbe = Geschwindigkeit.}{fig:kuehlfilm}
+
+\subsection{Reicht das? Eine grobe Wärmeabschätzung}
+Die Strömungsrechnung enthält keine Wärme. Eine eindimensionale Abschätzung für Druckwasser bei
+\SI{300}{\celsius} (Dittus-Boelter, Stahl mit $k=\SI{25}{W/(m\,K)}$) zeigt zwei Engstellen.
+\begin{table}[H]\centering\small
+\begin{tabular}{@{}lr@{}}\toprule
+Größe bei \SI{0,5}{MW/m^2} & Temperaturabfall \\\midrule
+Leitung durch die Innenhaut, \SI{30}{mm} (wie gebaut) & \SI{600}{K} \\
+Leitung durch die Innenhaut, \SI{5}{mm} & \SI{100}{K} \\
+Übergang ans Wasser, $v=\SI{0,10}{m/s}$ (f11), ohne / mit Rippenwirkung & \SI{415}{K} / \SI{210}{K} \\
+Übergang ans Wasser, feine Kanäle \SI{10}{mm} mit \SI{1}{m/s} & \SI{48}{K} \\\bottomrule
+\end{tabular}\caption{Grobe Wärmeabschätzung (\texttt{stellarator/kuehlung\_waerme.py}).}\end{table}
+Die Verteilung ist damit gelöst, die Kühlung aber noch nicht. Die Innenhaut ist viel zu dick, und das Wasser
+fließt an der Plasmaseite zu langsam. Außerdem steht auf 10\,\% der Plasmaseite das Wasser fast still
+(unter \SI{1}{mm/s}). Dort entstünden heiße Stellen.
+
+\subsection{Verbesserungsvorschläge}
+\begin{enumerate}\itemsep1pt
+\item \textbf{Innenhaut dünner:} \SIrange{3}{5}{mm} statt \SI{30}{mm}, gegebenenfalls mit einer Schutzschicht
+  aus Wolfram. Die Festigkeit trägt der Gyroid-Kern dahinter.
+\item \textbf{Plasmaseite schneller durchströmen:} entweder eine dünnere vordere Schicht (\SIrange{30}{40}{mm}
+  statt \SI{130}{mm}) mit feinerer Zelle, oder ein eigener Erstwand-Kreislauf mit parallelen Kanälen und etwa
+  \SI{1}{m/s}. Der Gyroid dahinter trägt dann nur noch und kühlt die Volumenwärme. Der Druckverlust steigt;
+  er ist heute mit \SI{22}{kPa} noch klein.
+\item \textbf{Totwasser beseitigen:} Wo die Geschwindigkeit an der Plasmaseite fast null ist, liegt
+  vermutlich an den Stirnwänden und Kammerecken. Das muss im Feld lokalisiert werden; Leitflächen oder eine
+  offenere Zelle dort sind naheliegend.
+\item \textbf{Weniger empfindlich abgleichen:} Ein Millimeter Wanddicke ändert den Durchfluss grob um den
+  Faktor~3,7. Bei üblichen Fertigungstoleranzen von $\pm\SI{0,1}{mm}$ wären das rund $\pm13\,\%$. Robuster sind
+  definierte Drosseln an den Kammern oder eine größere Zelle mit dickeren Wänden.
+\item \textbf{Wärme mitrechnen:} gekoppelte Rechnung von Strömung und Wärmeleitung (FluidX3D kann Temperatur,
+  oder Elmer für den Stahl). Erst dann lässt sich die Rippenwirkung der Filamente bewerten.
+\item \textbf{Gitter prüfen:} Die Wände der vorderen Filamente sind etwa \SI{10}{mm} dick, das Gitter hat
+  \SI{8}{mm}. Eine Gitterstudie mit \SIrange{4}{6}{mm} ist nötig, bevor die Zahlen belastbar sind.
+\item \textbf{Durchfluss auf Soll bringen:} Erreicht sind \SI{288}{l/s} statt \SI{319}{l/s}. Ursache ist die
+  Eintrittsrandbedingung, nicht die Geometrie.
+\end{enumerate}
+
+\subsection{Zusammenarbeit}
+Die entscheidenden Konstruktionsideen kamen auch hier vom Nutzer: Wasser durch die Filamente, Eintritt innen,
+schräge Kammergrenzen. Für die Verständigung über die Form hat sich die Skizze im Bildschirmfoto bewährt. Daraus
+entstand ein kleines Werkzeug, mit dem man direkt auf das 3D-Modell zeichnet und die Linien als 3D-Punkte an die
+KI übergibt \cite{sketch}. Den Fehler im Rechengitter fand der Assistent, aber erst nach mehreren falschen
+Vermutungen. Die Lehre daraus: einem merkwürdigen Ergebnis erst nachgehen, bevor man an der Konstruktion
+dreht. Der Ablauf ist in \texttt{docs/kuehlsegment\_prozess.md} beschrieben.
+
+\section*{Software und Daten}
+ElmerFEM 9.0 \cite{elmer}, FluidX3D 3.8 \cite{fluidx3d}, PicoGK \cite{picogk}, gmsh \cite{gmsh}, FreeCAD 1.1 \cite{freecad}, simsopt \cite{simsopt}, DESC
 \cite{desc}, PyVista \cite{pyvista}, ParaView \cite{paraview}, Blender 4.0 \cite{blender}. Programmcode, Befundprotokoll und Abbildungen:
 \url{https://github.com/ThomasSchmiegelt/stellarator-design} (MIT-Lizenz).
 
@@ -299,5 +421,29 @@ ElmerFEM 9.0 \cite{elmer}, gmsh \cite{gmsh}, FreeCAD 1.1 \cite{freecad}, simsopt
 \bibitem{blender} Blender, Version 4.0. Blender Foundation. \url{https://www.blender.org}
 \bibitem{hermes} Nous Research: Hermes Agent. \url{https://github.com/NousResearch/hermes-agent} (MIT-Lizenz).
 \bibitem{claudecode} Anthropic: Claude Code. \url{https://www.anthropic.com/claude-code}
+\bibitem{fluidx3d} M. Lehmann: FluidX3D, Version 3.8. \url{https://github.com/ProjectPhysX/FluidX3D}.
+  Lizenz: kostenlos nur für nicht kommerzielle Nutzung, Quelltext einsehbar, keine Open-Source-Lizenz.
+  Geänderte Fassung von \texttt{setup.cpp} und \texttt{defines.hpp} im Ordner \texttt{fluidx3d/} des Repositorys.
+\bibitem{lehmann2023} M. Lehmann: Computational study of microplastic transport at the water-air interface with
+  a memory-optimized lattice Boltzmann method. Dissertation, Universität Bayreuth (2023).
+  doi:10.15495/EPub\_UBT\_00006977
+\bibitem{lehmann2022ep} M. Lehmann: Esoteric Pull and Esoteric Push: Two simple in-place streaming schemes for
+  the lattice Boltzmann method on GPUs. \emph{Computation} 10 (2022) 92. doi:10.3390/computation10060092
+\bibitem{lehmann2022fp} M. Lehmann, M. Krause, G. Amati, M. Sega, J. Harting, S. Gekle: Accuracy and
+  performance of the lattice Boltzmann method with 64-bit, 32-bit, and customized 16-bit number formats.
+  \emph{Phys.\ Rev.\ E} 106 (2022) 015308.
+\bibitem{lehmann2022iwocl} M. Lehmann: Combined scientific CFD simulation and interactive raytracing with
+  OpenCL. \emph{IWOCL'22: International Workshop on OpenCL} (2022) 3, 1--2.
+\bibitem{lehmann2021} M. Lehmann, L.\,M. Oehlschlägel, F. Häusl, A. Held, S. Gekle: Ejection of marine
+  microplastics by raindrops: a computational and experimental study. \emph{Microplastics and Nanoplastics} 1
+  (2021) 18. doi:10.1186/s43591-021-00018-8
+\bibitem{lehmann2019} M. Lehmann: High performance free surface LBM on GPUs. Masterarbeit, Universität Bayreuth
+  (2019). doi:10.15495/EPub\_UBT\_00005400
+\bibitem{lehmann2022plic} M. Lehmann, S. Gekle: Analytic solution to the piecewise linear interface
+  construction problem and its application in curvature calculation for volume-of-fluid simulation codes.
+  \emph{Computation} 10 (2022) 21. doi:10.3390/computation10020021
+\bibitem{picogk} LEAP 71: PicoGK. \url{https://github.com/LEAP71/PicoGK} (Apache-2.0-Lizenz).
+\bibitem{sketch} sketch-to-prompt: Skizzen auf 3D-Modellen als Eingabe für KI-Assistenten.
+  \url{https://github.com/ThomasSchmiegelt/sketch-to-prompt} (MIT-Lizenz).
 \end{thebibliography}
 \end{document}

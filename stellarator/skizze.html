@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skizzen-Werkzeug</title>
+<style>
+  :root { --bg:#16181d; --panel:#21242b; --rand:#363a44; --text:#e6e8ec; --leise:#9aa1ad; --akzent:#e2483d; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:14px/1.4 system-ui, sans-serif; height:100vh;
+         display:grid; grid-template-columns:1fr 340px; grid-template-rows:auto 1fr; }
+  header { grid-column:1/3; display:flex; flex-wrap:wrap; gap:6px; align-items:center; padding:8px 10px;
+           background:var(--panel); border-bottom:1px solid var(--rand); }
+  header .gruppe { display:flex; gap:4px; align-items:center; padding-right:10px; margin-right:4px; border-right:1px solid var(--rand); }
+  button, select { background:#2c3039; color:var(--text); border:1px solid var(--rand); border-radius:6px; padding:5px 10px; font:inherit; cursor:pointer; }
+  button:hover { border-color:#5a606d; }
+  button.an { background:var(--akzent); border-color:var(--akzent); color:#fff; }
+  .farbe { width:24px; height:24px; padding:0; border-radius:50%; }
+  .farbe.an { outline:2px solid #fff; outline-offset:2px; }
+  #ansicht { position:relative; overflow:hidden; }
+  #ansicht canvas { display:block; }
+  #ansicht.zeichnen { cursor:crosshair; }
+  #info { position:absolute; left:10px; bottom:10px; background:#000a; padding:4px 8px; border-radius:6px; font:12px monospace; color:var(--leise); }
+  #hilfe { position:absolute; left:10px; top:10px; background:#000a; padding:6px 10px; border-radius:6px; font-size:12px; color:var(--leise); max-width:520px; }
+  aside { background:var(--panel); border-left:1px solid var(--rand); padding:12px; display:flex; flex-direction:column; gap:10px; }
+  textarea { flex:1; min-height:160px; resize:none; background:#15171c; color:var(--text); border:1px solid var(--rand); border-radius:6px; padding:8px; font:inherit; }
+  #senden { background:var(--akzent); border-color:var(--akzent); color:#fff; font-weight:600; padding:10px; }
+  #status { color:var(--leise); font-size:12px; min-height:3em; }
+  #linien { font-size:12px; color:var(--leise); }
+  .laden { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--leise); font-size:16px; pointer-events:none; }
+</style>
+</head>
+<body>
+<header>
+  <div class="gruppe"><label for="modell">Modell</label><select id="modell"></select></div>
+  <div class="gruppe">
+    <button id="drehen" class="an" title="Taste D">Drehen</button>
+    <button id="zeichnen" title="Taste Z">Zeichnen</button>
+  </div>
+  <div class="gruppe" id="farben"></div>
+  <div class="gruppe">
+    <button id="zurueck" title="Strg+Z">Rückgängig</button>
+    <button id="loeschen">Linien löschen</button>
+  </div>
+  <div class="gruppe">
+    <button id="durchsicht">Stahl durchsichtig</button>
+    <button id="wasser">Wasser zeigen</button>
+  </div>
+  <div class="gruppe" style="border:none">
+    Ansicht: <button data-v="oben">Oben</button><button data-v="aussen">Außen</button><button data-v="innen">Innen</button><button data-v="schraeg">Schräg</button>
+  </div>
+</header>
+<div id="ansicht">
+  <div id="hilfe">Drehen: linke Maus · Verschieben: rechte Maus · Zoom: Rad. Zeichnen: Taste Z, dann mit gedrückter Maus Linien ziehen.
+    Linien haften am Bauteil, neben dem Bauteil liegen sie in der Ebene durch die Bildmitte. Jede Linie bekommt eine Nummer für den Text.</div>
+  <div id="info">–</div>
+  <div class="laden" id="laden">Lade Modell …</div>
+</div>
+<aside>
+  <strong>Text zur Skizze</strong>
+  <textarea id="text" placeholder="z. B.: Die Gyroide sollen zwischen Linie 1 und Linie 2 liegen. Linie 1 beginnt an der oberen Ecke außen …"></textarea>
+  <div id="linien">Keine Linien.</div>
+  <button id="senden">An Claude senden</button>
+  <div id="status"></div>
+</aside>
+
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+               "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { STLLoader } from "three/addons/loaders/STLLoader.js";
+import { Line2 } from "three/addons/lines/Line2.js";
+import { LineMaterial } from "three/addons/lines/LineMaterial.js";
+import { LineGeometry } from "three/addons/lines/LineGeometry.js";
+
+const box = document.getElementById("ansicht");
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+box.appendChild(renderer.domElement);
+const szene = new THREE.Scene(); szene.background = new THREE.Color(0x16181d);
+const kamera = new THREE.PerspectiveCamera(35, 1, 0.05, 500); kamera.up.set(0, 0, 1);
+const steuerung = new OrbitControls(kamera, renderer.domElement); steuerung.enableDamping = true;
+szene.add(new THREE.HemisphereLight(0xffffff, 0x404050, 1.2));
+const sonne = new THREE.DirectionalLight(0xffffff, 1.6); szene.add(sonne);
+
+const matStahl = new THREE.MeshStandardMaterial({ color: 0xa9b0ba, metalness: 0.5, roughness: 0.45, side: THREE.DoubleSide });
+const matWasser = new THREE.MeshStandardMaterial({ color: 0x2a7fd4, roughness: 0.4, side: THREE.DoubleSide });
+let stahl = null, wasser = null, marken = [], mitte = new THREE.Vector3(), groesse = 10, eR = new THREE.Vector3(1, 0, 0);
+const loader = new STLLoader();
+const modellWahl = document.getElementById("modell");
+
+function groesseAnpassen() {
+  const w = box.clientWidth, h = box.clientHeight;
+  renderer.setSize(w, h); kamera.aspect = w / h; kamera.updateProjectionMatrix();
+  for (const l of linien) l.obj.material.resolution.set(w, h);
+}
+window.addEventListener("resize", groesseAnpassen);
+
+async function netz(name, teil) {
+  const r = await fetch(`/netz?modell=${name}&teil=${teil}`);
+  const g = loader.parse(await r.arrayBuffer()); g.scale(0.001, 0.001, 0.001); g.computeVertexNormals();
+  return g;
+}
+
+async function ladeModell(name) {
+  document.getElementById("laden").style.display = "flex";
+  for (const o of [stahl, wasser, ...marken]) if (o) szene.remove(o);
+  wasser = null; marken = []; document.getElementById("wasser").classList.remove("an");
+  stahl = new THREE.Mesh(await netz(name, "stahl"), matStahl); szene.add(stahl);
+  stahl.geometry.computeBoundingBox(); const bb = stahl.geometry.boundingBox;
+  bb.getCenter(mitte); groesse = bb.getSize(new THREE.Vector3()).length();
+  eR.set(mitte.x, mitte.y, 0).normalize();
+  const lage = await (await fetch(`/lage?modell=${name}`)).json();
+  for (const [k, farbe] of [["ein", 0x22c55e], ["aus", 0xe2483d]]) {
+    if (!lage.rohre || !lage.rohre[k]) continue;
+    const m = new THREE.Mesh(new THREE.SphereGeometry(groesse * 0.012), new THREE.MeshBasicMaterial({ color: farbe }));
+    m.position.fromArray(lage.rohre[k].ende_m); szene.add(m); marken.push(m);
+  }
+  document.getElementById("laden").style.display = "none";
+  ansicht("schraeg");
+}
+
+function ansicht(v) {
+  const eP = new THREE.Vector3(0, 0, 1).cross(eR), d = groesse * 1.3;
+  const z = new THREE.Vector3(0, 0, 1);
+  let pos, oben = z.clone();
+  if (v === "oben") { pos = mitte.clone().addScaledVector(z, d); oben = eP.clone().negate(); }     // aussen links
+  else if (v === "aussen") pos = mitte.clone().addScaledVector(eR, d);
+  else if (v === "innen") pos = mitte.clone().addScaledVector(eR, -d);
+  else pos = mitte.clone().addScaledVector(eR, d * 0.6).addScaledVector(eP, -d * 0.5).addScaledVector(z, d * 0.6);
+  kamera.position.copy(pos); kamera.up.copy(oben); steuerung.target.copy(mitte); kamera.lookAt(mitte); steuerung.update();
+  sonne.position.copy(pos).add(new THREE.Vector3(0, 0, groesse));
+}
+document.querySelectorAll("[data-v]").forEach(b => b.onclick = () => ansicht(b.dataset.v));
+
+// --- Zeichnen --------------------------------------------------------------------------------------------
+const FARBEN = { rot: 0xe2483d, gruen: 0x22c55e, blau: 0x3b82f6, gelb: 0xfacc15 };
+let farbe = "rot", modus = "drehen", aktiv = null;
+const linien = [];
+const fb = document.getElementById("farben");
+for (const [n, c] of Object.entries(FARBEN)) {
+  const b = document.createElement("button"); b.className = "farbe" + (n === farbe ? " an" : ""); b.title = n;
+  b.style.background = "#" + c.toString(16).padStart(6, "0");
+  b.onclick = () => { farbe = n; fb.querySelectorAll(".farbe").forEach(x => x.classList.remove("an")); b.classList.add("an"); };
+  fb.appendChild(b);
+}
+function setzeModus(m) {
+  modus = m; steuerung.enabled = m === "drehen";
+  document.getElementById("drehen").classList.toggle("an", m === "drehen");
+  document.getElementById("zeichnen").classList.toggle("an", m === "zeichnen");
+  box.classList.toggle("zeichnen", m === "zeichnen");
+}
+document.getElementById("drehen").onclick = () => setzeModus("drehen");
+document.getElementById("zeichnen").onclick = () => setzeModus("zeichnen");
+
+const strahl = new THREE.Raycaster(), maus = new THREE.Vector2();
+function treffer(ev) {
+  const r = renderer.domElement.getBoundingClientRect();
+  maus.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
+  strahl.setFromCamera(maus, kamera);
+  const t = stahl ? strahl.intersectObjects([stahl, ...(wasser && wasser.visible ? [wasser] : [])])[0] : null;
+  if (t) return { p: t.point.clone(), aufBauteil: true, px: [ev.clientX - r.left, ev.clientY - r.top] };
+  // daneben: Ebene durch die Bildmitte, senkrecht zur Blickrichtung
+  const ebene = new THREE.Plane().setFromNormalAndCoplanarPoint(kamera.getWorldDirection(new THREE.Vector3()), steuerung.target);
+  const p = new THREE.Vector3(); strahl.ray.intersectPlane(ebene, p);
+  return { p, aufBauteil: false, px: [ev.clientX - r.left, ev.clientY - r.top] };
+}
+function etikett(text, farbeHex) {
+  const c = document.createElement("canvas"); c.width = c.height = 64; const g = c.getContext("2d");
+  g.fillStyle = "#" + farbeHex.toString(16).padStart(6, "0"); g.beginPath(); g.arc(32, 32, 28, 0, 7); g.fill();
+  g.fillStyle = "#fff"; g.font = "bold 36px system-ui"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(text, 32, 34);
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthTest: false }));
+  s.scale.setScalar(groesse * 0.03); s.renderOrder = 11; return s;
+}
+function neuZeichnen(l) {
+  const g = new LineGeometry(); g.setPositions(l.punkte.flatMap(q => [q.p.x, q.p.y, q.p.z]));
+  l.obj.geometry.dispose(); l.obj.geometry = g; l.obj.computeLineDistances();
+}
+box.addEventListener("pointerdown", ev => {
+  if (modus !== "zeichnen" || ev.button !== 0 || !stahl) return;
+  const t = treffer(ev), c = FARBEN[farbe];
+  const mat = new LineMaterial({ color: c, linewidth: 5, depthTest: false });
+  mat.resolution.set(box.clientWidth, box.clientHeight);
+  const obj = new Line2(new LineGeometry(), mat); obj.renderOrder = 10; szene.add(obj);
+  const nr = linien.length + 1, et = etikett(String(nr), c); et.position.copy(t.p); szene.add(et);
+  aktiv = { nr, farbe, punkte: [t, t], obj, et }; linien.push(aktiv); neuZeichnen(aktiv);
+  box.setPointerCapture(ev.pointerId);
+});
+box.addEventListener("pointermove", ev => {
+  if (stahl) {
+    const t = treffer(ev), p = t.p;
+    const R = Math.hypot(p.x, p.y), phi = Math.atan2(p.y, p.x) * 180 / Math.PI;
+    document.getElementById("info").textContent = (t.aufBauteil ? "Bauteil  " : "frei     ") +
+      `x ${p.x.toFixed(2)}  y ${p.y.toFixed(2)}  z ${p.z.toFixed(2)} m   R ${R.toFixed(2)} m  φ ${phi.toFixed(2)}°`;
+    if (aktiv) {
+      const letzter = aktiv.punkte[aktiv.punkte.length - 1];
+      if (Math.hypot(t.px[0] - letzter.px[0], t.px[1] - letzter.px[1]) > 4) { aktiv.punkte.push(t); neuZeichnen(aktiv); }
+    }
+  }
+});
+box.addEventListener("pointerup", () => { if (aktiv) { aktiv = null; liste(); } });
+function entferne(l) { szene.remove(l.obj); szene.remove(l.et); l.obj.geometry.dispose(); }
+document.getElementById("zurueck").onclick = () => { const l = linien.pop(); if (l) entferne(l); liste(); };
+document.getElementById("loeschen").onclick = () => { while (linien.length) entferne(linien.pop()); liste(); };
+function liste() {
+  document.getElementById("linien").innerHTML = linien.length ? linien.map(l => {
+    const a = l.punkte[0], b = l.punkte[l.punkte.length - 1];
+    return `Linie ${l.nr} (${l.farbe}): ${l.punkte.length} Punkte, ${a.aufBauteil ? "Start auf Bauteil" : "Start frei"}, ${b.aufBauteil ? "Ende auf Bauteil" : "Ende frei"}`;
+  }).join("<br>") : "Keine Linien.";
+}
+window.addEventListener("keydown", ev => {
+  if (ev.target.tagName === "TEXTAREA") return;
+  if (ev.key === "z" && !ev.ctrlKey) setzeModus("zeichnen");
+  if (ev.key === "d") setzeModus("drehen");
+  if (ev.key === "z" && ev.ctrlKey) document.getElementById("zurueck").click();
+});
+
+document.getElementById("durchsicht").onclick = ev => {
+  matStahl.transparent = !matStahl.transparent; matStahl.opacity = matStahl.transparent ? 0.3 : 1; matStahl.depthWrite = !matStahl.transparent;
+  ev.target.classList.toggle("an", matStahl.transparent);
+};
+document.getElementById("wasser").onclick = async ev => {
+  if (!wasser) {
+    document.getElementById("laden").style.display = "flex";
+    wasser = new THREE.Mesh(await netz(modellWahl.value, "wasser"), matWasser); wasser.visible = false; szene.add(wasser);
+    document.getElementById("laden").style.display = "none";
+  }
+  wasser.visible = !wasser.visible; ev.target.classList.toggle("an", wasser.visible);
+};
+
+// --- Senden ----------------------------------------------------------------------------------------------
+document.getElementById("senden").onclick = async () => {
+  const st = document.getElementById("status");
+  if (!document.getElementById("text").value.trim() && !linien.length) { st.textContent = "Bitte Text oder Linien angeben."; return; }
+  renderer.render(szene, kamera);
+  const daten = {
+    modell: modellWahl.value, text: document.getElementById("text").value,
+    kamera: { position_m: kamera.position.toArray(), ziel_m: steuerung.target.toArray(), oben: kamera.up.toArray(), fov_grad: kamera.fov,
+              bild_px: [box.clientWidth, box.clientHeight] },
+    stahl_durchsichtig: matStahl.transparent, wasser_sichtbar: !!(wasser && wasser.visible),
+    linien: linien.map(l => ({ nr: l.nr, farbe: l.farbe, punkte: l.punkte.map(q => ({
+      xyz_m: q.p.toArray().map(v => +v.toFixed(4)), R_m: +Math.hypot(q.p.x, q.p.y).toFixed(4),
+      phi_grad: +(Math.atan2(q.p.y, q.p.x) * 180 / Math.PI).toFixed(3), auf_bauteil: q.aufBauteil, bild_px: q.px })) })),
+    bild: renderer.domElement.toDataURL("image/png"),
+  };
+  st.textContent = "Sende …";
+  try {
+    const r = await (await fetch("/skizze", { method: "POST", body: JSON.stringify(daten) })).json();
+    st.textContent = `Gesendet: ${r.ordner}. Claude wird benachrichtigt, wenn die Sitzung läuft – sonst im Terminal „Skizze ansehen“ schreiben.`;
+  } catch (e) { st.textContent = "Fehler beim Senden: " + e; }
+};
+
+// --- Start -----------------------------------------------------------------------------------------------
+const liste_ = await (await fetch("/modelle")).json();
+for (const n of liste_) { const o = document.createElement("option"); o.value = o.textContent = n; modellWahl.appendChild(o); }
+modellWahl.value = liste_.includes("f6") ? "f6" : liste_[liste_.length - 1];
+modellWahl.onchange = () => { document.getElementById("loeschen").click(); ladeModell(modellWahl.value); };
+groesseAnpassen();
+await ladeModell(modellWahl.value);
+renderer.setAnimationLoop(() => { steuerung.update(); renderer.render(szene, kamera); });
+</script>
+</body>
+</html>

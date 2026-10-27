@@ -200,3 +200,112 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
   Frei schwebend ohne Boden: blender_thorus.py --ansicht weit --ohne_boden -> thorus_weit_frei.png (74 s).
   HQ: --proben 1024 --hq (2560x1440, kein OIDN im Ubuntu-Blender, clamp indirect 5) -> thorus_weit_frei_hq.png.
 - HQ-Bild in README (docs/bilder/gyroid_gefaess_1GW_gesamt.jpg) und in Surrogat-Bericht (Abb. 6), Projektbericht de/en eingebaut.
+- Stand Abend 25.10. (alles gepusht, 2cdf3f8). Naechste Schritte: FluidX3D-Stroemung Kuehlsegment (GPU erst nach
+  Freigabe durch User, gehoert Hermes), evtl. Segment mit mehr Einlaessen/feinerer Zelle (v_Kern/v_Rohr 0,10),
+  Kollisionspruefung Gefaess/Spulen, Bild evtl. auch in ki_im_maschinenbau.tex.
+
+## 2026-10-26: Kuehlsegment 85..95 Grad durchgerechnet (FluidX3D, GPU freigegeben)
+- PicoGK picogk/SegmentKuehlung + stellarator/kuehlung_segment.py: Wand 0,9 m Gyroid (Zelle 0,6 m), Verteilkammer +
+  Lochblech (12 x 60 mm), Sammelkammer, Rohre DN200 ein / DN250 aus radial aussen in der Spulenluecke (3,4 m Abstand).
+  Auslegung: 0,5 MW/m2 x 26,7 m2 = 13,3 MW, 106 kg/s, dT 30 K.
+- FEHLER gefunden (User-Hinweis "vielleicht ist es nicht durchgaengig"): Normale der verdrillten Flaeche hat
+  Toroidalanteil -> Lochmitten bis 2,5 Grad neben der Platte, nur 3 von 12 offen. Fix: schnitt_ebene() (Punkte
+  in der Ebene phi interpoliert). Ausserdem bei 12 mm Gitter 45-mm-Loecher zu (nur 3,75 Zellen). Jetzt 8 mm.
+  kuehlung_cfd.durchgaengig() prueft nach dem Probelauf Zusammenhang + Zellen je Loch.
+- FluidX3D: eigene Kopie v3.8 in ~/fluidx3d_stellarator (Hermes-Kopie ~/fluidx3d_cae unberuehrt). Lizenz beachten
+  (Memory fluidx3d-lizenz): geaenderte setup.cpp liegt in fluidx3d/ mit LICENSE.md, NICHT MIT; vor Veroeffentlichung fragen.
+- Platte fast voll (~9 GB frei): Feldexport nur Wasserzellen (~0,8 GB je Feld bei 8 mm).
+- Ergebnis Lauf b (8 mm, 2,1e8 Zellen, 11 GB VRAM, 37 min, 90 s phys., konvergiert ab ~10 s): Druckverlust 15,9 kPa;
+  Lochblech Streuung 34 % (max/min 2,8); Gyroid-Kern: 12 Strahlen aus den Loechern laufen durch, dazwischen
+  fast Stillstand und Rueckstroemung (Streuung Umfang 163 %); Plasmaseite v ~ 4 cm/s (p10 3 mm/s) -> Waermeuebergang
+  viel zu klein fuer 0,5 MW/m2 (h ~ 200-400 W/m2K). Folgerung: eigene schnelle Erstwand-Kanaele noetig.
+  Mengenbilanz der Auswertung +-15 % (Loecher 117, Kern 89, Soll 106 l/s). Bild sim/kuehlung_segment/b/cfd/auswertung.png
+- Variante e1 "Erstwand-Spalt" (stellarator/kuehlung_erstwand.py, picogk/SegmentErstwand): 40-mm-Spalt hinter 10-mm-
+  Erstwand, Gyroid-Kern zu (nur Tragstruktur), dT Wasser 10 K -> 319 kg/s, DN350/DN400, Lochblech 34 x 60 mm.
+  FluidX3D 8 mm, 40 s phys., 13 min: Druckverlust 17,7 kPa; Loecher Streuung 31 % (max/min 3,0); Spalt ueberall
+  vorwaerts, Streuung 28 %, v 0,30-0,49 m/s (Plasmaseite Mittel 0,43, p10 0,085 m/s, vorher 0,04/0,003);
+  Wand ueber Wasser ~130-190 K (Dittus-Boelter heiss, Sektormittel). Bild sim/kuehlung_segment/e1/cfd/auswertung.png
+- e2 (Loecher abgestuft 45-73 mm) gebaut + geprueft, aber verworfen: User will KEIN Lochblech.
+- Variante f1 (User-Vorgabe): Ringkammern stirnseitig flaechig offen zum Gyroid-Kern, Wasser verteilt sich im Ring,
+  fliesst durch die Filamente zum Sammelring und raus. kuehlung_segment.py --ohne_platte (PicoGK mit_platte=false),
+  dT 10 K, 319 kg/s, DN350/DN400, kammer_ein 480 / kammer_aus 520. Probelauf durchgaengig. kuehlung_cfd.auswerten
+  zeigt ohne Loecher die Umfangsverteilung an Kerneintritt/-austritt. Lauf 8 mm, 40 s phys. gestartet.
+- Ergebnis f1 (8 mm, 40 s phys., 164000 Schritte): Druckverlust nur 5,2 kPa (b 15,9 / e1 17,7). Durchfluss gemessen
+  ~283 l/s statt 319 (Einlass-Messquerschnitt u 0,089 statt 0,1 Gitter, ~11 % weniger). Verteilung Kerneintritt
+  Streuung 141 %: direkt vor dem Einlassrohr (aussen, 0 Grad) Rueckstroemung (-24 l/s), Hauptstrom bei +-45 Grad,
+  Innenseite (180 Grad) schwach. Kernmitte 86 %, Kernaustritt 62 % (gleicht sich im Gyroid etwas aus).
+  Plasmaseite v Mittel 5 cm/s, p10 4 mm/s -> wie b, viel zu wenig fuer 0,5 MW/m2. Grund: grosser Kernquerschnitt
+  (0,9 m dick), Ring ungedrosselt. Ideen: Prallblech vor Einlass im Ring, Gyroid zur Plasmaseite feiner/enger
+  (abgestufte Zelle), Kern duenner. Bild sim/kuehlung_segment/f1/cfd/auswertung.png
+- Variante f2 = f1 + abgestufter Gyroid (User: "mach 2"): vorn 0,2 m Schicht Zelle 0,2 m / halbdicke 12 mm
+  (Porositaet ~0,6), hinten Zelle 0,3 m / halbdicke 40 mm (Porositaet ~0,16, drosselt). PicoGK --schicht/--zelle_vorn/
+  --halbdicke_vorn, voxel 8 (924 s, 6,8 GB). Stahl 13,4 m3, Wasser 14,7 m3. FluidX3D 8 mm 40 s:
+  Druckverlust 5,9 kPa; Verteilung Kerneintritt 40 % (f1 141 %), Kernmitte 36 %, Austritt 35 %, keine Rueckstroemung
+  mehr; vordere Schicht fuehrt 56 % des Durchflusses; Plasmaseite v Mittel 8,6 cm/s (f1 5), p10 0,7 mm/s (Totwasser
+  an der Haut). Grob h ~1000 W/m2K ohne Rippenwirkung -> fuer 0,5 MW/m2 noch zu wenig. Bild f2/cfd/auswertung.png
+  e2-Ordner geloescht (Platz). Platte ~4 GB frei.
+- Aufgeraeumt (User OK): STL- und Feld-Dateien von a, b, e1, f1 geloescht (Auftraege, json, png bleiben; neu erzeugbar
+  ueber kuehlung_segment/kuehlung_erstwand + kuehlung_cfd). f2 komplett behalten (fuer Blender). Platte 8,8 GB frei.
+- 2026-10-27 Modellaenderung (User-Skizze Draufsicht mit zwei roten Linien): Eintritt innen im Torus (180 Grad gedreht),
+  Austritt aussen. f3 = nur Eintritt innen (Keilkammern) -> verworfen. f4: --ein_innen --schraeg: Kern zwischen zwei
+  senkrechten schraegen Ebenen; Eintrittskammer innen 420 mm breit, laeuft aussen an Stirnplatte spitz aus;
+  Sammelkammer aussen 600 mm, laeuft innen spitz aus (Z-Verteiler). DN300 ein (innen, 0,68 m zur Spule), DN400 aus.
+  Abgestufter Gyroid wie f2. Geometrie voxel 12 gebaut; Draufsicht stellarator/draufsicht.py -> f4/draufsicht.png.
+  Vor CFD: Geometrie mit 8 mm neu bauen; auswerten() nutzt kern-Winkel = Mitte der Geraden (pruefen).
+- auswerten() verallgemeinert (schraege Kernebenen, Plasmahaut ueber alle phi statt nur einer Spalte). f2 neu
+  ausgewertet: vordere Schicht 66 % (vorher 56 %), Plasmaseite 9,6 cm/s (vorher 8,6) - alte Zahl war zu grob.
+- f5 = f4 + staerkere Abstufung (User: plasmaseitig mehr Wasser, aussen weniger): vorn Zelle 0,2/halbdicke 10
+  (Porositaet 0,69, Kanal 78 mm), hinten 0,3/43 (Porositaet ~0,08, Kanal ~40 mm). voxel 8.
+- Ergebnis f5 (8 mm, 40 s phys.): Druckverlust 7,9 kPa; Verteilung Kerneintritt 20 %, Mitte 21 %, Austritt 23 %
+  (bisher beste); vordere Schicht fuehrt ~100 % (hintere 0,3/43 bei 8-mm-Gitter praktisch zu -> nur Tragstruktur);
+  Plasmaseite v Mittel 0,137 m/s (f2 0,096), p10 4,7 mm/s. Grob h ~1450 W/m2K ohne Rippenwirkung -> noch zu wenig
+  fuer 0,5 MW/m2. Durchfluss ~299 l/s (Einlass-RB ~7 % unter Soll). Bild f5/cfd/auswertung.png
+- Prozessbeschreibung (User-Wunsch, Schwerpunkt Interaktion Nutzer/KI): docs/kuehlsegment_prozess.md - bei neuen
+  Varianten Tabelle Abschnitt 3 fortschreiben. Animation: stroemung_animation.py + blender_stroemung.py (EEVEE,
+  ~8 s/Bild) + picogk/StlSchnitt (Stahl z<0, ohne Innenhaut: plasma.stl Abstand 180 mm). Test an f5 ok.
+- Skizzen-Werkzeug (User-Wunsch): stellarator/skizze.py + skizze.html (three.js 0.160 von unpkg), lokal 127.0.0.1:8765,
+  systemd-Unit "skizze". Vorschau-Netze vorschau_stahl/wasser.stl (StlSchnitt voxel 16, ~100 MB). Senden ->
+  sim/skizzen/<zeit>/skizze.png + skizze.json (Linien als 3D-Punkte auf Bauteil, R, phi), neu.txt. Nach dem Lesen
+  neu.txt loeschen und Waechter neu starten (until [ -f sim/skizzen/neu.txt ]).
+- Ergebnis f6 (vorn 0,12 m, Zelle 0,12/6 mm): Druckverlust 16,7 kPa; Plasmaseite v 0,20 m/s (f5 0,137), vordere
+  Schicht ~100 %; Verteilung schlechter: Streuung 47 % (Innenseite +-180 Grad bekommt doppelt, Einbrueche bei +-52 Grad).
+  Grund vermutlich kuerzerer Weg innen durch die schraegen Ebenen + duenne Schicht staerker gedrosselt. Bild f6/cfd/auswertung.png
+- Repo https://github.com/ThomasSchmiegelt/sketch-to-prompt angelegt (oeffentlich, MIT, ~/sketch-to-prompt): allgemeine
+  Fassung des Skizzen-Werkzeugs, README de/en, Beispielmodell, Screenshot (headless chromium + swiftshader).
+- Stroemungsfilm f6 fertig: sim/kuehlung_segment/f6/animation/stroemung_f6_legende.mp4 (12 s, 360 Bilder EEVEE 32
+  Proben, ~10 min Render; 1 s Film = 3 s phys.), Standbild standbild.png. Teilchen-npz geloescht (neu erzeugbar).
+- f7 (2026-10-27, User: naechster Schritt + Film durchsichtig): Zelle vorn 0,10/5 mm, Schicht 0,13, Wand vorn ueber R
+  abgestuft (neu: halbdicke_vorn_R, Program.cs Gyroid fDicke(R)). Ergebnis schlechter: 42 kPa, Streuung 58 %, innen fast zu
+  (t 7,2 mm bei Zelle 0,1 schliesst), +-52 Grad weiter ~0. Ursache +-52: voxPlasma.voxOffset(310 mm) an der Schulter
+  ~70 mm zu kurz -> dort dichter hinterer Gyroid im Band (Pruefung: Wasserzellen gegen beide Gyroid-Formeln je Abstand).
+  Duenne Schicht ist in jeder Neigung gleich durchlaessig (Widerstandsnetz-Test), Neigung war nicht die Ursache.
+- f8: Grenze der feinen Schicht = exaktes Netz (Auftrag vorn_stl), Wand 6,2->5,0 mm. Ergebnis 47,8 kPa, Streuung 48 %,
+  +-52 weiter 0 -> Vermutung falsch. Richtige Ursache (Zellen 'Formel Wasser, Gitter Stahl' aufgetragen): INNENHAUT
+  (voxOffset 180 mm) an der Schulter R 10-10,8 m ~50 mm zu dick -> Band dort um 1/3 verengt. Eigene Diagnosefehler
+  unterwegs: Abstand ohne Vorzeichen zaehlte Plasmainneres mit (Wasseranteil scheinbar 0,37 statt 0,69).
+  PicoGK-Gyroid selbst ist exakt (Test picogk/GyroidTest: Wandanteil 0,30-0,32 = Formel 0,30).
+- f9: ALLE Versatzflaechen (spalt, haut_innen, haut_aussen, wand, vorn) als exakte Netze flaeche_*.stl (Auftrag
+  flaechen_stl); Wand vorn 5,35/5,75/5,75/5,4/5,2/5,0 mm bei R 5,2/5,9/6,6/7,3/9/11 m.
+- Skills ergaenzt (User-Wunsch): neu cae/skizze-zu-prompt; fluidx3d-lbm, blender-modell (durchsichtiger Film),
+  picogk-voxel (Gyroid, Offset-Fehler), stellarator-surrogat. ~/Downloads/stelerator gibt es nicht mehr (in Skill vermerkt).
+- f9 (exakte Flaechen): 37,8 kPa, Streuung 65 %, innen 30 l/s (zu offen), +-52 weiter 0. ECHTE URSACHE +-52 (seit f6):
+  FluidX3D voxelize_mesh_on_device kippt einzelne z-Lagen (Strahlparitaet) -> Lage z=1,906 m ganz Stahl statt 58 % Wasser
+  quer durchs Band. Beleg: Gitterzellen je z-Lage gegen select_enclosed_points auf wasser_gitter.stl.
+- Abhilfe: PicoGK schreibt wasser_belegung.bin (Kopf 6 int + 4 float, dann je z-Schicht x-schnell 1 Byte; GetVoxelSlice,
+  ACHTUNG Bildzeile 0 = groesstes y -> fValue(x, nYs-1-y)), kuehlung_cfd macht daraus cfd/belegung.bin (dx = Voxel),
+  setup_kuehlsegment.cpp liest .bin statt STL zu voxelisieren. Pruefung gegen STL: 100 % gleich. f10 = f9-Parameter damit.
+- f10 Ergebnis: 22,6 kPa, 288 l/s, Streuung 36 %, Einbrueche +-52 weg. Innen 22-24 l/s, oben/unten 7-9, aussen 13-15.
+  f11: halbdicke_vorn_R 5.2:5.8,5.9:5.75,6.6:5.45,7.3:5.15,8.0:4.95,9.0:4.9,9.6:4.95,10.3:5.1,11.0:5.2,12.0:5.2
+- f11 Ergebnis: Streuung 8 % (beste bisher), 22,0 kPa, 288 l/s, v Plasmaseite 0,10 m/s, Schicht vorn 0,18 m/s Mittel.
+  Film durchsichtig: animation/stahl_ganz.stl (StlSchnitt voxel 10, z_max 1e7, ueber starte_begrenzt mit env DOTNET_ROOT).
+
+- Film f11 durchsichtig fertig: sim/kuehlung_segment/f11/animation/stroemung_f11_durchsichtig.mp4 (12 s, 24000 Teilchen,
+  EEVEE 32 Proben, ~12 min), standbild.png, legende.png. Einzelbilder bilder/ (1,1 GB) noch da, npz geloescht.
+- 2026-10-27 abends (User: Gyroide im Film sehen, Gesamtbild + Bericht mit Erkenntnissen/Vorschlaegen, alles nach
+  GitHub, FluidX3D ordentlich zitieren): blender_stroemung.py --gyroid (untere Haelfte undurchsichtig ohne Innenhaut:
+  StlSchnitt voxel 6, z 0, flaeche_haut_innen.stl + 12 mm; obere Haelfte Roentgen mit z-Maske; Kamerafahrt 15/60/25 %)
+  -> f11/animation_gyroid/. kuehlung_waerme.py (1D: Innenhaut 30 mm = 600 K, v 0,10 m/s -> h 1200, 415 K; 10 % Plasmaseite
+  < 1 mm/s). gesamtbild_kuehlung.py -> docs/bilder/gyroid_gefaess_1GW_gesamt_kuehlung.jpg. Projektbericht de/en:
+  Abschnitt Kuehlung + FluidX3D und 7 Referenzen + PicoGK + sketch-to-prompt. fluidx3d/ (README, LICENSE, setup, defines
+  geaendert) im Repo freigegeben (.gitignore). README Abschnitt Kuehlung, Filme docs/filme/ (komprimiert).
+  GyroidTest-STLs nach sim/kuehlung_segment/gyroidtest/ verschoben (nicht ins Repo).

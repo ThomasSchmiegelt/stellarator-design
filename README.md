@@ -33,6 +33,7 @@ freier Software auf:
 - **Berechnung:** Magnetfeld → Lorentzkraft → Spannung in einem gekoppelten ElmerFEM-Lauf, mit einem robusten
   Rechenweg, der das Netz direkt aus den Bahndaten erzeugt (ohne CAD-Kern).
 - **Anschauung:** 3D-Schnittmodell mit Verguss, Isolierung und Supraleitern, Leiterdetail, ParaView und Blender.
+- **Kühlung:** Plasmagefäß mit Gyroid-Kühlkern (PicoGK), Strömung in einem Segment mit FluidX3D, Filme in Blender.
 
 Gebaut wurde das in wenigen Tagen mit zwei KI-Agenten: [Hermes Agent](https://github.com/NousResearch/hermes-agent)
 (lokal; Recherche, Projektpflege, lange Läufe) und [Claude Code](https://www.anthropic.com/claude-code)
@@ -53,6 +54,8 @@ software:
   meshes directly from the coil data (no CAD kernel).
 - **Visualisation:** 3D cut-away model with potting, insulation and superconductors, conductor detail, ParaView
   and Blender.
+- **Cooling:** plasma vessel with a gyroid cooling core (PicoGK), flow through one segment with FluidX3D, films in
+  Blender.
 
 It was built in a few days with two AI agents: [Hermes Agent](https://github.com/NousResearch/hermes-agent)
 (local; research, bookkeeping, long runs) and [Claude Code](https://www.anthropic.com/claude-code) (coding).
@@ -279,6 +282,65 @@ Fluidgebiet für eine spätere Strömungsrechnung: [Bild](docs/bilder/gyroid_kue
 Skripte: `stellarator/gyroid_gefaess.py`, `thorus_schnitt.py`, `blender_thorus.py`, `kuehlsegment.py`;
 schwere Läufe über `stellarator/speicherwaechter.py` (eigene systemd-Einheit mit Speichergrenze).
 
+### Kühlung des Plasmagefäßes: ein Segment durchströmt (PicoGK, FluidX3D, Blender)
+
+Aus der Darstellung wurde eine erste Rechnung. Ein 10°-Segment der Gefäßwand (85–95°) bekam einen Wasserweg:
+Eintritt innen, Austritt außen, dazwischen ein Gyroid-Kern zwischen zwei schrägen Ebenen mit keilförmigen
+Verteil- und Sammelkammern (Z-Verteiler). Zur Plasmaseite hin ist der Gyroid feiner (Schicht 130 mm, Zelle 100 mm).
+Die Geometrie baut PicoGK, die Strömung rechnet [FluidX3D](https://github.com/ProjectPhysX/FluidX3D)
+(Lattice-Boltzmann auf der GPU, 8-mm-Gitter, 259 Mio. Zellen), die Filme entstehen in Blender.
+Annahme: 0,5 MW/m² auf der Plasmaseite, 13,3 MW je Segment, 10 K Erwärmung, also 319 l/s.
+
+![Gesamtbild ergänzt um die Kühlung: Gyroid-Filamente, Verteilung über den Umfang, Erkenntnisse](docs/bilder/gyroid_gefaess_1GW_gesamt_kuehlung.jpg)
+
+![Kamerafahrt in die Gyroid-Filamente der Plasmaseite](docs/bilder/kuehlung_gyroid.gif)
+
+Filme: [durchsichtiges Segment](docs/filme/kuehlung_f11_durchsichtig.mp4) ·
+[Fahrt in die Gyroid-Filamente](docs/filme/kuehlung_f11_gyroid.mp4) (Teilchen im berechneten Feld, 1 s Film ≈ 3 s).
+
+![Querschnitt durch das Strömungsfeld f11: fast der ganze Durchfluss läuft durch die feine Gyroid-Schicht an der Plasmaseite](docs/bilder/kuehlung_f11_querschnitt.png)
+
+| Variante | Änderung | Streuung über den Umfang | Druckverlust |
+|---|---|---|---|
+| f1 | Wasser durch die Filamente statt durch ein Lochblech | 141 % | |
+| f5 | Z-Verteiler nach Skizze des Nutzers | 20 % | 7,9 kPa |
+| f10 | Gitterzellen direkt aus PicoGK (Fehler im Rechengitter behoben) | 36 % | 22,6 kPa |
+| **f11** | **Wanddicke der vorderen Filamente nach Radius (4,9–5,8 mm)** | **8 %** | **22,0 kPa** |
+
+**Was gelernt wurde:**
+- Die Verteilung lässt sich über die Wanddicke der Filamente abgleichen (f11: 10,3–13,9 l/s je Sektor). Sie
+  reagiert aber sehr steil: grob Faktor 3,7 im Durchfluss je Millimeter Wand.
+- Zwei Bänder ohne Wasser (f6–f9) waren kein Konstruktionsfehler. FluidX3D hatte beim Umwandeln des feinen
+  Gyroid-Netzes in Gitterzellen eine ganze Lage zu Stahl gemacht. Seit f10 liefert PicoGK die Zellen direkt.
+- **Die Kühlung reicht so noch nicht** (grobe 1D-Abschätzung, `stellarator/kuehlung_waerme.py`):
+  - Die 30 mm dicke Innenhaut allein kostet 600 K.
+  - An der Plasmaseite fließt das Wasser nur mit 0,10 m/s (h ≈ 1200 W/m²K).
+  - Auf 10 % der Plasmaseite steht es fast still.
+
+**Verbesserungsvorschläge:**
+1. Innenhaut 3–5 mm, eventuell mit Schutzschicht aus Wolfram.
+2. Plasmaseite schneller durchströmen: dünnere vordere Schicht oder eigener Erstwand-Kreislauf mit feinen
+   Kanälen und etwa 1 m/s.
+3. Totwassergebiete finden und beseitigen.
+4. Robuster abgleichen, mit Drosseln statt Wanddicke.
+5. Wärme gekoppelt mitrechnen.
+6. Gitterstudie mit 4–6 mm.
+
+Mehr dazu im Projektbericht (Abschnitt „Kühlung“). Wie Mensch und KI dabei zusammengearbeitet haben, einschließlich
+Skizzen als Eingabe und der Fehlersuche, steht in [docs/kuehlsegment_prozess.md](docs/kuehlsegment_prozess.md).
+Das Skizzen-Werkzeug gibt es auch allgemein als eigenes Repo:
+[sketch-to-prompt](https://github.com/ThomasSchmiegelt/sketch-to-prompt).
+
+> **FluidX3D-Lizenz:** FluidX3D (Dr. Moritz Lehmann) ist kostenlos nur für nicht kommerzielle Nutzung, der
+> Quelltext ist einsehbar, es ist aber **keine** Open-Source-Lizenz und nicht MIT. Es ist hier nicht enthalten.
+> Die geänderten Dateien (`setup.cpp`, `defines.hpp`) liegen gekennzeichnet mit Originallizenz in
+> [fluidx3d/](fluidx3d/). Quellen: siehe unten.
+
+Skripte: `stellarator/kuehlung_segment.py` (Auslegung, Geometrie über `picogk/SegmentKuehlung`),
+`kuehlung_cfd.py` (FluidX3D, Auswertung), `kuehlung_waerme.py`, `stroemung_animation.py` +
+`blender_stroemung.py` (Filme, Schnitt mit `picogk/StlSchnitt`), `gesamtbild_kuehlung.py`; Skizzen:
+`skizze.py`/`skizze.html`, `draufsicht.py`, `modell_ansicht.py`.
+
 ---
 
 ## Aufbau
@@ -311,6 +373,10 @@ invers/                      Inverser Entwurf (.venv-opt)
   stufe2_spulen.py           Stufe 2: Spulenoptimierung mit simsopt
   beispiele/                 precise QA (Referenz) und qa_nfp2 (eigene Form: wout, Spulen, 1-GW-Bilanz)
 picogk/StellaratorVoxel/     PicoGK-Headless-App (C#/.NET 9): Voxelkörper, Gehäuse, SDF
+picogk/SegmentKuehlung/      PicoGK: Kühlsegment (Gyroid-Kern, Kammern, Rohre), Belegung der Gitterzellen für FluidX3D
+picogk/StlSchnitt/           PicoGK: Bauteil aufschneiden, Innenhaut abnehmen (für die Filme)
+picogk/GyroidTest/           PicoGK: Prüfwürfel Gyroid-Wandanteil gegen Formel
+fluidx3d/                    geänderte FluidX3D-Dateien (FluidX3D-Lizenz, NICHT MIT)
 sim/pipeline/gerader_draht/  Validierung ElmerFEM gegen analytischen Draht (2D)
 forschung/                   Recherche und Analysen
 docs/bilder/                 Bilder für dieses README
@@ -393,6 +459,8 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 - [x] W7-X-Gehäuse kollisionsfrei (CAD: Nachbarschnitt) und Spannungsrechnung über den Rechenweg ohne CAD-Kern
 - [x] 3D-Schnittmodell mit Verguss, Isolierung und Supraleitern; Leiterdetail; ParaView und Blender
 - [x] Projektberichte (de/en, drei Zielgruppen) mit geprüften Quellen
+- [x] Kühlsegment des Plasmagefäßes: Gyroid-Wasserweg (PicoGK), Strömung (FluidX3D), Verteilung 8 % Streuung
+- [ ] Erstwand-Kühlung: dünne Innenhaut, schnelle Kanäle, Wärme gekoppelt rechnen
 - [ ] Wandstärken und Verbinder auslegen (zulässige Spannung einhalten)
 - [ ] Verguss (Quarzsand-Epoxid) zwischen Wickelpaket und Gehäuse in Geometrie und Rechnung
 - [ ] Verbinder und Tragring im Rechenweg statt eingespannter Bereiche; Keil und Gehäuse aus einem Stück
@@ -407,9 +475,21 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 - FEM: [ElmerFEM](https://www.elmerfem.org). Netze: [gmsh](https://gmsh.info). CAD: [FreeCAD](https://www.freecad.org).
 - Visualisierung: [PyVista](https://pyvista.org), [ParaView](https://www.paraview.org), [Blender](https://www.blender.org).
 - KI-Agenten: [Hermes Agent](https://github.com/NousResearch/hermes-agent) (Nous Research, MIT), [Claude Code](https://www.anthropic.com/claude-code) (Anthropic).
-- Frühe Voxel-Variante (heute optional): [PicoGK](https://github.com/leap71/PicoGK).
+- Voxel-Geometrie (Gyroid-Kern, Kühlsegment): [PicoGK](https://github.com/leap71/PicoGK) (LEAP 71, Apache 2.0).
+- Strömung: [FluidX3D](https://github.com/ProjectPhysX/FluidX3D) v3.8 (Dr. Moritz Lehmann; Lizenz nur nicht
+  kommerziell, nicht Open Source; geänderte Dateien in [fluidx3d/](fluidx3d/)). Zitiert nach Vorgabe der Lizenz:
+  - M. Lehmann: Computational study of microplastic transport at the water-air interface with a memory-optimized lattice Boltzmann method. PhD thesis, Univ. Bayreuth (2023). [doi:10.15495/EPub_UBT_00006977](https://doi.org/10.15495/EPub_UBT_00006977)
+  - M. Lehmann: Esoteric Pull and Esoteric Push: Two Simple In-Place Streaming Schemes for the Lattice Boltzmann Method on GPUs. Computation 10, 92 (2022). [doi:10.3390/computation10060092](https://doi.org/10.3390/computation10060092)
+  - M. Lehmann, M. Krause, G. Amati, M. Sega, J. Harting, S. Gekle: Accuracy and performance of the lattice Boltzmann method with 64-bit, 32-bit, and customized 16-bit number formats. Phys. Rev. E 106, 015308 (2022)
+  - M. Lehmann: Combined scientific CFD simulation and interactive raytracing with OpenCL. IWOCL'22: International Workshop on OpenCL, 3, 1–2 (2022)
+  - M. Lehmann, L. M. Oehlschlägel, F. Häusl, A. Held, S. Gekle: Ejection of marine microplastics by raindrops: a computational and experimental study. Micropl. & Nanopl. 1, 18 (2021). [doi:10.1186/s43591-021-00018-8](https://doi.org/10.1186/s43591-021-00018-8)
+  - M. Lehmann: High Performance Free Surface LBM on GPUs. Master's thesis, Univ. Bayreuth (2019). [doi:10.15495/EPub_UBT_00005400](https://doi.org/10.15495/EPub_UBT_00005400)
+  - M. Lehmann, S. Gekle: Analytic Solution to the Piecewise Linear Interface Construction Problem and Its Application in Curvature Calculation for Volume-of-Fluid Simulation Codes. Computation 10, 21 (2022). [doi:10.3390/computation10020021](https://doi.org/10.3390/computation10020021)
 - Fachliteratur: siehe Literaturverzeichnisse der [Projektberichte](bericht/projektbericht/).
 
 ## Lizenz
 
 [MIT](LICENSE) © 2026 Thomas Schmiegelt
+
+Ausnahme: Der Ordner [fluidx3d/](fluidx3d/) enthält geänderte FluidX3D-Dateien unter der FluidX3D-Lizenz (nicht MIT).
+*Exception: the folder `fluidx3d/` holds altered FluidX3D files under the FluidX3D licence (not MIT).*

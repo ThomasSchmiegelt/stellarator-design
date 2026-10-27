@@ -10,7 +10,7 @@
 \title{\textbf{Two AI Agents, One Stellarator}\\[2pt]\large Building an engineering simulation pipeline from an
   open dataset -- including the dead ends}
 \author{Thomas Schmiegelt \textbar{} hobby project \texttt{stellarator-design}}
-\date{25 October 2026}
+\date{25 October 2026, updated 27 October 2026}
 \begin{document}\maketitle
 
 \kasten{Hobby project, driven by curiosity.}{Not affiliated with any research institute or company, not peer
@@ -28,7 +28,8 @@ geometry $\to$ stress. This report is mostly about \emph{how} it was built: the 
 agent (Hermes) and a coding agent (Claude Code), a first model that was wrong while looking right, a fully
 parametric CAD model that broke the mesher, and a second, CAD-free code path that finally worked. For a
 W7-X-like system of 70 coils the result is 99\,\% of casing stresses below 43\,MPa -- under strongly simplified
-supports.
+supports. A follow-up (Section~\ref{sec:cooling}) computes the flow through the gyroid cooling core of the
+1\,GW plasma vessel with FluidX3D and suggests improvements.
 \end{abstract}
 
 \tableofcontents
@@ -235,7 +236,125 @@ Potting layer between winding pack and casing; connectors and support ring inste
 wall thickness; wedge and casing in one body; wall sizing for the 1\,GW design; HTS strain check; tolerance study
 ($\pm$2\,mm).
 
-\subsection*{Code and data}
+%======================================================================
+\section{Follow-up: cooling the plasma vessel}\label{sec:cooling}
+\kasten{Status 27 Oct 2026.}{Flow computed with cold water; heat only estimated roughly. The numbers show
+trends; they are not a design.}
+
+\subsection{Task and layout}
+The plasma vessel wall of the 1\,GW design is \SI{0.9}{m} thick and has a core of gyroid filaments built with
+PicoGK \cite{picogk}. A \ang{10} segment (\ang{85}--\ang{95}) was studied. The assumed heat flux is
+\SI{0.5}{MW/m^2} on \SI{26.7}{m^2} of plasma-facing surface, i.e.\ \SI{13.3}{MW}. With a \SI{10}{K} temperature
+rise the segment needs \SI{319}{l/s} of water.
+
+The layout grew step by step from the user's instructions:
+\begin{itemize}\itemsep1pt
+\item Water flows \emph{through the filaments}, not through holes in a perforated plate.
+\item The inlet is on the inboard side of the torus, the outlet outboard.
+\item The core sits between two inclined planes. In front of and behind it, the distribution and collection
+  chambers taper off (Z-manifold). This shape came from a sketch the user drew on a screenshot.
+\item The gyroid is graded: a \SI{130}{mm} layer with \SI{100}{mm} cells on the plasma side, behind it a dense,
+  coarse gyroid as load-bearing structure.
+\end{itemize}
+The flow was computed with FluidX3D \cite{fluidx3d}, a lattice Boltzmann solver for GPUs
+\cite{lehmann2023,lehmann2022ep,lehmann2022fp,lehmann2022iwocl,lehmann2021,lehmann2019,lehmann2022plic}. The
+lattice has \SI{8}{mm} spacing and 259 million cells. Each run covers \SI{40}{s} of physical time with the LES
+turbulence model and takes about \SI{15}{min}. FluidX3D has its own licence: free for non-commercial use only,
+source-available, not an open-source licence. The two modified files (\texttt{setup.cpp}, \texttt{defines.hpp})
+are published as an ``altered version'' with the original licence in the repository folder \texttt{fluidx3d/}.
+
+\subsection{History}
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}lXl@{}}\toprule
+Variant & Change & Result \\\midrule
+a, b & chamber with perforated plate; holes missed the plate (spotted by the user) & unstable, jets \\
+f1 & water through the filaments, open chambers & spread 141\,\% \\
+f2 & finer gyroid towards the plasma & spread 40\,\% \\
+f4, f5 & Z-manifold from the sketch, denser outer layer & spread 20\,\%, \SI{7.9}{kPa} \\
+f6--f9 & thinner front layer, wall thickness by radius & dips at $\pm\ang{52}$, cause searched \\
+f10 & lattice cells taken directly from PicoGK & dips gone, spread 36\,\% \\
+f11 & front wall \SIrange{4.9}{5.8}{mm} by radius & \textbf{spread 8\,\%}, \SI{22}{kPa}, \SI{288}{l/s} \\\bottomrule
+\end{tabularx}\caption{Variants of the cooling segment. Spread = standard deviation of the flow over 24
+circumferential sectors divided by the mean.}\end{table}
+
+\subsection{An error in the lattice}
+In f6 to f9, two bands at $\pm\ang{52}$ of the circumference received almost no water. It looked like a design
+flaw. Three hypotheses were tested and rejected in turn: layer thickness, orientation of the layer relative to
+the gyroid, and inaccurate offset surfaces in PicoGK. Two intermediate findings were our own measurement errors.
+
+The actual cause was the conversion of the water mesh into lattice cells. FluidX3D decides for each cell with a
+ray test whether it is inside. On nearly horizontal faces of the very fine gyroid mesh this failed: at
+$z=\SI{1.906}{m}$ a whole lattice layer became steel and blocked the band. It was found only by comparing the
+lattice with the mesh layer by layer. Since f10, PicoGK writes its voxel occupancy to a file that FluidX3D reads
+directly; it matches the mesh 100\,\%. The numbers of f6 to f9 are therefore distorted.
+\bild{kuehl_gitterfehler_f9.png}{0.9}{Lattice error (f9): water in the plasma-side layer, unrolled over the
+circumference (horizontal) and the path from inlet to outlet (vertical), colour = toroidal speed. The dark blocks
+at about $\pm\ang{50}$ carry no flow because one lattice layer there was wrongly set to steel. Zoom below.
+Labels in German.}
+
+After that, the distribution could be balanced in one step. The wall of the front filaments now varies with
+radius: \SI{5.8}{mm} inboard, \SI{4.9}{mm} top and bottom, \SI{5.2}{mm} outboard. The spread dropped from 36\,\%
+to 8\,\%.
+\bild{kuehl_auswertung_f11.png}{0.95}{Evaluation of the FluidX3D run f11: pressure drop over time (steady
+after about \SI{5}{s}), flow over the circumference at core inlet and outlet, flow through the gyroid core per
+sector (spread 8\,\%), and cross-section at mid core. Labels in German.}
+\bild{kuehl_schnitt_f11.png}{1.0}{Cross-section through the f11 flow field at $\varphi=\ang{90}$; every
+\SI{8}{mm} lattice cell with water is a dot, colour = speed (log scale). Water enters on the left (inboard).
+Almost all the flow passes through the fine gyroid layer on the plasma side (zoom on the right,
+\SIrange{0.1}{1}{m/s}). In the coarse dense gyroid behind it the water sits in closed pores; it only carries
+load. Labels in German.}
+\bild{kuehl_gesamt.jpg}{0.82}{Overview of the 1\,GW device extended by the cooling results: gyroid filaments on
+the plasma side with water paths (left), flow per circumferential sector before and after balancing (middle),
+findings (right). Labels in German.}
+\zwei{kuehl_durchsichtig.jpg}{kuehl_gyroid_nah.jpg}{Frames from the flow films (Blender \cite{blender}): the
+segment rendered transparent, inlet inboard right, outlet outboard left (left); the lower half without the inner
+skin, looking at the plasma-side filaments (right). Colour = speed.}{fig:coolfilm}
+
+\subsection{Is it enough? A rough heat estimate}
+The flow computation contains no heat. A one-dimensional estimate for pressurised water at \SI{300}{\celsius}
+(Dittus--Boelter, steel with $k=\SI{25}{W/(m\,K)}$) shows two bottlenecks.
+\begin{table}[H]\centering\small
+\begin{tabular}{@{}lr@{}}\toprule
+Quantity at \SI{0.5}{MW/m^2} & Temperature drop \\\midrule
+Conduction through the inner skin, \SI{30}{mm} (as built) & \SI{600}{K} \\
+Conduction through the inner skin, \SI{5}{mm} & \SI{100}{K} \\
+Transfer to the water, $v=\SI{0.10}{m/s}$ (f11), without / with fin effect & \SI{415}{K} / \SI{210}{K} \\
+Transfer to the water, fine \SI{10}{mm} channels at \SI{1}{m/s} & \SI{48}{K} \\\bottomrule
+\end{tabular}\caption{Rough heat estimate (\texttt{stellarator/kuehlung\_waerme.py}).}\end{table}
+The distribution is solved, the cooling is not yet. The inner skin is far too thick and the water on the plasma
+side is too slow. In addition, on 10\,\% of the plasma side the water almost stands still (below
+\SI{1}{mm/s}); hot spots would form there.
+
+\subsection{Suggested improvements}
+\begin{enumerate}\itemsep1pt
+\item \textbf{Thinner inner skin:} \SIrange{3}{5}{mm} instead of \SI{30}{mm}, possibly with tungsten armour. The
+  gyroid core behind it carries the load.
+\item \textbf{Faster flow on the plasma side:} either a thinner front layer (\SIrange{30}{40}{mm} instead of
+  \SI{130}{mm}) with a finer cell, or a separate first-wall circuit with parallel channels at about
+  \SI{1}{m/s}. The gyroid behind then only carries load and removes volumetric heat. The pressure drop rises;
+  at \SI{22}{kPa} it is still small today.
+\item \textbf{Remove stagnant water:} the near-zero speeds on the plasma side are probably at the end walls and
+  chamber corners. They must be located in the field; guide vanes or a more open cell there are obvious options.
+\item \textbf{Balance less sensitively:} one millimetre of wall thickness changes the flow by roughly a factor
+  of 3.7. With typical manufacturing tolerances of $\pm\SI{0.1}{mm}$ that is about $\pm13\,\%$. Defined orifices
+  at the chambers, or a larger cell with thicker walls, are more robust.
+\item \textbf{Compute the heat:} coupled flow and conduction (FluidX3D has a temperature extension, or Elmer for
+  the steel). Only then can the fin effect of the filaments be judged.
+\item \textbf{Check the lattice:} the front filament walls are about \SI{10}{mm} thick and the lattice is
+  \SI{8}{mm}. A grid study at \SIrange{4}{6}{mm} is needed before the numbers are reliable.
+\item \textbf{Reach the target flow:} \SI{288}{l/s} instead of \SI{319}{l/s}. The cause is the inlet boundary
+  condition, not the geometry.
+\end{enumerate}
+
+\subsection{Collaboration}
+Here too, the decisive design ideas came from the user: water through the filaments, inlet inboard, inclined
+chamber boundaries. To agree on shape, a sketch on a screenshot worked best. This led to a small tool for
+drawing directly on the 3D model and handing the lines to the AI as 3D points \cite{sketch}. The lattice error
+was found by the assistant, but only after several wrong guesses. The lesson: investigate an odd result before
+changing the design. The workflow is described in \texttt{docs/kuehlsegment\_prozess.md} (German).
+
+\section*{Code and data}
+Software: ElmerFEM, gmsh, FreeCAD, simsopt, DESC, PyVista, ParaView, Blender, FluidX3D 3.8 \cite{fluidx3d}, PicoGK \cite{picogk}.
 \url{https://github.com/ThomasSchmiegelt/stellarator-design} (MIT licence): pipeline code, findings log, figures.
 
 \begin{thebibliography}{99}\small
@@ -270,5 +389,29 @@ wall thickness; wedge and casing in one body; wall sizing for the 1\,GW design; 
 \bibitem{blender} Blender, version 4.0. Blender Foundation. \url{https://www.blender.org}
 \bibitem{hermes} Nous Research: Hermes Agent. \url{https://github.com/NousResearch/hermes-agent} (MIT licence).
 \bibitem{claudecode} Anthropic: Claude Code. \url{https://www.anthropic.com/claude-code}
+\bibitem{fluidx3d} M. Lehmann: FluidX3D, version 3.8. \url{https://github.com/ProjectPhysX/FluidX3D}.
+  Licence: free for non-commercial use only, source-available, not open source.
+  Altered version of \texttt{setup.cpp} and \texttt{defines.hpp} in the repository folder \texttt{fluidx3d/}.
+\bibitem{lehmann2023} M. Lehmann: Computational study of microplastic transport at the water-air interface with
+  a memory-optimized lattice Boltzmann method. PhD thesis, University of Bayreuth (2023).
+  doi:10.15495/EPub\_UBT\_00006977
+\bibitem{lehmann2022ep} M. Lehmann: Esoteric Pull and Esoteric Push: Two simple in-place streaming schemes for
+  the lattice Boltzmann method on GPUs. \emph{Computation} 10 (2022) 92. doi:10.3390/computation10060092
+\bibitem{lehmann2022fp} M. Lehmann, M. Krause, G. Amati, M. Sega, J. Harting, S. Gekle: Accuracy and
+  performance of the lattice Boltzmann method with 64-bit, 32-bit, and customized 16-bit number formats.
+  \emph{Phys.\ Rev.\ E} 106 (2022) 015308.
+\bibitem{lehmann2022iwocl} M. Lehmann: Combined scientific CFD simulation and interactive raytracing with
+  OpenCL. \emph{IWOCL'22: International Workshop on OpenCL} (2022) 3, 1--2.
+\bibitem{lehmann2021} M. Lehmann, L.\,M. Oehlschlägel, F. Häusl, A. Held, S. Gekle: Ejection of marine
+  microplastics by raindrops: a computational and experimental study. \emph{Microplastics and Nanoplastics} 1
+  (2021) 18. doi:10.1186/s43591-021-00018-8
+\bibitem{lehmann2019} M. Lehmann: High performance free surface LBM on GPUs. Master's thesis, University of Bayreuth
+  (2019). doi:10.15495/EPub\_UBT\_00005400
+\bibitem{lehmann2022plic} M. Lehmann, S. Gekle: Analytic solution to the piecewise linear interface
+  construction problem and its application in curvature calculation for volume-of-fluid simulation codes.
+  \emph{Computation} 10 (2022) 21. doi:10.3390/computation10020021
+\bibitem{picogk} LEAP 71: PicoGK. \url{https://github.com/LEAP71/PicoGK} (Apache 2.0 licence).
+\bibitem{sketch} sketch-to-prompt: sketches on 3D models as input for AI assistants.
+  \url{https://github.com/ThomasSchmiegelt/sketch-to-prompt} (MIT licence).
 \end{thebibliography}
 \end{document}

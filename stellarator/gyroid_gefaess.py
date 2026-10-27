@@ -24,14 +24,15 @@ WURZEL = PROJEKT / "sim" / "gyroid_gefaess"
 ENV = os.environ | {"DOTNET_ROOT": str(Path.home() / ".dotnet")}
 
 
-def randflaeche(R0: float = 10.4, n_th: int = 96, n_ph: int = 720) -> np.ndarray:
-    """VMEC-Rand X (n_th, n_ph, 3) [m], phi 0..2pi, skaliert auf R0."""
+def randflaeche(R0: float = 10.4, n_th: int = 96, n_ph: int = 720, phi: np.ndarray | None = None) -> np.ndarray:
+    """VMEC-Rand X (n_th, n_ph, 3) [m], phi 0..2pi (oder an den Winkeln phi [rad]), skaliert auf R0."""
     from netCDF4 import Dataset
     ordner = PROJEKT / "sim" / "invers" / "qa_nfp2_A45"
     R0_s = json.loads((ordner / "stufe1.json").read_text())["kennzahlen"]["R0_m"]
     with Dataset(str(next(ordner.glob("wout_*.nc")))) as w:
         rmnc, zmns, xm, xn = w["rmnc"][-1, :], w["zmns"][-1, :], w["xm"][:], w["xn"][:]
-    th, ph = np.meshgrid(np.linspace(0, 2 * np.pi, n_th, endpoint=False), np.linspace(0, 2 * np.pi, n_ph, endpoint=False), indexing="ij")
+    th, ph = np.meshgrid(np.linspace(0, 2 * np.pi, n_th, endpoint=False), np.linspace(0, 2 * np.pi, n_ph, endpoint=False) if phi is None else np.asarray(phi, float),
+                         indexing="ij")
     arg = xm[:, None, None] * th - xn[:, None, None] * ph
     R = np.einsum("m,mij->ij", rmnc, np.cos(arg)); Z = np.einsum("m,mij->ij", zmns, np.sin(arg))
     return np.stack([R * np.cos(ph), R * np.sin(ph), Z], -1) * (R0 / R0_s)
