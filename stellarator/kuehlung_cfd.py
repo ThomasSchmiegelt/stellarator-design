@@ -2,7 +2,7 @@
 
     .venv/bin/python -m stellarator.kuehlung_cfd --name a [--dx 12] [--t_phys 60] [--probe]
 
-FluidX3D (https://github.com/ProjectPhysX/FluidX3D, Dr. Moritz Lehmann) steht unter einer eigenen,
+FluidX3D (https://github.com/ProjectPhysX/FluidX3D) steht unter einer eigenen,
 nicht-kommerziellen Lizenz, nicht MIT. Es wird NICHT mitgeliefert: Arbeitskopie v3.8 in ~/fluidx3d_stellarator.
 Geaendert werden dort nur src/setup.cpp (aus fluidx3d/setup_kuehlsegment.cpp) und Schalter in src/defines.hpp.
 

@@ -361,6 +361,96 @@ drawing directly on the 3D model and handing the lines to the AI as 3D points \c
 was found by the assistant, but only after several wrong guesses. The lesson: investigate an odd result before
 changing the design. The workflow is described in \texttt{docs/kuehlsegment\_prozess.md} (German).
 
+\section{Follow-up: double filament, clearance and liquid lead}\label{sec:filament}
+Of the improvements suggested in Section~\ref{sec:cooling}, the second one was taken up: the plasma side gets
+its own cooling circuit with fine channels. The requirements came from the user: the water should not get hotter
+than \SI{150}{\celsius}, with an inlet of about \SI{60}{\celsius}. On top of that came the idea of building the
+wall as a \emph{double filament}: an inner part for cooling and, separate from it, an outer part for stiffness.
+All of it without colliding with the coils. All numbers in this section are rough estimates.
+
+\subsection{Wall layout}
+From the plasma side outwards: inner skin \SI{5}{mm}, cooling channels, back wall \SI{5}{mm}, dry gyroid for
+stiffness, outer skin \SI{40}{mm}. The channels run toroidally across the segment from the inlet to the outlet
+plenum. The gyroid no longer carries water, so it may be more open and no longer has to be tuned to the cooling
+network.
+\bild{kuehl_wandstueck.png}{1.0}{Wall piece with double filament (PicoGK, Blender), cut-out
+$450\times450\times\SI{900}{mm}$. A window is cut into the inner skin; the cooling channels (blue) lie below.
+Labels in German.}
+
+\subsection{Water at 60 to 150\,°C}
+At \SI{0.5}{MW/m^2} the segment (\ang{85}--\ang{95}) takes up about \SI{12.6}{MW} on the plasma side. With a
+temperature rise of \SI{90}{K} that is only \SI{35}{l/s}. Spread over all channels in parallel the water would
+be too slow and would boil at the wall. Therefore three neighbouring channels are connected in series (U-turn at
+the end face). Method: heat transfer after Gnielinski, friction after Petukhov, temperature in the cross-section
+with Elmer for the worst channel (\texttt{stellarator/erstwand\_kanal.py}).
+\begin{table}[H]\centering\small
+\begin{tabular}{lr}\toprule
+Channels & $6\times\SI{6}{mm}$, rib \SI{3}{mm}, 616 strands with 3 passes each\\
+Velocity & \SIrange{0.96}{2.15}{m/s}\\
+Pressure drop & \SI{49}{kPa}\\
+Steel maximum & \SI{300}{\celsius}\\
+Channel wall maximum & \SI{202}{\celsius} (boiling from \SI{212}{\celsius} at \SI{2}{MPa})\\\bottomrule
+\end{tabular}\caption{First-wall channels with water \SI{60}{\celsius} $\rightarrow$ \SI{150}{\celsius} at \SI{2}{MPa} (variant n5).}\end{table}
+\bild{erstwand_n5_querschnitt.png}{1.0}{Steel temperature around the channels (Elmer, half pitch mirrored).
+Labels in German.}
+So high pressures are not needed at \SI{150}{\celsius}; \SI{2}{MPa} leaves enough margin to boiling. The real
+drawback lies elsewhere: heat at \SI{150}{\celsius} can hardly be turned into electricity.
+
+\subsection{Clearance to the coils}
+For every point of the plasma boundary the smallest distance to the coil casings and connectors of the surrogate
+model was computed (\texttt{stellarator/gefaess\_abstand.py}). The minimum is \SI{1.25}{m} to the casings and
+\SI{1.70}{m} to the connectors; in the computed segment it is at least \SI{1.88}{m}. Including the gap the wall
+needs \SI{1.05}{m}; with \SI{5}{cm} margin it fits everywhere.
+\bild{kuehl_abstand.png}{1.0}{Distance from the plasma boundary to casings and connectors, unrolled over the
+torus. Red: limit at which the wall would no longer fit; it is reached nowhere. Labels in German.}
+
+\subsection{Liquid lead instead of water?}
+As a next step the user proposed a \emph{gyroid within a gyroid}: cooled near the plasma with liquid lead, which
+passes its heat on to the water. A gyroid wall does split space into two separate, intertwined networks and would
+make a compact heat exchanger. Lead needs no pressure, and lead-lithium would also breed tritium. Three points
+speak against putting the exchanger into the wall, however:
+\begin{enumerate}\itemsep1pt
+\item Lead melts at \SI{327}{\celsius}, lead-lithium at about \SI{235}{\celsius}. Next to water at
+  \SIrange{60}{150}{\celsius} it would freeze.
+\item A leak between hot lead and water right at the plasma is dangerous and cannot be repaired.
+\item In the magnetic field, induced currents brake the metal as soon as it flows across the field.
+\end{enumerate}
+For the third point the pressure drop was roughly estimated (\texttt{stellarator/blei\_kanal.py}):
+$\mathrm{d}p/\mathrm{d}x = \sigma\,v\,B_\perp^2\,k_p$ with $k_p = c/(1+c)$ for conducting steel walls
+($c$ wall conductance ratio) and $k_p \approx 1/\mathrm{Ha}$ for an insulating layer. The field of a stellarator is
+mainly toroidal, so toroidal channels run almost along the field; the pitch of the field lines was estimated at
+about \ang{6}.
+\bild{blei_druckverlust.png}{1.0}{Pressure drop in the segment for lead and lead-lithium per channel direction at
+\SI{6}{T}, logarithmic. Water (n5) for comparison. Labels in German.}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrr}\toprule
+Channel direction & Pressure drop & Pumping power / heat & \\\midrule
+toroidal, steel wall & \SI{247}{kPa} & 0.2\,\% & suitable\\
+toroidal, insulated & \SI{27}{kPa} & 0.02\,\% & suitable\\
+poloidal, steel wall & \SI{21}{MPa} & 17\,\% & unsuitable\\
+gyroid, steel wall & \SI{14}{MPa} & 11\,\% & unsuitable\\\bottomrule
+\end{tabular}\caption{Lead in $10\times\SI{10}{mm}$ channels, \SI{340}{\celsius} $\rightarrow$ \SI{420}{\celsius},
+\SI{0.87}{m/s}, \SI{103}{l/s} per segment (variant b5).}\end{table}
+\bild{blei_querschnitt.png}{1.0}{Steel temperature with lead (b5, inner skin \SI{3}{mm}): at most
+\SI{537}{\celsius}. With a \SI{500}{\celsius} outlet and \SI{20}{mm} channels it would be \SI{711}{\celsius}.
+Labels in German.}
+Result: \textbf{the gyroid is not suitable for liquid metal}, because it keeps turning the flow across the
+field. Toroidal channels, on the other hand, work well. A sensible layout: lead or lead-lithium in toroidal
+channels on the plasma side, the dry gyroid behind it for stiffness, and a steam generator outside the coils
+that passes the heat to the water. At about \SI{420}{\celsius} the heat can also be converted to electricity
+much better.
+
+Not included are the additional losses in bends, manifolds and changes of cross-section (often the largest share),
+corrosion of steel in lead, volumetric heat from neutrons, and a more accurate heat transfer (conservatively
+$\mathrm{Nu}=5$ here). The material properties have not been checked against sources.
+
+\subsection{Collaboration}
+The ideas in this section came from the user: the temperature limit, the double filament, the check against the
+coils and the gyroid within a gyroid with lead. The assistant calculated them, named the limits and proposed
+variants. Along the way a small browser tool was built for looking at flow sections: one specifies section planes
+and hands them to the AI with ``send and next section'' or ``send and finish''
+(\texttt{stellarator/schnitt\_werkzeug.py}).
+
 \section*{Code and data}
 Software: ElmerFEM, gmsh, FreeCAD, simsopt, DESC, PyVista, ParaView, Blender, FluidX3D 3.8 \cite{fluidx3d}, PicoGK \cite{picogk}.
 \url{https://github.com/ThomasSchmiegelt/stellarator-design} (MIT licence): pipeline code, findings log, figures.

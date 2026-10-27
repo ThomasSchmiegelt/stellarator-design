@@ -331,7 +331,7 @@ Skizzen als Eingabe und der Fehlersuche, steht in [docs/kuehlsegment_prozess.md]
 Das Skizzen-Werkzeug gibt es auch allgemein als eigenes Repo:
 [sketch-to-prompt](https://github.com/ThomasSchmiegelt/sketch-to-prompt).
 
-> **FluidX3D-Lizenz:** FluidX3D (Dr. Moritz Lehmann) ist kostenlos nur für nicht kommerzielle Nutzung, der
+> **FluidX3D-Lizenz:** FluidX3D ist kostenlos nur für nicht kommerzielle Nutzung, der
 > Quelltext ist einsehbar, es ist aber **keine** Open-Source-Lizenz und nicht MIT. Es ist hier nicht enthalten.
 > Die geänderten Dateien (`setup.cpp`, `defines.hpp`) liegen gekennzeichnet mit Originallizenz in
 > [fluidx3d/](fluidx3d/). Quellen: siehe unten.
@@ -510,7 +510,7 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 - Visualisierung: [PyVista](https://pyvista.org), [ParaView](https://www.paraview.org), [Blender](https://www.blender.org).
 - KI-Agenten: [Hermes Agent](https://github.com/NousResearch/hermes-agent) (Nous Research, MIT), [Claude Code](https://www.anthropic.com/claude-code) (Anthropic).
 - Voxel-Geometrie (Gyroid-Kern, Kühlsegment): [PicoGK](https://github.com/leap71/PicoGK) (LEAP 71, Apache 2.0).
-- Strömung: [FluidX3D](https://github.com/ProjectPhysX/FluidX3D) v3.8 (Dr. Moritz Lehmann; Lizenz nur nicht
+- Strömung: [FluidX3D](https://github.com/ProjectPhysX/FluidX3D) v3.8 (Lizenz nur nicht
   kommerziell, nicht Open Source; geänderte Dateien in [fluidx3d/](fluidx3d/)). Zitiert nach Vorgabe der Lizenz:
   - M. Lehmann: Computational study of microplastic transport at the water-air interface with a memory-optimized lattice Boltzmann method. PhD thesis, Univ. Bayreuth (2023). [doi:10.15495/EPub_UBT_00006977](https://doi.org/10.15495/EPub_UBT_00006977)
   - M. Lehmann: Esoteric Pull and Esoteric Push: Two Simple In-Place Streaming Schemes for the Lattice Boltzmann Method on GPUs. Computation 10, 92 (2022). [doi:10.3390/computation10060092](https://doi.org/10.3390/computation10060092)

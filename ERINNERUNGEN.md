@@ -332,3 +332,5 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
   - b5 (empfohlen): 10×10 mm, Steg 4, Innenhaut 3 mm, Blei 340→420 °C, 0,87 m/s, 103 l/s, Stahl max 537 °C, Kanalwand 478 °C, Pumpe 0,2 % der Wärme. b1 (20 mm, 350→500 °C): Stahl 711 °C zu heiß.
   - Grob: Nu = 5, keine 3D-MHD in Kehren/Verteilern, Stoffwerte ungeprüft, Korrosionsgrenze Stahl/Blei nicht geprüft.
 - Name auf Bildern: "Thomas Schmiegelt · privates Hobbyprojekt, nicht kommerziell" + FluidX3D-Nennung, kein ©-Zeichen (User fand © zu gewerblich).
+- 2026-10-27: Für PI zusätzlich verlinkt (~/.pi/agent/skills/ → ~/.hermes/skills/cae/): blender-modell, picogk-voxel, stroemung-schnitte, skizze-zu-prompt. PI hat jetzt alle 11 Projekt-Skills.
+- 2026-10-27: Berichte DE/EN um Kapitel 'Doppeltes Filament, Bauraum und Flüssigblei' ergänzt (35/33 S.), Prozess-Doku Abschnitt 8. Autorenname FluidX3D aus Fließtext/Bild entfernt (User-Wunsch), in LICENSE/Kopfzeilen/Zitaten bleibt er (Lizenz).

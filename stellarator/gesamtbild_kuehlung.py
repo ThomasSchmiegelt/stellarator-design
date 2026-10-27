@@ -87,7 +87,7 @@ def main(argv=None):
         y -= 0.019
     fig.text(0.70, 0.012, "Hobbyprojekt · grobe Abschätzungen, keine Auslegung", color=TEXT2, fontsize=13, style="italic")
     fig.text(0.02, 0.022, "Thomas Schmiegelt · privates Hobbyprojekt, nicht kommerziell", color=TEXT, fontsize=19, weight="bold")
-    fig.text(0.02, 0.009, "Strömung: FluidX3D (Dr. Moritz Lehmann, nicht-kommerzielle Lizenz) · github.com/ThomasSchmiegelt/stellarator-design", color=TEXT2, fontsize=15)
+    fig.text(0.02, 0.009, "Strömung: FluidX3D (nicht-kommerzielle Lizenz) · github.com/ThomasSchmiegelt/stellarator-design", color=TEXT2, fontsize=15)
     ziel = PROJEKT / "docs/bilder/gyroid_gefaess_1GW_gesamt_kuehlung.jpg"
     fig.savefig(ziel, dpi=100, facecolor=HG, pil_kwargs={"quality": 90})
     print(ziel)

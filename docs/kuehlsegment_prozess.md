@@ -19,7 +19,7 @@ Bilder um und legt die Ergebnisse so vor, dass der Mensch sie beurteilen kann.
 | Auswertung | Python/Matplotlib | `kuehlung_cfd.auswerten` | `auswertung.png/json`: Druckverlust, Verteilung, Geschwindigkeit an der Plasmaseite |
 | Animation | Python + Blender (EEVEE) | `stellarator/stroemung_animation.py`, `stellarator/blender_stroemung.py`, `picogk/StlSchnitt` | Teilchenschweife durch das berechnete Feld, Film |
 
-FluidX3D (Dr. Moritz Lehmann) ist **nicht** Open Source im Sinne der MIT-Lizenz dieses Repos. Die Lizenz ist
+FluidX3D ist **nicht** Open Source im Sinne der MIT-Lizenz dieses Repos. Die Lizenz ist
 „source-available, nur nicht kommerziell“. Die geänderten Dateien liegen getrennt in `fluidx3d/`, mit der
 Originallizenz und dem Hinweis „geänderte Fassung“. Bei Veröffentlichung von Ergebnissen werden das FluidX3D-Repository
 und die dort genannten Arbeiten zitiert.
@@ -205,3 +205,23 @@ Vorschläge, ungefähr nach Wirkung geordnet:
 5. Wärme gekoppelt rechnen.
 6. Gitterstudie mit 4–6 mm.
 7. Durchfluss auf Soll bringen (288 statt 319 l/s, Ursache Randbedingung).
+
+## 8. Nächste Schleife: doppeltes Filament, Bauraum, Flüssigblei (2026-10-27)
+
+So lief der Austausch zwischen Nutzer und KI:
+
+| Nutzer | KI |
+|---|---|
+| „Die Schnitte durch das Fluid sind nicht so toll“ – Wunsch nach einem Werkzeug mit „Senden und nächster Schnitt“ / „Senden und beenden“ | Browser-Werkzeug `stellarator/schnitt_werkzeug.py` (Ebene φ, z oder gezogene Linie; Größe, Stromlinien, Ausschnitt), Skill `stroemung-schnitte` |
+| Wasser höchstens 150 °C, Eintritt 60 °C; doppeltes Filament (innen Kühlung, außen Steifigkeit); darf nicht mit den Spulen kollidieren | `erstwand_kanal.py`: parallel siedet es, also 3 Kanäle in Reihe; n5: 6×6 mm, 49 kPa, Stahl ≤ 300 °C, Kanalwand 202 °C < 212 °C. `gefaess_abstand.py`: mindestens 1,25 m zu den Gehäusen, Wand braucht 1,10 m |
+| (Bild zeigen) | Wandstück in PicoGK (`picogk/WandStueck`) und Blender, beschriftet |
+| „Gyroid im Gyroid“: plasmanah flüssiges Blei, das an Wasser abgibt | `blei_kanal.py`: Blei erstarrt am Wasser, Leck gefährlich, MHD bremst quer zum Feld. Toroidale Kanäle 247 kPa, Gyroid 14 MPa. Vorschlag: Blei toroidal, Dampferzeuger außerhalb der Spulen, Stahl ≤ 537 °C (b5) |
+| Namen auf das Bild, aber „©“ wirkt gewerblich; FluidX3D nennen, ohne den Autor im Fließtext | Zeile „privates Hobbyprojekt, nicht kommerziell“ + „Strömung: FluidX3D“; Autorennamen nur noch dort, wo die Lizenz sie verlangt (Lizenzdatei, Kopfzeilen, Pflicht-Zitate) |
+
+Was dabei auffiel:
+- Die Ideen kamen auch hier vom Nutzer. Die KI hat sie durchgerechnet und die Grenzen benannt. Beim Blei war
+  die Antwort „ja, aber anders“: Der Gyroid passt nicht zum Flüssigmetall, die Grundidee schon.
+- Eine Sitzung ist mitten in der Arbeit abgestürzt. Weitergearbeitet wurde mit „mach weiter“; die Übergabe
+  stand in der Zusammenfassung und in `ERINNERUNGEN.md`.
+- Ein bequemer Schritt ging fast schief: Ein Bild im Bericht wurde überschrieben, bevor nachgesehen wurde, was
+  darin war. Es war zum Glück dasselbe Bild. Die Regel „erst ansehen, dann überschreiben“ gilt auch für Bilder.

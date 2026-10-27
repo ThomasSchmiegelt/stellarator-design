@@ -7,8 +7,8 @@
 > *This folder is NOT under the repository's MIT licence but under the FluidX3D licence (LICENSE.md):
 > free for non-commercial use only, source-available, not open source.*
 
-[FluidX3D](https://github.com/ProjectPhysX/FluidX3D) ist ein Lattice-Boltzmann-Strömungslöser für GPUs von
-Dr. Moritz Lehmann. Dieses Projekt hat damit die Strömung im Kühlsegment des Plasmagefäßes gerechnet
+[FluidX3D](https://github.com/ProjectPhysX/FluidX3D) ist ein Lattice-Boltzmann-Strömungslöser für GPUs.
+Dieses Projekt hat damit die Strömung im Kühlsegment des Plasmagefäßes gerechnet
 (`stellarator/kuehlung_cfd.py`). FluidX3D selbst ist hier **nicht** enthalten. Die Lizenz verlangt, dass geänderte
 Quelltexte veröffentlicht werden, wenn Ergebnisse daraus veröffentlicht werden. Deshalb liegen hier die beiden
 geänderten Dateien von FluidX3D v3.8 (Commit `50150a7`), jeweils als geänderte Fassung gekennzeichnet:

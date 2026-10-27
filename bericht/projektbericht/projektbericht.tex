@@ -393,6 +393,93 @@ KI übergibt \cite{sketch}. Den Fehler im Rechengitter fand der Assistent, aber 
 Vermutungen. Die Lehre daraus: einem merkwürdigen Ergebnis erst nachgehen, bevor man an der Konstruktion
 dreht. Der Ablauf ist in \texttt{docs/kuehlsegment\_prozess.md} beschrieben.
 
+\section{Fortsetzung: Doppeltes Filament, Bauraum und Flüssigblei}\label{sec:filament}
+Aus den Verbesserungsvorschlägen in Abschnitt~\ref{sec:kuehlung} wurde der zweite umgesetzt: Die Plasmaseite
+bekommt einen eigenen Kühlkreis mit feinen Kanälen. Die Vorgaben dafür kamen vom Nutzer: Das Wasser soll nicht
+heißer als \SI{150}{\celsius} werden, Eintritt etwa \SI{60}{\celsius}. Dazu der Vorschlag, die Wand als
+\emph{doppeltes Filament} zu bauen: innen ein Teil für die Kühlung, davon getrennt außen ein Teil für die
+Steifigkeit. Und das alles, ohne mit den Spulen zu kollidieren. Alle Zahlen in diesem Kapitel sind grobe
+Abschätzungen.
+
+\subsection{Aufbau der Wand}
+Von der Plasmaseite nach außen: Innenhaut \SI{5}{mm}, Kühlkanäle, Rückwand \SI{5}{mm}, trockener Gyroid für die
+Steifigkeit, Außenhaut \SI{40}{mm}. Die Kanäle laufen toroidal über das Segment von der Verteil- zur
+Sammelkammer. Der Gyroid führt kein Wasser mehr. Er darf deshalb offener sein und muss nicht dicht an das
+Kühlnetz angepasst werden.
+\bild{kuehl_wandstueck.png}{1.0}{Wandstück mit doppeltem Filament (PicoGK, Blender), Ausschnitt
+$450\times450\times\SI{900}{mm}$. In der Innenhaut ist ein Fenster freigeschnitten; darunter die Kühlkanäle (blau).}
+
+\subsection{Wasser mit 60 bis 150\,°C}
+Das Segment (\ang{85}--\ang{95}) nimmt an der Plasmaseite bei \SI{0,5}{MW/m^2} etwa \SI{12,6}{MW} auf. Mit
+\SI{90}{K} Erwärmung sind das nur \SI{35}{l/s}. Parallel durch alle Kanäle verteilt wäre das Wasser zu langsam
+und würde an der Wand sieden. Deshalb werden je drei benachbarte Kanäle hintereinander geschaltet (Kehre an der
+Stirnseite). Rechnung: Wärmeübergang nach Gnielinski, Reibung nach Petukhov, Temperatur im Querschnitt mit
+Elmer für den ungünstigsten Kanal (\texttt{stellarator/erstwand\_kanal.py}).
+\begin{table}[H]\centering\small
+\begin{tabular}{lr}\toprule
+Kanäle & $6\times\SI{6}{mm}$, Steg \SI{3}{mm}, 616 Stränge mit je 3 Durchgängen\\
+Geschwindigkeit & \SIrange{0,96}{2,15}{m/s}\\
+Druckverlust & \SI{49}{kPa}\\
+Stahl höchstens & \SI{300}{\celsius}\\
+Kanalwand höchstens & \SI{202}{\celsius} (Sieden ab \SI{212}{\celsius} bei \SI{2}{MPa})\\\bottomrule
+\end{tabular}\caption{Erstwand-Kanäle mit Wasser \SI{60}{\celsius} $\rightarrow$ \SI{150}{\celsius} bei \SI{2}{MPa} (Variante n5).}\end{table}
+\bild{erstwand_n5_querschnitt.png}{1.0}{Temperatur im Stahl um die Kanäle (Elmer, halbe Teilung gespiegelt).}
+Hohe Drücke sind bei \SI{150}{\celsius} also nicht nötig, \SI{2}{MPa} lassen genug Abstand zum Sieden. Der
+eigentliche Nachteil liegt woanders: Wärme mit \SI{150}{\celsius} lässt sich kaum in Strom umwandeln.
+
+\subsection{Bauraum zu den Spulen}
+Für jeden Punkt des Plasmarands wurde der kleinste Abstand zu den Spulengehäusen und Verbindern des
+Surrogat-Modells bestimmt (\texttt{stellarator/gefaess\_abstand.py}). Der kleinste Abstand ist \SI{1,25}{m}
+zum Gehäuse und \SI{1,70}{m} zu den Verbindern. Im gerechneten Segment sind es mindestens \SI{1,88}{m}. Die
+Wand braucht mit Spalt \SI{1,05}{m}; mit \SI{5}{cm} Sicherheitsabstand passt sie überall.
+\bild{kuehl_abstand.png}{1.0}{Abstand vom Plasmarand zu Gehäusen und Verbindern, abgewickelt über den Torus.
+Rot: Grenze, ab der die Wand nicht mehr passen würde; sie wird nirgends erreicht.}
+
+\subsection{Flüssiges Blei statt Wasser?}
+Der Nutzer schlug als nächsten Schritt einen \emph{Gyroid im Gyroid} vor: plasmanah mit flüssigem Blei
+gekühlt, das die Wärme an das Wasser abgibt. Eine Gyroid-Wand teilt den Raum tatsächlich in zwei getrennte,
+verschlungene Netze und wäre ein kompakter Wärmetauscher. Blei braucht keinen Druck, und Bleilithium würde
+zusätzlich Tritium erbrüten. Drei Punkte sprechen aber gegen den Tauscher in der Wand:
+\begin{enumerate}\itemsep1pt
+\item Blei schmilzt bei \SI{327}{\celsius}, Bleilithium bei etwa \SI{235}{\celsius}. Am Wasser mit
+  \SIrange{60}{150}{\celsius} würde es erstarren.
+\item Ein Leck zwischen heißem Blei und Wasser direkt am Plasma ist gefährlich und nicht reparierbar.
+\item Im Magnetfeld bremsen induzierte Ströme das Metall, sobald es quer zum Feld fließt.
+\end{enumerate}
+Für den dritten Punkt wurde der Druckverlust grob abgeschätzt (\texttt{stellarator/blei\_kanal.py}):
+$\mathrm{d}p/\mathrm{d}x = \sigma\,v\,B_\perp^2\,k_p$ mit $k_p = c/(1+c)$ für leitende Stahlwände
+($c$ Wandleitfähigkeit) und $k_p \approx 1/\mathrm{Ha}$ für eine isolierende Schicht. Das Feld eines
+Stellarators ist überwiegend toroidal. Toroidal laufende Kanäle liegen daher fast entlang des Feldes; die
+Steigung der Feldlinien wurde mit etwa \ang{6} geschätzt.
+\bild{blei_druckverlust.png}{1.0}{Druckverlust im Segment für Blei und Bleilithium je Kanalrichtung bei
+\SI{6}{T}, logarithmisch. Zum Vergleich Wasser (n5).}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrr}\toprule
+Kanalrichtung & Druckverlust & Pumpleistung / Wärme & \\\midrule
+toroidal, Stahlwand & \SI{247}{kPa} & 0,2\,\% & geeignet\\
+toroidal, isoliert & \SI{27}{kPa} & 0,02\,\% & geeignet\\
+poloidal, Stahlwand & \SI{21}{MPa} & 17\,\% & ungeeignet\\
+Gyroid, Stahlwand & \SI{14}{MPa} & 11\,\% & ungeeignet\\\bottomrule
+\end{tabular}\caption{Blei in Kanälen $10\times\SI{10}{mm}$, \SI{340}{\celsius} $\rightarrow$ \SI{420}{\celsius},
+\SI{0,87}{m/s}, \SI{103}{l/s} je Segment (Variante b5).}\end{table}
+\bild{blei_querschnitt.png}{1.0}{Temperatur im Stahl mit Blei (b5, Innenhaut \SI{3}{mm}): höchstens
+\SI{537}{\celsius}. Mit \SI{500}{\celsius} Austritt und \SI{20}{mm}-Kanälen wären es \SI{711}{\celsius}.}
+Ergebnis: \textbf{Für Flüssigmetall eignet sich der Gyroid nicht}, weil er die Strömung ständig quer zum Feld
+lenkt. Toroidale Kanäle gehen dagegen gut. Sinnvoll wäre: Blei oder Bleilithium in toroidalen Kanälen an der
+Plasmaseite, der trockene Gyroid dahinter trägt, und ein Dampferzeuger außerhalb der Spulen gibt die Wärme an
+das Wasser ab. Mit etwa \SI{420}{\celsius} lässt sich die Wärme auch deutlich besser verstromen.
+
+Nicht enthalten sind die Zusatzverluste in Kehren, Verteilern und Querschnittsänderungen (dort oft der größte
+Anteil), die Korrosion von Stahl in Blei, die Wärme aus Neutronen im Volumen und ein genauerer
+Wärmeübergang (hier konservativ $\mathrm{Nu}=5$). Die Stoffwerte sind nicht an Quellen geprüft.
+
+\subsection{Zusammenarbeit}
+Die Ideen dieses Kapitels kamen vom Nutzer: die Temperaturgrenze, das doppelte Filament, der Blick auf die
+Spulen und der Gyroid im Gyroid mit Blei. Der Assistent hat sie durchgerechnet, die Grenzen benannt und Varianten
+vorgeschlagen. Für das Ansehen von Strömungsschnitten entstand nebenbei ein kleines Werkzeug im Browser, in dem
+man Schnittebenen angibt und mit \glqq Senden und nächster Schnitt\grqq{} bzw.\ \glqq Senden und beenden\grqq{} an
+die KI übergibt (\texttt{stellarator/schnitt\_werkzeug.py}).
+
 \section*{Software und Daten}
 ElmerFEM 9.0 \cite{elmer}, FluidX3D 3.8 \cite{fluidx3d}, PicoGK \cite{picogk}, gmsh \cite{gmsh}, FreeCAD 1.1 \cite{freecad}, simsopt \cite{simsopt}, DESC
 \cite{desc}, PyVista \cite{pyvista}, ParaView \cite{paraview}, Blender 4.0 \cite{blender}. Programmcode, Befundprotokoll und Abbildungen:
