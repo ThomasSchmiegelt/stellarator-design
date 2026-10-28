@@ -353,6 +353,16 @@ Wärmebilanz (`stellarator/waermebilanz.py`, Herleitung im Projektbericht): 3053
 (Isar 2: 3950 MW thermisch, 1485 MW brutto) reicht. Offen ist das Blanket: 2,8 GW bei Druckwasserbedingungen.
 
 ![Wärmebilanz 1 GW netto mit Druckwasser](docs/bilder/waermebilanz.png)
+
+**Passen die Leitungen durch die Spulen?** (`stellarator/rohr_durchfuehrung.py`): 26,4 m³/s Druckwasser je Richtung
+müssen vom Gefäß nach außen. Von jedem Punkt der Gefäßaußenseite läuft ein gerades Rohr entlang der Normalen
+nach außen; der Abstand zu Spulen, Gehäusen und Verbindern (minus 0,15 m Wärmeschild) begrenzt den Durchmesser.
+Ergebnis: Sie passen reichlich. Nötig sind 11 Rohre mit 0,8 m Innendurchmesser (10 m/s, hin und zurück),
+möglich wären etwa 410; auf 19 % der Oberfläche ist ein gerader Weg für 0,8 m frei. Die Fenster liegen außen,
+oben und unten; innen ist fast alles verdeckt, das innere Blanket braucht Sammler von oben und unten.
+Offen: Stützstruktur und Zugänge für Heizung, Diagnostik und Pumpen belegen einen Teil der Fenster.
+
+![Freie Wege für Rohre durch die Spulenspalte](docs/bilder/rohr_durchfuehrung.png)
 3. Totwassergebiete finden und beseitigen.
 4. Robuster abgleichen, mit Drosseln statt Wanddicke.
 5. Wärme gekoppelt mitrechnen.

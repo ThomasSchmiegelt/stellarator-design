@@ -618,6 +618,46 @@ lead-lithium as breeder) aims at exactly this; sourced values are still missing 
 sites block automated access. Whether a turbine from a decommissioned plant is actually available was not
 checked; the reference plants only show the matching size class.
 
+\subsection{Do the pipes fit through the gaps between the coils?}
+All the cooling water has to go from the vessel through the coils to the steam generators and back. On the
+inboard side the winding packs of the HTS design leave only \SI{0.58}{m} (stage~3). This question could rule out
+the pressurised-water solution, so it was checked before anything else (\texttt{stellarator/rohr\_durchfuehrung.py}).
+
+\paragraph{Demand.} From the heat balance: $\dot V = (\dot m_\text{blanket} + \dot m_\text{first wall})/\rho =
+\SI{19290}{kg/s}\,/\,\SI{732}{kg/m^3} = \SI{26.4}{m^3/s}$ in each direction, so twice that pipe area for supply
+and return. With velocity $v$ and inner diameter $d_i$ one needs
+\[ n = \frac{2\,\dot V}{v\,\pi d_i^2/4}\quad\text{pipes, e.g. } n = \frac{2\cdot 26.4}{10\cdot\pi\cdot 0.8^2/4} = 11
+   \text{ at } d_i = \SI{0.8}{m},\ v = \SI{10}{m/s}. \]
+The pipe wall follows from the boiler formula $s = p\,d_i/(2\sigma)$: at \SI{16}{MPa} and \SI{150}{MPa},
+$s = 0.053\,d_i$, so the outer diameter is $D = d_i(1 + p/\sigma) = 1.11\,d_i$.
+
+\paragraph{Space.} From each point of the vessel's outer surface (plasma boundary plus \SI{1.05}{m}) a straight pipe
+runs \SI{4}{m} outward along the surface normal. The smallest distance $a_\text{min}$ of this path to winding pack,
+potting, casing and connectors of the surrogate model (R$_0$ = \SI{10.4}{m}) limits the pipe diameter:
+\[ D_\text{max} = 2\,(a_\text{min} - a_\text{shield}),\qquad a_\text{shield} = \SI{0.15}{m}. \]
+$a_\text{shield}$ is room for a gap and a thermal shield: the pipe is at \SI{300}{\celsius}, the superconducting
+coils are cryogenic. Pipes must be at least $D + \SI{0.2}{m}$ apart; counting was greedy, freest spots first.
+\bild{rohr_durchfuehrung.png}{1.0}{Left: largest inner diameter of a straight pipe over the unrolled vessel
+surface ($\theta = 0$ outboard, \ang{180} inboard); the windows between coils and connectors are clearly visible. Right:
+possible and required pipes per size (labels in German).}
+\begin{table}[H]\centering\small
+\begin{tabular}{rrrr}\toprule
+$d_i$ & required ($v = \SI{10}{m/s}$) & required ($v = \SI{5}{m/s}$, shield \SI{0.3}{m}) & possible (default / cautious)\\\midrule
+\SI{0.3}{m} & 75 & 150 & 1634 / 1386\\
+\SI{0.5}{m} & 27 & 54 & 824 / 732\\
+\SI{0.8}{m} & 11 & 22 & 410 / 340\\\bottomrule
+\end{tabular}\caption{Pipes through the gaps between the coils.}\end{table}
+
+\paragraph{Result.} \textbf{The pipes fit with plenty of room}, by more than a factor of 10 even in the cautious
+case. On 19\,\% of the vessel surface a straight path for \SI{0.8}{m} pipes is free. The windows lie mainly
+outboard ($\theta$ near 0) and at top and bottom. Inboard ($\theta$ around \ang{180}) almost everything is covered by coils: the
+inboard blanket has to be fed through headers from above and below. The initial concern about \SI{0.58}{m}
+applied only to the narrowest inboard gap.
+
+\paragraph{Limits.} The support structure between the coils is still open (forces about 1000 times those of W7-X).
+It will occupy part of the windows, as will access for heating, diagnostics, vacuum pumps and maintenance. Only
+straight pipes along the normal were considered; with bends more room would be found.
+
 \subsection{Collaboration}
 From the user came: the thinner wall with a larger outlet (f12), pairwise comparison as a tool for decisions and
 optimisation loops together with the judgements, the point that the walls of the pressure space must withstand

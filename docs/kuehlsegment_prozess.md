@@ -237,6 +237,7 @@ Was dabei auffiel:
 | „Die Wandung des Druckraums muss entsprechend gestaltet sein“ | `haut_festigkeit.py` (Elmer): 5-mm-Haut hält nur ~3,8 MPa; Hochdruckwasser nur in kleinen Kanälen |
 | Bestehende AKW-Turbine verwenden, Rest möglichst einfach | Druckwasser wie WWER-1000; Erstwandkanäle nachgerechnet (Stahl 441 °C); `waermebilanz.py`: 3053 MW Fusion, eine Turbine der Konvoi-Klasse reicht |
 | Dokumentieren, im Bericht mit Herleitung | Kapitel „Kühlmittel, Festigkeit und Wärmebilanz“ in beiden Berichten |
+| „Das Kühlsystem ist noch nicht fertig, oder?“ – ja, weiter, Dokumentation erweitern | Offene Teile nach Wärmemenge geordnet (Blanket 82 %); zuerst das größte Risiko geprüft: Leitungen durch die Spulenspalte (`rohr_durchfuehrung.py`) – passen reichlich (11 nötig, ~410 möglich bei 0,8 m) |
 
 Was dabei auffiel:
 - Der Paarvergleich hat sofort etwas gezeigt: f11 war auf ein Ziel optimiert, das der Nutzer gering gewichtet.
@@ -245,3 +246,6 @@ Was dabei auffiel:
   jemand gegenlesen.
 - Die Entscheidung für eine vorhandene Turbine hat mehr vereinfacht als jede Rechnung: Druck, Temperatur und
   Kühlmittel stehen damit fest.
+- Die Rückfrage des Nutzers („noch nicht fertig, oder?“) war berechtigt: Die Wärmebilanz hatte das Blanket nur als
+  Zahl geführt. Erst die Liste nach Wärmemenge zeigte, wo das eigentliche Kühlsystem liegt.
+- Die Sorge über den 0,58-m-Spalt war zu pessimistisch; sie galt nur innen. Rechnen statt schätzen hat sich gelohnt.

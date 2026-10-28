@@ -409,3 +409,14 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
   (0,25 MW/m2), Divertor 305 (>= 31 m2 bei 10 MW/m2), brutto 1197 MW; Wasser 17400 + 1890 kg/s. Isar 2 (Konvoi):
   3950 MWth/1485 brutto -> eine Turbine reicht; WWER-1000 (3000 MWth) zu klein. Kapitel sec:bilanz/sec:balance in
   beiden Berichten (DE 40 S., EN 38 S.), Prozess-Doku Abschnitt 9. REGEL User: immer im Bericht mit Herleitung dokumentieren.
+
+## 2026-10-28 Kuehlsystem: Leitungen durch die Spulenspalte (stellarator/rohr_durchfuehrung.py)
+- User: Kuehlsystem noch nicht fertig -> weiter + Doku erweitern. Offen nach Waermemenge: Blanket 2808 MW (82 %, nicht
+  ausgelegt, Tritium), Erstwand 305 (nur Querschnitt; Verteiler, Einbau, CFD fehlen, 5 K bis Sieden), Divertor 305,
+  Leitungen, Temperaturspannungen, Sicherheit (16-MPa-Bruch im Vakuum).
+- Leitungen geprueft: gerade Rohre entlang der Normalen ab Plasmarand + 1,05 m, 4 m nach aussen, Abstand zu allen
+  Spulenteilen des Surrogats minus 0,15 m Waermeschild. Noetig 26,4 m3/s je Richtung: bei 0,8 m / 10 m/s 11 Rohre,
+  moeglich ~410 (vorsichtig 0,3 m Schild, 5 m/s: 22 noetig, 340 moeglich). 19 % der Oberflaeche frei fuer 0,8 m.
+  Fenster aussen, oben, unten; innen fast zu -> inneres Blanket ueber Sammler oben/unten.
+- Doku: Berichte DE (41 S.) / EN (39 S.) Unterabschnitt "Passen die Leitungen...", README, Prozess-Doku Abschnitt 9.
+- Naechster Schritt Kuehlsystem: Blanket (82 % der Waerme) - Aufbau mit Druckwasser + Brutstoff.

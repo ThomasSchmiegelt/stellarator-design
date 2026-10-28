@@ -648,6 +648,47 @@ Bleilithium als Brutstoff) zielt genau darauf; belegte Werte dazu fehlen hier no
 automatische Abrufe sperren. Ob eine Turbine aus einer stillgelegten Anlage tatsächlich zu haben ist, wurde
 nicht geprüft; die Vergleichsanlagen zeigen nur die passende Größenklasse.
 
+\subsection{Passen die Leitungen durch die Spulenspalte?}
+Das ganze Kühlwasser muss vom Gefäß durch die Spulen nach außen zu den Dampferzeugern und zurück. Zwischen den
+Wickelpaketen der HTS-Auslegung sind innen nur \SI{0,58}{m} Platz (Stufe~3). Diese Frage kann die
+Druckwasserlösung kippen und wurde deshalb vor allen weiteren Schritten geprüft (\texttt{stellarator/rohr\_durchfuehrung.py}).
+
+\paragraph{Bedarf.} Aus der Wärmebilanz: $\dot V = (\dot m_\text{Blanket} + \dot m_\text{Erstwand})/\rho =
+\SI{19290}{kg/s}\,/\,\SI{732}{kg/m^3} = \SI{26,4}{m^3/s}$ je Richtung, also hin und zurück die doppelte
+Rohrfläche. Mit der Geschwindigkeit $v$ im Rohr und dem Innendurchmesser $d_i$ braucht man
+\[ n = \frac{2\,\dot V}{v\,\pi d_i^2/4}\quad\text{Rohre, z.\,B. } n = \frac{2\cdot 26{,}4}{10\cdot\pi\cdot 0{,}8^2/4} = 11
+   \text{ bei } d_i = \SI{0,8}{m},\ v = \SI{10}{m/s}. \]
+Die Rohrwand folgt aus der Kesselformel $s = p\,d_i/(2\sigma)$: bei \SI{16}{MPa} und \SI{150}{MPa} ist
+$s = 0{,}053\,d_i$, der Außendurchmesser also $D = d_i(1 + p/\sigma) = 1{,}11\,d_i$.
+
+\paragraph{Platz.} Von jedem Punkt der Gefäßaußenseite (Plasmarand plus \SI{1,05}{m}) führt ein gerades Rohr
+\SI{4}{m} entlang der Flächennormalen nach außen. Der kleinste Abstand $a_\text{min}$ dieses Weges zu Wickelpaket,
+Verguss, Gehäuse und Verbindern des Surrogat-Modells (R$_0$ = \SI{10,4}{m}) begrenzt den Rohrdurchmesser:
+\[ D_\text{max} = 2\,(a_\text{min} - a_\text{Schild}),\qquad a_\text{Schild} = \SI{0,15}{m}. \]
+$a_\text{Schild}$ ist der Platz für Luftspalt und Wärmeschild: Das Rohr ist \SI{300}{\celsius} heiß, die
+supraleitenden Spulen sind tiefkalt. Mehrere Rohre müssen mindestens $D + \SI{0,2}{m}$ auseinander liegen;
+gezählt wurde gierig, die freiesten Stellen zuerst.
+\bild{rohr_durchfuehrung.png}{1.0}{Links: größter Innendurchmesser eines geraden Rohrs über die abgewickelte
+Gefäßoberfläche ($\theta = 0$ außen, \ang{180} innen). Die Fenster zwischen Spulen und Verbindern sind gut zu erkennen.
+Rechts: mögliche und nötige Rohre je Nennweite.}
+\begin{table}[H]\centering\small
+\begin{tabular}{rrrr}\toprule
+$d_i$ & nötig ($v = \SI{10}{m/s}$) & nötig ($v = \SI{5}{m/s}$, Schild \SI{0,3}{m}) & möglich (Standard / vorsichtig)\\\midrule
+\SI{0,3}{m} & 75 & 150 & 1634 / 1386\\
+\SI{0,5}{m} & 27 & 54 & 824 / 732\\
+\SI{0,8}{m} & 11 & 22 & 410 / 340\\\bottomrule
+\end{tabular}\caption{Leitungen durch die Spulenspalte.}\end{table}
+
+\paragraph{Ergebnis.} \textbf{Die Leitungen passen reichlich}, auch vorsichtig gerechnet um mehr als den Faktor 10.
+Auf 19\,\% der Gefäßoberfläche ist ein gerader Weg für \SI{0,8}{m}-Rohre frei. Die Fenster liegen vor allem
+außen ($\theta$ nahe 0) sowie oben und unten. Innen ($\theta$ um \ang{180}) ist fast alles von Spulen verdeckt: Das innere Blanket
+muss über Sammler von oben und unten versorgt werden. Die anfängliche Sorge über \SI{0,58}{m} galt nur für den
+engsten Spalt innen.
+
+\paragraph{Grenzen.} Noch offen ist die Stützstruktur zwischen den Spulen (Kräfte etwa 1000-mal so groß wie bei
+W7-X). Sie wird einen Teil der Fenster belegen, ebenso Zugänge für Heizung, Diagnostik, Vakuumpumpen und
+Wartung. Nur gerade Rohre entlang der Normalen wurden betrachtet; mit Bögen fände sich mehr Platz.
+
 \subsection{Zusammenarbeit}
 Vom Nutzer kamen: die dünnere Wand mit größerem Austritt (f12), der Paarvergleich als Werkzeug für Entscheidungen
 und Optimierungsschleifen samt den Urteilen dazu, der Hinweis, dass die Wandung des Druckraums dem Druck
