@@ -328,6 +328,23 @@ auf 19,4 kPa, die Verteilung wird mit 11 % etwas ungleicher. Der Engpass ist jet
 Plasmaseite (0,10 m/s, Übergang ~410 K), also Vorschlag 2.
 
 ![Auswertung f12: Druckverlauf, Verteilung über den Umfang, Durchfluss im Gyroid-Kern](docs/bilder/kuehlung_f12_auswertung.png)
+
+**Varianten per Paarvergleich bewerten** (`stellarator/varianten_vergleich.py`): Pareto-Front über Temperatur,
+Streuung, Druckverlust und Totwasser, Gewichte aus den Paarvergleichen des Nutzers (AHP: Temperatur 0,61,
+Druckverlust 0,23, Streuung und Totwasser je 0,08). Rang: f12 vor f5 vor f2 vor f11.
+
+![Variantenvergleich: Pareto-Front und Rangfolge](docs/bilder/varianten_vergleich.png)
+
+**Hält die dünne Haut den Kühlmitteldruck?** (`stellarator/haut_festigkeit.py`, Elmer): Platte über 2×2 Gyroid-Zellen,
+eingespannt an den Gyroid-Wänden. Die 5-mm-Haut hält nur bis etwa 3,8 MPa, 10 mm bis 10,5 MPa, 15 mm bis 16 MPa
+(zulässig ~150 MPa, ohne Temperaturspannungen). Flüssigblei ist praktisch drucklos und passt zur dünnen Haut;
+Druckwasser mit 15,5 MPa gehört in kleine Erstwandkanäle (doppeltes Filament). Mit Festigkeit als Ausschluss bei
+4 MPa fällt f12 heraus und f5 liegt vorn.
+
+![Spannung in der Innenhaut über dem Gyroid](docs/bilder/haut_festigkeit.png)
+
+Referenzwerte für Temperaturen und Drücke (EPR, WWER, BREST, ALFRED, HTR-PM, ITER, DEMO): `docs/recherche/pi/ergebnis.md`,
+jeder Wert mit wörtlichem Zitat und Quelle, maschinell geprüft.
 3. Totwassergebiete finden und beseitigen.
 4. Robuster abgleichen, mit Drosseln statt Wanddicke.
 5. Wärme gekoppelt mitrechnen.

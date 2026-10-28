@@ -371,3 +371,28 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
 - PI-Lauf: docs/recherche/pi/ (auftrag.md, pi.log, ergebnis.md), Modell qwen-gross ueber Ollama.
 - Achtung: `pi` (~/.local/bin/pi) ist ein Startskript, das den Orchestrator auf :5000 startet, auch bei --help.
   Direkt: ~/.npm-global/bin/pi -p --provider ollama --model qwen-gross:latest --skill <ordner> "..."
+
+## 2026-10-28 Paarvergleich der Kuehlvarianten (stellarator/varianten_vergleich.py)
+- Idee User: Vorgehen/Optimierungsschleifen per Paarvergleich steuern. Werkzeug: Pareto-Front + AHP-Gewichte + Rang,
+  Ausgabe sim/kuehlung_segment/vergleich/. f6-f9 ausgeschlossen (Gitterfehler).
+- Urteile des Users (AHP): temperatur>streuung=5, temperatur>druck=5, temperatur>totwasser=5, druck>streuung=3,
+  streuung=totwasser, druck>totwasser=5 -> Gewichte Temperatur 0,61, Druck 0,23, Streuung 0,08, Totwasser 0,08, CR 0,10.
+- Rang: f12 0,73 > f5 0,69 > f2 0,58 > f11 0,42 > f10 0,38 > f1 0,30. Alle ausser f10 auf der Pareto-Front.
+- Hinweis daraus: f5 (zelle_vorn 0,2, Z-Verteiler) hat v Plasmaseite 0,137 m/s und nur 7,9 kPa; mit 5 mm Haut waere
+  sein Temperaturanstieg ~475 K < f12 (513 K). Kandidat f13: f12-Haut + groebere vordere Zelle / f5-Verteilung.
+
+## 2026-10-28 Festigkeit der Innenhaut (stellarator/haut_festigkeit.py, Elmer)
+- Platte ueber 2x2 Gyroid-Zellen (a 100 mm, Wand 10 mm eingespannt), Druck von der Wasserseite, linear (1 MPa gerechnet).
+  Pruefung Streifen: 34,3 vs Formel 32,0 MPa/MPa (t 5 mm). Ergebnis sim/haut_festigkeit/gyroid/ (haut.png).
+- sigma je MPa Druck: t 5 mm 39,2 / 10 mm 14,4 / 15 mm 9,3 MPa -> zulaessig (~150 MPa) bis 3,8 / 10,5 / 16 MPa Druck.
+- Folge: f12 (5 mm) nur bis ~3,8 MPa -> Blei (drucklos) ok, ITER-Wasser 4 MPa knapp drueber, 15,5 MPa nur mit 15 mm
+  Haut oder Druckwasser nur in kleinen Erstwandkanaelen (doppeltes Filament). Temperaturspannungen fehlen noch.
+- varianten_vergleich.py: Festigkeit als Ausschluss (--druck). Bei 4 MPa faellt f12 heraus (157 MPa), f5 ok (91).
+
+## 2026-10-28 PI-Recherche fertig (docs/recherche/pi/ergebnis.md)
+- Eine Anlage je PI-Aufruf (lauf.sh) klappt: 29 Belege bestaetigt, 0 Fehler, 2-5 min je Anlage.
+  Erster Versuch alles in einem Aufruf: 22 Abrufe, nichts geschrieben (Kontext 64k voll) -> abgebrochen.
+- Deutungsfehler, die pruefe.py nicht sieht: BREST/ALFRED Ein/Aus vertauscht (Dampferzeuger-Bezug) -> korrigiert.
+- Belegt: EPR 295,2/320 °C 15,5 MPa; WWER-1000 289/319 °C 16,0 MPa; BREST 340/540; ALFRED 390/520 drucklos;
+  Superphenix Na 550 °C atmosphaerisch; HTR-PM He 250/750 °C 7,0 MPa (OSTI); ITER 70 °C 4 MPa (iter.org);
+  DEMO HCPB He 300/500 °C 8 MPa (KIT). Luecken: DEMO WCLL (Verlage 403), W7-X, ITER-Austritt.
