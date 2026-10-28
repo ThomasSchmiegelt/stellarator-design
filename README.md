@@ -306,6 +306,7 @@ Filme: [durchsichtiges Segment](docs/filme/kuehlung_f11_durchsichtig.mp4) ·
 | f5 | Z-Verteiler nach Skizze des Nutzers | 20 % | 7,9 kPa |
 | f10 | Gitterzellen direkt aus PicoGK (Fehler im Rechengitter behoben) | 36 % | 22,6 kPa |
 | **f11** | **Wanddicke der vorderen Filamente nach Radius (4,9–5,8 mm)** | **8 %** | **22,0 kPa** |
+| f12 | Innenhaut 5 mm statt 30 mm, Austrittsrohr 500 mm statt 400 mm | 11 % | 19,4 kPa |
 
 **Was gelernt wurde:**
 - Die Verteilung lässt sich über die Wanddicke der Filamente abgleichen (f11: 10,3–13,9 l/s je Sektor). Sie
@@ -321,6 +322,12 @@ Filme: [durchsichtiges Segment](docs/filme/kuehlung_f11_durchsichtig.mp4) ·
 1. Innenhaut 3–5 mm, eventuell mit Schutzschicht aus Wolfram.
 2. Plasmaseite schneller durchströmen: dünnere vordere Schicht oder eigener Erstwand-Kreislauf mit feinen
    Kanälen und etwa 1 m/s.
+
+**f12 (Innenhaut 5 mm, Vorschlag 1 umgesetzt):** Die Wand kostet nur noch 100 K statt 600 K, der Druckverlust sinkt
+auf 19,4 kPa, die Verteilung wird mit 11 % etwas ungleicher. Der Engpass ist jetzt allein das langsame Wasser an der
+Plasmaseite (0,10 m/s, Übergang ~410 K), also Vorschlag 2.
+
+![Auswertung f12: Druckverlauf, Verteilung über den Umfang, Durchfluss im Gyroid-Kern](docs/bilder/kuehlung_f12_auswertung.png)
 3. Totwassergebiete finden und beseitigen.
 4. Robuster abgleichen, mit Drosseln statt Wanddicke.
 5. Wärme gekoppelt mitrechnen.

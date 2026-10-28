@@ -334,3 +334,40 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
 - Name auf Bildern: "Thomas Schmiegelt · privates Hobbyprojekt, nicht kommerziell" + FluidX3D-Nennung, kein ©-Zeichen (User fand © zu gewerblich).
 - 2026-10-27: Für PI zusätzlich verlinkt (~/.pi/agent/skills/ → ~/.hermes/skills/cae/): blender-modell, picogk-voxel, stroemung-schnitte, skizze-zu-prompt. PI hat jetzt alle 11 Projekt-Skills.
 - 2026-10-27: Berichte DE/EN um Kapitel 'Doppeltes Filament, Bauraum und Flüssigblei' ergänzt (35/33 S.), Prozess-Doku Abschnitt 8. Autorenname FluidX3D aus Fließtext/Bild entfernt (User-Wunsch), in LICENSE/Kopfzeilen/Zitaten bleibt er (Lizenz).
+- 2026-10-27 Referenz-Kühltemperaturen recherchiert:
+  - DWR primär ~290–330 °C, 15,5 MPa; sekundär gesättigter Dampf ~6,2 MPa / 275 °C (Wikipedia-Spiegel, tpu.ru).
+  - DEMO-WCLL: 295/328 °C, 15,5 MPa (EUROfusion WPPMICP16_15575).
+  - DEMO-HCPB: He 8 MPa, 300 → 500/520 °C, EUROFER-Grenze 550 °C (KIT/EUROfusion).
+  - DCLL: PbLi 300–550 °C wegen EUROFER (EUROfusion WPBBCP16_15491).
+  - ALFRED (Blei): 400 → 480 °C, ~0,1 MPa, Endstufe 520 °C (IAEA ARIS, NEA).
+  - ITER-TCWS: bis 126 °C, 4 MPa; Erstwand-Austritt ~110 °C.
+  - Konsequenz: 60→150 °C ist ITER-Niveau (Versuchsanlage). Für Strom DWR/WCLL-Werte oder Blei 400→480 °C nehmen. EUROFER unter ~300 °C unter Bestrahlung spröde -> kalte Wasserwand problematisch.
+- **UEBERGABE 2026-10-27 19:58:** Hermes recherchiert Kühltemperaturen (Auftrag docs/recherche/auftrag_kuehltemperaturen.md), Ergebnis -> docs/recherche/kuehlkreislauf_temperaturen.md, Log sim/hermes_recherche.log (Ende = Zeile HERMES_FERTIG). Danach prüfen (Quellen stichprobenartig) und dem User zeigen.
+- **UEBERGABE 2026-10-27 20:01:** f12 = f11 mit Innenhaut 5 mm, d_aus 500 mm (User). Geometrie läuft (sim/kuehlung_segment/f12.log, Ende GEOM_ENDE). Geometrie fertig (Stahl 16,9 m³, Wasser 12,0 m³). Kette sim/kuehlung_segment/f12_kette.sh wartet auf HERMES_FERTIG + GPU < 3 GB, dann Probe + CFD (Log f12_kette.log, Ende KETTE_ENDE). Danach Auswertung wie f11 (Streuung, Δp, v Plasmaseite, kuehlung_waerme.py).
+- 2026-10-27 User: 'nach dem Lauf alles beenden' -> f12_abschluss.sh: nach KETTE_ENDE kuehlung_waerme --name f12 (f12_waerme.log), dann Schnitt-Werkzeug-Server (PID 8869) beenden. Keine weiteren Läufe starten. Auswertung/Bilder beim nächsten Sitzungsbeginn ansehen.
+- 2026-10-27 Hermes-Recherche fertig (docs/recherche/kuehlkreislauf_temperaturen.md), aber Spaltreaktor-Teil fehlerhaft/erfundene Links -> Prüfhinweis oben eingefügt; nicht committen, bevor geprüft. Hermes-Websuche lief in Schleife (loop_web_search_cap).
+
+## 2026-10-27 NAECHSTES MAL: Recherche mit PI statt Hermes
+- Hermes (qwen3.8:27b lokal) hat die Recherche verhauen (Note 5): Websuche in Schleife, Werte und Links erfunden.
+- User will die Recherche naechstes Mal mit PI probieren. Dafuer braucht PI Scraping-Faehigkeit: Seiten wirklich
+  abrufen und daraus zitieren (z. B. Skill/Extension mit curl + Text-Extraktion, Quellen-URL bei jedem Wert Pflicht).
+- PI laeuft auch auf lokalen Ollama-Modellen (qwen-gross, qwen3.5:9b, ...): Scraping hilft, aber Modell bleibt Engpass.
+  Regel fuer die Aufgabe: nur Werte, die woertlich in einer abgerufenen Seite stehen; sonst "nicht gefunden".
+- Ausserdem offen: f12 auswerten (CFD fertig 21:10, auswertung.json fehlt, kuehlung_waerme scheiterte).
+
+## 2026-10-28 f12 ausgewertet (Innenhaut 5 mm, d_aus 500 mm)
+- auswertung.json fehlte, weil kuehlung_cfd.auswerten() nicht automatisch laeuft -> von Hand:
+  `.venv/bin/python -c "from stellarator.kuehlung_cfd import auswerten; from stellarator.kuehlung_segment import WURZEL; auswerten(WURZEL/'f12')"`
+  Danach `-m stellarator.kuehlung_waerme --name f12`. (Kette kuenftig mit Auswertung vor kuehlung_waerme!)
+- f12 vs f11: Streuung Kern 11 % (8 %), Druckverlust 19,4 kPa (22,0), 289 l/s (288), v_aus 1,49 m/s (2,35),
+  v Plasmaseite 0,10 m/s gleich, 10 % Totwasser < 0,7 mm/s. Waerme: Leitung 5 mm = 100 K (statt 600 K bei 30 mm),
+  Uebergang bei 0,10 m/s weiter ~410 K -> Engpass ist die Geschwindigkeit an der Plasmaseite, nicht die Wand.
+- Bild: sim/kuehlung_segment/f12/cfd/auswertung.png
+
+## 2026-10-28 Skill web-recherche (fuer PI, auch Hermes)
+- ~/.hermes/skills/cae/web-recherche/: suche.py (Wikipedia, OSTI, OpenAlex, arXiv; KEINE Suchmaschinen - DuckDuckGo
+  sperrt Automaten, nicht umgehen), abruf.py (Seite/PDF -> ./recherche_ablage, --suche, --zeilen), pruefe.py
+  (jedes Beleg: "Zitat" (URL) muss im abgerufenen Text stehen, sonst FEHLT/ERFUNDEN?). Link in ~/.pi/agent/skills.
+- PI-Lauf: docs/recherche/pi/ (auftrag.md, pi.log, ergebnis.md), Modell qwen-gross ueber Ollama.
+- Achtung: `pi` (~/.local/bin/pi) ist ein Startskript, das den Orchestrator auf :5000 startet, auch bei --help.
+  Direkt: ~/.npm-global/bin/pi -p --provider ollama --model qwen-gross:latest --skill <ordner> "..."
