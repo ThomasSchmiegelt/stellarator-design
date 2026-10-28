@@ -363,6 +363,20 @@ oben und unten; innen ist fast alles verdeckt, das innere Blanket braucht Sammle
 Offen: Stützstruktur und Zugänge für Heizung, Diagnostik und Pumpen belegen einen Teil der Fenster.
 
 ![Freie Wege für Rohre durch die Spulenspalte](docs/bilder/rohr_durchfuehrung.png)
+
+**Blanket: Abgleich mit EU-DEMO WCLL** (Arena et al., Energies 16 (2023) 2069, Werte belegt in
+`docs/recherche/wcll/wcll_werte.md`): DEMO kühlt mit Wasser 295 → 328 °C bei 15,5 MPa in zwei getrennten Kreisen
+(Erstwand, Brutzone) – praktisch dieselbe Wahl wie hier. Blei kommt als langsam fließender Brutstoff (PbLi) zurück,
+nicht als Kühlmittel. Kritisch: Die Neutronen-Wandlast dieser HTS-Auslegung ist mit 1,99 MW/m² doppelt so hoch wie
+bei DEMO (1,04), und die Tritium-Brutrate ist schon bei DEMO knapp (1,14, Ziel 1,15).
+
+**Abgestufte Struktur (Idee des Nutzers):** Statt eines Gyroids, der die Haut nur linienförmig berührt: an der Haut
+flächig und dicht (Zelle 20 mm, Stützabstand ~10 mm ≤ 20 mm für 16 MPa), nach außen verdoppelt sich die Zelle je
+Lage und die Wände verästeln sich (Stahlanteil ≥ 15 % > 11 % für den Druck). `picogk/GradientWand`, Herleitung der
+Regeln im Projektbericht. Test auf Durchströmung und Festigkeit steht aus.
+
+![Abgestufte Wand: fein an der Haut, verästelt nach außen](docs/bilder/gradientwand_gesamt.jpg)
+![Nahaufnahme der Haut mit flächiger Auflage](docs/bilder/gradientwand_haut_nah.jpg)
 3. Totwassergebiete finden und beseitigen.
 4. Robuster abgleichen, mit Drosseln statt Wanddicke.
 5. Wärme gekoppelt mitrechnen.

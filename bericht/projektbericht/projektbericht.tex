@@ -548,6 +548,14 @@ Für Druckwasser wie in einem Kernkraftwerk ($\approx\SI{16}{MPa}$) taugt der wa
 Hochdruckwasser gehört in kleine Kanäle: Ein \SI{6}{mm}-Kanal unter \SI{5}{mm} Haut kommt nach derselben Formel nur
 auf etwa \SI{11}{MPa}. Das ist das doppelte Filament aus Abschnitt~\ref{sec:filament}.
 
+\paragraph{Hinweis des Nutzers: Der Gyroid liegt nur linienförmig auf.} Die Gyroid-Wände berühren die Haut nur
+entlang schmaler Linien (im Modell 26\,\% der Fläche). Dort sammeln sich die Kräfte; im Bild oben sitzen die
+Spannungsspitzen genau an den Rändern dieser Anschlüsse. Beim doppelten Filament gleicht sich der Wasserdruck
+innerhalb der Kanalplatte aus (Haut und Rückwand ziehen über die Stege aneinander), der Gyroid trägt ihn also
+nicht. Es bleiben aber Wärmedehnung zwischen heißer Kanalplatte und Gyroid, Wirbelstromkräfte und die
+Ermüdung bei wechselndem Betrieb, und alle wirken an diesen Linien. Mögliche Abhilfe: Ausrundungen an den
+Anschlüssen, ein zur Haut hin dicker werdender Gyroid oder eine Rippenlage als Übergang. Noch nicht gerechnet.
+
 \subsection{Belegte Vergleichswerte}
 Die Kühlmittelwerte realer Anlagen wurden mit dem lokalen Agenten PI recherchiert. Ein erster Versuch mit einem
 anderen lokalen Agenten (Hermes) lieferte erfundene Werte und Links. Für PI entstand deshalb ein Skill
@@ -689,6 +697,90 @@ engsten Spalt innen.
 W7-X). Sie wird einen Teil der Fenster belegen, ebenso Zugänge für Heizung, Diagnostik, Vakuumpumpen und
 Wartung. Nur gerade Rohre entlang der Normalen wurden betrachtet; mit Bögen fände sich mehr Platz.
 
+\subsection{Blanket: Abgleich mit dem EU-DEMO-Konzept WCLL}
+Das Blanket nimmt 82\,\% der Wärme auf und muss zugleich Tritium erbrüten. Als Vorbild dient das wassergekühlte
+Blei-Lithium-Blanket (WCLL) des europäischen DEMO \cite{arena2023}. Der Nutzer hat den frei zugänglichen Artikel
+heruntergeladen; alle Werte unten sind wörtlich daraus belegt (\texttt{docs/recherche/wcll/wcll\_werte.md}).
+\begin{table}[H]\centering\small
+\begin{tabular}{lll}\toprule
+ & EU-DEMO WCLL \cite{arena2023} & diese Anlage\\\midrule
+Kühlwasser & \SI{295}{} $\rightarrow$ \SI{328}{\celsius}, \SI{15,5}{MPa} & \SI{289}{} $\rightarrow$ \SI{319}{\celsius}, \SI{16}{MPa}\\
+Kreisläufe & Erstwand und Brutzone getrennt & Erstwand und Blanket getrennt\\
+Stahl EUROFER & nicht über \SI{550}{\celsius} & Erstwand höchstens \SI{441}{\celsius}\\
+Wärmestrom Erstwand & \SI{0,32}{MW/m^2} & \SI{0,25}{MW/m^2} (Mittel), Kanäle für \SI{0,5}{}\\
+Fusionsleistung / netto & \SI{1998}{MW} / \SI{500}{MW} & \SI{3053}{MW} / \SI{1000}{MW}\\
+Neutronen-Wandlast & \SI{1,04}{MW/m^2} & \SI{1,99}{MW/m^2}\\
+Brutstoff & PbLi, Li mit 90\,\% \textsuperscript{6}Li & offen\\
+Tritium-Brutrate & 1,14 (Ziel 1,15) & offen\\\bottomrule
+\end{tabular}\caption{WCLL und die Druckwasser-Auslegung dieser Anlage.}\end{table}
+
+\paragraph{Was daraus folgt.}
+\begin{enumerate}\itemsep1pt
+\item \textbf{Die Festlegung auf Druckwasser wird bestätigt.} DEMO nutzt für WCLL praktisch dieselben Bedingungen
+  wie ein Druckwasserreaktor, mit zwei getrennten Kreisen für Erstwand und Brutzone. Genau so ist die Wärmebilanz
+  hier aufgeteilt.
+\item \textbf{Blei kommt zurück, aber als Brutstoff, nicht als Kühlmittel.} Im WCLL fließt PbLi nur langsam
+  durch das Blanket und trägt das erbrütete Tritium nach außen. Die Wärme nimmt das Wasser in doppelwandigen
+  Rohren auf. Die Bedenken gegen Blei als Kühlmittel (schnelle Strömung quer zum Feld) gelten dafür kaum.
+\item \textbf{Die Neutronen-Wandlast ist doppelt so hoch wie bei DEMO.} Die HTS-Auslegung wurde in Stufe~0 bis
+  an die Grenze von \SI{2}{MW/m^2} verkleinert. Das bedeutet etwa doppelte Wärmedichte im Blanket und doppelte
+  Strahlenschädigung des Stahls, also kürzere Standzeit der Blanket-Module, und mehr Abschirmung vor den Spulen.
+  Die Nb\textsubscript{3}Sn-Auslegung läge mit \SI{0,59}{MW/m^2} deutlich darunter, ist aber fast doppelt so groß.
+\item \textbf{Die Tritium-Brutrate ist knapp.} Selbst DEMO verfehlt das Ziel 1,15 leicht. Ein Stellarator hat
+  mehr Öffnungen und eine kompliziertere Form, an der Blanket-Fläche fehlt. Das ist ein eigenes Risiko und
+  bräuchte eine Neutronenrechnung.
+\end{enumerate}
+
+\subsection{Abgestufte Struktur: flächig an der Haut, verästelt nach außen}
+Der Nutzer schlug vor, das Problem der linienförmigen Auflage anders zu lösen: \glqq Man bräuchte auf der
+Blanketseite eine flächige Auflage, dann ist es ein Spiel. Einerseits dürfen die Metallstränge nicht so dicht
+sein, dass sie das Wasser zu sehr behindern, andererseits müssen sie dick genug für die Wärmeleitung sein. Nach
+außen kann das Material stark verästeln und dünn werden.\grqq{} Daraus lassen sich drei Bauregeln ableiten
+(Druckwasser $p = \SI{16}{MPa}$, Haut $t = \SI{5}{mm}$, zulässig $\sigma = \SI{150}{MPa}$):
+
+\paragraph{1. Stützabstand an der Haut.} Mit dem Faktor 1,22 aus der Elmer-Rechnung über dem Gyroid
+(\SI{39,2}{} statt \SI{32,0}{MPa} je MPa):
+\[ \sigma = 1{,}22\,\frac{p\,b^2}{2t^2} \le \sigma_\text{zul}\quad\Rightarrow\quad
+   b \le t\sqrt{\frac{2\sigma_\text{zul}}{1{,}22\,p}} = \SI{5}{mm}\cdot\sqrt{\frac{300}{19{,}5}} \approx \SI{20}{mm}. \]
+Bei \SI{4}{MPa} wären es \SI{39}{mm}. Mit Auflagen alle \SI{20}{mm} hält die dünne Haut auch Druckwasser wie im
+Kernkraftwerk.
+
+\paragraph{2. Wie tief die Stränge Wärme leiten.} Ein Strang der Dicke $d$ im Wasser wirkt wie eine Kühlrippe mit
+$m = \sqrt{4h/(k\,d)}$; wirksam ist etwa die Länge $2/m$ (Stahl $k = \SI{25}{W/(m\,K)}$):
+\begin{table}[H]\centering\small
+\begin{tabular}{rrr}\toprule
+$d$ & $h = \SI{1200}{W/(m^2K)}$ (langsam) & $h = \SI{10000}{W/(m^2K)}$ (schnell)\\\midrule
+\SI{3}{mm} & \SI{8}{mm} & \SI{3}{mm}\\
+\SI{10}{mm} & \SI{14}{mm} & \SI{5}{mm}\\\bottomrule
+\end{tabular}\caption{Wirksame Rippentiefe $2/m$.}\end{table}
+Die Wärme ist also nach \SIrange{3}{15}{mm} im Wasser. Nur diese erste Lage braucht dicke Stränge; dahinter tragen
+die Stränge nur noch.
+
+\paragraph{3. Wie dünn es nach außen werden darf.} Der Druck schiebt Innen- und Außenhaut auseinander; die Stränge
+halten sie auf Zug zusammen. Ihr Querschnittsanteil $\varphi$ muss überall
+\[ \varphi \ge \frac{p}{\sigma_\text{zul}} = \frac{16}{150} \approx 11\,\% \]
+betragen. Verästeln ist also erlaubt, solange die Summe der Querschnitte bleibt. Bei einem Gyroid der Zelle $a$ und
+Wanddicke $t_g$ ist $\varphi \approx 3{,}09\,t_g/a$.
+
+\paragraph{Umsetzung in PicoGK.} \texttt{picogk/GradientWand}: Haut \SI{5}{mm}, dann vier Lagen, deren Zelle sich
+von Lage zu Lage verdoppelt. Zwischen zwei Lagen werden die Abstandsfelder der Gyroide mit Zelle $a$ und $2a$ weich
+überblendet; so verzweigen sich die Wände. Die Anschlüsse sind mit \SI{1,5}{mm} ausgerundet.
+\begin{table}[H]\centering\small
+\begin{tabular}{rrrrr}\toprule
+Lage & Zelle & Wanddicke & bis Tiefe & Stahlanteil\\\midrule
+0 & \SI{20}{mm} & \SI{2,5}{mm} & \SI{30}{mm} & 39\,\%\\
+1 & \SI{40}{mm} & \SI{3}{mm} & \SI{80}{mm} & 23\,\%\\
+2 & \SI{80}{mm} & \SI{4,5}{mm} & \SI{180}{mm} & 17\,\%\\
+3 & \SI{160}{mm} & \SI{8}{mm} & \SI{570}{mm} & 15\,\%\\\bottomrule
+\end{tabular}\caption{Lagen des Wandstücks g1 ($240\times240\times\SI{600}{mm}$, Voxel \SI{1}{mm}); insgesamt 84\,\% Wasser.}\end{table}
+\bild{gradientwand_gesamt.jpg}{1.0}{Abgestufte Wand g1 von der Plasmaseite aus, ein Viertel weggeschnitten: unten an
+der Haut kleine Zellen, nach außen verdoppelt sich die Zelle je Lage.}
+\bild{gradientwand_haut_nah.jpg}{1.0}{Nahaufnahme der Haut mit Fenster: Die feine Lage stützt die Haut nahezu
+flächig, Stützabstand etwa \SI{10}{mm}.}
+Offen ist der Test auf Durchströmung (FluidX3D: geht das Wasser durch die dichte Hautlage oder weicht es nach außen
+aus?) und Festigkeit (Elmer: Haut und Verzweigungen unter \SI{16}{MPa}). Das Wandstück schreibt dafür auch den
+Wasserraum heraus.
+
 \subsection{Zusammenarbeit}
 Vom Nutzer kamen: die dünnere Wand mit größerem Austritt (f12), der Paarvergleich als Werkzeug für Entscheidungen
 und Optimierungsschleifen samt den Urteilen dazu, der Hinweis, dass die Wandung des Druckraums dem Druck
@@ -756,5 +848,7 @@ ElmerFEM 9.0 \cite{elmer}, FluidX3D 3.8 \cite{fluidx3d}, PicoGK \cite{picogk}, g
 \bibitem{picogk} LEAP 71: PicoGK. \url{https://github.com/LEAP71/PicoGK} (Apache-2.0-Lizenz).
 \bibitem{sketch} sketch-to-prompt: Skizzen auf 3D-Modellen als Eingabe für KI-Assistenten.
   \url{https://github.com/ThomasSchmiegelt/sketch-to-prompt} (MIT-Lizenz).
+\bibitem{arena2023} P. Arena, G. Bongiovì, I. Catanzaro et al.: Design and Integration of the EU-DEMO Water-Cooled Lead
+  Lithium Breeding Blanket. \emph{Energies} 16 (2023) 2069. doi:10.3390/en16042069
 \end{thebibliography}
 \end{document}

@@ -420,3 +420,27 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
   Fenster aussen, oben, unten; innen fast zu -> inneres Blanket ueber Sammler oben/unten.
 - Doku: Berichte DE (41 S.) / EN (39 S.) Unterabschnitt "Passen die Leitungen...", README, Prozess-Doku Abschnitt 9.
 - Naechster Schritt Kuehlsystem: Blanket (82 % der Waerme) - Aufbau mit Druckwasser + Brutstoff.
+
+## 2026-10-28 FluidX3D gesichert
+- Private Sicherung ~/sicherung/ (Spiegel FluidX3D.git + bundle, LIESMICH). Lizenz erlaubt Kopie/Aenderung privat.
+- User fragt nach Anpassung "hinsichtlich Plasma": Empfehlung FluidX3D bleibt fuer Kuehlmittel; Plasma-Waermelast
+  auf den Divertor besser per Feldlinienverfolgung (vorhandene Biot-Savart-Spulen), siehe Antwort im Chat.
+
+## 2026-10-28 WCLL belegt (User lud PDF: ~/Downloads/energies-16-02069-v2-1.pdf)
+- docs/recherche/wcll/wcll_werte.md: 13 Belege, 0 Fehler (pruefe.py kann jetzt file://). Wasser 295->328 °C 15,5 MPa,
+  zwei Kreise FW/BZ, DWT, EUROFER <= 550 °C, TBR 1,14 (Ziel 1,15), FW 0,32 MW/m2, DEMO 1998 MW / 500 MWe / NWL 1,04.
+- Abgleich im Bericht (Unterabschnitt "Blanket: Abgleich mit WCLL", DE 42 / EN 40 S., \cite{arena2023}):
+  Druckwasser bestaetigt; PbLi als Brutstoff (nicht Kuehlmittel); unsere NWL 1,99 = 2x DEMO; TBR knapp.
+- User-Hinweis: Gyroid liegt punktuell/linienfoermig auf -> Kerben/Ermuedung an den Anschluessen, offen.
+
+## 2026-10-28 IDEE User: gestufte Struktur statt Gyroid mit Linienauflage
+- "Auf der Blanketseite flaechige Auflage, dann ist es ein Spiel: Straenge nicht zu dicht (Wasser), dick genug fuer
+  Waermeleitung; nach aussen stark veraesteln und duenn."
+- Abschaetzung (16 MPa, Haut 5 mm, 150 MPa): Stuetzabstand b <= 20 mm (4 MPa: 39 mm); Rippenwirkung nur 3-15 mm tief
+  (2/m, m = sqrt(4h/(k d)), k 25); Zuganker-Querschnitt ueberall >= p/sigma = 11 % (4 MPa 3 %), veraesteln erlaubt.
+- Falle: dichte Hautlage hat hohen Widerstand -> Wasser umgeht sie; braucht eigene Zufuehrung (Ringkammer direkt in die Lage).
+- Vorschlag: PicoGK-Wandstueck mit abgestufter Zelle/Dicke, Elmer (Haut 16 MPa + Temperatur), FluidX3D (Durchstroemung). Wartet auf User.
+- GradientWand g1 gebaut (picogk/GradientWand, sim/gradientwand/g1): 240x240x600 mm, Voxel 1 mm, 43 s, 2 GB RAM;
+  Lagen Zelle 20/40/80/160, Dicke 2,5/3/4,5/8, bis 30/80/180/570 mm; Porositaet 0,84. Bilder gesamt.png, haut_nah.png
+  (blender_wandstueck.py jetzt mit --ohne_wasser --zoom --ziel_z --bild). STL gross (stahl_ganz 346 MB, wasser 368 MB).
+  Doku: Berichte DE 44 / EN 42 S. (Unterabschnitt "Abgestufte Struktur"), README. Naechst: Test Durchstroemung + Festigkeit.

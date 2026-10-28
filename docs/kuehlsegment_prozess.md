@@ -238,6 +238,10 @@ Was dabei auffiel:
 | Bestehende AKW-Turbine verwenden, Rest möglichst einfach | Druckwasser wie WWER-1000; Erstwandkanäle nachgerechnet (Stahl 441 °C); `waermebilanz.py`: 3053 MW Fusion, eine Turbine der Konvoi-Klasse reicht |
 | Dokumentieren, im Bericht mit Herleitung | Kapitel „Kühlmittel, Festigkeit und Wärmebilanz“ in beiden Berichten |
 | „Das Kühlsystem ist noch nicht fertig, oder?“ – ja, weiter, Dokumentation erweitern | Offene Teile nach Wärmemenge geordnet (Blanket 82 %); zuerst das größte Risiko geprüft: Leitungen durch die Spulenspalte (`rohr_durchfuehrung.py`) – passen reichlich (11 nötig, ~410 möglich bei 0,8 m) |
+| Lädt das WCLL-PDF herunter (Verlag sperrte den automatischen Abruf) | 13 Werte wörtlich belegt; Abgleich: Druckwasser bestätigt, PbLi als Brutstoff, Wandlast doppelt so hoch wie DEMO |
+| „Eines der großen Probleme ist wahrscheinlich, dass der Gyroid punktuell aufliegt“ | Als offener Punkt aufgenommen (Kerben an den Anschlusslinien, Ermüdung); Abschätzung im Chat |
+| Flächige Auflage an der Haut, Stränge nicht zu dicht (Wasser) und dick genug (Wärme), nach außen verästelt und dünn | Regeln aus Überschlag: Stützabstand ≤ 20 mm bei 16 MPa; Rippen wirken nur 3–15 mm tief; Stahlquerschnitt überall ≥ 11 %; Hautlage braucht eigene Zuführung |
+| „Baue es mal, mich interessiert wie es aussieht“; testen auf Durchströmung und Festigkeit | `picogk/GradientWand`: 4 Lagen (Zelle 20/40/80/160 mm), überblendete Gyroid-Felder, Ausrundung 1,5 mm; Bilder in Blender; Wasserraum für den Test mit ausgegeben |
 
 Was dabei auffiel:
 - Der Paarvergleich hat sofort etwas gezeigt: f11 war auf ein Ziel optimiert, das der Nutzer gering gewichtet.

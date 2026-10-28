@@ -519,6 +519,14 @@ For pressurised water as in a nuclear plant ($\approx\SI{16}{MPa}$) a water-fill
 High-pressure water belongs in small channels: a \SI{6}{mm} channel under a \SI{5}{mm} skin reaches only about
 \SI{11}{MPa} by the same formula. That is the double filament of Section~\ref{sec:filament}.
 
+\paragraph{User's remark: the gyroid only rests on lines.} The gyroid walls touch the skin only along narrow lines
+(26\,\% of the area in the model). Forces collect there; in the figure above the stress peaks sit exactly at the
+edges of these joints. In the double filament the water pressure is balanced inside the channel plate (skin and
+back wall pull on each other through the webs), so the gyroid does not carry it. What remains are thermal expansion
+between the hot channel plate and the gyroid, eddy-current forces and fatigue under cyclic operation, all acting on
+these lines. Possible remedies: fillets at the joints, a gyroid that thickens towards the skin, or a layer of ribs
+as a transition. Not yet calculated.
+
 \subsection{Sourced reference values}
 Coolant data of real plants were researched with the local agent PI. A first attempt with another local agent
 (Hermes) produced invented values and links. For PI a skill \texttt{web-recherche} was therefore written: it
@@ -658,6 +666,90 @@ applied only to the narrowest inboard gap.
 It will occupy part of the windows, as will access for heating, diagnostics, vacuum pumps and maintenance. Only
 straight pipes along the normal were considered; with bends more room would be found.
 
+\subsection{Blanket: comparison with the EU-DEMO WCLL concept}
+The blanket takes 82\,\% of the heat and has to breed tritium at the same time. The reference is the
+water-cooled lead-lithium blanket (WCLL) of the European DEMO \cite{arena2023}. The user downloaded the
+open-access article; all values below are quoted verbatim from it (\texttt{docs/recherche/wcll/wcll\_werte.md}).
+\begin{table}[H]\centering\small
+\begin{tabular}{lll}\toprule
+ & EU-DEMO WCLL \cite{arena2023} & this plant\\\midrule
+Cooling water & \SI{295}{} $\rightarrow$ \SI{328}{\celsius}, \SI{15.5}{MPa} & \SI{289}{} $\rightarrow$ \SI{319}{\celsius}, \SI{16}{MPa}\\
+Circuits & first wall and breeding zone separate & first wall and blanket separate\\
+EUROFER steel & not above \SI{550}{\celsius} & first wall at most \SI{441}{\celsius}\\
+First-wall heat flux & \SI{0.32}{MW/m^2} & \SI{0.25}{MW/m^2} (mean), channels for \SI{0.5}{}\\
+Fusion power / net & \SI{1998}{MW} / \SI{500}{MW} & \SI{3053}{MW} / \SI{1000}{MW}\\
+Neutron wall load & \SI{1.04}{MW/m^2} & \SI{1.99}{MW/m^2}\\
+Breeder & PbLi, Li enriched to 90\,\% \textsuperscript{6}Li & open\\
+Tritium breeding ratio & 1.14 (target 1.15) & open\\\bottomrule
+\end{tabular}\caption{WCLL and the pressurised-water design of this plant.}\end{table}
+
+\paragraph{Consequences.}
+\begin{enumerate}\itemsep1pt
+\item \textbf{The choice of pressurised water is confirmed.} DEMO uses practically the same conditions for WCLL as a
+  pressurised water reactor, with two separate circuits for first wall and breeding zone. The heat balance here is
+  split the same way.
+\item \textbf{Lead returns, but as breeder, not as coolant.} In WCLL the PbLi flows only slowly through the blanket
+  and carries the bred tritium out. The heat is taken up by water in double-walled tubes. The objections to lead as
+  a coolant (fast flow across the field) hardly apply.
+\item \textbf{The neutron wall load is twice that of DEMO.} In stage~0 the HTS design was shrunk up to the limit of
+  \SI{2}{MW/m^2}. That means roughly twice the heat density in the blanket and twice the radiation damage to the
+  steel, hence a shorter life of the blanket modules, and more shielding in front of the coils. The
+  Nb\textsubscript{3}Sn design would be at \SI{0.59}{MW/m^2}, but is almost twice as large.
+\item \textbf{The tritium breeding ratio is tight.} Even DEMO misses the target of 1.15 slightly. A stellarator has
+  more openings and a more complex shape, losing blanket area. This is a risk of its own and would need a neutronics
+  calculation.
+\end{enumerate}
+
+\subsection{Graded structure: flat contact at the skin, branching outward}
+The user suggested solving the line-contact problem differently: ``On the blanket side one would need a flat
+support, then it becomes a balancing act. On the one hand the metal strands must not be so dense that they obstruct
+the water too much, on the other hand they must be thick enough for heat conduction. Further out the material can
+branch heavily and become thin.'' Three design rules follow (pressurised water $p = \SI{16}{MPa}$, skin
+$t = \SI{5}{mm}$, allowable $\sigma = \SI{150}{MPa}$):
+
+\paragraph{1. Support spacing at the skin.} With the factor 1.22 from the Elmer calculation over the gyroid
+(\SI{39.2}{} instead of \SI{32.0}{MPa} per MPa):
+\[ \sigma = 1.22\,\frac{p\,b^2}{2t^2} \le \sigma_\text{allow}\quad\Rightarrow\quad
+   b \le t\sqrt{\frac{2\sigma_\text{allow}}{1.22\,p}} = \SI{5}{mm}\cdot\sqrt{\frac{300}{19.5}} \approx \SI{20}{mm}. \]
+At \SI{4}{MPa} it would be \SI{39}{mm}. With supports every \SI{20}{mm} the thin skin holds pressurised water as in a
+nuclear plant.
+
+\paragraph{2. How deep the strands conduct heat.} A strand of thickness $d$ in water acts as a cooling fin with
+$m = \sqrt{4h/(k\,d)}$; roughly the length $2/m$ is effective (steel $k = \SI{25}{W/(m\,K)}$):
+\begin{table}[H]\centering\small
+\begin{tabular}{rrr}\toprule
+$d$ & $h = \SI{1200}{W/(m^2K)}$ (slow) & $h = \SI{10000}{W/(m^2K)}$ (fast)\\\midrule
+\SI{3}{mm} & \SI{8}{mm} & \SI{3}{mm}\\
+\SI{10}{mm} & \SI{14}{mm} & \SI{5}{mm}\\\bottomrule
+\end{tabular}\caption{Effective fin depth $2/m$.}\end{table}
+The heat is in the water within \SIrange{3}{15}{mm}. Only this first layer needs thick strands; behind it the strands
+only carry load.
+
+\paragraph{3. How thin it may get further out.} The pressure pushes inner and outer skin apart; the strands hold them
+together in tension. Their area fraction $\varphi$ must everywhere satisfy
+\[ \varphi \ge \frac{p}{\sigma_\text{allow}} = \frac{16}{150} \approx 11\,\%. \]
+Branching is therefore allowed as long as the sum of the cross-sections remains. For a gyroid of cell $a$ and wall
+thickness $t_g$, $\varphi \approx 3.09\,t_g/a$.
+
+\paragraph{Implementation in PicoGK.} \texttt{picogk/GradientWand}: \SI{5}{mm} skin, then four layers whose cell
+doubles from layer to layer. Between two layers the distance fields of the gyroids with cell $a$ and $2a$ are blended
+smoothly, so the walls branch. The joints are filleted with \SI{1.5}{mm}.
+\begin{table}[H]\centering\small
+\begin{tabular}{rrrrr}\toprule
+Layer & Cell & Wall & to depth & Steel fraction\\\midrule
+0 & \SI{20}{mm} & \SI{2.5}{mm} & \SI{30}{mm} & 39\,\%\\
+1 & \SI{40}{mm} & \SI{3}{mm} & \SI{80}{mm} & 23\,\%\\
+2 & \SI{80}{mm} & \SI{4.5}{mm} & \SI{180}{mm} & 17\,\%\\
+3 & \SI{160}{mm} & \SI{8}{mm} & \SI{570}{mm} & 15\,\%\\\bottomrule
+\end{tabular}\caption{Layers of wall piece g1 ($240\times240\times\SI{600}{mm}$, voxel \SI{1}{mm}); 84\,\% water overall.}\end{table}
+\bild{gradientwand_gesamt.jpg}{1.0}{Graded wall g1 seen from the plasma side, one quarter cut away: small cells at the
+skin at the bottom, the cell doubles with each layer further out.}
+\bild{gradientwand_haut_nah.jpg}{1.0}{Close-up of the skin with a window: the fine layer supports the skin almost over
+its full area, support spacing about \SI{10}{mm}.}
+Still open are the flow test (FluidX3D: does the water pass through the dense skin layer or bypass it further out?)
+and the strength test (Elmer: skin and branches at \SI{16}{MPa}). The wall piece also writes out the water volume for
+this.
+
 \subsection{Collaboration}
 From the user came: the thinner wall with a larger outlet (f12), pairwise comparison as a tool for decisions and
 optimisation loops together with the judgements, the point that the walls of the pressure space must withstand
@@ -724,5 +816,7 @@ Software: ElmerFEM, gmsh, FreeCAD, simsopt, DESC, PyVista, ParaView, Blender, Fl
 \bibitem{picogk} LEAP 71: PicoGK. \url{https://github.com/LEAP71/PicoGK} (Apache 2.0 licence).
 \bibitem{sketch} sketch-to-prompt: sketches on 3D models as input for AI assistants.
   \url{https://github.com/ThomasSchmiegelt/sketch-to-prompt} (MIT licence).
+\bibitem{arena2023} P. Arena, G. Bongiovì, I. Catanzaro et al.: Design and Integration of the EU-DEMO Water-Cooled Lead
+  Lithium Breeding Blanket. \emph{Energies} 16 (2023) 2069. doi:10.3390/en16042069
 \end{thebibliography}
 \end{document}
