@@ -451,6 +451,179 @@ variants. Along the way a small browser tool was built for looking at flow secti
 and hands them to the AI with ``send and next section'' or ``send and finish''
 (\texttt{stellarator/schnitt\_werkzeug.py}).
 
+\section{Coolant, strength and heat balance up to the turbine}\label{sec:balance}
+This section follows the cooling from a single segment to the grid. Three questions started it: what does the
+thinner inner skin gain? Which variant is best when the figures of merit contradict each other? And which
+pressure and temperature are realistic? The user settled the last one: \emph{reuse an existing turbine from a
+nuclear power plant and keep everything else as simple as possible.}
+
+\subsection{Variant f12: \SI{5}{mm} inner skin}
+f12 is f11 with a \SI{5}{mm} instead of \SI{30}{mm} inner skin and a \SI{500}{mm} outlet pipe (rule: outlet always
+larger than inlet). Flow with FluidX3D as in Section~\ref{sec:cooling}.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrr}\toprule
+ & f11 & f12\\\midrule
+Spread around the circumference (gyroid core) & 8\,\% & 11\,\%\\
+Pressure drop & \SI{22.0}{kPa} & \SI{19.4}{kPa}\\
+Flow rate & \SI{288}{l/s} & \SI{289}{l/s}\\
+Velocity on the plasma side & \SI{0.10}{m/s} & \SI{0.10}{m/s}\\
+Temperature drop across the inner skin at \SI{0.5}{MW/m^2} & \SI{600}{K} & \SI{100}{K}\\\bottomrule
+\end{tabular}\caption{f11 and f12 compared.}\end{table}
+\bild{kuehlung_f12_auswertung.png}{1.0}{Evaluation of f12: pressure drop over time, distribution around the
+circumference and flow through the gyroid core.}
+The wall is no longer the bottleneck. What remains is the transfer into the slow water on the plasma side, about
+\SI{410}{K}.
+
+\subsection{Ranking by pairwise comparison}
+Each variant yields several figures of merit that often conflict: f12 beats f11 on temperature and pressure drop
+but loses on spread. The user suggested deciding how to proceed by pairwise comparison so that resources are used
+well. Implemented in \texttt{stellarator/varianten\_vergleich.py}:
+\begin{enumerate}\itemsep1pt
+\item \textbf{Pareto front:} a variant drops out if another one is worse in no criterion and better in at least
+  one. No weights are needed.
+\item \textbf{Weights by AHP} (Analytic Hierarchy Process): the user compares the criteria in pairs on a scale of
+  1 to 9. From the comparison matrix $A$ with $a_{ji}=1/a_{ij}$ the weight vector $w$ is the eigenvector of the
+  largest eigenvalue $\lambda_\text{max}$. Consistency is checked by
+  $\mathrm{CR} = \frac{(\lambda_\text{max}-n)/(n-1)}{\mathrm{RI}_n}$ with the random index $\mathrm{RI}_4 = 0.90$;
+  below 0.1 the judgements count as consistent.
+\item \textbf{Rank:} weighted sum of the figures of merit normalised to 0 to 1.
+\end{enumerate}
+The user's judgements: temperature is five times as important as spread, pressure drop and stagnant water each;
+pressure drop is three times as important as spread and five times as important as stagnant water. This gives
+weights of 0.61 for temperature, 0.23 for pressure drop, 0.08 for spread and 0.08 for stagnant water, with
+$\mathrm{CR} = 0.10$, right at the limit.
+\bild{varianten_vergleich.png}{1.0}{Left: variants by temperature rise and spread, colour pressure drop, red
+outline the Pareto front. Right: ranking with the user's weights.}
+Ranking: f12 (0.73) ahead of f5 (0.69), f2 (0.58), f11 (0.42), f10 (0.38) and f1 (0.30). Notably, f11 had been
+optimised for an even distribution, which the user in the end weighted low. The pairwise comparison thus showed
+that effort had gone into a secondary goal.
+
+\subsection{Does the thin skin hold the pressure?}
+A thin skin is good thermally but has to carry the coolant pressure. \texttt{stellarator/haut\_festigkeit.py}
+computes with Elmer a steel plate of thickness $t$ over $2\times2$ gyroid cells ($a = \SI{100}{mm}$). It is
+clamped where the \SI{10}{mm} gyroid walls touch the skin. In the plane of the skin these are the points with
+\[ \frac{|f|}{|\nabla f|}\,\frac{a}{2\pi} < \frac{w}{2},\qquad f = \sin X\cos Y + \sin Y\cos Z + \sin Z\cos X,\quad X = 2\pi x/a. \]
+In between, the coolant pushes towards the plasma. As a check, a strip with straight supports at a spacing of
+$b = a/2 - w = \SI{40}{mm}$ was computed. With both edges clamped, $\sigma = p\,b^2/(2t^2)$: at $t = \SI{5}{mm}$
+Elmer gives \SI{34.3}{MPa} per MPa of pressure, the formula \SI{32.0}{MPa}.
+\begin{table}[H]\centering\small
+\begin{tabular}{rrr}\toprule
+Skin thickness & Stress per MPa of pressure & Allowable pressure at \SI{150}{MPa}\\\midrule
+\SI{5}{mm} & \SI{39}{MPa} & \SI{3.8}{MPa}\\
+\SI{10}{mm} & \SI{14}{MPa} & \SI{10.5}{MPa}\\
+\SI{15}{mm} & \SI{9}{MPa} & \SI{16}{MPa}\\\bottomrule
+\end{tabular}\caption{Inner skin over the gyroid (Elmer, linear elastic, no thermal stresses).}\end{table}
+\bild{haut_festigkeit.png}{1.0}{Left: von Mises stress in the \SI{5}{mm} skin at \SI{15.5}{MPa}, gyroid walls in
+blue. Right: peak stress per coolant and skin thickness.}
+For pressurised water as in a nuclear plant ($\approx\SI{16}{MPa}$) a water-filled gyroid is therefore unsuitable.
+High-pressure water belongs in small channels: a \SI{6}{mm} channel under a \SI{5}{mm} skin reaches only about
+\SI{11}{MPa} by the same formula. That is the double filament of Section~\ref{sec:filament}.
+
+\subsection{Sourced reference values}
+Coolant data of real plants were researched with the local agent PI. A first attempt with another local agent
+(Hermes) produced invented values and links. For PI a skill \texttt{web-recherche} was therefore written: it
+actually fetches pages and records each value only with a verbatim quote and its source. A checker confirms that
+each quote appears in the fetched text. Because the local model has little context, PI researches each plant in a
+separate call; the user suggested this after a long run had produced nothing. All 29 quotes were confirmed. PI
+still misread two rows (inlet and outlet swapped at the steam generator); they were corrected on review.
+\begin{table}[H]\centering\small
+\begin{tabular}{llrrl}\toprule
+Plant & Coolant & In / out & Pressure & Source\\\midrule
+EPR & water & \SI{295}{} / \SI{320}{\celsius} & \SI{15.5}{MPa} & Wikipedia\\
+VVER-1000 & water & \SI{289}{} / \SI{319}{\celsius} & \SI{16.0}{MPa} & Wikipedia\\
+BREST-OD-300 & lead & \SI{340}{} / \SI{540}{\celsius} & -- & Wikipedia\\
+ALFRED & lead & \SI{390}{} / \SI{520}{\celsius} & unpressurised & Wikipedia\\
+HTR-PM & helium & \SI{250}{} / \SI{750}{\celsius} & \SI{7.0}{MPa} & OSTI report\\
+ITER blanket & water & \SI{70}{\celsius} / -- & \SI{4}{MPa} & iter.org\\
+EU-DEMO HCPB & helium & \SI{300}{} / \SI{500}{\celsius} & \SI{8}{MPa} & KIT\\\bottomrule
+\end{tabular}\caption{Sourced coolant data; full quotes in \texttt{docs/recherche/pi/ergebnis.md}.}\end{table}
+
+\subsection{Decision: pressurised water as in a nuclear plant}
+With an existing turbine from a pressurised water reactor the steam conditions are fixed, and with them the
+primary circuit: pressurised water at about \SI{289}{\celsius} $\rightarrow$ \SI{319}{\celsius} and \SI{16}{MPa}
+as in the VVER-1000. Steam generators, main coolant pumps and pressuriser are off-the-shelf. Lead (freezing at
+\SI{327}{\celsius}, braking in the magnetic field) and helium (\SI{8}{MPa}, blowers) are dropped. The first-wall
+channels ($6\times\SI{6}{mm}$, three passes) were recomputed for these conditions: steel at most
+\SI{441}{\celsius}, channel wall \SI{340}{\celsius} (boiling at \SI{345}{\celsius}), pressure drop \SI{0.24}{MPa}.
+The steel thus sits in the working range of EUROFER (about \SIrange{300}{550}{\celsius}); with water at
+\SIrange{60}{150}{\celsius} it was below it. The margin to boiling, \SI{5}{K}, is tight.
+
+\subsection{Derivation of the heat balance}
+The chain runs backwards from the grid to the plasma, with the same assumptions as the power balance of stage~0
+(\texttt{invers/stufe0\_bilanz.py}), here split by component (\texttt{stellarator/waermebilanz.py}).
+
+\paragraph{1. Thermal power from grid power.} $P_\text{grid}$ goes to the grid; the turbine converts the heat
+$P_\text{th}$ into electricity with efficiency $\eta$. Pumps ($f_p P_\text{th}$) and the remaining house load
+$P_\text{house}$ (coil refrigeration, tritium plant, buildings) are subtracted:
+\[ P_\text{grid} = \eta P_\text{th} - f_p P_\text{th} - P_\text{house}
+   \quad\Rightarrow\quad P_\text{th} = \frac{P_\text{grid} + P_\text{house}}{\eta - f_p}
+   = \frac{1000 + 60}{0.35 - 0.04}\,\text{MW} = \SI{3419}{MW}. \]
+
+\paragraph{2. Fusion power.} One D-T fusion releases \SI{17.59}{MeV}; the alpha particle carries \SI{3.52}{MeV},
+the neutron \SI{14.07}{MeV}. The alpha fraction is $f_\alpha = 3.52/17.59 = 0.200$. Nuclear reactions in the
+blanket multiply the neutron energy by $M = 1.15$:
+\[ P_\text{th} = P_\text{fus}\,\bigl[(1-f_\alpha)M + f_\alpha\bigr] = 1.120\,P_\text{fus}
+   \quad\Rightarrow\quad P_\text{fus} = \SI{3053}{MW}. \]
+
+\paragraph{3. Split by component.} The neutrons pass through the first wall and deposit their energy in the
+blanket. The alpha power stays in the plasma and leaves it as radiation (onto the whole first wall) or as particle
+flow along the field lines (onto the divertor). Half each way is assumed ($f_\text{div} = 0.5$):
+\begin{align*}
+P_\text{blanket}  &= (1-f_\alpha)\,M\,P_\text{fus} = \SI{2808}{MW},\\
+P_\text{first wall} &= (1-f_\text{div})\,f_\alpha\,P_\text{fus} = \SI{305}{MW},\qquad
+q_\text{first wall} = P_\text{first wall}/S = \SI{305}{MW}/\SI{1230}{m^2} = \SI{0.25}{MW/m^2},\\
+P_\text{divertor} &= f_\text{div}\,f_\alpha\,P_\text{fus} = \SI{305}{MW},\qquad
+A_\text{divertor} \ge P_\text{divertor}/q_\text{max} = \SI{305}{MW}/\SI{10}{MW/m^2} = \SI{31}{m^2}.
+\end{align*}
+$S$ is the plasma surface of the HTS design (from stage~0: neutron wall load \SI{1.99}{MW/m^2}). The first-wall
+channels are designed for \SI{0.5}{MW/m^2}, a factor of 2 margin for local peaks. \SI{10}{MW/m^2} is the design
+load of the water-cooled divertor elements of Wendelstein~7-X (Wikipedia).
+
+\paragraph{4. Cooling water.} With $\Delta T = \SI{30}{K}$ and $c_p = \SI{5380}{J/(kg\,K)}$, $\rho = \SI{732}{kg/m^3}$
+at about \SI{300}{\celsius}:
+\[ \dot m = \frac{P}{c_p\,\Delta T}:\qquad \dot m_\text{blanket} = \SI{17400}{kg/s}\;(\SI{23.8}{m^3/s}),\qquad
+   \dot m_\text{first wall} = \SI{1890}{kg/s}\;(\SI{2.6}{m^3/s}). \]
+The pumping power for the first-wall channels alone is small: $\dot V\,\Delta p/\eta_\text{pump} =
+\SI{26.4}{m^3/s}\cdot\SI{0.24}{MPa}/0.8 \approx \SI{8}{MW}$, even if all the water passed through such channels.
+The assumed $f_p P_\text{th} = \SI{137}{MW}$ leaves room for steam generators, piping and blanket.
+
+\paragraph{5. Turbine.} $P_\text{gross} = \eta\,P_\text{th} = \SI{1197}{MW}$, waste heat at the condenser
+$(1-\eta)P_\text{th} = \SI{2223}{MW}$. Comparison with sourced plants:
+\begin{itemize}\itemsep1pt
+\item \textbf{Isar~2 (Konvoi):} \SI{3950}{MW} thermal, \SI{1485}{MW} gross, \SI{1410}{MW} net, i.e.\
+  $\eta_\text{gross} = 0.376$; shut down since 15~April 2023. The fusion plant would need 87\,\% of its heat and
+  81\,\% of its turbine output: \textbf{one turbine of this class is enough}.
+\item \textbf{VVER-1000:} \SI{3000}{MW} thermal, net efficiency 31.7\,\%, about \SI{1}{GW} electric. The fusion plant
+  delivers 114\,\% of this heat; a single turbine of this size would be too small.
+\end{itemize}
+\bild{waermebilanz.png}{1.0}{Heat balance for \SI{1}{GW} net with pressurised water and a turbine from a
+pressurised water reactor (labels in German).}
+
+\paragraph{6. Sensitivity.} Efficiency has the largest effect on the required fusion power:
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrr}\toprule
+Case & $P_\text{fus}$ & $P_\text{th}$ & $P_\text{gross}$\\\midrule
+$\eta = 0.35$, divertor heat used & \SI{3053}{MW} & \SI{3419}{MW} & \SI{1197}{MW}\\
+$\eta = 0.376$ (as Isar~2) & \SI{2817}{MW} & \SI{3155}{MW} & \SI{1186}{MW}\\
+$\eta = 0.317$ (VVER-1000, net) & \SI{3417}{MW} & \SI{3827}{MW} & \SI{1213}{MW}\\
+$\eta = 0.35$, divertor heat lost & \SI{3353}{MW} & \SI{3419}{MW} & \SI{1197}{MW}\\\bottomrule
+\end{tabular}\caption{Fusion power required for \SI{1}{GW} net.}\end{table}
+The divertor is cooled at low temperature (copper alloy). Its heat can preheat the feedwater. If it is lost, the
+required fusion power rises by 10\,\%.
+
+\paragraph{Limits.} $f_\text{div}$ and $M$ are assumptions. Part of the neutron heat is already deposited in the
+first wall and is counted here with the blanket. The blanket itself is open: it must remove \SI{2.8}{GW} at
+pressurised-water conditions and breed tritium at the same time. The EU-DEMO WCLL concept (water as coolant,
+lead-lithium as breeder) aims at exactly this; sourced values are still missing here because the publishers'
+sites block automated access. Whether a turbine from a decommissioned plant is actually available was not
+checked; the reference plants only show the matching size class.
+
+\subsection{Collaboration}
+From the user came: the thinner wall with a larger outlet (f12), pairwise comparison as a tool for decisions and
+optimisation loops together with the judgements, the point that the walls of the pressure space must withstand
+the pressure, the point about the small context of the local model, and the decision for an existing turbine. The
+assistant did the calculations, built the tools, checked the research and named the consequences.
+
 \section*{Code and data}
 Software: ElmerFEM, gmsh, FreeCAD, simsopt, DESC, PyVista, ParaView, Blender, FluidX3D 3.8 \cite{fluidx3d}, PicoGK \cite{picogk}.
 \url{https://github.com/ThomasSchmiegelt/stellarator-design} (MIT licence): pipeline code, findings log, figures.

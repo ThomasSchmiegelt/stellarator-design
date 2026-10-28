@@ -480,6 +480,180 @@ vorgeschlagen. Für das Ansehen von Strömungsschnitten entstand nebenbei ein kl
 man Schnittebenen angibt und mit \glqq Senden und nächster Schnitt\grqq{} bzw.\ \glqq Senden und beenden\grqq{} an
 die KI übergibt (\texttt{stellarator/schnitt\_werkzeug.py}).
 
+\section{Kühlmittel, Festigkeit und Wärmebilanz bis zur Turbine}\label{sec:bilanz}
+Dieses Kapitel führt die Kühlung vom einzelnen Segment bis zum Stromnetz. Am Anfang standen drei Fragen: Was
+bringt die dünnere Innenhaut? Welche Variante ist die beste, wenn sich die Kennzahlen widersprechen? Und welcher
+Druck und welche Temperatur sind realistisch? Die Antwort auf die letzte Frage hat der Nutzer am Ende selbst
+festgelegt: \emph{eine bestehende Turbine aus einem Kernkraftwerk verwenden und den Rest möglichst einfach halten.}
+
+\subsection{Variante f12: Innenhaut \SI{5}{mm}}
+f12 ist f11 mit einer Innenhaut von \SI{5}{mm} statt \SI{30}{mm} und einem Austrittsrohr von \SI{500}{mm}
+(Regel: Austritt immer größer als Eintritt). Strömung mit FluidX3D wie in Abschnitt~\ref{sec:kuehlung}.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrr}\toprule
+ & f11 & f12\\\midrule
+Streuung über den Umfang (Gyroid-Kern) & 8\,\% & 11\,\%\\
+Druckverlust & \SI{22,0}{kPa} & \SI{19,4}{kPa}\\
+Durchfluss & \SI{288}{l/s} & \SI{289}{l/s}\\
+Geschwindigkeit an der Plasmaseite & \SI{0,10}{m/s} & \SI{0,10}{m/s}\\
+Temperaturabfall in der Innenhaut bei \SI{0,5}{MW/m^2} & \SI{600}{K} & \SI{100}{K}\\\bottomrule
+\end{tabular}\caption{f11 und f12 im Vergleich.}\end{table}
+\bild{kuehlung_f12_auswertung.png}{1.0}{Auswertung f12: Druckverlust über der Zeit, Verteilung über den Umfang
+und Durchfluss im Gyroid-Kern.}
+Die Wand ist damit kein Engpass mehr. Es bleibt der Übergang ins langsame Wasser an der Plasmaseite mit etwa
+\SI{410}{K}.
+
+\subsection{Bewertung per Paarvergleich}
+Jede Variante liefert mehrere Kennzahlen, die sich oft widersprechen: f12 ist bei Temperatur und Druckverlust
+besser als f11, bei der Streuung schlechter. Der Nutzer schlug vor, die Vorgehensweise über einen Paarvergleich
+festzulegen, um die Ressourcen gut einzusetzen. Umgesetzt in \texttt{stellarator/varianten\_vergleich.py}:
+\begin{enumerate}\itemsep1pt
+\item \textbf{Pareto-Front:} Eine Variante fällt heraus, wenn eine andere in keinem Kriterium schlechter und in
+  mindestens einem besser ist. Dazu braucht es keine Gewichte.
+\item \textbf{Gewichte nach AHP} (Analytic Hierarchy Process): Der Nutzer vergleicht die Kriterien paarweise auf
+  der Skala 1 bis 9. Aus der Vergleichsmatrix $A$ mit $a_{ji}=1/a_{ij}$ ergibt sich der Gewichtsvektor $w$ als
+  Eigenvektor zum größten Eigenwert $\lambda_\text{max}$. Die Konsistenz prüft
+  $\mathrm{CR} = \frac{(\lambda_\text{max}-n)/(n-1)}{\mathrm{RI}_n}$ mit dem Zufallsindex $\mathrm{RI}_4 = 0{,}90$;
+  unter 0,1 gelten die Urteile als widerspruchsfrei.
+\item \textbf{Rang:} gewichtete Summe der auf 0 bis 1 normierten Kennzahlen.
+\end{enumerate}
+Die Urteile des Nutzers: Die Temperatur ist jeweils fünfmal so wichtig wie Streuung, Druckverlust und
+Totwasser; der Druckverlust ist dreimal so wichtig wie die Streuung und fünfmal so wichtig wie das Totwasser.
+Daraus folgen die Gewichte Temperatur 0,61, Druckverlust 0,23, Streuung 0,08 und Totwasser 0,08 bei
+$\mathrm{CR} = 0{,}10$, also gerade an der Grenze.
+\bild{varianten_vergleich.png}{1.0}{Links: Varianten nach Temperaturanstieg und Streuung, Farbe Druckverlust, rot
+umrandet die Pareto-Front. Rechts: Rangfolge mit den Gewichten des Nutzers.}
+Rang: f12 (0,73) vor f5 (0,69), f2 (0,58), f11 (0,42), f10 (0,38) und f1 (0,30). Bemerkenswert: f11 war auf die
+gleichmäßige Verteilung optimiert, die der Nutzer am Ende gering gewichtet. Der Paarvergleich hat so offengelegt,
+dass Aufwand in ein nachrangiges Ziel geflossen war.
+
+\subsection{Hält die dünne Haut den Druck?}
+Eine dünne Haut ist thermisch gut, muss aber den Kühlmitteldruck tragen. \texttt{stellarator/haut\_festigkeit.py}
+rechnet mit Elmer eine Stahlplatte der Dicke $t$ über $2\times2$ Gyroid-Zellen ($a = \SI{100}{mm}$). Eingespannt
+ist sie dort, wo die \SI{10}{mm} dicken Gyroid-Wände die Haut berühren. In der Hautebene sind das die Punkte mit
+\[ \frac{|f|}{|\nabla f|}\,\frac{a}{2\pi} < \frac{w}{2},\qquad f = \sin X\cos Y + \sin Y\cos Z + \sin Z\cos X,\quad X = 2\pi x/a. \]
+Dazwischen drückt das Kühlmittel zum Plasma hin. Zur Prüfung wurde ein Streifen mit geraden Lagern im Abstand
+$b = a/2 - w = \SI{40}{mm}$ gerechnet. Für ihn gilt bei beidseitiger Einspannung $\sigma = p\,b^2/(2t^2)$: Elmer
+liefert bei $t = \SI{5}{mm}$ \SI{34,3}{MPa} je MPa Druck, die Formel \SI{32,0}{MPa}.
+\begin{table}[H]\centering\small
+\begin{tabular}{rrr}\toprule
+Hautdicke & Spannung je MPa Druck & zulässiger Druck bei \SI{150}{MPa}\\\midrule
+\SI{5}{mm} & \SI{39}{MPa} & \SI{3,8}{MPa}\\
+\SI{10}{mm} & \SI{14}{MPa} & \SI{10,5}{MPa}\\
+\SI{15}{mm} & \SI{9}{MPa} & \SI{16}{MPa}\\\bottomrule
+\end{tabular}\caption{Innenhaut über dem Gyroid (Elmer, linear elastisch, ohne Temperaturspannungen).}\end{table}
+\bild{haut_festigkeit.png}{1.0}{Links: Vergleichsspannung in der \SI{5}{mm}-Haut bei \SI{15,5}{MPa}, blau die
+Gyroid-Wände. Rechts: höchste Spannung je Kühlmittel und Hautdicke.}
+Für Druckwasser wie in einem Kernkraftwerk ($\approx\SI{16}{MPa}$) taugt der wassergeführte Gyroid also nicht.
+Hochdruckwasser gehört in kleine Kanäle: Ein \SI{6}{mm}-Kanal unter \SI{5}{mm} Haut kommt nach derselben Formel nur
+auf etwa \SI{11}{MPa}. Das ist das doppelte Filament aus Abschnitt~\ref{sec:filament}.
+
+\subsection{Belegte Vergleichswerte}
+Die Kühlmittelwerte realer Anlagen wurden mit dem lokalen Agenten PI recherchiert. Ein erster Versuch mit einem
+anderen lokalen Agenten (Hermes) lieferte erfundene Werte und Links. Für PI entstand deshalb ein Skill
+\texttt{web-recherche}: Er ruft Seiten wirklich ab und schreibt jeden Wert nur mit wörtlichem Zitat und Quelle auf.
+Ein Prüfprogramm stellt fest, ob das Zitat im abgerufenen Text steht. Weil das lokale Modell nur wenig Kontext
+hat, recherchiert PI je Anlage in einem eigenen Aufruf. Das schlug der Nutzer vor, nachdem ein langer Lauf ohne
+Ergebnis geblieben war. Alle 29 Zitate wurden bestätigt. Zwei Zeilen hat PI trotzdem falsch gedeutet (Ein- und
+Austritt beim Dampferzeuger vertauscht); sie wurden beim Gegenlesen korrigiert.
+\begin{table}[H]\centering\small
+\begin{tabular}{llrrl}\toprule
+Anlage & Kühlmittel & Ein / Aus & Druck & Quelle\\\midrule
+EPR & Wasser & \SI{295}{} / \SI{320}{\celsius} & \SI{15,5}{MPa} & Wikipedia\\
+WWER-1000 & Wasser & \SI{289}{} / \SI{319}{\celsius} & \SI{16,0}{MPa} & Wikipedia\\
+BREST-OD-300 & Blei & \SI{340}{} / \SI{540}{\celsius} & -- & Wikipedia\\
+ALFRED & Blei & \SI{390}{} / \SI{520}{\celsius} & drucklos & Wikipedia\\
+HTR-PM & Helium & \SI{250}{} / \SI{750}{\celsius} & \SI{7,0}{MPa} & OSTI-Bericht\\
+ITER Blanket & Wasser & \SI{70}{\celsius} / -- & \SI{4}{MPa} & iter.org\\
+EU-DEMO HCPB & Helium & \SI{300}{} / \SI{500}{\celsius} & \SI{8}{MPa} & KIT\\\bottomrule
+\end{tabular}\caption{Belegte Kühlmittelwerte; vollständige Zitate in \texttt{docs/recherche/pi/ergebnis.md}.}\end{table}
+
+\subsection{Entscheidung: Druckwasser wie im Kernkraftwerk}
+Mit einer vorhandenen Turbine aus einem Druckwasserreaktor ist der Dampfzustand vorgegeben, und damit auch der
+Primärkreis: Druckwasser mit etwa \SI{289}{\celsius} $\rightarrow$ \SI{319}{\celsius} bei \SI{16}{MPa} wie beim
+WWER-1000. Dampferzeuger, Hauptkühlmittelpumpen und Druckhalter sind Serientechnik. Blei (Erstarren bei
+\SI{327}{\celsius}, Bremsung im Magnetfeld) und Helium (\SI{8}{MPa}, Gebläse) entfallen. Die Erstwandkanäle
+($6\times\SI{6}{mm}$, drei Durchgänge) wurden für diese Bedingungen nachgerechnet:
+Stahl höchstens \SI{441}{\celsius}, Kanalwand \SI{340}{\celsius} (Sieden bei \SI{345}{\celsius}), Druckverlust
+\SI{0,24}{MPa}. Der Stahl liegt damit im Arbeitsbereich von EUROFER (etwa \SIrange{300}{550}{\celsius}); mit
+Wasser von \SIrange{60}{150}{\celsius} lag er darunter. Knapp ist der Abstand zum Sieden mit \SI{5}{K}.
+
+\subsection{Herleitung der Wärmebilanz}
+Die Kette läuft vom Netz rückwärts zum Plasma, mit denselben Annahmen wie die Leistungsbilanz der Stufe~0
+(\texttt{invers/stufe0\_bilanz.py}). Hier wird sie nach Bauteilen aufgeteilt (\texttt{stellarator/waermebilanz.py}).
+
+\paragraph{1. Thermische Leistung aus der Netzleistung.} Ins Netz gehen $P_\text{netz}$; die Turbine wandelt die
+Wärme $P_\text{th}$ mit dem Wirkungsgrad $\eta$ in Strom um. Davon gehen die Pumpen ($f_p P_\text{th}$) und der
+übrige Eigenbedarf $P_\text{eigen}$ (Kälteanlage der Spulen, Tritiumanlage, Gebäude) ab:
+\[ P_\text{netz} = \eta P_\text{th} - f_p P_\text{th} - P_\text{eigen}
+   \quad\Rightarrow\quad P_\text{th} = \frac{P_\text{netz} + P_\text{eigen}}{\eta - f_p}
+   = \frac{1000 + 60}{0{,}35 - 0{,}04}\,\text{MW} = \SI{3419}{MW}. \]
+
+\paragraph{2. Fusionsleistung.} Eine D-T-Fusion setzt \SI{17,59}{MeV} frei; \SI{3,52}{MeV} trägt das
+Alpha-Teilchen, \SI{14,07}{MeV} das Neutron. Der Alpha-Anteil ist $f_\alpha = 3{,}52/17{,}59 = 0{,}200$. Im
+Blanket vervielfachen Kernreaktionen die Neutronenenergie um $M = 1{,}15$:
+\[ P_\text{th} = P_\text{fus}\,\bigl[(1-f_\alpha)M + f_\alpha\bigr] = 1{,}120\,P_\text{fus}
+   \quad\Rightarrow\quad P_\text{fus} = \SI{3053}{MW}. \]
+
+\paragraph{3. Aufteilung auf die Bauteile.} Die Neutronen durchdringen die Erstwand und geben ihre Energie im
+Blanket ab. Die Alpha-Leistung bleibt im Plasma und verlässt es als Strahlung (auf die ganze Erstwand) oder
+als Teilchenstrom entlang der Feldlinien (auf den Divertor). Angenommen ist eine Hälfte je Weg ($f_\text{div} = 0{,}5$):
+\begin{align*}
+P_\text{Blanket}  &= (1-f_\alpha)\,M\,P_\text{fus} = \SI{2808}{MW},\\
+P_\text{Erstwand} &= (1-f_\text{div})\,f_\alpha\,P_\text{fus} = \SI{305}{MW},\qquad
+q_\text{Erstwand} = P_\text{Erstwand}/S = \SI{305}{MW}/\SI{1230}{m^2} = \SI{0,25}{MW/m^2},\\
+P_\text{Divertor} &= f_\text{div}\,f_\alpha\,P_\text{fus} = \SI{305}{MW},\qquad
+A_\text{Divertor} \ge P_\text{Divertor}/q_\text{max} = \SI{305}{MW}/\SI{10}{MW/m^2} = \SI{31}{m^2}.
+\end{align*}
+$S$ ist die Oberfläche des Plasmas der HTS-Auslegung (aus Stufe~0: Neutronen-Wandlast \SI{1,99}{MW/m^2}).
+Die Erstwandkanäle sind für \SI{0,5}{MW/m^2} ausgelegt und haben damit Faktor 2 Reserve für örtliche Spitzen.
+\SI{10}{MW/m^2} ist die Auslegung der wassergekühlten Divertor-Elemente von Wendelstein~7-X (Wikipedia).
+
+\paragraph{4. Kühlwasser.} Mit $\Delta T = \SI{30}{K}$ und $c_p = \SI{5380}{J/(kg\,K)}$, $\rho = \SI{732}{kg/m^3}$
+bei etwa \SI{300}{\celsius}:
+\[ \dot m = \frac{P}{c_p\,\Delta T}:\qquad \dot m_\text{Blanket} = \SI{17400}{kg/s}\;(\SI{23,8}{m^3/s}),\qquad
+   \dot m_\text{Erstwand} = \SI{1890}{kg/s}\;(\SI{2,6}{m^3/s}). \]
+Die Pumpleistung allein für die Erstwandkanäle ist klein: $\dot V\,\Delta p/\eta_\text{Pumpe} =
+\SI{26,4}{m^3/s}\cdot\SI{0,24}{MPa}/0{,}8 \approx \SI{8}{MW}$, selbst wenn alles Wasser durch solche Kanäle
+liefe. Die angesetzten $f_p P_\text{th} = \SI{137}{MW}$ lassen Platz für Dampferzeuger, Leitungen und Blanket.
+
+\paragraph{5. Turbine.} $P_\text{brutto} = \eta\,P_\text{th} = \SI{1197}{MW}$, Abwärme am Kondensator
+$(1-\eta)P_\text{th} = \SI{2223}{MW}$. Vergleich mit belegten Anlagen:
+\begin{itemize}\itemsep1pt
+\item \textbf{Isar~2 (Konvoi):} \SI{3950}{MW} thermisch, \SI{1485}{MW} brutto, \SI{1410}{MW} netto, also
+  $\eta_\text{brutto} = 0{,}376$; seit 15.~April 2023 außer Betrieb. Die Fusionsanlage bräuchte 87\,\% der
+  Wärme und 81\,\% der Turbinenleistung: \textbf{eine Turbine dieser Klasse reicht}.
+\item \textbf{WWER-1000:} \SI{3000}{MW} thermisch, Wirkungsgrad netto 31,7\,\%, etwa \SI{1}{GW} elektrisch. Die
+  Fusionsanlage liefert 114\,\% dieser Wärme; eine einzelne Turbine dieser Größe wäre zu klein.
+\end{itemize}
+\bild{waermebilanz.png}{1.0}{Wärmebilanz für \SI{1}{GW} netto mit Druckwasser und einer Turbine aus einem
+Druckwasserreaktor.}
+
+\paragraph{6. Empfindlichkeit.} Der Wirkungsgrad bestimmt die nötige Fusionsleistung am stärksten:
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrr}\toprule
+Fall & $P_\text{fus}$ & $P_\text{th}$ & $P_\text{brutto}$\\\midrule
+$\eta = 0{,}35$, Divertor-Wärme genutzt & \SI{3053}{MW} & \SI{3419}{MW} & \SI{1197}{MW}\\
+$\eta = 0{,}376$ (wie Isar~2) & \SI{2817}{MW} & \SI{3155}{MW} & \SI{1186}{MW}\\
+$\eta = 0{,}317$ (WWER-1000, netto) & \SI{3417}{MW} & \SI{3827}{MW} & \SI{1213}{MW}\\
+$\eta = 0{,}35$, Divertor-Wärme verloren & \SI{3353}{MW} & \SI{3419}{MW} & \SI{1197}{MW}\\\bottomrule
+\end{tabular}\caption{Nötige Fusionsleistung für \SI{1}{GW} netto.}\end{table}
+Der Divertor wird bei niedriger Temperatur gekühlt (Kupferlegierung). Seine Wärme kann das Speisewasser
+vorwärmen. Geht sie verloren, steigt die nötige Fusionsleistung um 10\,\%.
+
+\paragraph{Grenzen.} $f_\text{div}$ und $M$ sind Annahmen. Ein Teil der Neutronenwärme fällt schon in der Erstwand
+an und ist hier dem Blanket zugerechnet. Offen ist das Blanket selbst: Es muss \SI{2,8}{GW} bei
+Druckwasserbedingungen abführen und zugleich Tritium erbrüten. Das EU-DEMO-Konzept WCLL (Wasser als Kühlmittel,
+Bleilithium als Brutstoff) zielt genau darauf; belegte Werte dazu fehlen hier noch, weil die Verlagsseiten
+automatische Abrufe sperren. Ob eine Turbine aus einer stillgelegten Anlage tatsächlich zu haben ist, wurde
+nicht geprüft; die Vergleichsanlagen zeigen nur die passende Größenklasse.
+
+\subsection{Zusammenarbeit}
+Vom Nutzer kamen: die dünnere Wand mit größerem Austritt (f12), der Paarvergleich als Werkzeug für Entscheidungen
+und Optimierungsschleifen samt den Urteilen dazu, der Hinweis, dass die Wandung des Druckraums dem Druck
+standhalten muss, der Hinweis auf den knappen Kontext des lokalen Modells und die Festlegung auf eine bestehende
+Turbine. Der Assistent hat gerechnet, die Werkzeuge gebaut, die Recherche geprüft und die Folgen benannt.
+
 \section*{Software und Daten}
 ElmerFEM 9.0 \cite{elmer}, FluidX3D 3.8 \cite{fluidx3d}, PicoGK \cite{picogk}, gmsh \cite{gmsh}, FreeCAD 1.1 \cite{freecad}, simsopt \cite{simsopt}, DESC
 \cite{desc}, PyVista \cite{pyvista}, ParaView \cite{paraview}, Blender 4.0 \cite{blender}. Programmcode, Befundprotokoll und Abbildungen:

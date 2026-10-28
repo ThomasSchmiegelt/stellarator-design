@@ -396,3 +396,16 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
 - Belegt: EPR 295,2/320 °C 15,5 MPa; WWER-1000 289/319 °C 16,0 MPa; BREST 340/540; ALFRED 390/520 drucklos;
   Superphenix Na 550 °C atmosphaerisch; HTR-PM He 250/750 °C 7,0 MPa (OSTI); ITER 70 °C 4 MPa (iter.org);
   DEMO HCPB He 300/500 °C 8 MPa (KIT). Luecken: DEMO WCLL (Verlage 403), W7-X, ITER-Austritt.
+
+## 2026-10-28 ENTSCHEIDUNG User: bestehende AKW-Turbine verwenden, Rest moeglichst einfach
+- Folge: Primaerkreis Druckwasser wie DWR/WWER-1000 (belegt 289 -> 319 °C, 16,0 MPa), Standard-Dampferzeuger + Turbine.
+  1 GW netto ~ 1,2-1,3 GWe brutto -> eine grosse DWR-Turbine (WWER-1000-/Konvoi-Klasse).
+- Druckwasser nur in kleinen Erstwandkanaelen (doppeltes Filament), Gyroid trocken als Stuetze. Kein Blei, kein Helium.
+- Nachgerechnet (erstwand_kanal, 6x6 mm, 3 Durchgaenge, Drossel): w1000 289->319 °C 16 MPa: Stahl max 441 °C,
+  Kanalwand 340 °C (Sieden 345 °C, nur 5 K Abstand), dp 232 kPa. w440 269->300 °C 12,5 MPa: Stahl 423 °C,
+  Kanalwand 322 °C (Sieden 326 °C). Stahl damit im EUROFER-Fenster 300-550 °C (bei 60-150 °C war er darunter).
+- Offen: Blanket (80 % der Leistung als Neutronen) braucht dieselben Bedingungen -> WCLL-artig (Werte noch unbelegt).
+- Waermebilanz (stellarator/waermebilanz.py, sim/waermebilanz/): P_th 3419, P_fus 3053, Blanket 2808, Erstwand 305
+  (0,25 MW/m2), Divertor 305 (>= 31 m2 bei 10 MW/m2), brutto 1197 MW; Wasser 17400 + 1890 kg/s. Isar 2 (Konvoi):
+  3950 MWth/1485 brutto -> eine Turbine reicht; WWER-1000 (3000 MWth) zu klein. Kapitel sec:bilanz/sec:balance in
+  beiden Berichten (DE 40 S., EN 38 S.), Prozess-Doku Abschnitt 9. REGEL User: immer im Bericht mit Herleitung dokumentieren.

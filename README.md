@@ -345,6 +345,14 @@ Druckwasser mit 15,5 MPa gehört in kleine Erstwandkanäle (doppeltes Filament).
 
 Referenzwerte für Temperaturen und Drücke (EPR, WWER, BREST, ALFRED, HTR-PM, ITER, DEMO): `docs/recherche/pi/ergebnis.md`,
 jeder Wert mit wörtlichem Zitat und Quelle, maschinell geprüft.
+
+**Entscheidung: bestehende Turbine aus einem Kernkraftwerk, Rest möglichst einfach.** Damit läuft alles mit
+Druckwasser wie beim WWER-1000 (289 → 319 °C, 16 MPa), nur in kleinen Erstwandkanälen; der Gyroid bleibt trocken.
+Wärmebilanz (`stellarator/waermebilanz.py`, Herleitung im Projektbericht): 3053 MW Fusion → 2808 MW Blanket,
+305 MW Erstwand (0,25 MW/m²), 305 MW Divertor → 1197 MW brutto, 1000 MW netto. Eine Turbine der Konvoi-Klasse
+(Isar 2: 3950 MW thermisch, 1485 MW brutto) reicht. Offen ist das Blanket: 2,8 GW bei Druckwasserbedingungen.
+
+![Wärmebilanz 1 GW netto mit Druckwasser](docs/bilder/waermebilanz.png)
 3. Totwassergebiete finden und beseitigen.
 4. Robuster abgleichen, mit Drosseln statt Wanddicke.
 5. Wärme gekoppelt mitrechnen.

@@ -225,3 +225,23 @@ Was dabei auffiel:
   stand in der Zusammenfassung und in `ERINNERUNGEN.md`.
 - Ein bequemer Schritt ging fast schief: Ein Bild im Bericht wurde überschrieben, bevor nachgesehen wurde, was
   darin war. Es war zum Glück dasselbe Bild. Die Regel „erst ansehen, dann überschreiben“ gilt auch für Bilder.
+
+## 9. Bewerten, Festigkeit, Recherche und Wärmebilanz (2026-10-28)
+
+| Nutzer | KI |
+|---|---|
+| f12: Wand 5 mm, Austritt größer; „nach dem Lauf alles beenden“ | f12 lief über Nacht, die Auswertung fehlte (lief nicht automatisch) und wurde nachgeholt: 11 % Streuung, 19,4 kPa, Wand 100 K statt 600 K |
+| Hermes recherchiert schlecht („ne 5“), PI soll es mit Scraping-Fähigkeit versuchen | Skill `web-recherche` (suche/abruf/pruefe.py): nur offizielle Schnittstellen, jeder Wert mit wörtlichem Zitat, Prüfprogramm |
+| „So viel kann der sich gar nicht merken“ | Umbau auf eine Anlage je PI-Aufruf, Datei als Gedächtnis: 29 Belege, 0 Fehler; zwei Deutungsfehler beim Gegenlesen gefunden |
+| Vorgehen per Paarvergleich festlegen, auch für Optimierungsschleifen; Urteile zu 6 Kriterienpaaren | `varianten_vergleich.py`: Pareto + AHP; Gewichte Temperatur 0,61, Druckverlust 0,23; Rang f12 vor f5 |
+| „Die Wandung des Druckraums muss entsprechend gestaltet sein“ | `haut_festigkeit.py` (Elmer): 5-mm-Haut hält nur ~3,8 MPa; Hochdruckwasser nur in kleinen Kanälen |
+| Bestehende AKW-Turbine verwenden, Rest möglichst einfach | Druckwasser wie WWER-1000; Erstwandkanäle nachgerechnet (Stahl 441 °C); `waermebilanz.py`: 3053 MW Fusion, eine Turbine der Konvoi-Klasse reicht |
+| Dokumentieren, im Bericht mit Herleitung | Kapitel „Kühlmittel, Festigkeit und Wärmebilanz“ in beiden Berichten |
+
+Was dabei auffiel:
+- Der Paarvergleich hat sofort etwas gezeigt: f11 war auf ein Ziel optimiert, das der Nutzer gering gewichtet.
+- Die Festigkeitsfrage des Nutzers hat eine ganze Linie (Wasser im Gyroid) beendet. Ohne sie wäre f13 gerechnet worden.
+- Lokale Agenten taugen für Recherche nur in kleinen Stücken mit maschineller Prüfung; die Deutung muss trotzdem
+  jemand gegenlesen.
+- Die Entscheidung für eine vorhandene Turbine hat mehr vereinfacht als jede Rechnung: Druck, Temperatur und
+  Kühlmittel stehen damit fest.
