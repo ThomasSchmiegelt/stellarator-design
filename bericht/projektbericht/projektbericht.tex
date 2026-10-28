@@ -781,6 +781,75 @@ Offen ist der Test auf Durchströmung (FluidX3D: geht das Wasser durch die dicht
 aus?) und Festigkeit (Elmer: Haut und Verzweigungen unter \SI{16}{MPa}). Das Wandstück schreibt dafür auch den
 Wasserraum heraus.
 
+\subsection{Wie kommt die Wärme in die Breite und nach außen?}\label{sec:waermebreite}
+Frage des Nutzers: Wie bekommen wir die Wärme in die Breite und leiten so den Wärmefluss nach außen?
+
+\paragraph{Überschlag.} Eine Platte der Dicke $t$ mit Wärmeleitfähigkeit $k$, die auf einer Seite mit dem
+Wärmeübergang $h$ gekühlt wird, verteilt einen Wärmefleck seitlich nur über die Ausbreitungslänge
+\begin{equation}\lambda=\sqrt{k\,t/h}.\end{equation}
+Für \SI{5}{mm} Stahl ($k\approx\SI{25}{W/(m.K)}$) und $h=\SI{e4}{W/(m^2.K)}$ sind das \SI{3,5}{mm}.
+Eine Gyroid-Wand der Dicke $t$ wirkt als Rippe, die beidseitig gekühlt wird. Ihre wirksame Tiefe ist
+\begin{equation}1/m=\sqrt{k\,t/(2h)},\end{equation}
+für Stahl mit \SI{2,5}{mm} also \SI{1,8}{mm}. Beide Werte sind klein gegen die Zelle von \SI{20}{mm}.
+Erwartung: In Stahl bleibt die Wärme dort, wo sie auftrifft, und geht unmittelbar hinter der Haut ins Wasser.
+
+\paragraph{Rechnung.} Elmer HeatSolve (stationär) an einem Ausschnitt der Wand g1:
+\begin{itemize}
+\item Ausschnitt $80\times80\times\SI{100}{mm}$, das ist eine volle Periode der ersten drei Lagen. Gleiche Lagen und Überblendung wie \texttt{GradientWand}, Ausrundung durch morphologisches Schließen.
+\item Voxel-Hexaeder mit \SI{0,5}{mm} Kantenlänge, 1,4 bis 1,5 Millionen Elemente.
+\item Plasmaseite: $q=\SI{0,5}{MW/m^2}$.
+\item Benetzte Flächen: $h=\SI{e4}{W/(m^2.K)}$ an Wasser von \SI{304}{\celsius}. Die Treppenfläche der Voxel ist um den Faktor $|n_x|+|n_y|+|n_z|$ größer als die glatte Fläche; $h$ wird je Fläche durch diesen Faktor geteilt.
+\item Seiten und Rückseite: adiabat.
+\item Energiebilanz: Eintrag und Abgabe stimmen auf \SI{0,1}{\%} überein.
+\end{itemize}
+Gerechnet wurden fünf Fälle:
+\begin{itemize}
+\item gleichmäßige Last;
+\item heißer Fleck (Radius \SI{10}{mm}, $2q$);
+\item derselbe Fleck mit \SI{3}{mm} Wolfram vor der Haut ($k=130$);
+\item Haut und Struktur aus Kupferlegierung ($k=320$, wie CuCrZr am Divertor);
+\item doppeltes $h$ (schnelleres Wasser).
+\end{itemize}
+Die $k$-Werte sind grobe Annahmen und nicht belegt.
+
+\begin{table}[h]\centering\begin{tabular}{lrrrr}\toprule
+Fall & Plasmaseite max & nasse Wand max & Abgabe bis \SI{10}{mm} & im Fleck abgegeben\\\midrule
+Stahl, gleichmäßig & \SI{469}{\celsius} & \SI{364}{\celsius} & 95\,\% & --\\
+Stahl, Fleck & \SI{588}{\celsius} & \SI{399}{\celsius} & 95\,\% & 6,9\,\%\\
+Wolfram + Stahl, Fleck & \SI{535}{\celsius} & \SI{377}{\celsius} & 95\,\% & 5,6\,\%\\
+Kupferlegierung, Fleck & \SI{351}{\celsius} & \SI{340}{\celsius} & 62\,\% & 5,8\,\%\\
+Stahl, Fleck, $h$ doppelt & \SI{559}{\celsius} & \SI{363}{\celsius} & 98\,\% & 7,0\,\%\\\bottomrule
+\end{tabular}\caption{Wärmetest an der Wand g1. Siedegrenze bei \SI{16}{MPa}: \SI{344,8}{\celsius}.
+„Abgabe bis \SI{10}{mm}“: Anteil der Wärme, der bis \SI{10}{mm} hinter der Plasmaseite der Stahlhaut ins Wasser geht.
+„Im Fleck abgegeben“: Anteil, der innerhalb des Fleckradius abgeht. Eingestrahlt wird dort 9,4\,\% der Wärme;
+was weniger abgeht, wurde seitlich verteilt.}\end{table}
+\bild{gradientwand_waerme.jpg}{1.0}{Wärmetest der Wand g1. Spalten von links: Temperatur der Plasmaseite; Schnitt
+durch die Mitte; an das Wasser abgegebene Wärme je Grundfläche (rot: Fleck); abgegebene Wärme über der Tiefe.}
+
+\paragraph{Ergebnis.}
+\begin{itemize}
+\item \textbf{In Stahl geht die Wärme nicht in die Tiefe.} 95\,\% verlassen den Stahl in den ersten \SI{5}{mm} hinter der Haut, über die Rückseite der Haut und die Wurzeln der Stränge. Die Stränge selbst bleiben fast auf Wassertemperatur. Die benetzte Fläche ist rund 15-mal so groß wie die Grundfläche, wird aber kaum genutzt. Die abgestufte Struktur ist in Stahl also eine Tragstruktur, kein Wärmetauscher. Das bestätigt den Überschlag.
+\item \textbf{Die Siedegrenze wird schon bei gleichmäßiger Last überschritten.} 3\,\% der nassen Wand liegen über \SI{344,8}{\celsius}, und zwar dort, wo die Stränge an die Haut ansetzen. Dort kühlt örtlich weniger Fläche. Mit dem Fleck steigt die Wand auf \SI{399}{\celsius}.
+\item \textbf{Wolfram verteilt den Fleck in die Breite}: \SI{53}{K} weniger an der heißesten Stelle. Weil \SI{3}{mm} Wolfram zusätzlich Wärme leiten müssen, wird die Plasmaseite im Mittel aber um \SI{12}{K} wärmer.
+\item \textbf{Schnelleres Wasser} senkt die Wandtemperatur am stärksten bei gleichem Werkstoff, hilft aber dem Fleck kaum.
+\item \textbf{Kupferlegierung ist der einzige Fall, der die Wärme in die Tiefe bringt.} Nur 62\,\% gehen in den ersten \SI{5}{mm} ab, der Rest weiter hinten über die Stränge. Die Plasmaseite bleibt unter \SI{351}{\celsius} und die nasse Wand unter der Siedegrenze. Die Rippen wirken jetzt, weil $1/m=\sqrt{k t/(2h)}$ mit $k=320$ auf \SI{6}{mm} wächst.
+\end{itemize}
+
+\paragraph{Folgerungen.}
+\begin{itemize}
+\item Wärme verteilt nur ein gut leitender Werkstoff in die Breite und Tiefe. Das kann eine dünne Wolfram- oder Kupferschicht an der Haut sein oder Stränge aus Kupferlegierung in den ersten \SIrange{10}{20}{mm}. Kupfer ist unter Neutronen problematisch (Versprödung, Aktivierung), am Divertor aber üblich. Die Struktur weiter hinten kann aus Stahl bleiben, sie trägt nur noch.
+\item Mit Stahl allein muss das Wasser direkt an der Haut schnell strömen. Die Hautlage braucht deshalb eine eigene Zuführung, wie schon in den Regeln oben gefordert.
+\item Im Blanket entsteht die Wärme im ganzen Volumen (Neutronen). Dort sind verzweigte, gut leitende Pfade zum Wasser sinnvoll, wie sie die Konstrukt-Theorie für das Kühlen eines wärmeerzeugenden Volumens beschreibt \cite{bejan1997}. Das ist der nächste Schritt, zusammen mit Durchströmung (FluidX3D) und Festigkeit.
+\end{itemize}
+Grenzen der Rechnung:
+\begin{itemize}
+\item $h$ ist überall gleich, weil keine Strömungsrechnung gekoppelt ist.
+\item Es gibt keine Volumenwärme durch Neutronen.
+\item $k$ ist konstant.
+\item Die Seiten sind adiabat statt periodisch.
+\end{itemize}
+Skript: \texttt{stellarator/gradient\_waerme.py}.
+
 \subsection{Zusammenarbeit}
 Vom Nutzer kamen: die dünnere Wand mit größerem Austritt (f12), der Paarvergleich als Werkzeug für Entscheidungen
 und Optimierungsschleifen samt den Urteilen dazu, der Hinweis, dass die Wandung des Druckraums dem Druck
@@ -850,5 +919,7 @@ ElmerFEM 9.0 \cite{elmer}, FluidX3D 3.8 \cite{fluidx3d}, PicoGK \cite{picogk}, g
   \url{https://github.com/ThomasSchmiegelt/sketch-to-prompt} (MIT-Lizenz).
 \bibitem{arena2023} P. Arena, G. Bongiovì, I. Catanzaro et al.: Design and Integration of the EU-DEMO Water-Cooled Lead
   Lithium Breeding Blanket. \emph{Energies} 16 (2023) 2069. doi:10.3390/en16042069
+\bibitem{bejan1997} A. Bejan: Constructal-theory network of conducting paths for cooling a heat generating volume.
+  \emph{Int. J. Heat Mass Transfer} 40 (1997) 799--816. doi:10.1016/0017-9310(96)00175-5
 \end{thebibliography}
 \end{document}

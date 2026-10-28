@@ -444,3 +444,14 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
   Lagen Zelle 20/40/80/160, Dicke 2,5/3/4,5/8, bis 30/80/180/570 mm; Porositaet 0,84. Bilder gesamt.png, haut_nah.png
   (blender_wandstueck.py jetzt mit --ohne_wasser --zoom --ziel_z --bild). STL gross (stahl_ganz 346 MB, wasser 368 MB).
   Doku: Berichte DE 44 / EN 42 S. (Unterabschnitt "Abgestufte Struktur"), README. Naechst: Test Durchstroemung + Festigkeit.
+- 2026-10-28 Push 2daa5f8 (WCLL, GradientWand, Berichte). Danach Waermetest stellarator/gradient_waerme.py (Elmer HeatSolve,
+  Voxel 0,5 mm, Ausschnitt 80x80x100 mm von g1, 1,4 Mio Elemente, 2:20 min je 3 Faelle, 2,8 GB RAM), q 0,5 MW/m2, h 1e4, 304 C.
+  Ergebnis: Stahl gibt 95 % in den ersten 5 mm hinter der Haut ab (Rippe wirkt nur sqrt(kt/2h) ~ 2 mm), Plasmaseite 469 C,
+  nasse Wand 364 C > Sieden 344,8 (an den Strangwurzeln). Fleck 2q: 588/399; +3 mm W: 535/377; h doppelt: 559/363;
+  Kupferlegierung k 320: 351/340 und nur 62 % in 5 mm (einziger Fall, der Waerme in die Tiefe bringt).
+  Doku: Berichte DE 47 / EN 45 S. (Unterabschnitt sec:waermebreite, \cite{bejan1997}), README, Prozess-Doku. NICHT gepusht.
+  Naechst moeglich: Blanket-Volumenwaerme mit verzweigten Pfaden, Kupfer-Hautlage, Durchstroemung FluidX3D, Festigkeit.
+- 2026-10-28 Nutzer-Idee: Gyroid besser als Zwei-Fluid-Waermetauscher (zwei getrennte Kanalnetze) statt Waermeleiter in der
+  Erstwand; Kondensator-Abwaerme (~2200 MW, ~33 C) nutzen, geschlossener Kreislauf. Vorschlaege (Divertor-Vorwaermer
+  ~2000 m2/7 m3, Gyroid-Dampferzeuger ~23000 m2/75 m3, Kondensator: Dampf 0,05 bar ~25000 m3/s -> kleine Zellen ersticken,
+  Trockenkuehlturm, Tritium-Zwischenkreis) werden AB FREITAG 2026-10-30 gebaut. Erst fragen: Kondensator oder Vorwaermer.

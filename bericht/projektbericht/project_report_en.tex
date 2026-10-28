@@ -750,6 +750,75 @@ Still open are the flow test (FluidX3D: does the water pass through the dense sk
 and the strength test (Elmer: skin and branches at \SI{16}{MPa}). The wall piece also writes out the water volume for
 this.
 
+\subsection{How does the heat spread sideways and outward?}\label{sec:heatspread}
+The user's question: how do we spread the heat sideways and so lead the heat flow outward?
+
+\paragraph{Estimate.} A plate of thickness $t$ and conductivity $k$, cooled on one side with heat transfer coefficient
+$h$, spreads a hot spot sideways only over the spreading length
+\begin{equation}\lambda=\sqrt{k\,t/h}.\end{equation}
+For \SI{5}{mm} steel ($k\approx\SI{25}{W/(m.K)}$) and $h=\SI{e4}{W/(m^2.K)}$ that is \SI{3.5}{mm}.
+A gyroid wall of thickness $t$ acts as a fin cooled on both sides. Its effective depth is
+\begin{equation}1/m=\sqrt{k\,t/(2h)},\end{equation}
+which is \SI{1.8}{mm} for \SI{2.5}{mm} steel. Both values are small compared with the \SI{20}{mm} cell.
+Expectation: in steel the heat stays where it arrives and enters the water directly behind the skin.
+
+\paragraph{Calculation.} Elmer HeatSolve (steady state) on a cut-out of wall g1:
+\begin{itemize}
+\item Cut-out $80\times80\times\SI{100}{mm}$, one full period of the first three layers. Same layers and blending as \texttt{GradientWand}; fillets from morphological closing.
+\item Voxel hexahedra of \SI{0.5}{mm}, 1.4 to 1.5 million elements.
+\item Plasma side: $q=\SI{0.5}{MW/m^2}$.
+\item Wetted surfaces: $h=\SI{e4}{W/(m^2.K)}$ to water at \SI{304}{\celsius}. The voxel staircase area exceeds the smooth area by the factor $|n_x|+|n_y|+|n_z|$, so $h$ is divided by this factor on each face.
+\item Sides and back: adiabatic.
+\item Energy balance: input and output agree to \SI{0.1}{\%}.
+\end{itemize}
+Five cases were computed:
+\begin{itemize}
+\item uniform load;
+\item hot spot (radius \SI{10}{mm}, $2q$);
+\item the same spot with \SI{3}{mm} tungsten in front of the skin ($k=130$);
+\item skin and structure of copper alloy ($k=320$, like CuCrZr in the divertor);
+\item doubled $h$ (faster water).
+\end{itemize}
+The $k$ values are rough assumptions, not sourced.
+
+\begin{table}[h]\centering\begin{tabular}{lrrrr}\toprule
+Case & plasma side max & wet wall max & removed within \SI{10}{mm} & removed under spot\\\midrule
+steel, uniform & \SI{469}{\celsius} & \SI{364}{\celsius} & 95\,\% & --\\
+steel, hot spot & \SI{588}{\celsius} & \SI{399}{\celsius} & 95\,\% & 6.9\,\%\\
+tungsten + steel, spot & \SI{535}{\celsius} & \SI{377}{\celsius} & 95\,\% & 5.6\,\%\\
+copper alloy, spot & \SI{351}{\celsius} & \SI{340}{\celsius} & 62\,\% & 5.8\,\%\\
+steel, spot, $h$ doubled & \SI{559}{\celsius} & \SI{363}{\celsius} & 98\,\% & 7.0\,\%\\\bottomrule
+\end{tabular}\caption{Heat test on wall g1. Saturation temperature at \SI{16}{MPa}: \SI{344.8}{\celsius}.
+“Removed within \SI{10}{mm}”: share of heat entering the water within \SI{10}{mm} behind the plasma side of the steel skin.
+“Removed under spot”: share leaving within the spot radius. The spot receives 9.4\,\% of the heat;
+any shortfall was spread sideways.}\end{table}
+\bild{gradientwand_waerme.jpg}{1.0}{Heat test of wall g1. Columns from left: plasma-side temperature; section through
+the middle; heat given to the water per footprint area (red: spot); cumulative heat removal over depth.}
+
+\paragraph{Result.}
+\begin{itemize}
+\item \textbf{In steel the heat does not travel into the depth.} 95\,\% leaves the steel within the first \SI{5}{mm} behind the skin, through the back of the skin and the roots of the struts. The struts themselves stay almost at water temperature. The wetted area is about 15 times the footprint but is hardly used. In steel the graded structure is a load-bearing structure, not a heat exchanger. This confirms the estimate.
+\item \textbf{The saturation temperature is exceeded even under uniform load.} 3\,\% of the wet wall is above \SI{344.8}{\celsius}, where the struts join the skin and less area cools locally. With the hot spot the wall reaches \SI{399}{\celsius}.
+\item \textbf{Tungsten spreads the hot spot sideways}: \SI{53}{K} less at the hottest point. Because the extra \SI{3}{mm} of tungsten must also conduct the heat, the plasma side is \SI{12}{K} warmer on average.
+\item \textbf{Faster water} lowers the wall temperature most for the same material, but barely helps the spot.
+\item \textbf{Copper alloy is the only case that carries heat into the depth.} Only 62\,\% leaves within the first \SI{5}{mm}; the rest leaves further back through the struts. The plasma side stays below \SI{351}{\celsius} and the wet wall below saturation. The fins now work because $1/m=\sqrt{k t/(2h)}$ grows to \SI{6}{mm} with $k=320$.
+\end{itemize}
+
+\paragraph{Conclusions.}
+\begin{itemize}
+\item Only a well-conducting material spreads heat sideways and into the depth. Options are a thin tungsten or copper layer at the skin, or copper-alloy struts in the first \SIrange{10}{20}{mm}. Copper is problematic under neutrons (embrittlement, activation) but common in divertors. The structure further back can stay steel; it then only carries load.
+\item With steel alone the water must flow fast directly at the skin. The skin layer therefore needs its own supply, as the rules above already require.
+\item In the blanket the heat is generated throughout the volume by neutrons. There, branching well-conducting paths to the water make sense, as constructal theory describes for cooling a heat-generating volume \cite{bejan1997}. That is the next step, together with flow (FluidX3D) and strength.
+\end{itemize}
+Limits of the calculation:
+\begin{itemize}
+\item $h$ is uniform because no flow calculation is coupled.
+\item There is no volumetric neutron heating.
+\item $k$ is constant.
+\item The sides are adiabatic instead of periodic.
+\end{itemize}
+Script: \texttt{stellarator/gradient\_waerme.py}.
+
 \subsection{Collaboration}
 From the user came: the thinner wall with a larger outlet (f12), pairwise comparison as a tool for decisions and
 optimisation loops together with the judgements, the point that the walls of the pressure space must withstand
@@ -818,5 +887,7 @@ Software: ElmerFEM, gmsh, FreeCAD, simsopt, DESC, PyVista, ParaView, Blender, Fl
   \url{https://github.com/ThomasSchmiegelt/sketch-to-prompt} (MIT licence).
 \bibitem{arena2023} P. Arena, G. Bongiovì, I. Catanzaro et al.: Design and Integration of the EU-DEMO Water-Cooled Lead
   Lithium Breeding Blanket. \emph{Energies} 16 (2023) 2069. doi:10.3390/en16042069
+\bibitem{bejan1997} A. Bejan: Constructal-theory network of conducting paths for cooling a heat generating volume.
+  \emph{Int. J. Heat Mass Transfer} 40 (1997) 799--816. doi:10.1016/0017-9310(96)00175-5
 \end{thebibliography}
 \end{document}

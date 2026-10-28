@@ -373,10 +373,24 @@ bei DEMO (1,04), und die Tritium-Brutrate ist schon bei DEMO knapp (1,14, Ziel 1
 **Abgestufte Struktur (Idee des Nutzers):** Statt eines Gyroids, der die Haut nur linienförmig berührt: an der Haut
 flächig und dicht (Zelle 20 mm, Stützabstand ~10 mm ≤ 20 mm für 16 MPa), nach außen verdoppelt sich die Zelle je
 Lage und die Wände verästeln sich (Stahlanteil ≥ 15 % > 11 % für den Druck). `picogk/GradientWand`, Herleitung der
-Regeln im Projektbericht. Test auf Durchströmung und Festigkeit steht aus.
+Regeln im Projektbericht. Test auf Durchströmung und Festigkeit steht aus, der Wärmetest ist gemacht (unten).
 
 ![Abgestufte Wand: fein an der Haut, verästelt nach außen](docs/bilder/gradientwand_gesamt.jpg)
 ![Nahaufnahme der Haut mit flächiger Auflage](docs/bilder/gradientwand_haut_nah.jpg)
+
+**Wie kommt die Wärme in die Breite und nach außen?** Wärmetest mit Elmer an einem Ausschnitt der Wand
+(80×80×100 mm, 1,4 Mio. Voxel-Elemente, 0,5 MW/m² auf der Plasmaseite, `stellarator/gradient_waerme.py`).
+- **Stahl:** 95 % der Wärme gehen in den ersten 5 mm hinter der Haut ins Wasser. Die Stränge bleiben kalt, die tiefe
+  Struktur trägt nur. Grund: Eine Stahlrippe wirkt nur √(k·t/2h) ≈ 2 mm tief.
+- **Siedegrenze:** Die nasse Wand erreicht schon bei gleichmäßiger Last örtlich 364 °C (Siedegrenze 345 °C).
+- **Heißer Fleck:** Mit 2 q erreicht die Plasmaseite 588 °C. Wolfram davor senkt das auf 535 °C, doppelt so schnelles
+  Wasser auf 559 °C.
+- **Kupferlegierung:** Nur mit Kupferlegierung (k = 320) geht die Wärme in die Tiefe (Plasmaseite 351 °C, Wand unter der
+  Siedegrenze).
+- **Folgerung:** In die Breite verteilt nur ein gut leitender Werkstoff an der Haut. Im Blanket (Volumenwärme) sind
+  verzweigte Leitpfade sinnvoll (Konstrukt-Theorie nach Bejan).
+
+![Wärmetest der abgestuften Wand: Stahl, Fleck, Wolfram, Kupfer, schnelles Wasser](docs/bilder/gradientwand_waerme.jpg)
 3. Totwassergebiete finden und beseitigen.
 4. Robuster abgleichen, mit Drosseln statt Wanddicke.
 5. Wärme gekoppelt mitrechnen.

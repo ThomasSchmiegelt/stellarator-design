@@ -242,6 +242,7 @@ Was dabei auffiel:
 | „Eines der großen Probleme ist wahrscheinlich, dass der Gyroid punktuell aufliegt“ | Als offener Punkt aufgenommen (Kerben an den Anschlusslinien, Ermüdung); Abschätzung im Chat |
 | Flächige Auflage an der Haut, Stränge nicht zu dicht (Wasser) und dick genug (Wärme), nach außen verästelt und dünn | Regeln aus Überschlag: Stützabstand ≤ 20 mm bei 16 MPa; Rippen wirken nur 3–15 mm tief; Stahlquerschnitt überall ≥ 11 %; Hautlage braucht eigene Zuführung |
 | „Baue es mal, mich interessiert wie es aussieht“; testen auf Durchströmung und Festigkeit | `picogk/GradientWand`: 4 Lagen (Zelle 20/40/80/160 mm), überblendete Gyroid-Felder, Ausrundung 1,5 mm; Bilder in Blender; Wasserraum für den Test mit ausgegeben |
+| „Wie bekommen wir die Wärme in die Breite und leiten den Wärmefluss nach außen?“ – erst pushen, dann Wärmetest | Überschlag (Ausbreitungslänge, Rippentiefe) im Chat, dann `gradient_waerme.py`: Elmer an 1,4 Mio. Voxeln, 5 Fälle. Stahl gibt 95 % in 5 mm ab, nur Kupfer bringt Wärme in die Tiefe. Zwei Gegenproben (Kupfer, h doppelt) von der KI ergänzt, damit der Hebel sichtbar wird |
 
 Was dabei auffiel:
 - Der Paarvergleich hat sofort etwas gezeigt: f11 war auf ein Ziel optimiert, das der Nutzer gering gewichtet.
