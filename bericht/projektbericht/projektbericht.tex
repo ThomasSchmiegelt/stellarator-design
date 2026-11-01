@@ -1070,6 +1070,34 @@ Die Divertorwärme fällt bei niedriger Temperatur an. Beim EU-DEMO tritt das K�
 \SI{130}{\celsius} und \SI{5}{MPa} ein und erwärmt sich um \SI{6}{K}. Die Autoren sehen vor, diese Wärme zum
 Vorwärmen zu nutzen \cite{you2022}. Hier sind es \SI{305}{MW} (Abschnitt Wärmebilanz).
 
+\paragraph{Wie der Vorwärmer funktioniert (ohne Formeln).} Der Divertor ist der \emph{Auspuff} des Plasmas: Dort
+treffen etwa 10\,\% der Leistung auf kleiner Fläche auf, bis zu \SI{10}{MW/m^2}. Damit Kupfer und Wolfram das
+aushalten, wird er mit recht kaltem Wasser gekühlt, \SI{130}{\celsius} hinein, \SI{136}{\celsius} heraus. Für den
+Dampferzeuger ist das zu kalt; die Turbine braucht Dampf von knapp \SI{300}{\celsius}, den das Blanket liefert.
+Ohne weitere Maßnahme müsste man diese Wärme wegkühlen.
+
+Im Dampfkreislauf gibt es aber eine Stelle mit noch kälterem Wasser: das \emph{Kondensat}, das hinter der Turbine
+im Kondensator aus dem Dampf entsteht. Es hat nur etwa \SI{21}{\celsius} und muss auf dem Weg zurück zum
+Dampferzeuger ohnehin wieder aufgeheizt werden. In jedem Dampfkraftwerk geschieht das heute mit \emph{Anzapfdampf}:
+Man zweigt Dampf aus der Turbine ab, der danach keine Arbeit mehr leistet. Übernimmt die Divertorwärme dieses
+Vorwärmen, bleibt der Dampf in der Turbine und treibt den Generator bis zum Kondensator weiter an. Diese zusätzliche
+Arbeit ist der Gewinn. Ein Vergleich aus dem Alltag: Wer Badewasser mit Abwärme vorwärmt, verbrennt im
+Durchlauferhitzer weniger Gas; die Abwärme wird nicht selbst zu Gas, sie spart nur welches.
+
+Der Vorwärmer ist ein \emph{Wärmetauscher}: zwei getrennte Kanalsysteme, eines für das warme Divertorwasser, eines
+für das kalte Kondensat, dazwischen eine Stahlwand. Die Wässer mischen sich nie; nur die Wärme geht durch die Wand.
+Weil die Divertorwärme nur den kältesten, schon fast entspannten Anzapfdampf ersetzt, ist sie weniger wert, als ihre
+Menge vermuten lässt: höchstens \SI{73}{MW} Strom, nicht $0{,}35\times\SI{305}{MW} = \SI{107}{MW}$. Die folgende
+Rechnung leitet diese Zahl her und vergleicht die Bauarten.
+
+\bild{vorwaermer_prinzip.png}{1.0}{Prinzip des Divertor-Vorwärmers im Dampfkreislauf.}
+\lesehilfe{Die Pfeile zeigen, wohin Wasser und Dampf fließen. Oben der Hauptweg: Der Dampferzeuger liefert Dampf,
+die Turbine treibt den Generator, der Dampf wird im Kondensator wieder zu Wasser. Unten der Rückweg des Wassers:
+Das kalte Kondensat (blau) läuft durch den Vorwärmer und kommt etwa \SI{40}{K} wärmer heraus (violett). Darunter der
+eigene Kreislauf des Divertors: Sein Wasser kommt mit \SI{136}{\celsius} (rot), gibt Wärme ab und fließt mit
+\SI{130}{\celsius} zurück. Der gestrichelte gelbe Pfeil ist der Anzapfdampf, der sonst dieses Vorwärmen erledigt
+hätte. Er wird eingespart und erzeugt stattdessen in der Turbine Strom, bis zu \SI{73}{MW}.}
+
 \paragraph{Frage und Hypothese.} Welche Bauart des Vorwärmers holt aus diesen \SI{305}{MW} den meisten
 Netto-Strom? Im Vergleich stehen Rohrbündel, Platte, Gyroid (gleichmäßig und abgestuft) und Diamond.
 \[
@@ -1200,6 +1228,7 @@ standhalten muss, der Hinweis auf den knappen Kontext des lokalen Modells und di
 Turbine. Der Assistent hat gerechnet, die Werkzeuge gebaut, die Recherche geprüft und die Folgen benannt.
 
 \input{plasma_de.tex}
+\input{mhd_de.tex}
 
 \section*{Software und Daten}
 ElmerFEM 9.0 \cite{elmer}, FluidX3D 3.8 \cite{fluidx3d}, PicoGK \cite{picogk}, gmsh \cite{gmsh}, FreeCAD 1.1 \cite{freecad}, simsopt \cite{simsopt}, DESC
@@ -1242,6 +1271,9 @@ anderer Werke sind nicht übernommen. Die Lizenzen der Quellen stehen in den Bel
 \bibitem{hermes} Nous Research: Hermes Agent. \url{https://github.com/NousResearch/hermes-agent} (MIT-Lizenz).
 \bibitem{claudecode} Anthropic: Claude Code. \url{https://www.anthropic.com/claude-code}
 \bibitem{fluidx3d} M. Lehmann: FluidX3D, Version 3.8. \url{https://github.com/ProjectPhysX/FluidX3D}.
+\bibitem{shercliff1953} J.\,A. Shercliff: Steady motion of conducting fluids in pipes under transverse magnetic fields. Mathematical Proceedings of the Cambridge Philosophical Society 49, 136--144 (1953). \url{https://doi.org/10.1017/S0305004100028139}
+\bibitem{hunt1965} J.\,C.\,R. Hunt: Magnetohydrodynamic flow in rectangular ducts. Journal of Fluid Mechanics 21, 577--590 (1965). \url{https://doi.org/10.1017/S0022112065000344}
+\bibitem{huntshercliff1971} J.\,C.\,R. Hunt, J.\,A. Shercliff: Magnetohydrodynamics at high Hartmann number. Annual Review of Fluid Mechanics 3, 37--62 (1971). \url{https://doi.org/10.1146/annurev.fl.03.010171.000345}
   Lizenz: kostenlos nur für nicht kommerzielle Nutzung, Quelltext einsehbar, keine Open-Source-Lizenz.
   Geänderte Fassung von \texttt{setup.cpp} und \texttt{defines.hpp} im Ordner \texttt{fluidx3d/} des Repositorys.
 \bibitem{lehmann2023} M. Lehmann: Computational study of microplastic transport at the water-air interface with

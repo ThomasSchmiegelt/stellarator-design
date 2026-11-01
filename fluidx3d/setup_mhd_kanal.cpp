@@ -3,10 +3,11 @@
 // Nicht das Original: die Beispiel-Setups wurden durch diesen einen Fall ersetzt. Es gilt die FluidX3D-Lizenz
 // (LICENSE.md), NICHT die MIT-Lizenz des uebrigen Repositorys.
 //
-// Fall: Hartmann-Stroemung, Pruefung der Lorentzkraft (Kernaenderung MHD, kernel.cpp.diff).
+// Fall: Hartmann-Stroemung (Platten) oder Rechteckkanal mit Seitenwaenden (Shercliff, Hunt), Pruefung der Lorentzkraft
+// und des Potentials (Kernaenderungen MHD und MHD_POT, kernel.cpp.diff).
 // Kanal zwischen zwei Platten (y), B senkrecht zu den Platten (y), Stroemung in x durch Volumenkraft fx,
 // x und z periodisch (unendlich ausgedehnt -> kein Potentialgefaelle, j = sigma u x B).
-// Konfiguration ueber die Datei in MHD_FALL:  aus Ny nu fx schritte stat_alle
+// Konfiguration ueber die Datei in MHD_FALL:  aus Ny nu fx schritte stat_alle [Nz seitenwaende]
 // K = sigma B^2/rho kommt ueber FX_MHD_K (Gittereinheiten), Richtung ueber FX_MHD_B.
 // Ausgabe: stat.txt (t, mittleres ux), profil.txt (y, ux) am Ende.
 
@@ -20,12 +21,14 @@ void main_setup() { // benoetigt in defines.hpp: VOLUME_FORCE, MHD
 	string aus; uint Ny; float nu, fx; ulong schritte, stat_alle;
 	c >> aus >> Ny >> nu >> fx >> schritte >> stat_alle;
 	if(c.fail()) print_error("Konfiguration unvollstaendig: "+string(fall));
-	const uint Nx = 4u, Nz = 4u;
+	uint Nz = 4u, seiten = 0u; // optional: Nz und Seitenwaende (1 = Waende bei z = 0 und Nz-1, Rechteckkanal)
+	c >> Nz >> seiten; if(c.fail()) { Nz = 4u; seiten = 0u; }
+	const uint Nx = 4u;
 	LBM lbm(uint3(Nx, Ny, Nz), nu, fx, 0.0f, 0.0f);
 	const ulong N = lbm.get_N();
 	for(ulong n=0ull; n<N; n++) {
 		uint x=0u, y=0u, z=0u; lbm.coordinates(n, x, y, z);
-		if(y==0u||y==Ny-1u) lbm.flags[n] = TYPE_S;
+		if(y==0u||y==Ny-1u||(seiten&&(z==0u||z==Nz-1u))) lbm.flags[n] = TYPE_S;
 	}
 	std::ofstream st(aus+"/stat.txt");
 	st << "# t  ux_mittel\n";
@@ -34,13 +37,17 @@ void main_setup() { // benoetigt in defines.hpp: VOLUME_FORCE, MHD
 		lbm.run(stat_alle, schritte);
 		lbm.u.read_from_device();
 		double su=0.0; ulong m=0ull;
-		for(uint y=1u; y<Ny-1u; y++) { su += lbm.u.x[lbm.index(1u, y, 1u)]; m++; }
+		for(uint z=0u; z<Nz; z++) for(uint y=1u; y<Ny-1u; y++) if(!(seiten&&(z==0u||z==Nz-1u))) { su += lbm.u.x[lbm.index(1u, y, z)]; m++; }
 		st << lbm.get_t() << " " << su/(double)m << "\n"; st.flush();
 		if(!(su==su)) { st << "# instabil\n"; st.close(); print_error("Simulation instabil."); }
 	}
 	st.close();
 	std::ofstream pr(aus+"/profil.txt");
 	pr << "# y  ux  (Waende bei y = 0,5 und Ny-1,5)\n";
-	for(uint y=1u; y<Ny-1u; y++) pr << y << " " << lbm.u.x[lbm.index(1u, y, 1u)] << "\n";
+	for(uint y=1u; y<Ny-1u; y++) pr << y << " " << lbm.u.x[lbm.index(1u, y, seiten ? Nz/2u : 1u)] << "\n";
 	pr.close();
+	std::ofstream p2(aus+"/profil2d.txt"); // ganzer Querschnitt x = 1
+	p2 << "# y  z  ux\n";
+	for(uint z=0u; z<Nz; z++) for(uint y=0u; y<Ny; y++) p2 << y << " " << z << " " << lbm.u.x[lbm.index(1u, y, z)] << "\n";
+	p2.close();
 }

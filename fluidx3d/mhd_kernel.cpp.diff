@@ -1,8 +1,18 @@
 diff --git a/src/kernel.cpp b/src/kernel.cpp
-index 98279e9..fe0418c 100644
+index 98279e9..cf2cd8d 100644
 --- a/src/kernel.cpp
 +++ b/src/kernel.cpp
-@@ -1546,6 +1546,18 @@ string opencl_c_container() { return R( // ########################## begin of O
+@@ -1460,6 +1460,9 @@ string opencl_c_container() { return R( // ########################## begin of O
+ )+"#ifdef TEMPERATURE"+R(
+ 	, global fpxx* gi, global float* T // argument order is important
+ )+"#endif"+R( // TEMPERATURE
++)+"#ifdef MHD_POT"+R(
++	, const global float* mphi // geaendert
++)+"#endif"+R( // MHD_POT
+ )+") {"+R( // stream_collide()
+ 	const uxx n = get_global_id(0); // n = x+(y+z*Ny)*Nx
+ 	if(n>=(uxx)def_N||is_halo(n)) return; // don't execute stream_collide() on halo
+@@ -1546,6 +1549,39 @@ string opencl_c_container() { return R( // ########################## begin of O
  	}
  )+"#endif"+R( // TEMPERATURE
  
@@ -17,7 +27,61 @@ index 98279e9..fe0418c 100644
 +		fyn -= c*(vy-vb*bb.y);
 +		fzn -= c*(vz-vb*bb.z);
 +	}
++)+"#ifdef MHD_POT"+R( // geaendert: Anteil des Potentials, f += K rho (E x B), E = -grad phi aus Flaechenwerten
++	{
++		const float3 bb = (float3)(def_mhd_b);
++		const float3 wn = cross((float3)(uxn, uyn, uzn), bb); // u x B (B Einheitsvektor)
++		const float pn = mphi[n];
++		float3 E = (float3)(0.0f, 0.0f, 0.0f);
++		for(uint i=1u; i<7u; i++) { // Nachbarn +x -x +y -y +z -z
++			const float3 d = (float3)(i==1u ? 1.0f : i==2u ? -1.0f : 0.0f, i==3u ? 1.0f : i==4u ? -1.0f : 0.0f, i==5u ? 1.0f : i==6u ? -1.0f : 0.0f);
++			const uxx m = j[i];
++			float Ef;
++			if((flags[m]&TYPE_BO)==TYPE_S) {
++				Ef = (def_mhd_wand==1 && fabs(dot(d, bb))>0.5f) ? 2.0f*pn : -dot(wn, d); // leitend: phi = 0 auf der Wandflaeche; isolierend: j.n = 0
++			} else {
++				Ef = pn-mphi[m];
++			}
++			E += 0.5f*Ef*d;
++		}
++		const float3 fe = def_mhd_k*rhon*cross(E, bb);
++		fxn += fe.x; fyn += fe.y; fzn += fe.z;
++	}
++)+"#endif"+R( // MHD_POT
 +)+"#endif"+R( // MHD
  	{ // separate block to avoid variable name conflicts
  )+"#ifdef VOLUME_FORCE"+R( // apply force and collision operator, write to fi in video memory
  		const float rho2 = 0.5f/rhon; // apply external volume force (Guo forcing, Krueger p.233f)
+@@ -1790,6 +1826,32 @@ string opencl_c_container() { return R( // ########################## begin of O
+ } // possible types at the end of surface_3(): TYPE_F / TYPE_I / TYPE_G
+ )+"#endif"+R( // SURFACE
+ 
++)+"#ifdef MHD_POT"+R( // geaendert: ein Jacobi-Schritt fuer div j = 0, j = -grad phi + u x B (Flaechenbilanz je Zelle)
++)+R(kernel void mhd_jacobi(const global float* u, const global uchar* flags, const global float* pin, global float* pout) {
++	const uxx n = get_global_id(0);
++	if(n>=(uxx)def_N||is_halo(n)) return;
++	if((flags[n]&TYPE_BO)==TYPE_S) { pout[n] = 0.0f; return; }
++	uxx x0, xp, xm, y0, yp, ym, z0, zp, zm;
++	calculate_indices(n, &x0, &xp, &xm, &y0, &yp, &ym, &z0, &zp, &zm);
++	uxx nb[6];
++	nb[0] = xp+y0+z0; nb[1] = xm+y0+z0; nb[2] = x0+yp+z0; nb[3] = x0+ym+z0; nb[4] = x0+y0+zp; nb[5] = x0+y0+zm;
++	const float3 bb = (float3)(def_mhd_b);
++	const float3 wn = cross(load3(u, n), bb);
++	float s = 0.0f, c = 0.0f;
++	for(uint i=0u; i<6u; i++) {
++		const float3 d = (float3)(i==0u ? 1.0f : i==1u ? -1.0f : 0.0f, i==2u ? 1.0f : i==3u ? -1.0f : 0.0f, i==4u ? 1.0f : i==5u ? -1.0f : 0.0f);
++		const uxx m = nb[i];
++		if((flags[m]&TYPE_BO)==TYPE_S) {
++			if(def_mhd_wand==1 && fabs(dot(d, bb))>0.5f) { c += 2.0f; } // ideal leitende Wand: phi = 0 auf der Wandflaeche (halbe Zelle entfernt, dort u = 0)
++		} else {
++			const float3 wf = 0.5f*(wn+cross(load3(u, m), bb));
++			s += pin[m]-dot(wf, d); c += 1.0f;
++		}
++	}
++	pout[n] = c>0.0f ? s/c : 0.0f;
++}
++)+"#endif"+R( // MHD_POT
++
+ )+R(kernel void update_fields)+"("+R(const global fpxx* fi, global float* rho, global float* u, const global uchar* flags, const ulong t, const float fx, const float fy, const float fz // ) { // calculate fields from DDFs
+ )+"#ifdef FORCE_FIELD"+R(
+ 	, const global float* F // argument order is important

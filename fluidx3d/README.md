@@ -46,15 +46,22 @@ Eigene, getrennte Arbeitskopie von FluidX3D v3.8 (Commit `50150a7`). Geändert:
 
 | Datei | Änderung |
 |---|---|
-| `setup_mhd_hartmann.cpp` | ersetzt `src/setup.cpp`: Hartmann-Kanal (Platten in y, B in y, x und z periodisch) |
-| `mhd_defines.hpp.diff` | `VOLUME_FORCE` und neuer Schalter `MHD` an, `FP16S` und `BENCHMARK` aus |
-| `mhd_lbm.cpp.diff` | `def_mhd_k` (K = σB²/ρ in Gittereinheiten) und `def_mhd_b` (Richtung von B) aus den Umgebungsvariablen `FX_MHD_K`, `FX_MHD_B` |
-| `mhd_kernel.cpp.diff` | Lorentzkraft f = σ(u×B)×B = −Kρu⊥ in `stream_collide`, halbimplizit zur Guo-Kraft: u⊥ = (u*⊥ + F⊥/2ρ)/(1 + K/2) |
+| `setup_mhd_kanal.cpp` | ersetzt `src/setup.cpp`: Kanal mit Hartmann-Wänden (y, senkrecht zu B), wahlweise mit Seitenwänden (z), x periodisch; Ausgabe Profil und ganzer Querschnitt |
+| `mhd_defines.hpp.diff` | `VOLUME_FORCE` und neue Schalter `MHD` und `MHD_POT` an (`MHD_POT` schaltet `UPDATE_FIELDS` ein), `FP16S` und `BENCHMARK` aus |
+| `mhd_lbm.hpp.diff` | Puffer `mhd_phi`, `mhd_phi2` für das Potential, zwei Jacobi-Kernel |
+| `mhd_lbm.cpp.diff` | `def_mhd_k` (K = σB²/ρ in Gittereinheiten), `def_mhd_b` (Richtung von B), `def_mhd_wand` (0 alle Wände isolierend, 1 Hartmann-Wände ideal leitend) aus `FX_MHD_K`, `FX_MHD_B`, `FX_MHD_WAND`; vor jedem Zeitschritt `FX_MHD_JACOBI` Jacobi-Doppelschritte (nur eine GPU) |
+| `mhd_kernel.cpp.diff` | Lorentzkraft in `stream_collide`: lokaler Teil σ(u×B)×B = −Kρu⊥ halbimplizit zur Guo-Kraft, u⊥ = (u*⊥ + F⊥/2ρ)/(1 + K/2); dazu der Potentialteil +Kρ(E×B), E = −∇φ aus Flächenwerten. Neuer Kernel `mhd_jacobi`: ∇·j = 0 als Flächenbilanz je Zelle, j = −∇φ + u×B; isolierende Wand j·n = 0, leitende Wand φ = 0 auf der Wandfläche |
 
-Gilt nur, solange das elektrische Potential keine Rolle spielt (unendlich ausgedehnte Platten). Für Kanäle mit
-Seitenwänden fehlt noch der Potentialanteil −σ∇φ×B (Poisson-Gleichung ∇²φ = ∇·(u×B)).
-Prüfung: `stellarator/mhd_hartmann.py` (Abweichung zur exakten Lösung 0,03 % bei Ha = 0, 0,1 % bei Ha = 5,
-zweite Ordnung im Gitter).
+Prüfungen:
+- `stellarator/mhd_hartmann.py`: Platten ohne Seitenwände (Potential spielt keine Rolle). Abweichung zur exakten
+  Lösung 0,03 % bei Ha = 0, 0,04 % bei Ha = 5, 0,5 % bei Ha = 30 (32 Zellen), etwa zweite Ordnung im Gitter. Die zuerst
+  genannten schlechteren Werte (4,3 % bei Ha = 30) kamen aus der Auswertung: Ohne `UPDATE_FIELDS` berechnet
+  `update_fields` die Geschwindigkeit ohne die halbe Lorentzkraft. Mit `MHD_POT` ist `UPDATE_FIELDS` an.
+- `stellarator/mhd_kanal.py`: quadratischer Kanal mit isolierenden Wänden (Shercliff) und mit leitenden
+  Hartmann-Wänden (Hunt), verglichen mit einem eigenen 2D-Löser in der Formulierung mit induziertem Feld. Bei Ha = 10
+  fällt der Fehler mit dem Gitter von 0,75 % auf 0,09 % (Shercliff); alle zwölf Fälle bis Ha = 30 liegen unter 1 %.
+  Dabei gefunden: Die Potentialkraft muss vor dem halbimpliziten Teil addiert werden, sonst wächst der Fehler bei
+  isolierenden Wänden mit Ha (zuerst 36 % bei Ha = 30).
 
 ## Quellen / References
 

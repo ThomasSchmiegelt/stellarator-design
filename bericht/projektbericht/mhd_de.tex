@@ -1,0 +1,174 @@
+\section{Flüssigmetall im Magnetfeld: MHD in FluidX3D}\label{sec:mhd}
+
+Im Abschnitt über flüssiges Blei (Abschnitt~\ref{sec:filament}) wurde der Druckverlust im Magnetfeld nur mit
+einer Faustformel abgeschätzt: $\mathrm{d}p/\mathrm{d}x = \sigma\,v\,B^2 k_p$, mit $k_p \approx 1/\mathrm{Ha}$ für
+isolierende Wände. Der Nutzer fragte, ob sich die Strömung im Magnetfeld auch dynamisch rechnen lässt, als eine Art
+CFD-Rechnung, und ob man das mit FluidX3D koppeln kann. FluidX3D kennt von sich aus keine Magnetfelder. Dieser
+Abschnitt beschreibt, wie die nötige Kraft in zwei Stufen eingebaut und an Fällen mit bekannter Lösung geprüft wurde.
+
+\paragraph{Was passiert physikalisch?} Bewegt sich ein elektrisch leitendes Metall quer durch ein Magnetfeld,
+entsteht darin eine elektrische Spannung, wie in einem Dynamo. Sie treibt Ströme $\mathbf{j}$, und diese Ströme
+erfahren im Feld wieder eine Kraft, die \emph{Lorentzkraft} $\mathbf{j}\times\mathbf{B}$. Sie bremst die Bewegung
+quer zum Feld. Bei kleiner magnetischer Reynoldszahl, wie bei Blei in einer Spule, verändern die Ströme das äußere
+Feld kaum (\emph{induktionsfreie} Näherung). Dann gilt das Ohmsche Gesetz für bewegte Leiter und die Erhaltung der
+Ladung:
+\[
+\mathbf{j} = \sigma\left(-\nabla\varphi + \mathbf{u}\times\mathbf{B}\right),\qquad \nabla\cdot\mathbf{j} = 0
+\quad\Rightarrow\quad \nabla^2\varphi = \nabla\cdot(\mathbf{u}\times\mathbf{B}),\qquad
+\mathbf{f} = \frac{\mathbf{j}\times\mathbf{B}}{\rho}.
+\]
+$\sigma$ ist die elektrische Leitfähigkeit, $\varphi$ das elektrische Potential. Wie stark das Feld gegenüber der
+Zähigkeit wirkt, misst die \emph{Hartmann-Zahl} $\mathrm{Ha} = B\,a\sqrt{\sigma/(\rho\nu)}$ ($a$ halbe Kanalweite in
+Feldrichtung). An den Wänden senkrecht zum Feld (\emph{Hartmann-Wände}) bilden sich dünne Grenzschichten der Dicke
+$a/\mathrm{Ha}$, an den Wänden parallel zum Feld (\emph{Seitenwände}) dickere Schichten der Dicke $a/\sqrt{\mathrm{Ha}}$
+\cite{huntshercliff1971}. Ob sich die Ströme durch die Wände oder nur durch diese Schichten schließen, entscheidet über
+den Druckverlust.
+
+\paragraph{Begriffe in diesem Abschnitt.}
+\begin{description}\itemsep2pt
+\item[Hartmann-Wände] die beiden Kanalwände, auf die das Magnetfeld senkrecht trifft. Zeigt das Feld nach oben, sind
+  es Boden und Decke des Kanals. Benannt nach dem dänischen Physiker Julius Hartmann, der diese Strömung in den 1930er-Jahren untersuchte.
+\item[Seitenwände] die beiden anderen Wände, an denen das Feld entlangläuft (links und rechts).
+\item[isolierende Wand] eine Wand, durch die kein elektrischer Strom fließen kann, etwa mit einer Keramikschicht.
+  Die im Metall erzeugten Ströme müssen sich dann innerhalb des Metalls schließen, in den dünnen Schichten an der Wand.
+\item[leitende Wand] eine Wand, die den Strom gut leitet, etwa aus Kupfer oder dickem Stahl. Die Ströme können sich
+  dann über die Wand schließen wie über einen Draht; der Stromkreis hat wenig Widerstand, und die Bremskraft wird groß.
+  \emph{Ideal leitend} heißt: ohne jeden Widerstand, ein Grenzfall für die Rechnung.
+\item[leitende Hartmann-Wände] Boden und Decke leiten, die Seitenwände isolieren. Das ist der Fall von Hunt (1965), für
+  den es eine genaue Lösung gibt.
+\item[Hartmann-Zahl Ha] ein Maß dafür, wie stark das Magnetfeld gegenüber der Zähigkeit des Metalls wirkt. Ha = 0 heißt
+  kein Feld; bei Ha = 100 beherrscht das Feld die Strömung fast vollständig.
+\item[Hartmann-Schicht] die dünne Schicht an den Hartmann-Wänden, in der die Geschwindigkeit von null auf den Wert in
+  der Mitte steigt. Ihre Dicke ist die halbe Kanalweite geteilt durch Ha, bei Ha = 100 also ein Hundertstel.
+\item[Seitenschicht] die entsprechende Schicht an den Seitenwänden. Sie ist dicker, halbe Kanalweite geteilt durch
+  $\sqrt{\mathrm{Ha}}$.
+\item[Potential $\varphi$] die elektrische Spannung an jeder Stelle im Metall, gemessen gegen einen festen Punkt. Ihr
+  Gefälle lenkt die Ströme so, dass sie sich schließen.
+\item[Jacobi-Schritt] ein einfaches Rechenverfahren für $\varphi$: Jede Zelle nimmt immer wieder den Mittelwert ihrer
+  Nachbarn an, korrigiert um die Quelle, bis sich nichts mehr ändert.
+\item[Druckverlustbeiwert $k_p$] gibt an, welcher Bruchteil der größtmöglichen magnetischen Bremskraft tatsächlich wirkt
+  (1 = volle Bremsung, klein = die Ströme finden einen schwierigen Rückweg).
+\end{description}
+
+\subsection*{Stufe 1: Lorentzkraft ohne Potential}
+Zwischen zwei unendlich ausgedehnten Platten verschwindet $\nabla\varphi$, und es bleibt
+$\mathbf{f} = -K\,\mathbf{u}_\perp$ mit $K = \sigma B^2/\rho$. In die eigene Kopie von FluidX3D wurde diese Kraft in den
+Hauptkernel eingebaut, halbimplizit zur Guo-Kraft: $\mathbf{u}_\perp = (\mathbf{u}^*_\perp + \mathbf{F}_\perp/2\rho)/(1+K/2)$.
+So bleibt die Rechnung auch bei großem $K$ stabil. Die Änderungen liegen als Diffs im Ordner \texttt{fluidx3d/}
+(FluidX3D-Lizenz \cite{fluidx3d}). Geprüft wurde an der Hartmann-Strömung, für die es eine exakte Lösung gibt:
+$u(y) = f_x/K\,(1-\cosh(\mathrm{Ha}\,y/a)/\cosh\mathrm{Ha})$.
+
+\bild{mhd_hartmann.png}{1.0}{Stufe 1: Hartmann-Strömung zwischen zwei Platten. Links FluidX3D (Punkte) gegen die exakte
+Lösung (Linien) für Ha = 0 bis 30. Rechts der Fehler bei Ha = 30 über der Gitterfeinheit.}
+\lesehilfe{Links ist jede Farbe eine Feldstärke. Waagrecht steht die Lage zwischen den beiden Platten ($-1$ und $+1$
+sind die Wände), senkrecht die Geschwindigkeit, bezogen auf ihren Höchstwert. Ohne Feld (grau) ergibt sich die
+bekannte Parabel. Je stärker das Feld, desto flacher wird das Profil in der Mitte und desto steiler fällt es an den
+Wänden ab: Das Feld bremst die schnelle Mitte, nur in dünnen Schichten an der Wand bleibt ein Gefälle. Die Punkte
+(FluidX3D) liegen auf den Linien (exakte Lösung). Rechts sieht man, wie der Fehler schrumpft, wenn man das Gitter
+verfeinert. Die Beschriftung nennt, wie viele Rechenzellen in der dünnen Wandschicht liegen. Selbst mit nur einer
+Zelle bleibt der Fehler unter 1\,\%; bei feinerem Gitter fällt er etwa wie die gestrichelte Linie (zweite Ordnung).}
+
+Ohne Feld beträgt die Abweichung 0,03\,\%, bei Ha = 5 0,04\,\% und bei Ha = 30 mit 32 Zellen, also gut einer Zelle
+in der Hartmann-Schicht, 0,5\,\%. Bei feinerem Gitter fällt der Fehler etwa mit der zweiten Ordnung (3,0 / 1,5 / 0,48
+/ 0,13\,\% für $a$ = 8 / 16 / 32 / 64 Zellen).
+
+\paragraph{Korrektur.} Die zuerst ermittelten Werte waren deutlich schlechter (4,3\,\% bei Ha = 30 und 32 Zellen,
+68\,\% bei 8 Zellen) und standen so schon in einer früheren Fassung. Sie waren ein Fehler der Auswertung, nicht der
+Rechnung: Ohne den Schalter \texttt{UPDATE\_FIELDS} berechnet FluidX3D die ausgegebene Geschwindigkeit in einem
+eigenen Kernel nach, und dort fehlte die halbe Lorentzkraft. Je größer $K$, desto größer der Fehler. Aufgefallen ist
+das erst, als der Hartmann-Test mit dem Programmstand von Stufe~2 wiederholt wurde, in dem \texttt{UPDATE\_FIELDS} an
+ist. Die Regel „mindestens zwei Zellen in der Hartmann-Schicht“ war damit zu streng; etwa eine Zelle genügt für
+1\,\% Genauigkeit.
+
+\subsection*{Stufe 2: Kanäle mit Seitenwänden}
+In einem echten Kanal fließen die Ströme im Kreis. In der Mitte laufen sie quer zur Strömung, zurück müssen sie über
+die Wände oder durch die dünnen Schichten an den Wänden. Diesen Rückweg beschreibt das Potential $\varphi$. Ohne
+$\varphi$ würde Stufe~1 die Bremskraft in einem Kanal mit isolierenden Wänden um ein Vielfaches überschätzen.
+
+\paragraph{Umsetzung.} Ein neuer Schalter \texttt{MHD\_POT} legt zwei Puffer für $\varphi$ an. Vor jedem
+Zeitschritt laufen auf der GPU einige Jacobi-Schritte für $\nabla\cdot\mathbf{j} = 0$, hier 20 Doppelschritte. Die
+Gleichung ist als Bilanz der Ströme über die sechs Flächen jeder Zelle geschrieben. So bleibt die Ladung auch
+diskret erhalten. Auf einer isolierenden Wand ist der Strom durch die Wandfläche null. Eine ideal leitende Wand hält
+$\varphi = 0$ auf ihrer Oberfläche, die eine halbe Zelle vor dem Wandknoten liegt. Im Hauptkernel kommt die Kraft
+$K\rho\,(\mathbf{E}\times\hat{\mathbf{B}})$ mit $\mathbf{E} = -\nabla\varphi$ aus denselben Flächenwerten hinzu.
+
+\paragraph{Prüfung.} Ein Vergleich nur mit sich selbst wäre wertlos. Deshalb entstand ein eigener 2D-Löser für die
+ausgebildete Kanalströmung, der einen anderen Weg geht: Er rechnet nicht mit $\varphi$, sondern mit dem induzierten
+Magnetfeld $b$ (Shercliff \cite{shercliff1953}, Hunt \cite{hunt1965}):
+\[
+\nabla^2 u + \mathrm{Ha}\,\frac{\partial b}{\partial y} = -1,\qquad \nabla^2 b + \mathrm{Ha}\,\frac{\partial u}{\partial y} = 0 .
+\]
+Er reproduziert drei bekannte Grenzfälle: den quadratischen Kanal ohne Feld ($\bar u = 0{,}1406$, entsprechend
+$f\,\mathit{Re} = 14{,}23$), bei breitem Kanal mit leitenden Wänden die exakte Hartmann-Lösung und bei breitem Kanal mit
+isolierenden Wänden die Kerngeschwindigkeit $1/\mathrm{Ha}$. Dabei fiel ein Fehler in seiner eigenen Randbehandlung
+auf, der behoben wurde.
+
+Geprüft wurden zwei klassische Fälle im quadratischen Kanal. Bei \emph{Shercliff} sind alle Wände isolierend. Bei
+\emph{Hunt} sind die Hartmann-Wände ideal leitend und die Seitenwände isolierend; dort fließt der Strom durch die
+Wand zurück, und an den Seitenwänden entstehen schnelle Strahlen.
+
+\paragraph{Ein Fehler, den erst die Prüfung zeigte.} Im ersten Durchlauf wuchs der Fehler bei isolierenden Wänden
+stark mit Ha: 12\,\% bei Ha = 15, 36\,\% bei Ha = 30. Bei leitenden Wänden war alles gut. Die Ursache: Im Kern eines
+isolierten Kanals heben sich zwei große Kräfte fast auf, die Bremskraft $-K\mathbf{u}_\perp$ und die Kraft aus dem
+Potential. Übrig bleibt nur ein Teil von etwa $1/\mathrm{Ha}$. Jeder kleine Widerspruch zwischen den beiden Teilen wird
+deshalb mit Ha verstärkt. Im Kernel wurde die Potentialkraft erst nach dem halbimpliziten Teil addiert, sodass diesem
+ein Teil der Kraft fehlte. Nach dem Tausch der Reihenfolge, und mit derselben gespeicherten Geschwindigkeit für
+$\mathbf{u}\times\mathbf{B}$ wie im Jacobi-Schritt, sank der Fehler bei Ha = 15 von 12\,\% auf 0,45\,\%.
+
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrr}\toprule
+Fall & Ha & $a$ [Zellen] & Fehler Profil & Fehler Durchsatz\\\midrule
+ohne Feld & 0 & 32 & 0,01\,\% & $-0{,}03$\,\%\\
+Shercliff (isolierend) & 5 / 10 / 15 & 32 & 0,09 / 0,23 / 0,45\,\% & $-0{,}15$ / $-0{,}30$ / $-0{,}37$\,\%\\
+Shercliff & 30 & 64 & 0,49\,\% & $-0{,}19$\,\%\\
+Hunt (leitende Hartmann-Wände) & 5 / 10 / 15 & 32 & 0,08 / 0,42 / 0,86\,\% & $-0{,}09$ / $-0{,}30$ / $-0{,}68$\,\%\\
+Hunt & 30 & 64 & 0,79\,\% & $-0{,}78$\,\%\\
+Gitterstudie Shercliff & 10 & 16 / 32 / 64 & 0,75 / 0,23 / 0,09\,\% & \\\bottomrule
+\end{tabular}\caption{Stufe 2: FluidX3D gegen den unabhängigen 2D-Löser (RMS-Fehler des Profils bezogen auf den
+Höchstwert; Abweichung des mittleren Durchsatzes).}\end{table}
+
+\bild{mhd_kanal.png}{1.0}{Stufe 2: quadratischer Kanal, B senkrecht nach oben. Oben links und Mitte isolierende Wände
+(Shercliff), oben rechts leitende Hartmann-Wände (Hunt). Unten links und Mitte der ganze Querschnitt bei Hunt, Ha = 30,
+FluidX3D und Referenz. Unten rechts die Gitterstudie.}
+\lesehilfe{Man blickt in einen quadratischen Kanal hinein; das Metall fließt auf den Betrachter zu, das Magnetfeld
+zeigt nach oben. Oben links das Geschwindigkeitsprofil von unten nach oben, also entlang des Feldes, oben in der
+Mitte von links nach rechts, quer zum Feld. Die Punkte sind FluidX3D, die Linien der unabhängige Vergleichslöser; die
+Prozentzahlen sind die Abweichungen. Mit isolierenden Wänden wird das Profil mit stärkerem Feld in Feldrichtung
+kastenförmig flach (dünne Schichten oben und unten). Quer dazu bleibt es runder, weil die Schichten an den Seiten
+dicker sind. Oben rechts sind die Wände oben und unten leitend: Jetzt bremst das Feld die Mitte stark, und das Metall
+weicht in zwei schnelle Strahlen an den Seitenwänden aus. Die beiden Farbbilder unten zeigen genau das im ganzen
+Querschnitt (gelb schnell, dunkel langsam); links FluidX3D, in der Mitte die Referenz. Sie sind kaum zu
+unterscheiden. Unten rechts fällt der Fehler, wenn man das Gitter verfeinert.}
+
+Alle zwölf Fälle stimmen auf besser als 1\,\% mit dem Vergleichslöser überein. Die Gitterstudie zeigt eine Ordnung
+von 1,4 bis 1,7, also etwas schlechter als bei Stufe~1. Grund ist vermutlich die Behandlung der Wandflächen; das
+ist noch nicht untersucht.
+
+\paragraph{Prüfung der früheren Faustformel.} Aus dem Vergleichslöser folgt der Druckverlustbeiwert
+$k_p = \mathrm{d}p/\mathrm{d}x\,/\,(\sigma\bar u B^2) = 1/(\mathrm{Ha}^2\,\bar U)$ im quadratischen Kanal:
+\begin{table}[H]\centering\small
+\begin{tabular}{rrrr}\toprule
+Ha & $1/\mathrm{Ha}$ & $k_p$ isolierend & $k_p$ leitende Hartmann-Wände\\\midrule
+5 & 0,200 & 0,407 & 0,925\\
+10 & 0,100 & 0,153 & 0,634\\
+20 & 0,050 & 0,065 & 0,475\\
+50 & 0,020 & 0,023 & 0,335\\
+100 & 0,010 & 0,011 & 0,256\\\bottomrule
+\end{tabular}\caption{Druckverlustbeiwert aus dem 2D-Löser (Gitter mit mindestens drei Zellen je Hartmann-Schicht).}\end{table}
+Mit isolierenden Wänden nähert sich $k_p$ tatsächlich $1/\mathrm{Ha}$; bei Ha = 100 liegt er noch 10\,\% darüber. Die
+Faustformel war also für große Ha richtig und liegt bei kleinen Ha zu niedrig. Leiten die Hartmann-Wände, fällt
+$k_p$ nur langsam, und der Druckverlust ist bei Ha = 100 etwa 25-mal so groß wie mit isolierenden Wänden.
+
+\paragraph{Grenzen und nächste Schritte.}
+\begin{itemize}\itemsep1pt
+\item \textbf{Reale Hartmann-Zahlen sind viel größer.} Bleilithium in den \SI{10}{mm}-Kanälen bei \SI{6}{T} ergibt
+  grob Ha $\approx 600$, in Blanket-Kanälen von einigen Zentimetern einige Tausend (Stoffwerte noch nicht geprüft).
+  Mit einer Zelle je Hartmann-Schicht bräuchte schon Ha = 600 etwa 600 Zellen je halber Kanalweite. Der
+  Speicher reicht dafür, aber der einfache Jacobi-Löser konvergiert auf so feinen Gittern zu langsam. Nötig wären ein
+  Mehrgitterverfahren oder ein zur Wand verdichtetes Gitter; bis dahin gelten gerechnete Werte bis Ha $\approx 30$
+  und darüber die geprüften Skalierungen.
+\item \textbf{Endlich leitende Wände} (Stahl, Wandleitfähigkeit $c$) fehlen noch; bisher gibt es nur ideal isolierend
+  und ideal leitend. Für Stahlkanäle ist der Fall dazwischen der wichtigste.
+\item \textbf{Nur eine GPU}, und das Feld ist bisher überall gleich. Das Feld der Spulen ($\mathbf{B}(\mathbf{x})$
+  aus Biot-Savart) wäre der Schritt zur Kopplung mit dem Stellarator.
+\end{itemize}

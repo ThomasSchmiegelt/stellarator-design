@@ -1,0 +1,171 @@
+\section{Liquid metal in a magnetic field: MHD in FluidX3D}\label{sec:mhd}
+
+In the section on liquid lead (Section~\ref{sec:filament}) the pressure drop in the magnetic field was only estimated
+with a rule of thumb: $\mathrm{d}p/\mathrm{d}x = \sigma\,v\,B^2 k_p$, with $k_p \approx 1/\mathrm{Ha}$ for insulating
+walls. The user asked whether the flow in the magnetic field could also be computed dynamically, as a kind of CFD
+simulation, and whether this could be coupled with FluidX3D. FluidX3D has no magnetic fields of its own. This section
+describes how the required force was added in two stages and checked against cases with known solutions.
+
+\paragraph{What happens physically?} When an electrically conducting metal moves across a magnetic field, a voltage
+arises in it, as in a dynamo. It drives currents $\mathbf{j}$, and these currents in turn feel a force in the field,
+the \emph{Lorentz force} $\mathbf{j}\times\mathbf{B}$. It brakes the motion across the field. At a small magnetic
+Reynolds number, as for lead in a coil, the currents hardly change the external field (\emph{inductionless}
+approximation). Then Ohm's law for moving conductors and charge conservation apply:
+\[
+\mathbf{j} = \sigma\left(-\nabla\varphi + \mathbf{u}\times\mathbf{B}\right),\qquad \nabla\cdot\mathbf{j} = 0
+\quad\Rightarrow\quad \nabla^2\varphi = \nabla\cdot(\mathbf{u}\times\mathbf{B}),\qquad
+\mathbf{f} = \frac{\mathbf{j}\times\mathbf{B}}{\rho}.
+\]
+$\sigma$ is the electrical conductivity, $\varphi$ the electric potential. How strongly the field acts compared with
+viscosity is measured by the \emph{Hartmann number} $\mathrm{Ha} = B\,a\sqrt{\sigma/(\rho\nu)}$ ($a$ half the duct
+width along the field). Thin boundary layers of thickness $a/\mathrm{Ha}$ form at the walls perpendicular to the field
+(\emph{Hartmann walls}); thicker layers of thickness $a/\sqrt{\mathrm{Ha}}$ form at the walls parallel to the field
+(\emph{side walls}) \cite{huntshercliff1971}. Whether the currents close through the walls or only through these
+layers decides the pressure drop.
+
+\paragraph{Terms used in this section.}
+\begin{description}\itemsep2pt
+\item[Hartmann walls] the two duct walls that the magnetic field meets at right angles. If the field points upwards,
+  they are the floor and the ceiling of the duct. Named after the Danish physicist Julius Hartmann, who studied this
+  flow in the 1930s.
+\item[side walls] the other two walls, along which the field runs (left and right).
+\item[insulating wall] a wall through which no electric current can flow, for example one with a ceramic layer. The
+  currents generated in the metal must then close inside the metal, in the thin layers at the wall.
+\item[conducting wall] a wall that conducts current well, for example copper or thick steel. The currents can then
+  close through the wall as through a wire; the circuit has little resistance and the braking force becomes large.
+  \emph{Perfectly conducting} means without any resistance, a limiting case for the calculation.
+\item[conducting Hartmann walls] floor and ceiling conduct, the side walls insulate. This is Hunt's case (1965), for
+  which an exact solution exists.
+\item[Hartmann number Ha] a measure of how strongly the magnetic field acts compared with the viscosity of the metal.
+  Ha = 0 means no field; at Ha = 100 the field almost completely dominates the flow.
+\item[Hartmann layer] the thin layer at the Hartmann walls in which the velocity rises from zero to the value in the
+  middle. Its thickness is half the duct width divided by Ha, i.e.\ one hundredth at Ha = 100.
+\item[side layer] the corresponding layer at the side walls. It is thicker: half the duct width divided by
+  $\sqrt{\mathrm{Ha}}$.
+\item[potential $\varphi$] the electric voltage at each point in the metal, measured against a fixed point. Its
+  gradient steers the currents so that they close.
+\item[Jacobi step] a simple method for computing $\varphi$: each cell repeatedly takes the average of its neighbours,
+  corrected by the source, until nothing changes any more.
+\item[pressure-drop coefficient $k_p$] the fraction of the largest possible magnetic braking force that actually acts
+  (1 = full braking, small = the currents find only a difficult return path).
+\end{description}
+
+\subsection*{Stage 1: Lorentz force without potential}
+Between two infinitely wide plates $\nabla\varphi$ vanishes, leaving $\mathbf{f} = -K\,\mathbf{u}_\perp$ with
+$K = \sigma B^2/\rho$. This force was built into the main kernel of the project's own FluidX3D copy, semi-implicitly
+with the Guo forcing: $\mathbf{u}_\perp = (\mathbf{u}^*_\perp + \mathbf{F}_\perp/2\rho)/(1+K/2)$. This keeps the
+calculation stable even for large $K$. The changes are published as diffs in the folder \texttt{fluidx3d/}
+(FluidX3D licence \cite{fluidx3d}). The check is the Hartmann flow, which has an exact solution:
+$u(y) = f_x/K\,(1-\cosh(\mathrm{Ha}\,y/a)/\cosh\mathrm{Ha})$.
+
+\bild{mhd_hartmann_en.png}{1.0}{Stage 1: Hartmann flow between two plates. Left: FluidX3D (dots) against the exact
+solution (lines) for Ha = 0 to 30. Right: the error at Ha = 30 versus grid resolution.}
+\lesehilfe{On the left each colour is one field strength. Horizontally is the position between the two plates ($-1$
+and $+1$ are the walls), vertically the velocity relative to its maximum. Without a field (grey) the familiar
+parabola appears. The stronger the field, the flatter the profile in the middle and the steeper its drop at the
+walls: the field brakes the fast middle, and only thin layers at the wall keep a gradient. The dots (FluidX3D) lie on
+the lines (exact solution). On the right you see the error shrink as the grid is refined. The labels give the number
+of cells inside the thin wall layer. Even with a single cell the error stays below 1\,\%; on finer grids it falls
+roughly like the dashed line (second order).}
+
+Without a field the deviation is 0.03\,\%, at Ha = 5 it is 0.04\,\%, and at Ha = 30 with 32 cells (just over one cell
+in the Hartmann layer) 0.5\,\%. On finer grids the error falls roughly with second order (3.0 / 1.5 / 0.48 / 0.13\,\%
+for $a$ = 8 / 16 / 32 / 64 cells).
+
+\paragraph{Correction.} The values obtained first were much worse (4.3\,\% at Ha = 30 with 32 cells, 68\,\% with 8
+cells) and already appeared in an earlier version. They were an error in the evaluation, not in the calculation.
+Without the switch \texttt{UPDATE\_FIELDS}, FluidX3D recomputes the output velocity in a separate kernel, and that
+kernel lacked half of the Lorentz force. The larger $K$, the larger the error. This only came to light when the
+Hartmann test was repeated with the stage~2 code, in which \texttt{UPDATE\_FIELDS} is on. The rule ``at least two
+cells in the Hartmann layer'' was therefore too strict; about one cell is enough for 1\,\% accuracy.
+
+\subsection*{Stage 2: ducts with side walls}
+In a real duct the currents flow in loops. In the middle they run across the flow; to return they must go through
+the walls or through the thin layers at the walls. This return path is described by the potential $\varphi$.
+Without $\varphi$, stage~1 would overestimate the braking force in a duct with insulating walls several times over.
+
+\paragraph{Implementation.} A new switch \texttt{MHD\_POT} allocates two buffers for $\varphi$. Before every time
+step the GPU performs some Jacobi steps for $\nabla\cdot\mathbf{j} = 0$, here 20 double steps. The equation is written
+as a balance of currents over the six faces of each cell, so that charge is also conserved discretely. On an
+insulating wall the current through the wall face is zero. A perfectly conducting wall holds $\varphi = 0$ on its
+surface, which lies half a cell in front of the wall node. In the main kernel the force
+$K\rho\,(\mathbf{E}\times\hat{\mathbf{B}})$ with $\mathbf{E} = -\nabla\varphi$ is added from the same face values.
+
+\paragraph{Validation.} Comparing the code only with itself would be worthless. So a separate 2D solver for fully
+developed duct flow was written that takes a different route. It does not use $\varphi$ but the induced magnetic
+field $b$ (Shercliff \cite{shercliff1953}, Hunt \cite{hunt1965}):
+\[
+\nabla^2 u + \mathrm{Ha}\,\frac{\partial b}{\partial y} = -1,\qquad \nabla^2 b + \mathrm{Ha}\,\frac{\partial u}{\partial y} = 0 .
+\]
+It reproduces three known limits: the square duct without field ($\bar u = 0.1406$, i.e.\ $f\,\mathit{Re} = 14.23$),
+the exact Hartmann solution for a wide duct with conducting walls, and the core velocity $1/\mathrm{Ha}$ for a wide duct
+with insulating walls. Along the way a bug in its own boundary treatment was found and fixed.
+
+Two classic cases in the square duct were checked. In \emph{Shercliff}'s case all walls are insulating. In
+\emph{Hunt}'s case the Hartmann walls are perfectly conducting and the side walls insulating; the current returns
+through the wall, and fast jets form at the side walls.
+
+\paragraph{A bug that only the validation revealed.} In the first run the error with insulating walls grew strongly
+with Ha: 12\,\% at Ha = 15, 36\,\% at Ha = 30. With conducting walls everything was fine. The reason: in the core of
+an insulated duct two large forces almost cancel, the braking force $-K\mathbf{u}_\perp$ and the force from the
+potential. Only a fraction of about $1/\mathrm{Ha}$ remains, so any small inconsistency between the two parts is
+amplified by Ha. In the kernel the potential force was added only after the semi-implicit part, so that part missed
+some of the force. After swapping the order, and using the same stored velocity for $\mathbf{u}\times\mathbf{B}$ as in
+the Jacobi step, the error at Ha = 15 dropped from 12\,\% to 0.45\,\%.
+
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrr}\toprule
+Case & Ha & $a$ [cells] & profile error & flow-rate error\\\midrule
+no field & 0 & 32 & 0.01\,\% & $-0.03$\,\%\\
+Shercliff (insulating) & 5 / 10 / 15 & 32 & 0.09 / 0.23 / 0.45\,\% & $-0.15$ / $-0.30$ / $-0.37$\,\%\\
+Shercliff & 30 & 64 & 0.49\,\% & $-0.19$\,\%\\
+Hunt (conducting Hartmann walls) & 5 / 10 / 15 & 32 & 0.08 / 0.42 / 0.86\,\% & $-0.09$ / $-0.30$ / $-0.68$\,\%\\
+Hunt & 30 & 64 & 0.79\,\% & $-0.78$\,\%\\
+grid study Shercliff & 10 & 16 / 32 / 64 & 0.75 / 0.23 / 0.09\,\% & \\\bottomrule
+\end{tabular}\caption{Stage 2: FluidX3D against the independent 2D solver (RMS error of the profile relative to the
+maximum; deviation of the mean flow rate).}\end{table}
+
+\bild{mhd_kanal_en.png}{1.0}{Stage 2: square duct, B pointing straight up. Top left and centre: insulating walls
+(Shercliff); top right: conducting Hartmann walls (Hunt). Bottom left and centre: the whole cross-section for Hunt,
+Ha = 30, FluidX3D and reference. Bottom right: the grid study.}
+\lesehilfe{You are looking into a square duct; the metal flows towards you and the magnetic field points up. Top
+left: the velocity profile from bottom to top, i.e.\ along the field; top centre: from left to right, across the
+field. Dots are FluidX3D, lines the independent reference solver; the percentages are the deviations. With
+insulating walls a stronger field makes the profile flat and box-like along the field (thin layers at top and
+bottom). Across the field it stays rounder because the side layers are thicker. Top right: the top and bottom walls
+conduct. Now the field strongly brakes the middle, and the metal escapes into two fast jets along the side walls. The
+two colour maps at the bottom show exactly this over the whole cross-section (yellow fast, dark slow); left FluidX3D,
+centre the reference. They are hard to tell apart. Bottom right: the error falls as the grid is refined.}
+
+All twelve cases agree with the reference solver to better than 1\,\%. The grid study shows an order of 1.4 to 1.7,
+somewhat worse than in stage~1. The likely reason is the treatment of the wall faces; this has not been investigated
+yet.
+
+\paragraph{Checking the earlier rule of thumb.} The reference solver gives the pressure-drop coefficient
+$k_p = \mathrm{d}p/\mathrm{d}x\,/\,(\sigma\bar u B^2) = 1/(\mathrm{Ha}^2\,\bar U)$ in the square duct:
+\begin{table}[H]\centering\small
+\begin{tabular}{rrrr}\toprule
+Ha & $1/\mathrm{Ha}$ & $k_p$ insulating & $k_p$ conducting Hartmann walls\\\midrule
+5 & 0.200 & 0.407 & 0.925\\
+10 & 0.100 & 0.153 & 0.634\\
+20 & 0.050 & 0.065 & 0.475\\
+50 & 0.020 & 0.023 & 0.335\\
+100 & 0.010 & 0.011 & 0.256\\\bottomrule
+\end{tabular}\caption{Pressure-drop coefficient from the 2D solver (grid with at least three cells per Hartmann layer).}\end{table}
+With insulating walls $k_p$ does approach $1/\mathrm{Ha}$; at Ha = 100 it is still 10\,\% above. The rule of thumb was
+therefore right for large Ha and too low for small Ha. If the Hartmann walls conduct, $k_p$ falls only slowly, and at
+Ha = 100 the pressure drop is about 25 times larger than with insulating walls.
+
+\paragraph{Limits and next steps.}
+\begin{itemize}\itemsep1pt
+\item \textbf{Real Hartmann numbers are much larger.} Lead--lithium in the \SI{10}{mm} channels at \SI{6}{T} gives
+  roughly Ha $\approx 600$, in blanket ducts of a few centimetres several thousand (material data not yet checked).
+  With one cell per Hartmann layer, Ha = 600 alone would need about 600 cells per half duct width. Memory suffices,
+  but the simple Jacobi solver converges too slowly on such fine grids. A multigrid method or a grid refined towards
+  the wall would be needed; until then computed values hold up to Ha $\approx 30$, and the validated scaling laws
+  beyond.
+\item \textbf{Finitely conducting walls} (steel, wall conductance ratio $c$) are still missing; so far there are only
+  perfectly insulating and perfectly conducting walls. For steel ducts the case in between is the most important one.
+\item \textbf{Single GPU only}, and the field is uniform so far. The coil field ($\mathbf{B}(\mathbf{x})$ from
+  Biot--Savart) would be the step towards coupling with the stellarator.
+\end{itemize}

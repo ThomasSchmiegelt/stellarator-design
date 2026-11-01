@@ -374,3 +374,28 @@ auf Deutsch und auf Englisch. Er sagt, was zu sehen ist (Achsen, Farben, Linien 
 achten soll und was daraus folgt. Fachwörter wie Vergleichsspannung, Poincaré-Schnitt oder Reynolds-Zahl werden
 dort in einem Halbsatz erklärt. Das gilt ab jetzt als feste Regel für jedes neue Bild. Die Bildunterschriften
 allein waren für Fachleute geschrieben; erst der Nutzer machte die Leserschaft ohne Physikstudium zum Maßstab.
+
+## 15. Flüssigmetall im Magnetfeld, Stufe 2, und der Divertor-Vorwärmer in Alltagssprache (2026-11-01)
+
+Nach dem Push des Plasma-Teils bat der Nutzer um Stufe 2 der MHD-Rechnung. Die KI baute in die eigene FluidX3D-Kopie
+einen Löser für das elektrische Potential ein (Jacobi-Schritte auf der GPU, Strombilanz über die Zellflächen). Zur
+Prüfung entstand ein unabhängiger 2D-Löser in einer anderen Formulierung (induziertes Feld statt Potential). Drei
+Fehler zeigten sich erst durch Prüfen:
+
+1. Im Vergleichslöser fehlte in der Randbehandlung ein Term. Das fiel am bekannten Wert für den quadratischen Kanal
+   ohne Feld auf (f·Re = 14,23).
+2. Bei isolierenden Wänden wuchs der Fehler mit Ha bis 36 %. Ursache war die Reihenfolge der Kräfte im Kernel. Im
+   Kern des Kanals heben sich zwei große Kräfte fast auf, deshalb verstärkt sich jeder kleine Widerspruch. Nach dem
+   Tausch liegen alle zwölf Fälle unter 1 %.
+3. Beim Nachrechnen der schon veröffentlichten Stufe 1 waren die Werte plötzlich zehnmal besser. Die alte Ausgabe
+   hatte die halbe Lorentzkraft nicht enthalten, der Löser selbst war richtig. Die KI hat das offen korrigiert, statt
+   die neuen Zahlen still einzusetzen.
+
+Die Vergleichsrechnung bestätigt auch die frühere Faustformel für Blei (k_p gegen 1/Ha bei isolierenden Wänden).
+
+Während der Rechnung fragte der Nutzer, wie der Divertor-Vorwärmer eigentlich funktioniert; das sei nicht
+angekommen. Die KI erklärte ihn ohne Formeln: zu kalte Divertorwärme, Kondensat vorwärmen, Anzapfdampf sparen, dazu
+ein Vergleich aus dem Alltag. Der Nutzer wollte das im Bericht haben. Dazu kam die Bitte, Begriffe wie „leitende
+Hartmann-Wände“ zu erklären. Daraus wurden eine Prinzipskizze mit Lesehilfe vor den Formeln, ein Begriffskasten im
+MHD-Kapitel und eine feste Regel: erst die Funktion in Alltagssprache, dann die Formel. Wieder war es der Nutzer als
+Leser, der den Maßstab für Verständlichkeit setzte.

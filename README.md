@@ -529,17 +529,32 @@ Bisher war das Plasma nur die Quelle von 3053 MW. `stellarator/plasma_waerme.py`
 
 ![Woher die Wärme kommt: Reaktivität, Gamow-Fenster, Profile, Energiewege](docs/bilder/plasma_waerme.png)
 
-### Flüssigmetall im Magnetfeld (MHD), Stufe 1
+### Flüssigmetall im Magnetfeld (MHD) in FluidX3D
 
-Fließt ein leitendes Metall wie Blei quer durch ein Magnetfeld, entstehen darin Ströme, die es bremsen. Damit
-FluidX3D das abbilden kann, ist die bremsende Lorentzkraft in eine eigene Kopie eingebaut (Änderungen in
-[`fluidx3d/`](fluidx3d/README.md), FluidX3D-Lizenz). Geprüft wird an der Hartmann-Strömung zwischen zwei Platten,
-für die es eine exakte Lösung gibt: Die Abweichung beträgt 0,03 % ohne Feld und 0,1 % bei Ha = 5. Bei starkem Feld
-werden die Randschichten dünn. Sie brauchen mindestens zwei Rechenzellen, sonst wächst der Fehler (4,3 % bei
-Ha = 30 mit 32 Zellen); bei feinerem Gitter fällt er mit der zweiten Ordnung. Stufe 2 ergänzt das elektrische
-Potential, das in Kanälen mit Seitenwänden die Ströme umlenkt.
+Fließt ein leitendes Metall wie Blei quer durch ein Magnetfeld, entstehen darin Ströme, die es bremsen
+(Lorentzkraft). FluidX3D kennt keine Magnetfelder; die Kraft ist deshalb in eine eigene Kopie eingebaut (Änderungen in
+[`fluidx3d/`](fluidx3d/README.md), FluidX3D-Lizenz). Begriffe: *Hartmann-Wände* sind die Wände, auf die das Feld
+senkrecht trifft (Boden und Decke, wenn das Feld nach oben zeigt), *Seitenwände* die beiden anderen. Eine
+*isolierende* Wand lässt keinen Strom durch, eine *leitende* (z. B. Kupfer) schließt den Stromkreis wie ein Draht und
+verstärkt so die Bremsung. Die *Hartmann-Zahl Ha* misst, wie stark das Feld gegenüber der Zähigkeit wirkt.
+
+- **Stufe 1, Platten:** Hartmann-Strömung zwischen zwei unendlich breiten Platten, exakte Lösung bekannt. Abweichung
+  0,03 % ohne Feld, 0,04 % bei Ha = 5, 0,5 % bei Ha = 30; bei feinerem Gitter fällt der Fehler etwa mit der zweiten
+  Ordnung. *Korrektur:* Die zuerst veröffentlichten, schlechteren Werte (4,3 % bei Ha = 30) waren ein Fehler der
+  Auswertung. Die ausgegebene Geschwindigkeit enthielt die halbe Lorentzkraft nicht; die Rechnung selbst war richtig.
+- **Stufe 2, Kanal mit Seitenwänden:** Die Ströme müssen sich im Kreis schließen. Dafür löst die GPU zusätzlich das
+  elektrische Potential (Poisson-Gleichung, Jacobi-Schritte). Geprüft an zwei klassischen Fällen: alle Wände isolierend
+  (Shercliff 1953) und leitende Hartmann-Wände (Hunt 1965). Vergleich mit einem eigenen, unabhängigen 2D-Löser:
+  alle zwölf Fälle bis Ha = 30 besser als 1 %. Ein Fehler in der Reihenfolge der Kräfte (zuerst 36 % bei Ha = 30)
+  wurde dabei gefunden und behoben.
+- **Faustformel geprüft:** Für isolierende Wände geht der Druckverlustbeiwert tatsächlich gegen 1/Ha (bei Ha = 100
+  noch 10 % darüber). Mit leitenden Hartmann-Wänden ist der Druckverlust bei Ha = 100 etwa 25-mal so groß.
+- **Grenze:** Reale Kanäle haben Ha von einigen Hundert bis Tausenden. Dafür braucht der Potential-Löser ein
+  Mehrgitterverfahren; auch endlich leitende Stahlwände und das echte Spulenfeld fehlen noch.
 
 ![Hartmann-Strömung: FluidX3D gegen exakte Lösung und Gitterstudie](docs/bilder/mhd_hartmann.png)
+
+![Kanal mit Seitenwänden: Shercliff und Hunt, FluidX3D gegen Referenz](docs/bilder/mhd_kanal.png)
 
 ### Doppeltes Filament, Platz zu den Spulen, Flüssigblei (grobe Abschätzungen)
 
@@ -700,7 +715,8 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 - [ ] Plasma: Transport radial (1-D), Linien- und Zyklotronstrahlung, Divertorlast mit Randstrahlung
 - [x] Alle Bilder im Bericht mit Lesehilfe für Nicht-Physiker (DE+EN)
 - [x] Flüssigmetall im Magnetfeld, Stufe 1: Lorentzkraft in FluidX3D, geprüft an der Hartmann-Strömung
-- [ ] Flüssigmetall im Magnetfeld, Stufe 2: elektrisches Potential für Kanäle mit Seitenwänden
+- [x] Flüssigmetall im Magnetfeld, Stufe 2: elektrisches Potential für Kanäle mit Seitenwänden (Shercliff, Hunt)
+- [ ] MHD: Mehrgitter für reale Ha, endlich leitende Stahlwände, Spulenfeld B(x)
 - [ ] Alphateilchen im Spulenfeld: Verluste und Wandtreffer (Lauf mit 1000 Teilchen)
 - [ ] Erstwand-Kühlung: dünne Innenhaut, schnelle Kanäle, Wärme gekoppelt rechnen
 - [ ] Wandstärken und Verbinder auslegen (zulässige Spannung einhalten)

@@ -1,0 +1,17 @@
+diff --git a/src/lbm.hpp b/src/lbm.hpp
+index a2ff421..7efea4e 100644
+--- a/src/lbm.hpp
++++ b/src/lbm.hpp
+@@ -80,6 +80,12 @@ public:
+ #ifdef TEMPERATURE
+ 	Memory<float> T; // temperature of every cell
+ #endif // TEMPERATURE
++#ifdef MHD_POT // geaendert
++	Memory<float> mhd_phi, mhd_phi2; // elektrisches Potential (geteilt durch |B|), zwei Puffer fuer Jacobi
++	Kernel kernel_mhd_jacobi_a, kernel_mhd_jacobi_b;
++	uint mhd_iter = 20u; // Jacobi-Doppelschritte je LBM-Schritt (FX_MHD_JACOBI)
++	void enqueue_mhd_potential();
++#endif // MHD_POT
+ #ifdef PARTICLES
+ 	Memory<float> particles; // particle positions
+ #endif // PARTICLES

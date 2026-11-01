@@ -1,8 +1,8 @@
 diff --git a/src/defines.hpp b/src/defines.hpp
-index eeb5404..1b6691f 100644
+index eeb5404..0d3c3e9 100644
 --- a/src/defines.hpp
 +++ b/src/defines.hpp
-@@ -10,18 +10,19 @@
+@@ -10,18 +10,20 @@
  #define SRT // choose single-relaxation-time LBM collision operator; (default)
  //#define TRT // choose two-relaxation-time LBM collision operator
  
@@ -21,7 +21,19 @@ index eeb5404..1b6691f 100644
  //#define SURFACE // enables free surface LBM: mark fluid cells with TYPE_F; at initialization the TYPE_I interface and TYPE_G gas domains will automatically be completed; allocates an extra 12 Bytes/cell
  //#define TEMPERATURE // enables temperature extension; set fixed-temperature cells with TYPE_T (similar to EQUILIBRIUM_BOUNDARIES); allocates an extra 32 (FP32) or 18 (FP16) Bytes/cell
  //#define SUBGRID // enables Smagorinsky-Lilly subgrid turbulence LES model to keep simulations with very large Reynolds number stable
++#define MHD_POT // geaendert: elektrisches Potential phi (Poisson, Jacobi auf der GPU) fuer Kanaele mit Waenden; braucht MHD
 +#define MHD // geaendert: Lorentzkraft j x B (induktionsfrei, kleine magnetische Reynoldszahl), Parameter aus FX_MHD_K, FX_MHD_B
  //#define PARTICLES // enables particles with immersed-boundary method (for 2-way coupling also activate VOLUME_FORCE and FORCE_FIELD; only supported in single-GPU)
  
  //#define INTERACTIVE_GRAPHICS // enable interactive graphics; start/pause the simulation by pressing P; either Windows or Linux X11 desktop must be available; on Linux: change to "compile on Linux with X11" command in make.sh
+@@ -97,6 +99,10 @@
+ #define VOLUME_FORCE
+ #endif // TEMPERATURE
+ 
++#ifdef MHD_POT // geaendert: u wird fuer die Quelle von phi in jedem Schritt gebraucht
++#define UPDATE_FIELDS
++#endif // MHD_POT
++
+ #ifdef PARTICLES // (rho, u) need to be updated exactly every LBM step
+ #define UPDATE_FIELDS // update (rho, u, T) in every LBM step
+ #endif // PARTICLES

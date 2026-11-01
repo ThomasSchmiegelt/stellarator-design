@@ -1026,6 +1026,34 @@ The divertor heat arrives at low temperature. In EU-DEMO the target coolant ente
 \SI{5}{MPa} and heats up by \SI{6}{K}. The authors plan to use this heat for preheating \cite{you2022}. In this
 design it amounts to \SI{305}{MW} (see heat balance).
 
+\paragraph{How the preheater works (without formulas).} The divertor is the \emph{exhaust} of the plasma: about
+10\,\% of the power lands there on a small area, up to \SI{10}{MW/m^2}. For copper and tungsten to survive this, it
+is cooled with fairly cold water, \SI{130}{\celsius} in and \SI{136}{\celsius} out. That is too cold for the steam
+generator; the turbine needs steam of almost \SI{300}{\celsius}, which the blanket supplies. Without further measures
+this heat would have to be discarded.
+
+But the steam cycle has a place with even colder water: the \emph{condensate}, which forms from the steam in the
+condenser behind the turbine. It is only about \SI{21}{\celsius} and has to be heated again anyway on its way back to
+the steam generator. In every steam plant today this is done with \emph{bleed steam}: steam is tapped from the
+turbine and does no more work afterwards. If the divertor heat takes over this preheating, the steam stays in the
+turbine and keeps driving the generator down to the condenser. This extra work is the gain. An everyday comparison:
+if you preheat bath water with waste heat, the water heater burns less gas; the waste heat does not turn into gas, it
+only saves some.
+
+The preheater is a \emph{heat exchanger}: two separate channel systems, one for the warm divertor water and one for
+the cold condensate, with a steel wall between them. The waters never mix; only heat passes through the wall. Because
+the divertor heat only replaces the coldest, almost fully expanded bleed steam, it is worth less than its amount
+suggests: at most \SI{73}{MW} of electricity, not $0.35\times\SI{305}{MW} = \SI{107}{MW}$. The calculation below
+derives this number and compares the designs.
+
+\bild{vorwaermer_prinzip_en.png}{1.0}{Principle of the divertor preheater in the steam cycle.}
+\lesehilfe{The arrows show where water and steam flow. At the top the main path: the steam generator supplies steam,
+the turbine drives the generator, and the steam turns back into water in the condenser. Below, the water's way back:
+the cold condensate (blue) runs through the preheater and leaves about \SI{40}{K} warmer (violet). Underneath, the
+divertor's own loop: its water arrives at \SI{136}{\celsius} (red), gives off heat and returns at \SI{130}{\celsius}.
+The dashed yellow arrow is the bleed steam that would otherwise have done this preheating. It is saved and instead
+produces electricity in the turbine, up to \SI{73}{MW}.}
+
 \paragraph{Question and hypothesis.} Which preheater design extracts the most net electricity from these
 \SI{305}{MW}? The candidates are a tube bundle, a plate exchanger, gyroid (uniform and graded) and diamond.
 \[
@@ -1151,6 +1179,7 @@ the pressure, the point about the small context of the local model, and the deci
 assistant did the calculations, built the tools, checked the research and named the consequences.
 
 \input{plasma_en.tex}
+\input{mhd_en.tex}
 
 \section*{Code and data}
 Software: ElmerFEM, gmsh, FreeCAD, simsopt, DESC, PyVista, ParaView, Blender, FluidX3D 3.8 \cite{fluidx3d}, PicoGK \cite{picogk}.
@@ -1193,6 +1222,9 @@ UrhG); no figures from other works are reproduced. Source licences are listed in
 \bibitem{hermes} Nous Research: Hermes Agent. \url{https://github.com/NousResearch/hermes-agent} (MIT licence).
 \bibitem{claudecode} Anthropic: Claude Code. \url{https://www.anthropic.com/claude-code}
 \bibitem{fluidx3d} M. Lehmann: FluidX3D, version 3.8. \url{https://github.com/ProjectPhysX/FluidX3D}.
+\bibitem{shercliff1953} J.\,A. Shercliff: Steady motion of conducting fluids in pipes under transverse magnetic fields. Mathematical Proceedings of the Cambridge Philosophical Society 49, 136--144 (1953). \url{https://doi.org/10.1017/S0305004100028139}
+\bibitem{hunt1965} J.\,C.\,R. Hunt: Magnetohydrodynamic flow in rectangular ducts. Journal of Fluid Mechanics 21, 577--590 (1965). \url{https://doi.org/10.1017/S0022112065000344}
+\bibitem{huntshercliff1971} J.\,C.\,R. Hunt, J.\,A. Shercliff: Magnetohydrodynamics at high Hartmann number. Annual Review of Fluid Mechanics 3, 37--62 (1971). \url{https://doi.org/10.1146/annurev.fl.03.010171.000345}
   Licence: free for non-commercial use only, source-available, not open source.
   Altered version of \texttt{setup.cpp} and \texttt{defines.hpp} in the repository folder \texttt{fluidx3d/}.
 \bibitem{lehmann2023} M. Lehmann: Computational study of microplastic transport at the water-air interface with
