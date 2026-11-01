@@ -439,17 +439,49 @@ Ausschnitt (`stellarator/tauscher_cfd.py`, geänderter FluidX3D-Quelltext in `fl
 
 ![Teilchenbahnen in Gyroid, Diamond und Chevron-Platten](docs/bilder/tauscher_stroemung_drei.jpg)
 
-**Surrogat und Stufung (2026-11-01).** 36 weitere FluidX3D-Läufe liefen als anhaltbare Auftragsliste, überwacht von
-einem zweiten KI-Agenten, ohne Fehlschlag: Latin Hypercube über Re 500–10 000, Pr 1,2–2,0 und Zellgröße, dazu
-Kontrollen und ein drittes Gitter mit 62,5 Mio. Zellen. Daraus entstand ein Gauß-Prozess-Surrogat mit Gitterkorrektur
-(Co-Kriging, `stellarator/tauscher_surrogat.py`).
+**Surrogat und Stufung (2026-11-01).**
+
+*Warum ein Surrogat?* Die Auslegung des Vorwärmers braucht für jeden Entwurf die Wärmeübertragung (Nu) und die
+Reibung (f) auf beiden Seiten. Dafür gibt es drei Wege, und jeder hat einen Haken:
+1. **Korrelationen aus der Literatur** sind schnell, streuen aber stark. Bei Re 3000 nennen drei Arbeiten für
+   denselben Gyroid f = 0,15, 0,54 und 0,81, also mehr als Faktor 5. Sie gelten außerdem nur für die Zellen, an denen
+   sie gemessen wurden.
+2. **Eigene Strömungsrechnungen** passen genau, kosten aber 1–70 Minuten je Punkt. Das Segmentmodell unten braucht
+   je Variante etwa 440 000 Auswertungen. Mit Strömungsrechnung wären das fast zwei Jahre.
+3. **Eine eigene Potenzformel** an die Rechenpunkte anzupassen wäre schnell, legt die Form aber vorher fest und sagt
+   nicht, wie sicher sie zwischen den Punkten ist.
+
+Ein **Surrogat** (Ersatzmodell) verbindet die Vorteile. Es lernt einmal aus wenigen teuren Rechnungen und liefert
+danach in Mikrosekunden Werte für beliebige Eingänge, mit Fehlerband. Die konkrete Frage war, ob sich eine **Stufung**
+der Zellen längs des Wegs lohnt. Die Literatur gibt dafür nur einen pauschalen Faktor (Nu × 1,28). Um das selbst zu
+prüfen, muss man wissen, wie Nu und f von der Zellgröße abhängen, und genau das lernt das Surrogat.
+
+*Wie es funktioniert.*
+- **Gauß-Prozess:** nimmt keine Formel an, nur dass ähnliche Eingänge ähnliche Ergebnisse geben. Eine Längenskala je
+  Eingang (Re, Pr, Zellgröße) sagt, wie schnell sich das Ergebnis ändert. Diese Längenskalen sind selbst ein Ergebnis:
+  Die Zellgröße zählt bei gleichem hydraulischen Durchmesser kaum. Zu jedem Wert gibt es eine Standardabweichung, die
+  in Lücken zwischen den Rechenpunkten wächst.
+- **Mehrstufig (Co-Kriging):** 28 billige Läufe auf grobem Gitter (je 1–2 min) beschreiben die *Form* über Re, Pr und
+  Zelle. Sechs Kontrollen auf mittlerem und zwei auf feinem Gitter (62,5 Mio. Zellen, 30–70 min) bestimmen die
+  *Verschiebung* durch das Gitter.
+- **Gelernt wird nur die Abweichung** von der Korrelation von Renon (ln Nu/Nu_Renon). Das macht das Modell glatt und
+  robust. Weglasstest: Nu auf 0,9–2,8 % genau.
+- **Ablauf:** Die 36 Läufe liefen als anhaltbare Auftragsliste (`pause`/`weiter`/`stop`). Ein zweiter KI-Agent
+  überwachte Speicher, Platte und Divergenz. Es gab keinen Fehlschlag.
+
+*Ergebnisse.*
 - Die drei Gitter sind noch nicht im asymptotischen Bereich. Auf ein unendlich feines Gitter extrapoliert, liegt Nu
-  bei der Korrelation von Renon (Faktor 0,97–1,14). Der frühere Überschuss war also Gitterfehler.
-- Die extrapolierte Reibung ist nicht verwertbar; für f gilt die gerechnete Stufe (144 Zellen).
-- **Stufung:** Ein Segmentmodell des Vorwärmers (`stellarator/vorwaermer_stufung.py`) lässt jedes von 8 Segmenten
-  seine Zelle selbst wählen. Ergebnis: Überall gewinnt die kleinste zulässige Zelle, abgestuft = gleichmäßig. Die
-  Pumpleistung (unter 1 MW) ist zu klein, als dass sich gröbere Zellen lohnen. 95 % der 73,3 MW erreicht ein
-  Tauscher von 1,3–1,5 m³.
+  bei der Korrelation von Renon (Faktor 0,97–1,14). Der frühere Überschuss war also Gitterfehler, nicht Physik.
+- Die extrapolierte Reibung ist nicht verwertbar; für f gilt die gerechnete feinste Stufe.
+- **Stufung bringt nichts:** Ein Segmentmodell des Vorwärmers (`stellarator/vorwaermer_stufung.py`) lässt jedes von 8
+  Segmenten seine Zelle selbst wählen. Überall gewinnt die kleinste zulässige Zelle, abgestuft ist also gleich
+  gleichmäßig. Die Pumpleistung (unter 1 MW) ist zu klein, als dass sich gröbere Zellen lohnen.
+- 95 % der möglichen 73,3 MW erreicht ein Tauscher von 1,3–1,5 m³.
+- Grenzen: Die beste Zelle liegt am Rand des gerechneten Bereichs. Festigkeit der 0,5-mm-Wand und Fertigung sind
+  offen.
+
+Skripte: `stellarator/tauscher_cfd.py` (FluidX3D-Fall), `tauscher_surrogat.py` (Surrogat), `vorwaermer_stufung.py`
+(Anwendung). Herleitung im Projektbericht, Abschnitt „Ersatzmodell (Surrogat)“.
 
 ![Surrogat für Gyroid- und Diamond-Zellen](docs/bilder/tauscher_surrogat.png)
 
@@ -627,6 +659,9 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 - [x] 3D-Schnittmodell mit Verguss, Isolierung und Supraleitern; Leiterdetail; ParaView und Blender
 - [x] Projektberichte (de/en, drei Zielgruppen) mit geprüften Quellen
 - [x] Kühlsegment des Plasmagefäßes: Gyroid-Wasserweg (PicoGK), Strömung (FluidX3D), Verteilung 8 % Streuung
+- [x] Wärmebilanz bis zur Turbine, Leistungsfluss Plasma → Netz, Bauteile erklärt
+- [x] Divertor-Vorwärmer: Bauarten verglichen, Tauscherzellen mit FluidX3D gerechnet, Surrogat, Stufung geprüft
+- [ ] Plasma: woher die Wärme kommt und wie sie entsteht (in Arbeit)
 - [ ] Erstwand-Kühlung: dünne Innenhaut, schnelle Kanäle, Wärme gekoppelt rechnen
 - [ ] Wandstärken und Verbinder auslegen (zulässige Spannung einhalten)
 - [ ] Verguss (Quarzsand-Epoxid) zwischen Wickelpaket und Gehäuse in Geometrie und Rechnung
