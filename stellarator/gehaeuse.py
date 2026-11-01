@@ -16,13 +16,14 @@ Braucht DISPLAY (z.B. DISPLAY=:1) fuer den Ansichtsschritt, sonst ist in der GUI
 """
 from __future__ import annotations
 import argparse, json, os, subprocess
+import os
 from pathlib import Path
 import numpy as np
 
 from . import spulen as sp
 from .lauf import PROJEKT
 
-FREECAD = Path.home() / "Applications" / "FreeCAD_1.1.4.AppImage"
+FREECAD = Path(os.environ.get("FREECAD_APPIMAGE", Path.home() / "Applications" / "FreeCAD_1.1.4.AppImage"))  # Pfad zum FreeCAD-AppImage
 SKRIPT = Path(__file__).with_name("freecad_vss.py")
 ANSICHT = Path(__file__).with_name("freecad_ansicht.py")     # GUI-Ansicht nachtragen (sonst alles ausgeblendet)
 

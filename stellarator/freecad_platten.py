@@ -1,7 +1,7 @@
 """freecad_platten.py — Plattenpaket eines Plattenwaermetauschers als FreeCAD-Modell (Vergleich zu Gyroid/Diamond).
 
 Laeuft IN FreeCAD (freecadcmd), nicht im Projekt-venv:
-  PLATTEN='{"aus": "sim/tauscher/platten_glatt", "A": 0}' ~/Applications/FreeCAD_1.1.4.AppImage freecadcmd stellarator/freecad_platten.py
+  PLATTEN='{"aus": "sim/tauscher/platten_glatt", "A": 0}' $FREECAD_APPIMAGE freecadcmd stellarator/freecad_platten.py
 
 Platte i liegt bei y_i = i * (spalt + t). Ihre Mittelflaeche ist gewellt (Winkelwellung, "chevron"):
     y = y_i + A sin(2 pi (x cos(beta_i) - z sin(beta_i)) / lam),   beta_i = +beta / -beta abwechselnd,

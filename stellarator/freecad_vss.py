@@ -1,7 +1,7 @@
 """freecad_vss.py — "Variable Section Sweep" (wie Creo VSS) als parametrisches FreeCAD-Modell.
 
 Laeuft IN FreeCAD (freecadcmd), nicht im Projekt-venv:
-  VSS_EINGABE=<vss_eingabe.json> ~/Applications/FreeCAD_1.1.4.AppImage freecadcmd stellarator/freecad_vss.py
+  VSS_EINGABE=<vss_eingabe.json> $FREECAD_APPIMAGE freecadcmd stellarator/freecad_vss.py
 Die Eingabe schreibt stellarator/gehaeuse.py (Masse in mm).
 
 Aufbau je Basisspule (alles im Modellbaum editierbar):

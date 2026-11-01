@@ -649,11 +649,11 @@ python3 -m venv .venv-opt && .venv-opt/bin/pip install -r requirements-opt.txt
 Systemwerkzeuge:
 - **ElmerFEM 9.0** (Ubuntu-PPA `elmer-csc-ubuntu`), für `stellarator.elmer`,
 - **ParaView** zum Ansehen,
-- **FreeCAD 1.1** (AppImage von github.com/FreeCAD/FreeCAD/releases, abgelegt als
-  `~/Applications/FreeCAD_1.1.4.AppImage`), für `stellarator.gehaeuse`,
+- **FreeCAD 1.1** (AppImage von github.com/FreeCAD/FreeCAD/releases; Pfad über die Umgebungsvariable
+  `FREECAD_APPIMAGE`), für `stellarator.gehaeuse`,
 - optional **PicoGK** mit .NET 9, für `stellarator.lauf` im Voxelmodus.
 
-Referenzrechner: 32 GB RAM, RTX 3090 (24 GB).
+Ein Arbeitsplatzrechner mit einer aktuellen Grafikkarte reicht; einige Rechnungen brauchen viel Arbeitsspeicher.
 
 ## Schnellstart
 
@@ -676,10 +676,10 @@ Referenzrechner: 32 GB RAM, RTX 3090 (24 GB).
     --k_B Nb3Sn=2.5,HTS=2.42 --f_I 1.09
 .venv/bin/python -m stellarator.bewerte stellarator/faelle/qa_nfp2_1GW_HTS.json --bild
 
-# Spulengehäuse parametrisch in FreeCAD (~35 s; FreeCAD-AppImage unter ~/Applications)
+# Spulengehäuse parametrisch in FreeCAD (~35 s; FreeCAD-AppImage über FREECAD_APPIMAGE)
 .venv/bin/python -m stellarator.gehaeuse stellarator/faelle/qa_nfp2_A45_1GW_HTS.json --oeffnen
 
-# FEM: ElmerFEM mit allen 70 W7-X-Spulen (~12 min, ~10 GB RAM)
+# FEM: ElmerFEM mit allen 70 W7-X-Spulen (~12 min, braucht viel Arbeitsspeicher)
 .venv/bin/python -m stellarator.elmer sim/stellarator/elmer_w7x_70 --spulen 70 --B0 2.5 --h_spule 0.05 --h_luft 0.8
 ```
 
