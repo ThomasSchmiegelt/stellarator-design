@@ -25,6 +25,8 @@ Magnetfeld ab. Der Nutzer fragte nach einer dynamischen Simulation mit dem Magne
 \item[Quasisymmetrie] eine besondere Form des Stellaratorfelds: Obwohl die Anlage verdreht ist, sieht die Feldstärke
   entlang der Bahnen so aus wie in einem symmetrischen Ring. Dann driften gefangene Teilchen im Mittel nicht nach
   außen. Unsere Plasmaform ist quasi-axialsymmetrisch (QA) ausgelegt.
+\item[Prompter Verlust] ein Alpha, dessen Bahn schon beim ersten Umlauf den Rand streift; es geht innerhalb von
+  Bruchteilen einer Millisekunde verloren. Das betrifft vor allem Alphas, die nahe am Rand geboren werden.
 \end{description}
 
 \paragraph{Methode.} Die Bahnen werden mit simsopt \cite{simsopt} als stoßfreie Führungszentren im Vakuumfeld der
@@ -82,10 +84,41 @@ Millisekunden bis zur Abbremszeit. Das ist das typische Bild, wenn gefangene Tei
 quasisymmetrischen Feld nach außen driften. Die Plasmaform selbst ist sehr genau quasisymmetrisch (Zielwert
 der Quasisymmetrie in DESC $2{,}4\cdot10^{-5}$, kleiner als bei der Referenz \emph{precise QA} mit
 $5{,}8\cdot10^{-5}$). Die Spulen treffen diese Form aber nur ungefähr: Das Feld steht im Mittel um 0,27\,\% und
-höchstens um 0,96\,\% schräg zur Randfläche ($|B_n|/|B|$). Ob der Hauptteil der Verluste aus diesen Spulenfehlern stammt oder schon in der Form angelegt ist, ist noch
-nicht geprüft. Dass sehr genaue Quasisymmetrie erreichbar ist und dann einen ausgezeichneten Einschluss ergibt,
-zeigten Landreman und Paul \cite{landreman2022}. Ein Verlust von über 10\,\% der Alphaenergie wäre für ein Kraftwerk
-zu viel, vor allem wegen der gebündelten Wandlast.
+höchstens um 0,96\,\% schräg zur Randfläche ($|B_n|/|B|$). Ob der Hauptteil der Verluste aus diesen Spulenfehlern stammt oder schon in der Form angelegt ist,
+klärt der folgende Vergleich. Ein Verlust von über 10\,\% der Alphaenergie wäre für ein Kraftwerk zu viel, vor allem
+wegen der gebündelten Wandlast.
+
+\paragraph{Vorher und nachher: Spulen oder Form?} Dieselbe Rechnung wurde ein zweites Mal gemacht, diesmal im Feld der
+Plasmaform allein, also so, als ob die Spulen die Form perfekt träfen. Dazu wird das Gleichgewicht der Form mit
+\texttt{booz\_xform}\footnote{\url{https://github.com/hiddenSymmetries/booz_xform}} in
+\emph{Boozer-Koordinaten} umgerechnet, ein Koordinatensystem, in dem die Feldlinien gerade verlaufen und die
+Feldstärke als einfache Fourier-Reihe vorliegt. Dann rechnet simsopt die Bahnen direkt darin, mit derselben
+Verteilung der Geburtsorte und Richtungen wie zuvor (im Mittel $s = 0{,}18$, 31\,\% gefangene Startrichtungen in
+beiden Läufen).
+
+\emph{Erwartung vorher.} Bevor das Ergebnis vorlag, wurde im Ereignisprotokoll festgelegt: Die Form ist genauer
+quasisymmetrisch als \emph{precise QA}, für die Landreman und Paul in \SI{0,2}{s} keine Alphaverluste fanden
+\cite{landreman2022}. Erwartet wurden deshalb unter 1\,\% Verlust. Die Deutung wurde ebenfalls vorab festgelegt:
+unter 2\,\% heißt, die Spulen sind die Hauptursache; zwischen 2 und 10\,\% tragen beide bei; über 10\,\% liegt es an
+der Form selbst oder an einem Rechenfehler.
+
+\bild{alpha_vergleich.png}{1.0}{Vorher und nachher: Alphaverluste im Feld der 16 Spulen (rot) und im Feld der
+Plasmaform allein (blau), je 1000 Alphas bis \SI{0,2}{s}.}
+\lesehilfe{Links: waagrecht die Zeit seit der Geburt der Alphas (logarithmisch), senkrecht der verlorene Anteil. Die
+rote Kurve (Spulen) steigt ab etwa einer Millisekunde stetig bis 16,6\,\%. Die blaue Kurve (Form allein) springt ganz
+am Anfang auf 0,3\,\% und bleibt dann flach: Danach geht kein einziges Alpha mehr verloren. Die gestrichelte Linie
+ist die vorher festgelegte Erwartung von 1\,\%; die blaue Kurve bleibt darunter. Rechts die Kennzahlen beider Läufe.}
+
+\emph{Ergebnis.} Im Feld der Form allein gehen nur 3 von 1000 Alphas verloren ($0{,}3 \pm 0{,}2$\,\%), alle weit
+außen geboren ($s = 0{,}60$ bis $0{,}72$) und schon in den ersten \SI{0,1}{ms}. Die langsamen Verluste gefangener
+Alphas, die im Spulenfeld 95\,\% der Verluste ausmachen, fehlen vollständig. Die verlorene Heizleistung sinkt von
+\SI{71}{MW} auf \SI{1,8}{MW}. Weil dieser Lauf viel schneller war als der Spulenlauf, wurde stichprobenhaft
+geprüft, ob die Bahnen wirklich bis \SI{0,2}{s} gerechnet werden: Sechs nicht verlorene Alphas (vier gefangene, zwei
+umlaufende) erreichen alle \SI{0,2000}{s}; die gefangenen pendeln (v$_\parallel$ wechselt immer wieder das
+Vorzeichen) und bleiben innen. Die Erwartung ist damit bestätigt: Rund 98\,\% der Verluste stammen von der
+Ungenauigkeit der Spulen, nicht von der Plasmaform. Das passt zum Standbild oben: Die rote Bahn bleibt in einem
+kleinen Feldtal hängen, wie es nur ein nicht ganz quasisymmetrisches Feld bildet. Dieser Vergleich ist die
+Ausgangslage für den nächsten Schritt: Spulen nachoptimieren und dieselbe Rechnung wiederholen.
 
 \paragraph{Grenzen.}
 \begin{itemize}\itemsep1pt
@@ -96,8 +129,11 @@ zu viel, vor allem wegen der gebündelten Wandlast.
 \item \textbf{Verlustort ist der Plasmarand}, nicht die Wand. Die Wand liegt weiter außen; die Treffer verteilen sich
   dort etwas anders.
 \item \textbf{Statistik}: 1000 Alphas reichen für den Verlustanteil, aber nicht für eine feine Wandlastkarte.
+\item \textbf{Feld der Form}: Die Umrechnung in Boozer-Koordinaten nutzt 24 Fourier-Moden in jeder Richtung; feinere
+  Anteile fehlen. Das könnte die Verluste der Form leicht unterschätzen, ändert aber nicht die Größenordnung
+  (0,3\,\% gegen 16,6\,\%).
 \end{itemize}
 
-\paragraph{Nächste Schritte.} (1) Dieselben Alphas im Feld der Plasmaform allein rechnen (ohne Spulenfehler), um die
-Ursache zu trennen. (2) Falls die Spulen die Ursache sind: die Spulen mit einem Ziel für Alphaverluste nachoptimieren.
+\paragraph{Nächste Schritte.} (1) Erledigt: Die Ursache ist getrennt, es sind die Spulen. (2) Die Spulen genauer an
+die Form anpassen, mit einem Ziel für Alphaverluste, und denselben Vergleich wiederholen („nachher“).
 (3) Mehr Teilchen und Stöße für eine belastbare Wandlastkarte.

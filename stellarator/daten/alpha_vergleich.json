@@ -1,0 +1,24 @@
+{
+ "spulen": {
+  "n": 1000,
+  "verloren": 166,
+  "anteil": 0.166,
+  "fehler": 0.011766222843376714,
+  "prompt_1ms": 10,
+  "gefangen_anteil": 0.9518072289156626,
+  "energie_anteil": 0.11639413168470174,
+  "energie_MW": 71.11163612876356
+ },
+ "form": {
+  "n": 1000,
+  "verloren": 3,
+  "anteil": 0.003,
+  "fehler": 0.001729450779872038,
+  "prompt_1ms": 3,
+  "gefangen_anteil": 0.3333333333333333,
+  "energie_anteil": 0.002998648283150917,
+  "energie_MW": 1.8320406922851473
+ },
+ "spulen_anteil_an_verlust": 0.9819277108433735,
+ "erwartung_vorher": "Form allein < 1 % (Landreman & Paul 2022: precise QA ohne Verluste in 0,2 s)"
+}

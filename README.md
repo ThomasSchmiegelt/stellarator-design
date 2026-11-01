@@ -567,7 +567,7 @@ Feldes um den ganzen Ring.
 - **11,6 % der Alphaenergie, also 71 MW**, fehlen dem Plasma als Selbstheizung.
 - **Die Treffer am Rand sind gebündelt:** im Mittel 58 kW/m², im heißesten Feld (≈ 10 m²) etwa 2,4 MW/m², also fast
   das Fünffache der Wandauslegung (0,5 MW/m²).
-- **Offen:** ob die Verluste von den Spulenfehlern (|B·n|/|B| 0,27 %) kommen oder schon in der Plasmaform liegen.
+- **Ursache geklärt (vorher/nachher, siehe unten):** Die Verluste kommen von den Spulen, nicht von der Plasmaform.
   Grenzen: stoßfrei, Vakuumfeld, Verlustort am Plasmarand statt an der Wand.
 
 ![Alpha-Verluste: Zeitverlauf, wer verloren geht, Wandtreffer](docs/bilder/alpha_verluste.png)
@@ -577,6 +577,29 @@ Feldes um den ganzen Ring.
 So liest man das Bild: schräger Blick von oben auf den Ring, graue Schleifen sind Querschnitte des Plasmarands.
 Blau läuft entlang des Feldes immer wieder um den Ring, gelb pendelt zwischen Stellen starken Feldes, rot wandert
 langsam nach außen und erreicht den Rand. [Film mit sechs Alphas](docs/filme/alpha_bahnen.mp4) (20 s).
+
+**Vorher und nachher: Spulen oder Form?** Dieselben 1000 Alphas wurden ein zweites Mal gerechnet, im Feld der
+Plasmaform allein, also so, als ob die Spulen die Form perfekt träfen (`stellarator/alpha_form.py`, Umrechnung mit
+[booz_xform](https://github.com/hiddenSymmetries/booz_xform) in Boozer-Koordinaten). **Vorher festgelegte
+Erwartung:** unter 1 % Verlust, weil die Form genauer quasisymmetrisch ist als „precise QA“ (Landreman & Paul 2022:
+keine Verluste); unter 2 % würde heißen, die Spulen sind schuld.
+
+| | Feld der 16 Spulen | Feld der Form allein |
+|---|---|---|
+| verloren | 16,6 % ± 1,2 % | **0,3 % ± 0,2 %** |
+| davon gefangene Alphas | 95 % | 1 von 3 |
+| Heizleistung verloren | 71 MW | 1,8 MW |
+
+Erwartung bestätigt: **rund 98 % der Verluste kommen von der Ungenauigkeit der Spulen.** Die drei Verlorenen im Feld
+der Form sind weit außen geboren und sofort weg (prompter Verlust); die langsamen Verluste gefangener Alphas fehlen
+ganz. Kontrolle: sechs nicht verlorene Alphas wurden einzeln bis 0,2 s verfolgt, alle bleiben innen (die Rechnung war
+schnell, aber vollständig). Das ist die Ausgangslage für den nächsten Schritt: Spulen nachoptimieren und denselben Vergleich wiederholen.
+
+![Vorher und nachher: Alphaverluste im Feld der Spulen (rot) und der Form allein (blau)](docs/bilder/alpha_vergleich.png)
+
+So liest man das Bild: links die Zeit seit der Geburt (logarithmisch) und der verlorene Anteil. Rot (Spulen) steigt
+ab einer Millisekunde stetig auf 16,6 %, blau (Form allein) springt ganz am Anfang auf 0,3 % und bleibt dann flach.
+Die gestrichelte Linie ist die vorher festgelegte Erwartung. Rechts die Kennzahlen.
 
 ### Doppeltes Filament, Platz zu den Spulen, Flüssigblei (grobe Abschätzungen)
 
@@ -740,7 +763,8 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 - [x] Flüssigmetall im Magnetfeld, Stufe 2: elektrisches Potential für Kanäle mit Seitenwänden (Shercliff, Hunt)
 - [ ] MHD: Mehrgitter für reale Ha, endlich leitende Stahlwände, Spulenfeld B(x)
 - [x] Alphateilchen im Spulenfeld: Verluste und Wandtreffer (1000 Teilchen, 16,6 % verloren)
-- [ ] Alphas: Ursache trennen (Form allein gegen Spulen), Spulen mit Alpha-Ziel nachoptimieren, Stöße
+- [x] Alphas: Ursache getrennt – Spulen (16,6 %) gegen Form allein (0,3 %)
+- [ ] Alphas: Spulen mit Alpha-Ziel nachoptimieren und Vergleich wiederholen, Stöße
 - [ ] Erstwand-Kühlung: dünne Innenhaut, schnelle Kanäle, Wärme gekoppelt rechnen
 - [ ] Wandstärken und Verbinder auslegen (zulässige Spannung einhalten)
 - [ ] Verguss (Quarzsand-Epoxid) zwischen Wickelpaket und Gehäuse in Geometrie und Rechnung

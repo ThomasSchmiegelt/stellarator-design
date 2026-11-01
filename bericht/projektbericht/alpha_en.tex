@@ -24,6 +24,8 @@ magnetic field. The user asked for a dynamic simulation with the magnetic field;
 \item[quasisymmetry] a special form of stellarator field: although the machine is twisted, the field strength along
   the orbits looks as in a symmetric ring. Trapped particles then do not drift outwards on average. Our plasma shape is
   designed to be quasi-axisymmetric (QA).
+\item[prompt loss] an alpha whose orbit already grazes the edge on its first transit; it is lost within fractions of
+  a millisecond. This mainly affects alphas born close to the edge.
 \end{description}
 
 \paragraph{Method.} The orbits are computed with simsopt \cite{simsopt} as collisionless guiding centres in the
@@ -80,10 +82,40 @@ to the slowing-down time. This is the typical picture of trapped particles drift
 quite quasisymmetric. The plasma shape itself is very precisely quasisymmetric (quasisymmetry objective in DESC
 $2.4\cdot10^{-5}$, smaller than the reference \emph{precise QA} with $5.8\cdot10^{-5}$). The coils, however, only
 approximate this shape: the field is inclined to the edge surface by 0.27\,\% on average and 0.96\,\% at most
-($|B_n|/|B|$). Whether most of the losses come from these coil errors or are already inherent in the shape has not yet
-been checked. Landreman and Paul showed that very precise quasisymmetry is achievable and then gives excellent
-confinement \cite{landreman2022}. A loss of more than 10\,\% of the alpha energy would be too much for a power plant,
-above all because of the bunched wall load.
+($|B_n|/|B|$). Whether most of the losses come from these coil errors or are already inherent in the shape is
+settled by the following comparison. A loss of more than 10\,\% of the alpha energy would be too much for a power
+plant, above all because of the bunched wall load.
+
+\paragraph{Before and after: coils or shape?} The same calculation was done a second time, now in the field of the
+plasma shape alone, i.e.\ as if the coils reproduced the shape perfectly. For this, the equilibrium of the shape is
+converted with \texttt{booz\_xform}\footnote{\url{https://github.com/hiddenSymmetries/booz_xform}} into
+\emph{Boozer coordinates}, a coordinate system in which the field lines are straight and the field strength is a
+simple Fourier series. simsopt then computes the orbits directly in it, with the same distribution of birth positions
+and directions as before (mean $s = 0.18$, 31\,\% trapped starting directions in both runs).
+
+\emph{Expectation beforehand.} Before the result was available, the event log recorded: the shape is more precisely
+quasisymmetric than \emph{precise QA}, for which Landreman and Paul found no alpha losses within \SI{0.2}{s}
+\cite{landreman2022}. Less than 1\,\% loss was therefore expected. The interpretation was also fixed in advance:
+below 2\,\% means the coils are the main cause; between 2 and 10\,\% both contribute; above 10\,\% it is the shape
+itself or a calculation error.
+
+\bild{alpha_vergleich_en.png}{1.0}{Before and after: alpha losses in the field of the 16 coils (red) and in the field
+of the plasma shape alone (blue), 1000 alphas each up to \SI{0.2}{s}.}
+\lesehilfe{Left: horizontally the time since the alphas were born (logarithmic), vertically the fraction lost. The red
+curve (coils) rises steadily from about one millisecond to 16.6\,\%. The blue curve (shape alone) jumps to 0.3\,\%
+right at the start and then stays flat: after that not a single alpha is lost. The dashed line is the expectation of
+1\,\% fixed beforehand; the blue curve stays below it. Right: the key figures of both runs.}
+
+\emph{Result.} In the field of the shape alone only 3 of 1000 alphas are lost ($0.3 \pm 0.2$\,\%), all born far out
+($s = 0.60$ to $0.72$) and within the first \SI{0.1}{ms}. The slow losses of trapped alphas, which make up 95\,\% of
+the losses in the coil field, are completely absent. The lost heating power drops from \SI{71}{MW} to \SI{1.8}{MW}.
+Because this run was much faster than the coil run, a spot check verified that the orbits are really computed up
+to \SI{0.2}{s}: six alphas that were not lost (four trapped, two passing) all reach \SI{0.2000}{s}; the trapped ones
+bounce (v$_\parallel$ changes sign again and again) and stay inside.
+The expectation is confirmed: about 98\,\% of the losses come from the inaccuracy of the coils, not from the plasma
+shape. This fits the still image above: the red orbit gets caught in a small field well, which only a not quite
+quasisymmetric field forms. This comparison is the baseline for the next step: re-optimise the coils and repeat the
+same calculation.
 
 \paragraph{Limits.}
 \begin{itemize}\itemsep1pt
@@ -94,8 +126,11 @@ above all because of the bunched wall load.
 \item \textbf{The loss location is the plasma edge}, not the wall. The wall lies further out, and the hits spread
   somewhat differently there.
 \item \textbf{Statistics}: 1000 alphas are enough for the loss fraction, but not for a fine wall-load map.
+\item \textbf{Field of the shape}: the conversion to Boozer coordinates uses 24 Fourier modes in each direction; finer
+  components are missing. This could slightly underestimate the losses of the shape, but does not change the order of
+  magnitude (0.3\,\% versus 16.6\,\%).
 \end{itemize}
 
-\paragraph{Next steps.} (1) Compute the same alphas in the field of the plasma shape alone (without coil errors) to
-separate the causes. (2) If the coils are the cause, re-optimise the coils with a target for alpha losses. (3) More
-particles and collisions for a reliable wall-load map.
+\paragraph{Next steps.} (1) Done: the causes are separated, it is the coils. (2) Fit the coils more closely to the
+shape, with a target for alpha losses, and repeat the same comparison (``after''). (3) More particles and collisions
+for a reliable wall-load map.

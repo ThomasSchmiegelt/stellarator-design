@@ -415,3 +415,40 @@ Zum Prozess: Das erste Video zeigte alle Bahnen gleichzeitig und war für Laien 
 (Bilder für Nicht-Physiker) entstand ein Standbild mit genau drei Bahnen (umlaufend, gefangen, verloren). Im Video
 zieht jede Bahn nur einen kurzen Schweif hinter sich her. Eine erste Bildbeschreibung behauptete mehr, als die Daten
 zeigen (eine Wellenlinie als „letzter Umkehrpunkt“). Diese Deutung wurde gestrichen.
+
+## 17. Vorher und nachher: Woher kommen die Alpha-Verluste? (2026-11-01)
+
+Zwei Hinweise des Nutzers haben diesen Schritt geprägt.
+
+**„Hast du dir die Bilder angeguckt? Kann das sein?“** Bis dahin wurden Bilder für den Nutzer geöffnet, aber von der
+KI nicht selbst geprüft. Beim Nachsehen fielen zwei Dinge auf: Bahnen schienen außerhalb des Plasmas zu laufen, und
+eine verlorene Bahn machte kurz vor dem Ende eine Spirale. Beides wurde nachgerechnet statt hingenommen. Ein Test
+„liegt der Punkt im Querschnitt des Randes?“ für alle Bahnpunkte zeigte: Keine Bahn liegt außerhalb, der Eindruck
+entsteht durch die Schrägansicht. Die Spirale ist echt: Das Alpha bleibt in einem kleinen Feldtal hängen, pendelt
+dort kurz hin und her und driftet dabei nach außen. Das war der erste Hinweis auf die Ursache. Seitdem gilt:
+**jedes Bild selbst ansehen und bewerten**, bevor es in den Bericht geht. Beim Vergleichsbild unten hat das gleich
+dreimal geholfen: Balken mit drei verschiedenen Einheiten auf einer Achse, eine abgeschnittene Beschriftung und ein
+deutsches Wort im englischen Bild wurden so gefunden.
+
+**„Zuerst eine Erwartungshaltung definieren und dann mit dem Ergebnis vergleichen.“** Vor dem Kontrolllauf wurde im
+Ereignisprotokoll festgelegt, was herauskommen sollte und wie jedes Ergebnis zu deuten wäre: Die Form allein sollte
+unter 1 % verlieren (Landreman & Paul fanden für „precise QA“ keine Verluste). Unter 2 % hieße: Die Spulen sind die
+Hauptursache; über 10 % hieße: Die Form selbst oder ein Rechenfehler. So kann man sich das Ergebnis hinterher nicht
+zurechtlegen.
+
+**Vorher – nachher.** Dieselben 1000 Alphas (gleiche Verteilung der Geburtsorte und Richtungen) wurden einmal im
+Feld der Spulen und einmal im Feld der Plasmaform allein gerechnet:
+
+| | Feld der 16 Spulen (vorher) | Feld der Form allein |
+|---|---|---|
+| verloren | 16,6 % ± 1,2 % | 0,3 % ± 0,2 % |
+| davon gefangene | 95 % | 1 von 3 |
+| Heizleistung verloren | 71 MW | 1,8 MW |
+
+Die Erwartung ist bestätigt. Rund 98 % der Verluste kommen von der Ungenauigkeit der Spulen, nicht von der Form. Das
+ist zugleich die Ausgangslage („vorher“) für den nächsten Schritt: Spulen nachoptimieren und dieselbe Rechnung
+wiederholen („nachher“).
+
+Technisch: Das Feld der Form wurde mit `booz_xform` in Boozer-Koordinaten umgerechnet. Zwei Stolpersteine in simsopt
+(die VMEC-Anbindung wird nur mit mpi4py geladen; ein Hilfsobjekt wurde von Python zu früh aufgeräumt, dann fehlte eine
+Feldgröße) kosteten Zeit, sind aber im Skript kommentiert. Der Lauf dauerte 27 Minuten.
