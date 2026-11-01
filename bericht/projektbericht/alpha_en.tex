@@ -1,0 +1,101 @@
+\section{Alpha particles in the coil field: do they stay in the plasma long enough?}\label{sec:alpha}
+
+In the plasma section (Section~\ref{sec:plasma}) the alpha particles heat the plasma with \SI{611}{MW}. This assumes
+that every alpha gives off its energy inside the plasma before it reaches the edge. Whether that holds depends on the
+magnetic field. The user asked for a dynamic simulation with the magnetic field; this is the first part of it
+(variant A): the orbits of 1000 alphas in the field of the project's own coils.
+
+\paragraph{Terms used in this section.}
+\begin{description}\itemsep2pt
+\item[alpha particle] the helium nucleus created in every deuterium--tritium fusion, with \SI{3.5}{MeV} of kinetic
+  energy. It is electrically charged and therefore follows the magnetic field lines.
+\item[guiding centre] a charged particle circles rapidly around a field line (about \SI{4}{cm} radius for an alpha).
+  Instead of computing every circle, one follows only the centre of this circle, the guiding centre. It moves along
+  the field line and drifts slowly across it.
+\item[passing and trapped] an alpha flying mainly along the field keeps going around the whole ring
+  (\emph{passing}). One flying mainly across the field is reflected at places of stronger field, as by a mirror, and
+  bounces back and forth (\emph{trapped}). Trapped particles are especially sensitive to small field errors.
+\item[$v_\parallel/v$] the share of the velocity along the field: $+1$ or $-1$ means exactly along it, $0$ exactly
+  across.
+\item[slowing-down time] the time in which an alpha gives its energy to the plasma through collisions with electrons
+  and ions, here about \SI{0.2}{s}. An alpha that stays in the plasma that long has done its job.
+\item[last closed surface] the outermost of the nested flux surfaces, the edge of the confined plasma. An alpha that
+  crosses it counts as lost here.
+\item[quasisymmetry] a special form of stellarator field: although the machine is twisted, the field strength along
+  the orbits looks as in a symmetric ring. Trapped particles then do not drift outwards on average. Our plasma shape is
+  designed to be quasi-axisymmetric (QA).
+\end{description}
+
+\paragraph{Method.} The orbits are computed with simsopt \cite{simsopt} as collisionless guiding centres in the
+vacuum field of the 16 coils from stage~2. Coils and shape are available at unit size ($R_0 = \SI{1.03}{m}$).
+Collisionless orbits, however, depend only on the ratio of gyration radius to plasma radius ($\rho_L/a = 0.018$). So
+instead of enlarging the coils, the velocity is reduced accordingly, and times and positions are scaled back to the
+plant. The 1000 starting points follow the distribution of fusion power, and the directions are uniformly
+distributed. The calculation runs to \SI{0.2}{s}, the slowing-down time. For the energy balance, each lost alpha is
+assigned the energy it would still have at the time of loss according to classical slowing down \cite{stix1972}:
+\[
+u(t) = \bigl(u_0 + 1\bigr)\,e^{-3t/\tau_s} - 1,\qquad u = (E/E_c)^{3/2},\qquad \tau_s = \SI{0.195}{s},\ E_c = \SI{415}{keV}.
+\]
+The loss positions are assigned to a grid on the edge surface ($64\times32$ points, combined into $16\times8$ tiles of
+about \SI{10}{m^2} each). This gives the heat flux.
+
+\bild{alpha_verluste_en.png}{1.0}{Alpha particle losses: time history, who is lost, where they hit the edge, key
+figures (1000 alphas, collisionless, field of the project's own coils).}
+\lesehilfe{Top left: horizontally the time since the alphas were born, logarithmic from a hundredth of a millisecond
+to \SI{0.2}{s}. Vertically, the percentage lost. Blue counts particles, orange their energy. The orange curve stays
+lower because alphas lost late have already given off much of their energy. Hardly anything is lost in the first
+millisecond; most losses happen between \SI{5}{ms} and \SI{100}{ms}. Top right: each dot is one alpha, horizontally its
+direction at birth (0 = across the field), vertically its birth position (0 = plasma centre, 1 = edge). The red, lost
+alphas lie almost all in a narrow strip around 0: they are trapped particles. Bottom left: the unrolled edge surface of
+the plasma, horizontally once along the ring, vertically once around the cross-section. The colour is the heat flux,
+the number the count of hits. The hits are bunched in one band, and twice over, because the machine repeats itself
+twice. Bottom right: the key figures.}
+
+\bild{alpha_bahnen_standbild_en.png}{1.0}{Three alpha orbits in the field of the project's own coils (still from the
+video \texttt{docs/filme/alpha\_bahnen.mp4}): passing (blue), trapped (yellow), lost early (red).}
+\lesehilfe{You are looking at the ring obliquely from above. The thin grey loops are cross-sections of the plasma edge
+at 16 places; they show how the shape twists around the ring. Each coloured line is the path of an alpha's guiding
+centre. The blue alpha flies along the field and keeps going around the whole ring; it stays safely inside. The yellow
+one flies almost across the field and turns back at places of strong field; its path is bent back at the ends. The red
+one is also a trapped alpha. Its orbit slowly moves outwards until it reaches the edge after \SI{0.13}{ms} (red dot
+at the top). Orbits like this cause the losses in the figure above, though mostly much more slowly.}
+
+\paragraph{Results.}
+\begin{itemize}\itemsep1pt
+\item \textbf{16.6\,\% of the alphas are lost} ($\pm1.2$\,\% statistical uncertainty with 1000 particles), only 10 of
+  them in the first millisecond. Half of the losses have occurred after \SI{25}{ms}.
+\item \textbf{They are almost all trapped alphas}: 95\,\% of the lost ones had $|v_\parallel/v| < 0.3$. On average they
+  were born somewhat further out ($s = 0.24$ versus $0.18$).
+\item \textbf{Lost energy: 11.6\,\% of the alpha power, i.e.\ \SI{71}{MW}}. The plasma misses this part of its
+  self-heating; instead of \SI{611}{MW} about \SI{540}{MW} remain.
+\item \textbf{The losses arrive bunched.} Averaged over the whole edge it is only \SI{58}{kW/m^2}, but almost all hits
+  lie in one band in the upper half of the cross-section, in two spots. In the hottest tile of about \SI{10}{m^2} it
+  is around \SI{2.4}{MW/m^2}. The first wall of this project is designed for \SI{0.5}{MW/m^2} (cooling section).
+  Because of the coarse tiles and only 27 hits in the hottest tile, the peak value is uncertain; the true peak is more
+  likely higher.
+\end{itemize}
+
+\paragraph{Assessment.} The losses do not come as a prompt loss in the first transits but slowly, over milliseconds up
+to the slowing-down time. This is the typical picture of trapped particles drifting outwards in a field that is not
+quite quasisymmetric. The plasma shape itself is very precisely quasisymmetric (quasisymmetry objective in DESC
+$2.4\cdot10^{-5}$, smaller than the reference \emph{precise QA} with $5.8\cdot10^{-5}$). The coils, however, only
+approximate this shape: the field is inclined to the edge surface by 0.27\,\% on average and 0.96\,\% at most
+($|B_n|/|B|$). Whether most of the losses come from these coil errors or are already inherent in the shape has not yet
+been checked. Landreman and Paul showed that very precise quasisymmetry is achievable and then gives excellent
+confinement \cite{landreman2022}. A loss of more than 10\,\% of the alpha energy would be too much for a power plant,
+above all because of the bunched wall load.
+
+\paragraph{Limits.}
+\begin{itemize}\itemsep1pt
+\item \textbf{Collisionless}: in reality the orbits change while the alpha slows down and changes direction through
+  collisions. Collisions can turn trapped particles into passing ones and vice versa; this can shift the losses either
+  way.
+\item \textbf{Vacuum field}: currents in the plasma (finite pressure) are not included.
+\item \textbf{The loss location is the plasma edge}, not the wall. The wall lies further out, and the hits spread
+  somewhat differently there.
+\item \textbf{Statistics}: 1000 alphas are enough for the loss fraction, but not for a fine wall-load map.
+\end{itemize}
+
+\paragraph{Next steps.} (1) Compute the same alphas in the field of the plasma shape alone (without coil errors) to
+separate the causes. (2) If the coils are the cause, re-optimise the coils with a target for alpha losses. (3) More
+particles and collisions for a reliable wall-load map.

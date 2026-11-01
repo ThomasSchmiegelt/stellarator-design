@@ -399,3 +399,19 @@ ein Vergleich aus dem Alltag. Der Nutzer wollte das im Bericht haben. Dazu kam d
 Hartmann-Wände“ zu erklären. Daraus wurden eine Prinzipskizze mit Lesehilfe vor den Formeln, ein Begriffskasten im
 MHD-Kapitel und eine feste Regel: erst die Funktion in Alltagssprache, dann die Formel. Wieder war es der Nutzer als
 Leser, der den Maßstab für Verständlichkeit setzte.
+
+## 16. Alphateilchen im Feld der Spulen (2026-11-01)
+
+Der Lauf mit 1000 Alphas (Variante A der „dynamischen Simulation mit dem Magnetfeld“) ist ausgewertet. 16,6 % gehen
+verloren, fast nur gefangene Teilchen und langsam, nicht in den ersten Umläufen. Mit der Abbremsung gewichtet sind
+das 11,6 % der Alphaenergie, also 71 MW. Die Treffer am Plasmarand sind gebündelt: im heißesten Feld etwa
+2,4 MW/m², fast das Fünffache der Wandauslegung.
+
+Damit stellt die Rechnung eine stillschweigende Annahme der Plasma-Bilanz in Frage: dass alle Alphas ihre Energie im
+Plasma abgeben. Die Ursache ist offen. Die Plasmaform ist sehr genau quasisymmetrisch, die Spulen treffen sie aber nur
+auf etwa 0,3 % genau. Der nächste Schritt trennt beides.
+
+Zum Prozess: Das erste Video zeigte alle Bahnen gleichzeitig und war für Laien unlesbar. Nach der neuen Regel
+(Bilder für Nicht-Physiker) entstand ein Standbild mit genau drei Bahnen (umlaufend, gefangen, verloren). Im Video
+zieht jede Bahn nur einen kurzen Schweif hinter sich her. Eine erste Bildbeschreibung behauptete mehr, als die Daten
+zeigen (eine Wellenlinie als „letzter Umkehrpunkt“). Diese Deutung wurde gestrichen.

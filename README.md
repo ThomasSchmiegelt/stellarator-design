@@ -556,6 +556,28 @@ verstärkt so die Bremsung. Die *Hartmann-Zahl Ha* misst, wie stark das Feld geg
 
 ![Kanal mit Seitenwänden: Shercliff und Hunt, FluidX3D gegen Referenz](docs/bilder/mhd_kanal.png)
 
+### Alphateilchen im Feld der Spulen: Bleiben sie lange genug im Plasma?
+
+Die Heliumkerne aus der Fusion (Alphas, 3,5 MeV) sollen das Plasma heizen, bevor sie den Rand erreichen.
+`stellarator/alpha_bahnen.py` verfolgt 1000 Alphas als Führungszentren (simsopt, stoßfrei) im Feld der eigenen 16
+Spulen bis zur Abbremszeit von 0,2 s; `stellarator/alpha_auswertung.py` wertet aus. Begriffe: *gefangene* Alphas
+fliegen fast quer zum Feld und pendeln zwischen Stellen starken Feldes hin und her; *umlaufende* fliegen entlang des
+Feldes um den ganzen Ring.
+- **16,6 % gehen verloren** (± 1,2 %), fast nur gefangene Alphas, und zwar langsam: die Hälfte erst nach 25 ms.
+- **11,6 % der Alphaenergie, also 71 MW**, fehlen dem Plasma als Selbstheizung.
+- **Die Treffer am Rand sind gebündelt:** im Mittel 58 kW/m², im heißesten Feld (≈ 10 m²) etwa 2,4 MW/m², also fast
+  das Fünffache der Wandauslegung (0,5 MW/m²).
+- **Offen:** ob die Verluste von den Spulenfehlern (|B·n|/|B| 0,27 %) kommen oder schon in der Plasmaform liegen.
+  Grenzen: stoßfrei, Vakuumfeld, Verlustort am Plasmarand statt an der Wand.
+
+![Alpha-Verluste: Zeitverlauf, wer verloren geht, Wandtreffer](docs/bilder/alpha_verluste.png)
+
+![Drei Alphabahnen: umlaufend (blau), gefangen (gelb), früh verloren (rot)](docs/bilder/alpha_bahnen_standbild.png)
+
+So liest man das Bild: schräger Blick von oben auf den Ring, graue Schleifen sind Querschnitte des Plasmarands.
+Blau läuft entlang des Feldes immer wieder um den Ring, gelb pendelt zwischen Stellen starken Feldes, rot wandert
+langsam nach außen und erreicht den Rand. [Film mit sechs Alphas](docs/filme/alpha_bahnen.mp4) (20 s).
+
 ### Doppeltes Filament, Platz zu den Spulen, Flüssigblei (grobe Abschätzungen)
 
 Aus den Vorschlägen oben: Die Plasmaseite bekommt eigene feine Kanäle (innen, Kühlung), dahinter trägt ein
@@ -717,7 +739,8 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 - [x] Flüssigmetall im Magnetfeld, Stufe 1: Lorentzkraft in FluidX3D, geprüft an der Hartmann-Strömung
 - [x] Flüssigmetall im Magnetfeld, Stufe 2: elektrisches Potential für Kanäle mit Seitenwänden (Shercliff, Hunt)
 - [ ] MHD: Mehrgitter für reale Ha, endlich leitende Stahlwände, Spulenfeld B(x)
-- [ ] Alphateilchen im Spulenfeld: Verluste und Wandtreffer (Lauf mit 1000 Teilchen)
+- [x] Alphateilchen im Spulenfeld: Verluste und Wandtreffer (1000 Teilchen, 16,6 % verloren)
+- [ ] Alphas: Ursache trennen (Form allein gegen Spulen), Spulen mit Alpha-Ziel nachoptimieren, Stöße
 - [ ] Erstwand-Kühlung: dünne Innenhaut, schnelle Kanäle, Wärme gekoppelt rechnen
 - [ ] Wandstärken und Verbinder auslegen (zulässige Spannung einhalten)
 - [ ] Verguss (Quarzsand-Epoxid) zwischen Wickelpaket und Gehäuse in Geometrie und Rechnung

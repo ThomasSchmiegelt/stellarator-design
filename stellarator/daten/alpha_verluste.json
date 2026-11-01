@@ -1,0 +1,23 @@
+{
+ "N": 1000,
+ "verloren": 166,
+ "anteil": 0.166,
+ "energie_anteil": 0.11639413168470174,
+ "P_alpha_MW": 610.9555103808565,
+ "P_verloren_MW": 71.11163612876356,
+ "q_max_MW_m2": 2.4078905700829414,
+ "q_mittel_MW_m2": 0.058077185487859145,
+ "flaeche_m2": 1224.4332353817185,
+ "t_median_ms": 24.600312825122757,
+ "vor_1ms": 10,
+ "vor_10ms": 58,
+ "lam_betrag_verloren": 0.1229508824244969,
+ "lam_betrag_alle": 0.490355218434366,
+ "s_verloren": 0.2403262816965513,
+ "s_alle": 0.18198456595117551,
+ "gefangen_anteil_verloren": 0.9518072289156626,
+ "fehler_anteil_1sigma": 0.011766222843376714,
+ "max_treffer_feld": 27,
+ "tau_s": 0.19544757552039368,
+ "E_krit_keV": 414.87907557111765
+}

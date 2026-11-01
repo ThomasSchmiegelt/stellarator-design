@@ -1,0 +1,103 @@
+\section{Alphateilchen im Feld der Spulen: Bleiben sie lange genug im Plasma?}\label{sec:alpha}
+
+Im Abschnitt über das Plasma (Abschnitt~\ref{sec:plasma}) heizen die Alphateilchen das Plasma mit \SI{611}{MW}. Das
+setzt voraus, dass jedes Alpha seine Energie im Plasma abgibt, bevor es den Rand erreicht. Ob das stimmt, hängt vom
+Magnetfeld ab. Der Nutzer fragte nach einer dynamischen Simulation mit dem Magnetfeld; dies ist der erste Teil davon
+(Variante A): die Bahnen von 1000 Alphas im Feld der eigenen Spulen.
+
+\paragraph{Begriffe in diesem Abschnitt.}
+\begin{description}\itemsep2pt
+\item[Alphateilchen] der Heliumkern, der bei jeder Fusion von Deuterium und Tritium entsteht, mit \SI{3,5}{MeV}
+  Bewegungsenergie. Er ist elektrisch geladen und folgt deshalb den Magnetfeldlinien.
+\item[Führungszentrum] Ein geladenes Teilchen kreist schnell um eine Feldlinie (beim Alpha mit etwa \SI{4}{cm}
+  Radius). Statt jeden Kreis zu rechnen, verfolgt man nur den Mittelpunkt dieses Kreises, das Führungszentrum. Es
+  läuft an der Feldlinie entlang und driftet langsam quer dazu.
+\item[umlaufend und gefangen] Ein Alpha, das überwiegend entlang des Feldes fliegt, läuft immer wieder um den ganzen
+  Ring (\emph{umlaufend}). Eines, das überwiegend quer zum Feld fliegt, wird an Stellen mit stärkerem Feld
+  zurückgeworfen wie von einem Spiegel und pendelt hin und her (\emph{gefangen}). Gefangene Teilchen sind besonders
+  empfindlich für kleine Fehler im Feld.
+\item[$v_\parallel/v$] der Anteil der Geschwindigkeit entlang des Feldes: $+1$ oder $-1$ heißt genau entlang,
+  $0$ genau quer.
+\item[Abbremszeit] die Zeit, in der ein Alpha durch Stöße mit den Elektronen und Ionen seine Energie an das Plasma
+  abgibt, hier etwa \SI{0,2}{s}. Was so lange im Plasma bleibt, hat seine Aufgabe erfüllt.
+\item[letzte geschlossene Fläche] die äußerste der ineinanderliegenden Flussflächen, der Rand des eingeschlossenen
+  Plasmas. Wer sie überquert, gilt hier als verloren.
+\item[Quasisymmetrie] eine besondere Form des Stellaratorfelds: Obwohl die Anlage verdreht ist, sieht die Feldstärke
+  entlang der Bahnen so aus wie in einem symmetrischen Ring. Dann driften gefangene Teilchen im Mittel nicht nach
+  außen. Unsere Plasmaform ist quasi-axialsymmetrisch (QA) ausgelegt.
+\end{description}
+
+\paragraph{Methode.} Die Bahnen werden mit simsopt \cite{simsopt} als stoßfreie Führungszentren im Vakuumfeld der
+16 Spulen aus Stufe~2 gerechnet. Spulen und Form liegen in Einheitsgröße vor ($R_0 = \SI{1,03}{m}$). Stoßfreie Bahnen
+hängen aber nur vom Verhältnis Kreisradius zu Plasmaradius ab ($\rho_L/a = 0{,}018$). Statt die Spulen zu vergrößern,
+wird deshalb die Geschwindigkeit passend verkleinert, und Zeiten und Orte werden auf die Anlage zurückgerechnet. Die
+1000 Startorte folgen der Verteilung der Fusionsleistung, die Richtungen sind gleichmäßig verteilt. Gerechnet wird bis
+\SI{0,2}{s}, der Abbremszeit. Für die Energiebilanz bekommt jedes verlorene Alpha die Energie, die es zum
+Verlustzeitpunkt nach der klassischen Abbremsung \cite{stix1972} noch hätte:
+\[
+u(t) = \bigl(u_0 + 1\bigr)\,e^{-3t/\tau_s} - 1,\qquad u = (E/E_c)^{3/2},\qquad \tau_s = \SI{0,195}{s},\ E_c = \SI{415}{keV}.
+\]
+Die Verlustorte werden einem Gitter auf der Randfläche zugeordnet ($64\times32$ Punkte, zusammengefasst zu
+$16\times8$ Feldern von je etwa \SI{10}{m^2}). Daraus folgt der Wärmefluss.
+
+\bild{alpha_verluste.png}{1.0}{Verluste der Alphateilchen: Zeitverlauf, wer verloren geht, wo sie den Rand treffen,
+Kennzahlen (1000 Alphas, stoßfrei, Feld der eigenen Spulen).}
+\lesehilfe{Oben links: Waagrecht die Zeit seit der Geburt der Alphas, logarithmisch von einer Hundertstel
+Millisekunde bis \SI{0,2}{s}. Senkrecht, wie viel Prozent verloren sind. Blau zählt Teilchen, orange ihre Energie.
+Die orange Kurve bleibt darunter, weil spät verlorene Alphas schon einen großen Teil ihrer Energie abgegeben haben.
+In der ersten Millisekunde geht kaum etwas verloren; die meisten Verluste kommen zwischen \SI{5}{ms} und
+\SI{100}{ms}. Oben rechts: Jeder Punkt ist ein Alpha, waagrecht seine Flugrichtung bei der Geburt (0 = quer zum Feld),
+senkrecht sein Geburtsort (0 = Plasmamitte, 1 = Rand). Die roten, verlorenen Alphas liegen fast alle in einem
+schmalen Streifen um 0: Es sind gefangene Teilchen. Unten links: die ausgerollte Randfläche des Plasmas, waagrecht
+einmal den Ring entlang, senkrecht einmal um den Querschnitt. Die Farbe ist der Wärmefluss, die Zahl die Anzahl der
+Treffer. Die Treffer liegen gebündelt in einem Band, und zwar zweimal, weil sich die Anlage zweimal wiederholt.
+Unten rechts die wichtigsten Zahlen.}
+
+\bild{alpha_bahnen_standbild.png}{1.0}{Drei Alphabahnen im Feld der eigenen Spulen (Standbild aus dem Video
+\texttt{docs/filme/alpha\_bahnen.mp4}): umlaufend (blau), gefangen (gelb), früh verloren (rot).}
+\lesehilfe{Man blickt schräg von oben auf den Ring. Die dünnen grauen Schleifen sind Querschnitte des Plasmarands an
+16 Stellen; sie zeigen, wie sich die Form beim Umlauf verdreht. Jede farbige Linie ist der Weg des Führungszentrums
+eines Alphas. Das blaue Alpha fliegt entlang des Feldes und läuft immer wieder um den ganzen Ring; es bleibt sicher
+innen. Das gelbe fliegt fast quer zum Feld und kehrt an Stellen mit starkem Feld um; seine Bahn ist an den Enden
+umgebogen. Das rote ist ebenfalls ein gefangenes Alpha. Seine Bahn wandert langsam nach außen, bis es nach
+\SI{0,13}{ms} den Rand erreicht (roter Punkt oben). Solche Bahnen erzeugen die Verluste im Bild oben, meist allerdings viel langsamer.}
+
+\paragraph{Ergebnisse.}
+\begin{itemize}\itemsep1pt
+\item \textbf{16,6\,\% der Alphas gehen verloren} ($\pm1{,}2$\,\% statistische Unsicherheit bei 1000 Teilchen),
+  davon nur 10 in der ersten Millisekunde. Die Hälfte der Verluste ist nach \SI{25}{ms} erreicht.
+\item \textbf{Es sind fast nur gefangene Alphas}: 95\,\% der verlorenen hatten $|v_\parallel/v| < 0{,}3$. Sie stammen
+  im Mittel etwas weiter außen ($s = 0{,}24$ gegen $0{,}18$).
+\item \textbf{Verlorene Energie: 11,6\,\% der Alphaleistung, also \SI{71}{MW}}. Dem Plasma fehlt dieser Teil seiner
+  Selbstheizung; statt \SI{611}{MW} bleiben etwa \SI{540}{MW}.
+\item \textbf{Die Verluste treffen gebündelt auf.} Im Mittel über den ganzen Rand sind es nur \SI{58}{kW/m^2}, aber
+  fast alle Treffer liegen in einem Band in der oberen Hälfte des Querschnitts, in zwei Flecken. Im heißesten Feld
+  von etwa \SI{10}{m^2} sind es rund \SI{2,4}{MW/m^2}. Die Erstwand dieses Projekts ist auf \SI{0,5}{MW/m^2}
+  ausgelegt (Abschnitt Kühlung). Wegen der groben Felder und der nur 27 Treffer im heißesten Feld ist der Spitzenwert
+  unsicher; die echte Spitze ist eher höher.
+\end{itemize}
+
+\paragraph{Einordnung.} Die Verluste kommen nicht als schneller Verlust in den ersten Umläufen, sondern langsam, über
+Millisekunden bis zur Abbremszeit. Das ist das typische Bild, wenn gefangene Teilchen in einem nicht ganz
+quasisymmetrischen Feld nach außen driften. Die Plasmaform selbst ist sehr genau quasisymmetrisch (Zielwert
+der Quasisymmetrie in DESC $2{,}4\cdot10^{-5}$, kleiner als bei der Referenz \emph{precise QA} mit
+$5{,}8\cdot10^{-5}$). Die Spulen treffen diese Form aber nur ungefähr: Das Feld steht im Mittel um 0,27\,\% und
+höchstens um 0,96\,\% schräg zur Randfläche ($|B_n|/|B|$). Ob der Hauptteil der Verluste aus diesen Spulenfehlern stammt oder schon in der Form angelegt ist, ist noch
+nicht geprüft. Dass sehr genaue Quasisymmetrie erreichbar ist und dann einen ausgezeichneten Einschluss ergibt,
+zeigten Landreman und Paul \cite{landreman2022}. Ein Verlust von über 10\,\% der Alphaenergie wäre für ein Kraftwerk
+zu viel, vor allem wegen der gebündelten Wandlast.
+
+\paragraph{Grenzen.}
+\begin{itemize}\itemsep1pt
+\item \textbf{Stoßfrei}: Die Bahnen ändern sich in Wirklichkeit, während das Alpha abbremst und durch Stöße die
+  Richtung wechselt. Stöße können gefangene Teilchen in umlaufende verwandeln und umgekehrt; das kann die Verluste
+  in beide Richtungen verschieben.
+\item \textbf{Vakuumfeld}: Ströme im Plasma (endlicher Druck) sind nicht enthalten.
+\item \textbf{Verlustort ist der Plasmarand}, nicht die Wand. Die Wand liegt weiter außen; die Treffer verteilen sich
+  dort etwas anders.
+\item \textbf{Statistik}: 1000 Alphas reichen für den Verlustanteil, aber nicht für eine feine Wandlastkarte.
+\end{itemize}
+
+\paragraph{Nächste Schritte.} (1) Dieselben Alphas im Feld der Plasmaform allein rechnen (ohne Spulenfehler), um die
+Ursache zu trennen. (2) Falls die Spulen die Ursache sind: die Spulen mit einem Ziel für Alphaverluste nachoptimieren.
+(3) Mehr Teilchen und Stöße für eine belastbare Wandlastkarte.
