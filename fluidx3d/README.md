@@ -10,7 +10,7 @@
 [FluidX3D](https://github.com/ProjectPhysX/FluidX3D) ist ein Lattice-Boltzmann-Strömungslöser für GPUs.
 Dieses Projekt hat damit die Strömung im Kühlsegment des Plasmagefäßes gerechnet
 (`stellarator/kuehlung_cfd.py`). FluidX3D selbst ist hier **nicht** enthalten. Die Lizenz verlangt, dass geänderte
-Quelltexte veröffentlicht werden, wenn Ergebnisse daraus veröffentlicht werden. Deshalb liegen hier die beiden
+Quelltexte veröffentlicht werden, wenn Ergebnisse daraus veröffentlicht werden. Deshalb liegen hier die
 geänderten Dateien von FluidX3D v3.8 (Commit `50150a7`), jeweils als geänderte Fassung gekennzeichnet:
 
 | Datei | Ersetzt | Änderung |
@@ -18,8 +18,27 @@ geänderten Dateien von FluidX3D v3.8 (Commit `50150a7`), jeweils als geänderte
 | `setup_kuehlsegment.cpp` | `src/setup.cpp` | Beispiel-Setups ersetzt durch den Fall „Kühlsegment“: Belegung der Gitterzellen aus PicoGK (`.bin`) oder Netz (STL), Ein- und Austritt als TYPE_E, Ausgabe des Strömungsfelds |
 | `defines.hpp` (+ `defines.hpp.diff`) | `src/defines.hpp` | `BENCHMARK` aus, `EQUILIBRIUM_BOUNDARIES` und `SUBGRID` an |
 
-Verwendung: FluidX3D v3.8 selbst klonen, die beiden Dateien an ihre Stelle kopieren, dann
-`stellarator/kuehlung_cfd.py` (erwartet die Arbeitskopie unter `~/fluidx3d_stellarator`).
+### Fall „Tauscher“ (Zwei-Fluid-Wärmetauscher, 2026-10-31)
+
+Für die Strömungs- und Wärmerechnung der Tauschermodule (`stellarator/tauscher_cfd.py`) wurde eine zweite
+Arbeitskopie desselben Stands geändert. Die Änderungen am Löser liegen als Diff gegen Commit `50150a7` vor:
+
+| Datei | Ersetzt / ändert | Änderung |
+|---|---|---|
+| `setup_tauscher.cpp` | `src/setup.cpp` | periodisches Gebiet aus PicoGK-Belegung, Festzellen als `TYPE_S\|TYPE_T` mit T = 0, Volumenkraft f_z, Ausgabe `stat.txt` (mittlere Geschwindigkeit, Mischtemperatur) und `feld.bin` |
+| `defines_tauscher.hpp.diff` | `src/defines.hpp` | `FP16S` aus, `TEMPERATURE` an, `UPDATE_FIELDS` an, `EQUILIBRIUM_BOUNDARIES` und `SUBGRID` an |
+| `kernel.cpp.diff` | `src/kernel.cpp` | (1) Anti-Bounce-Back der Temperatur-Verteilungen an Festzellen mit `TYPE_T` (Wand genau zwischen Fluid- und Festzelle); (2) turbulente Diffusivität D_t = ν_t/0,85 aus dem Smagorinsky-Modell; (3) Wärmequelle `def_q_T` in jeder Fluidzelle, gleichmäßig oder proportional u_z (`def_q_u0` > 0, Patankar 1977); (4) Auftriebskopplung nur bei `def_beta ≠ 0`; (5) TRT-Stoß (Ginzburg, Λ = 1/4) statt BGK für die Temperatur, weil BGK bei τ nahe 0,5 instabil wurde |
+| `lbm.cpp.diff` | `src/lbm.cpp` | Konstanten `def_q_T` und `def_q_u0` aus den Umgebungsvariablen `FX_Q_T` und `FX_Q_U0` |
+
+Hinweis zum Temperaturmodell (D3Q7): Die Schallgeschwindigkeit ist c_s² = 1/4, die tatsächliche Diffusivität also
+D = α/2. `tauscher_cfd.py` übergibt deshalb α = 2D.
+
+Verwendung „Tauscher“: FluidX3D v3.8 (Commit `50150a7`) klonen, `setup_tauscher.cpp` als `src/setup.cpp` kopieren,
+die Diffs mit `git apply` einspielen, `make Linux` bauen; `stellarator/tauscher_cfd.py` erwartet eine eigene,
+getrennte Arbeitskopie (Pfad im Skript).
+
+Verwendung „Kühlsegment“: FluidX3D v3.8 selbst klonen, die beiden Dateien an ihre Stelle kopieren, dann
+`stellarator/kuehlung_cfd.py` (erwartet eine eigene Arbeitskopie, Pfad im Skript).
 
 ## Quellen / References
 

@@ -354,6 +354,15 @@ Wärmebilanz (`stellarator/waermebilanz.py`, Herleitung im Projektbericht): 3053
 
 ![Wärmebilanz 1 GW netto mit Druckwasser](docs/bilder/waermebilanz.png)
 
+**Vom Plasma ins Netz: Leistungsfluss und Einflüsse** (`stellarator/einflussgraph.py`): Von 3053 MW Fusionsleistung
+kommen 1000 MW im Netz an. Den größten Posten bildet die Abwärme des Kondensators (2223 MW), wie bei jedem
+Dampfkraftwerk. Der Entwurf greift an drei Stellen in den Wirkungsgrad ein: Kühlmitteltemperatur (setzt 78 bar
+Frischdampf und η = 0,35), Divertortemperatur (nur Vorwärmung, höchstens 73 MW) und Druckverluste (Pumpen 137 MW).
+Was jedes Bauteil tut und warum es gebraucht wird, von Plasma und Spulen über Divertor und Blanket bis zum
+Transformator, steht mit Quellen in [docs/bauteile.md](docs/bauteile.md).
+
+![Leistungsfluss vom Fusionsplasma bis zum Netzanschluss](docs/bilder/einflussgraph.png)
+
 **Passen die Leitungen durch die Spulen?** (`stellarator/rohr_durchfuehrung.py`): 26,4 m³/s Druckwasser je Richtung
 müssen vom Gefäß nach außen. Von jedem Punkt der Gefäßaußenseite läuft ein gerades Rohr entlang der Normalen
 nach außen; der Abstand zu Spulen, Gehäusen und Verbindern (minus 0,15 m Wärmeschild) begrenzt den Durchmesser.
@@ -382,7 +391,7 @@ Regeln im Projektbericht. Test auf Durchströmung und Festigkeit steht aus, der 
 (80×80×100 mm, 1,4 Mio. Voxel-Elemente, 0,5 MW/m² auf der Plasmaseite, `stellarator/gradient_waerme.py`).
 - **Stahl:** 95 % der Wärme gehen in den ersten 5 mm hinter der Haut ins Wasser. Die Stränge bleiben kalt, die tiefe
   Struktur trägt nur. Grund: Eine Stahlrippe wirkt nur √(k·t/2h) ≈ 2 mm tief.
-- **Siedegrenze:** Die nasse Wand erreicht schon bei gleichmäßiger Last örtlich 364 °C (Siedegrenze 345 °C).
+- **Siedegrenze:** Die nasse Wand erreicht schon bei gleichmäßiger Last örtlich 364 °C (Siedegrenze 347 °C).
 - **Heißer Fleck:** Mit 2 q erreicht die Plasmaseite 588 °C. Wolfram davor senkt das auf 535 °C, doppelt so schnelles
   Wasser auf 559 °C.
 - **Kupferlegierung:** Nur mit Kupferlegierung (k = 320) geht die Wärme in die Tiefe (Plasmaseite 351 °C, Wand unter der
@@ -391,6 +400,60 @@ Regeln im Projektbericht. Test auf Durchströmung und Festigkeit steht aus, der 
   verzweigte Leitpfade sinnvoll (Konstrukt-Theorie nach Bejan).
 
 ![Wärmetest der abgestuften Wand: Stahl, Fleck, Wolfram, Kupfer, schnelles Wasser](docs/bilder/gradientwand_waerme.jpg)
+
+**Divertor-Vorwärmer: Welche Bauart bringt den meisten Strom?** Die 305 MW Divertorwärme (130 → 136 °C, wie beim
+EU-DEMO) wärmen Kondensat vor und sparen Anzapfdampf (`stellarator/vorwaermer.py`, Turbine mit CoolProp, Gegenstrom,
+Korrelationen aus der Literatur mit Streuband):
+- **Obergrenze 73 MW Strom**, also 24 % der Divertorwärme. Die Wärmebilanz hatte sie mit 35 % gezählt. Die nötige
+  Fusionsleistung steigt dadurch um etwa 3 %.
+- **Der Wirkungsgrad entscheidet nicht über die Bauart.** Ab etwa 30 m³ erreichen alle Bauarten 72,9–73,1 MW.
+- **Die Bauarten unterscheiden sich im Volumen.** Für 99 % der Obergrenze braucht der abgestufte Gyroid etwa 4 m³,
+  Diamond und der gleichmäßige Gyroid 4,5–5 m³, eine Platte 7 m³ und ein Rohrbündel 30 m³ (jeweils ohne Sammler).
+- Divertorwasser und Kondensat strömen im Verhältnis 7:1. Ein symmetrischer Tauscher braucht deshalb mehrere
+  Durchgänge auf der Kondensatseite.
+
+![Netto-Mehrleistung des Divertor-Vorwärmers über dem Bauvolumen](docs/bilder/vorwaermer_netto.png)
+
+**Tauschermodule gebaut und mit FluidX3D durchströmt.** PicoGK baut abgestufte Zwei-Fluid-Blöcke (Gyroid
+4,33 → 5,8 mm, Diamond 5,37 → 7,2 mm, je d_h 2 → 2,9 mm), FreeCAD die Platten. Gerechnet wird ein periodischer
+Ausschnitt (`stellarator/tauscher_cfd.py`, geänderter FluidX3D-Quelltext in `fluidx3d/`):
+- **Fünf Änderungen am Löser:** Diffusivität D = α/2 im D3Q7-Modell, Wand per Anti-Bounce-Back (vorher Nu dreimal zu
+  hoch), turbulente Diffusivität aus dem Smagorinsky-Modell, TRT- statt BGK-Stoß für die Temperatur (BGK wurde bei
+  feinem Gitter instabil und überschätzte Nu um etwa 25 %), Wärmequelle proportional u_z (Patankar 1977).
+- **Prüffall laminarer Plattenkanal:** f·Re 29,7 → 25,7 → 24,7 (exakt 24), Nu 8,9 → 8,5 (exakt 8,235).
+- **Vergleich bei Re ≈ 3000, 96 Zellen je d_h:**
+
+  | Bauart | f | Nu | j/f^1/3 |
+  |---|---|---|---|
+  | Gyroid | 0,73 | 102 | 0,038 |
+  | Diamond | 0,60 | 101 | 0,039 |
+  | Chevron ±60° | 0,86 | 104 | 0,033 |
+
+- **Folgerung:** Gyroid und Diamond sind gleich gut, Chevron-Platten etwa 15 % schlechter. Nu liegt bei 96 Zellen
+  noch 1,5-fach über den Korrelationen, bei 144 Zellen 1,3-fach. Videos der Strömung liegen für alle drei Bauarten vor
+  (nicht im Repository).
+
+![Abgestufte Zwei-Fluid-Module Gyroid und Diamond, aufgeschnitten](docs/bilder/tauscher_module.jpg)
+
+![Prüffall und Gitterstudie der FluidX3D-Rechnung](docs/bilder/tauscher_cfd_pruefung.png)
+
+![Teilchenbahnen in Gyroid, Diamond und Chevron-Platten](docs/bilder/tauscher_stroemung_drei.jpg)
+
+**Surrogat und Stufung (2026-11-01).** 36 weitere FluidX3D-Läufe liefen als anhaltbare Auftragsliste, überwacht von
+einem zweiten KI-Agenten, ohne Fehlschlag: Latin Hypercube über Re 500–10 000, Pr 1,2–2,0 und Zellgröße, dazu
+Kontrollen und ein drittes Gitter mit 62,5 Mio. Zellen. Daraus entstand ein Gauß-Prozess-Surrogat mit Gitterkorrektur
+(Co-Kriging, `stellarator/tauscher_surrogat.py`).
+- Die drei Gitter sind noch nicht im asymptotischen Bereich. Auf ein unendlich feines Gitter extrapoliert, liegt Nu
+  bei der Korrelation von Renon (Faktor 0,97–1,14). Der frühere Überschuss war also Gitterfehler.
+- Die extrapolierte Reibung ist nicht verwertbar; für f gilt die gerechnete Stufe (144 Zellen).
+- **Stufung:** Ein Segmentmodell des Vorwärmers (`stellarator/vorwaermer_stufung.py`) lässt jedes von 8 Segmenten
+  seine Zelle selbst wählen. Ergebnis: Überall gewinnt die kleinste zulässige Zelle, abgestuft = gleichmäßig. Die
+  Pumpleistung (unter 1 MW) ist zu klein, als dass sich gröbere Zellen lohnen. 95 % der 73,3 MW erreicht ein
+  Tauscher von 1,3–1,5 m³.
+
+![Surrogat für Gyroid- und Diamond-Zellen](docs/bilder/tauscher_surrogat.png)
+
+![Divertor-Vorwärmer: Stufung der Zelle mit dem Surrogat](docs/bilder/vorwaermer_stufung.png)
 3. Totwassergebiete finden und beseitigen.
 4. Robuster abgleichen, mit Drosseln statt Wanddicke.
 5. Wärme gekoppelt mitrechnen.

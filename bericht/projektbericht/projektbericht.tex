@@ -582,9 +582,9 @@ Primärkreis: Druckwasser mit etwa \SI{289}{\celsius} $\rightarrow$ \SI{319}{\ce
 WWER-1000. Dampferzeuger, Hauptkühlmittelpumpen und Druckhalter sind Serientechnik. Blei (Erstarren bei
 \SI{327}{\celsius}, Bremsung im Magnetfeld) und Helium (\SI{8}{MPa}, Gebläse) entfallen. Die Erstwandkanäle
 ($6\times\SI{6}{mm}$, drei Durchgänge) wurden für diese Bedingungen nachgerechnet:
-Stahl höchstens \SI{441}{\celsius}, Kanalwand \SI{340}{\celsius} (Sieden bei \SI{345}{\celsius}), Druckverlust
+Stahl höchstens \SI{441}{\celsius}, Kanalwand \SI{340}{\celsius} (Sieden bei \SI{347}{\celsius}), Druckverlust
 \SI{0,24}{MPa}. Der Stahl liegt damit im Arbeitsbereich von EUROFER (etwa \SIrange{300}{550}{\celsius}); mit
-Wasser von \SIrange{60}{150}{\celsius} lag er darunter. Knapp ist der Abstand zum Sieden mit \SI{5}{K}.
+Wasser von \SIrange{60}{150}{\celsius} lag er darunter. Knapp ist der Abstand zum Sieden mit \SI{7}{K} (anfangs mit falscher Siedetemperatur als \SI{5}{K} angegeben).
 
 \subsection{Herleitung der Wärmebilanz}
 Die Kette läuft vom Netz rückwärts zum Plasma, mit denselben Annahmen wie die Leistungsbilanz der Stufe~0
@@ -655,6 +655,8 @@ Druckwasserbedingungen abführen und zugleich Tritium erbrüten. Das EU-DEMO-Kon
 Bleilithium als Brutstoff) zielt genau darauf; belegte Werte dazu fehlen hier noch, weil die Verlagsseiten
 automatische Abrufe sperren. Ob eine Turbine aus einer stillgelegten Anlage tatsächlich zu haben ist, wurde
 nicht geprüft; die Vergleichsanlagen zeigen nur die passende Größenklasse.
+
+\input{leistungsfluss_de.tex}
 
 \subsection{Passen die Leitungen durch die Spulenspalte?}
 Das ganze Kühlwasser muss vom Gefäß durch die Spulen nach außen zu den Dampferzeugern und zurück. Zwischen den
@@ -819,7 +821,7 @@ Stahl, Fleck & \SI{588}{\celsius} & \SI{399}{\celsius} & 95\,\% & 6,9\,\%\\
 Wolfram + Stahl, Fleck & \SI{535}{\celsius} & \SI{377}{\celsius} & 95\,\% & 5,6\,\%\\
 Kupferlegierung, Fleck & \SI{351}{\celsius} & \SI{340}{\celsius} & 62\,\% & 5,8\,\%\\
 Stahl, Fleck, $h$ doppelt & \SI{559}{\celsius} & \SI{363}{\celsius} & 98\,\% & 7,0\,\%\\\bottomrule
-\end{tabular}\caption{Wärmetest an der Wand g1. Siedegrenze bei \SI{16}{MPa}: \SI{344,8}{\celsius}.
+\end{tabular}\caption{Wärmetest an der Wand g1. Siedegrenze bei \SI{16}{MPa}: \SI{347,4}{\celsius}.
 „Abgabe bis \SI{10}{mm}“: Anteil der Wärme, der bis \SI{10}{mm} hinter der Plasmaseite der Stahlhaut ins Wasser geht.
 „Im Fleck abgegeben“: Anteil, der innerhalb des Fleckradius abgeht. Eingestrahlt wird dort 9,4\,\% der Wärme;
 was weniger abgeht, wurde seitlich verteilt.}\end{table}
@@ -829,7 +831,7 @@ durch die Mitte; an das Wasser abgegebene Wärme je Grundfläche (rot: Fleck); a
 \paragraph{Ergebnis.}
 \begin{itemize}
 \item \textbf{In Stahl geht die Wärme nicht in die Tiefe.} 95\,\% verlassen den Stahl in den ersten \SI{5}{mm} hinter der Haut, über die Rückseite der Haut und die Wurzeln der Stränge. Die Stränge selbst bleiben fast auf Wassertemperatur. Die benetzte Fläche ist rund 15-mal so groß wie die Grundfläche, wird aber kaum genutzt. Die abgestufte Struktur ist in Stahl also eine Tragstruktur, kein Wärmetauscher. Das bestätigt den Überschlag.
-\item \textbf{Die Siedegrenze wird schon bei gleichmäßiger Last überschritten.} 3\,\% der nassen Wand liegen über \SI{344,8}{\celsius}, und zwar dort, wo die Stränge an die Haut ansetzen. Dort kühlt örtlich weniger Fläche. Mit dem Fleck steigt die Wand auf \SI{399}{\celsius}.
+\item \textbf{Die Siedegrenze wird schon bei gleichmäßiger Last überschritten.} 3\,\% der nassen Wand liegen über \SI{347,4}{\celsius}, und zwar dort, wo die Stränge an die Haut ansetzen. Dort kühlt örtlich weniger Fläche. Mit dem Fleck steigt die Wand auf \SI{399}{\celsius}.
 \item \textbf{Wolfram verteilt den Fleck in die Breite}: \SI{53}{K} weniger an der heißesten Stelle. Weil \SI{3}{mm} Wolfram zusätzlich Wärme leiten müssen, wird die Plasmaseite im Mittel aber um \SI{12}{K} wärmer.
 \item \textbf{Schnelleres Wasser} senkt die Wandtemperatur am stärksten bei gleichem Werkstoff, hilft aber dem Fleck kaum.
 \item \textbf{Kupferlegierung ist der einzige Fall, der die Wärme in die Tiefe bringt.} Nur 62\,\% gehen in den ersten \SI{5}{mm} ab, der Rest weiter hinten über die Stränge. Die Plasmaseite bleibt unter \SI{351}{\celsius} und die nasse Wand unter der Siedegrenze. Die Rippen wirken jetzt, weil $1/m=\sqrt{k t/(2h)}$ mit $k=320$ auf \SI{6}{mm} wächst.
@@ -850,6 +852,127 @@ Grenzen der Rechnung:
 \end{itemize}
 Skript: \texttt{stellarator/gradient\_waerme.py}.
 
+\subsection{Divertor-Vorwärmer: Welche Bauart bringt den meisten Strom?}\label{sec:vorwaermer}
+Die Divertorwärme fällt bei niedriger Temperatur an. Beim EU-DEMO tritt das Kühlwasser der Targets mit
+\SI{130}{\celsius} und \SI{5}{MPa} ein und erwärmt sich um \SI{6}{K}. Die Autoren sehen vor, diese Wärme zum
+Vorwärmen zu nutzen \cite{you2022}. Hier sind es \SI{305}{MW} (Abschnitt Wärmebilanz).
+
+\paragraph{Frage und Hypothese.} Welche Bauart des Vorwärmers holt aus diesen \SI{305}{MW} den meisten
+Netto-Strom? Im Vergleich stehen Rohrbündel, Platte, Gyroid (gleichmäßig und abgestuft) und Diamond.
+\[
+P_\text{netto} = \Delta P_\text{Turbine} - P_\text{Pumpe, Divertorseite} - P_\text{Pumpe, Kondensatseite}.
+\]
+Die Hypothese H1 lautete: Bei gleichem Pumpaufwand erreicht eine TPMS-Struktur eine kleinere Temperaturannäherung
+und damit mehr Netto-Strom.
+
+\paragraph{1. Kraftwerksseite.} Das Divertorwasser wärmt Kondensat vor. Damit spart die Anlage Anzapfdampf. Der
+eingesparte Dampf leistet bis zum Kondensator noch Arbeit. Für die Erwärmung um $\mathrm{d}T$ gilt
+\[
+\mathrm{d}W = \dot m_k\,c_p\,\mathrm{d}T\;\frac{h_A - h_\text{aus}}{h_A - h'_A},\qquad
+p_A = p_s(T + \Delta T_\text{G}).
+\]
+Dabei ist $h_A$ die Enthalpie des Anzapfdampfs, $h'_A$ die des siedenden Kondensats beim Anzapfdruck und
+$h_\text{aus}$ die Enthalpie am Turbinenaustritt. $\Delta T_\text{G}$ ist die Grädigkeit des Vorwärmers.
+Alle Zustände stammen aus CoolProp \cite{coolprop}.
+
+Die Expansionslinie beginnt mit Sattdampf bei \SI{78}{bar}, wie beim EPR \cite{epr_de}; die englische
+Wikipedia nennt \SI{77,2}{bar} am Turbineneintritt \cite{epr_en}. Am Ende steht der Kondensator mit
+\SI{24,7}{mbar} (\SI{20,9}{\celsius}). Der Kondensatstrom ist der Dampfstrom des EPR (\SI{2443}{kg/s}),
+skaliert auf unsere \SI{3419}{MW} thermisch, also \SI{1820}{kg/s}. Das Kondensat erwärmt sich dann um
+$Q/(\dot m_k c_p) = \SI{39,8}{K}$. Es kann höchstens bis \SI{136}{\celsius} kommen.
+
+Ohne Temperaturannäherung und ohne Pumpen ergibt das eine \textbf{Obergrenze von \SI{73,3}{MW}}. Das sind
+24\,\% der Divertorwärme.
+
+\paragraph{2. Tauscherseite.} Gegenstrom mit $UA = Q/\Delta T_\text{log}$. Die Annäherung am warmen Ende ist
+$\Delta T_1 = \SI{136}{\celsius} - T_{k,\text{aus}}$. Am kalten Ende gilt
+$\Delta T_2 = \SI{130}{\celsius} - T_{k,\text{ein}} = \Delta T_1 + \SI{33,8}{K}$. Das Divertorwasser wirkt fast wie eine
+Quelle fester Temperatur. Deshalb bleibt $\Delta T_\text{log}$ auch bei kleinem $\Delta T_1$ groß, zum Beispiel
+\SI{7}{K} bei $\Delta T_1 = \SI{0,3}{K}$.
+
+Beide Seiten teilen sich die Wandfläche $A$. Mit $d_h = 4V_f/A$ ist das Fluidvolumen je Seite $V_f = A\,d_h/4$.
+Bei gleicher Weglänge folgt daraus
+\[
+\frac{\mathit{Re}_\text{warm}}{\mathit{Re}_\text{kalt}} = \frac{\dot m_\text{warm}\,\mu_\text{kalt}}{\dot m_\text{kalt}\,\mu_\text{warm}} \approx 7,
+\]
+und zwar unabhängig von der Geometrie. Grund ist das ungleiche Verhältnis der Massenströme:
+\SI{12000}{kg/s} Divertorwasser gegen \SI{1820}{kg/s} Kondensat. Eine symmetrische TPMS-Struktur kann deshalb nicht
+beide Seiten im gültigen Bereich der Korrelation halten ($2961 < \mathit{Re} < 18254$). Mehrere Durchgänge auf der
+Kondensatseite ($n$) lösen das, denn der Kondensatweg wird $n$-mal so lang:
+\[
+A_{f,\text{warm}} = n\,A_{f,\text{kalt}}\,\frac{d_{h,\text{warm}}}{d_{h,\text{kalt}}},\qquad
+\Delta p = 4f\,\frac{L}{d_h}\,\frac{\rho v^2}{2},\qquad P_\text{Pumpe} = \frac{\Delta p\,\dot V}{\eta_P}.
+\]
+Bauvolumen: $V = A\,(d_{h,\text{warm}} + d_{h,\text{kalt}})/4 + A\,t$, ohne Sammler und Verteiler.
+
+Abgetastet werden je Bauart 40~Annäherungen (\SIrange{0,3}{25}{K}), 12~hydraulische Durchmesser, 13~Verhältnisse
+der Durchmesser beider Seiten, 24~Geschwindigkeiten und $n = 1$ bis $8$. Für jedes Volumen gilt der beste
+gültige Entwurf (Pareto-Front).
+
+\begin{table}[H]\centering\small
+\begin{tabular}{p{3.2cm}p{6.4cm}p{3.6cm}}\toprule
+Bauart & Wärmeübergang und Reibung (Fanning) & Band\\\midrule
+Diamond & $\mathit{Nu} = 0{,}2644\,\mathit{Re}^{0,69}\mathit{Pr}^{1/3}$, $f = 1{,}850\,\mathit{Re}^{-0,17}$, CFD \cite{renon2024} &
+  Li 2020, Li 2022 \cite{alsafadi2026}\\
+Gyroid gleichmäßig & wie Diamond, $f \times 1{,}145$ (12,3--16,7\,\% mehr Reibung \cite{renon2024}) & Li 2020, Li 2022\\
+Gyroid abgestuft & $j/f^{1/3}$ um 28\,\% besser (Messung \cite{oh2025}), hier $\mathit{Nu}\times 1{,}28$ & wie oben\\
+Platte (Notbehelf) & wie Gyroid gleichmäßig; gemessen ist der Gyroid „etwas schlechter“ \cite{oh2025} & bis +10\,\%\\
+Rohrbündel & Gnielinski und Petukhov, Mantelseite wie Rohrseite (schwächste Annahme) & --\\\bottomrule
+\end{tabular}\caption{Korrelationen; wörtliche Belege in \texttt{docs/recherche/vorwaermer/}.}\end{table}
+Hydraulische Durchmesser: Rohr \SIrange{10}{25}{mm}, Platte \SIrange{3}{10}{mm}, TPMS \SIrange{2}{15}{mm}.
+Annahmen: Wand \SI{0,5}{mm} Edelstahl (gedruckt wie bei \cite{oh2025}), Grädigkeit \SI{3}{K}, Turbine
+isentrop 0,85 (HD) und 0,88 (ND), Zwischenüberhitzung bei \SI{11}{bar} auf \SI{270}{\celsius}, Pumpen 0,8,
+Kondensatdruck \SI{2}{MPa}.
+
+\bild{vorwaermer_netto.png}{1.0}{Netto-Mehrleistung über dem Bauvolumen. Die Linie zeigt die mittlere
+Korrelation, das Band die Streuung der Literatur. Gestrichelt: Platte (Notbehelf).}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrr}\toprule
+Bauart & Volumen für 95\,\% & Volumen für 99\,\% & Netto bis \SI{50}{m^3}\\\midrule
+Rohrbündel & \SI{11}{m^3} & \SI{30}{m^3} & \SI{72,9}{MW}\\
+Platte (Notbehelf) & \SIrange{2,8}{3,0}{m^3} & \SIrange{6,7}{7,3}{m^3} & \SI{73,1}{MW}\\
+Gyroid gleichmäßig & \SIrange{1,8}{2,1}{m^3} & \SIrange{4,5}{5,0}{m^3} & \SI{73,1}{MW}\\
+Gyroid abgestuft & \SIrange{1,6}{1,8}{m^3} & \SIrange{3,8}{4,2}{m^3} & \SI{73,1}{MW}\\
+Diamond & \SIrange{1,7}{2,1}{m^3} & \SIrange{4,4}{4,9}{m^3} & \SI{73,1}{MW}\\\bottomrule
+\end{tabular}\caption{Bauvolumen für 95 und 99\,\% der Obergrenze. Die Spanne entsteht aus den Korrelationen.}\end{table}
+
+\paragraph{3. Befunde.}
+\begin{itemize}
+\item \textbf{Der Wirkungsgrad entscheidet nicht über die Bauart.} Ab etwa \SI{30}{m^3} erreicht jede Bauart
+  \SIrange{72,9}{73,1}{MW}. Die Pumpleistung liegt dann bei \SIrange{0,01}{0,14}{MW}. H1 stimmt nur bei kleinem
+  Volumen. Bei ausreichender Größe schöpfen alle Bauarten die Obergrenze aus.
+\item \textbf{Die Bauarten unterscheiden sich im Volumen.} Für 99\,\% braucht ein TPMS-Tauscher
+  \SIrange{4}{5}{m^3}, eine Platte etwa \SI{7}{m^3} und ein Rohrbündel etwa \SI{30}{m^3}. Der abgestufte Gyroid
+  ist am kleinsten, Diamond liegt knapp dahinter. Gewählt werden muss also nach Volumen, Kosten, Fertigung,
+  Verschmutzung und Festigkeit, nicht nach dem Wirkungsgrad.
+\item \textbf{Korrektur der Wärmebilanz.} Die Bilanz oben hatte die Divertorwärme mit dem vollen Wirkungsgrad
+  0,35 gezählt, also mit \SI{107}{MW} Strom. Als Vorwärmung bringt sie höchstens \SI{73}{MW}. Für \SI{1}{GW} netto
+  steigt die nötige Fusionsleistung damit um etwa 3\,\%, von \SI{3053}{MW} auf rund \SI{3140}{MW}.
+\item \textbf{Massenströme.} Divertorwasser und Kondensat strömen im Verhältnis 7:1. Ein symmetrischer Tauscher
+  braucht deshalb mehrere Durchgänge auf der Kondensatseite. Die besten Entwürfe nutzen $n = 8$ und liegen an der
+  unteren Grenze $\mathit{Re} \approx 3000$. Langsamer wäre noch besser, aber dafür fehlen geprüfte
+  Korrelationen.
+\item \textbf{Größere Hebel als die Bauart.} Ein Kondensator mit \SI{50}{mbar} (Flusswasser) senkt die
+  Obergrenze auf \SI{63,5}{MW}. Ein Kondensatstrom von 75\,\% senkt sie auf \SI{68,7}{MW}. Beim EU-DEMO führt
+  außerdem der Kassettenkörper Wärme bei \SIrange{180}{210}{\celsius} ab (\SI{4,2}{MW} je Kassette)
+  \cite{you2022}. Wärme bei höherer Temperatur ist mehr wert. Das ist der nächste Rechenschritt.
+\end{itemize}
+Grenzen der Rechnung:
+\begin{itemize}
+\item Die Korrelationen streuen stark, und die Plattenkurve ist kein eigenes Modell.
+\item Die Expansionslinie ist vereinfacht: ein Wirkungsgrad je Teil, Anzapfungen ohne Rückwirkung auf den
+  Dampfstrom.
+\item Sammler, Verteiler und Gleichverteilung fehlen. Die besten TPMS-Entwürfe sind nur etwa \SI{1,3}{m} lang
+  und haben dafür eine große Stirnfläche.
+\item Ob eine \SI{0,5}{mm} dünne gedruckte Wand \SI{5}{MPa} gegen \SI{2}{MPa} hält, ist nicht geprüft. Das ist eine
+  Frage für Festigkeitsfachleute.
+\end{itemize}
+Skript: \texttt{stellarator/vorwaermer.py}, Ergebnisse in \texttt{stellarator/daten/vorwaermer.json}.
+
+\input{tauscher_cfd_de.tex}
+\input{surrogat_de.tex}
+
 \subsection{Zusammenarbeit}
 Vom Nutzer kamen: die dünnere Wand mit größerem Austritt (f12), der Paarvergleich als Werkzeug für Entscheidungen
 und Optimierungsschleifen samt den Urteilen dazu, der Hinweis, dass die Wandung des Druckraums dem Druck
@@ -860,6 +983,9 @@ Turbine. Der Assistent hat gerechnet, die Werkzeuge gebaut, die Recherche geprü
 ElmerFEM 9.0 \cite{elmer}, FluidX3D 3.8 \cite{fluidx3d}, PicoGK \cite{picogk}, gmsh \cite{gmsh}, FreeCAD 1.1 \cite{freecad}, simsopt \cite{simsopt}, DESC
 \cite{desc}, PyVista \cite{pyvista}, ParaView \cite{paraview}, Blender 4.0 \cite{blender}. Programmcode, Befundprotokoll und Abbildungen:
 \url{https://github.com/ThomasSchmiegelt/stellarator-design} (MIT-Lizenz).
+
+Zitate: Übernommen sind Zahlen, Formeln und kurze wörtliche Belegstellen mit Quellenangabe (§§ 51, 63 UrhG); Abbildungen
+anderer Werke sind nicht übernommen. Die Lizenzen der Quellen stehen in den Belegdateien unter \texttt{docs/recherche/}.
 
 \begin{thebibliography}{99}\small
 \bibitem{bosch2013} H.-S. Bosch, R.\,C. Wolf, T. Andreeva et al.: Technical challenges in the construction of
@@ -921,5 +1047,29 @@ ElmerFEM 9.0 \cite{elmer}, FluidX3D 3.8 \cite{fluidx3d}, PicoGK \cite{picogk}, g
   Lithium Breeding Blanket. \emph{Energies} 16 (2023) 2069. doi:10.3390/en16042069
 \bibitem{bejan1997} A. Bejan: Constructal-theory network of conducting paths for cooling a heat generating volume.
   \emph{Int. J. Heat Mass Transfer} 40 (1997) 799--816. doi:10.1016/0017-9310(96)00175-5
+\bibitem{you2022} J.\,H. You, G. Mazzone, E. Visca et al.: Divertor of the European DEMO: Engineering and technologies
+  for power exhaust. \emph{Fusion Eng.\ Des.} 175 (2022) 113010. doi:10.1016/j.fusengdes.2022.113010;
+  frei zugänglich: doi:10.5445/IR/1000142224
+\bibitem{renon2024} C. Renon, X. Jeanningros: A numerical investigation of heat transfer and pressure drop correlations in
+  Gyroid and Diamond TPMS-based heat exchanger channels. \emph{Int.\ J.\ Heat Mass Transfer} (2024) 126599.
+  doi:10.1016/j.ijheatmasstransfer.2024.126599; Manuskript: HAL cea-04896410
+\bibitem{alsafadi2026} M. Al-Safadi, F. Ejaz, S.\,Z. Shuja, S.\,M. Zubair: Quantitative synthesis and correlations of heat
+  transfer and friction factor in triply periodic minimal surface (TPMS) structures. \emph{Results Eng.} 29 (2026)
+  109402. doi:10.1016/j.rineng.2026.109402
+\bibitem{oh2025} S.-H. Oh, J.\,E. Kim, C.\,H. Jang, J. Kim, C.\,Y. Park, K. Park: Multifunctional gradations of TPMS
+  architected heat exchanger for enhancements in flow and heat exchange performances. \emph{Sci.\ Rep.} 15 (2025)
+  19931. doi:10.1038/s41598-025-04940-2
+\bibitem{coolprop} I.\,H. Bell, J. Wronski, S. Quoilin, V. Lemort: Pure and pseudo-pure fluid thermophysical property
+  evaluation and the open-source thermophysical property library CoolProp. \emph{Ind.\ Eng.\ Chem.\ Res.} 53 (2014)
+  2498--2508. doi:10.1021/ie4033999
+\bibitem{epr_de} Wikipedia: EPR (Kernkraftwerk). \url{https://de.wikipedia.org/wiki/EPR_(Kernkraftwerk)}, abgerufen 2026-10-31.
+\bibitem{epr_en} Wikipedia: EPR (nuclear reactor). \url{https://en.wikipedia.org/wiki/EPR_(nuclear_reactor)}, abgerufen 2026-10-31.
+\bibitem{patankar1977} S.\,V. Patankar, C.\,H. Liu, E.\,M. Sparrow: Fully developed flow and heat transfer in ducts having streamwise-periodic variations of cross-sectional area. J. Heat Transfer 99(2) (1977) 180--186. \url{https://doi.org/10.1115/1.3450666}
+\bibitem{ginzburg2005} I. Ginzburg: Equilibrium-type and link-type lattice Boltzmann models for generic advection and anisotropic-dispersion equation. Adv. Water Resour. 28(11) (2005) 1171--1195. \url{https://doi.org/10.1016/j.advwatres.2005.03.004}
+\input{bauteile_bib.tex}
+\bibitem{kennedy2000} M.\,C. Kennedy, A. O'Hagan: Predicting the output from a complex computer code when fast
+  approximations are available. Biometrika 87 (2000) 1--13. doi:10.1093/biomet/87.1.1
+\bibitem{mckay1979} M.\,D. McKay, R.\,J. Beckman, W.\,J. Conover: A comparison of three methods for selecting values
+  of input variables in the analysis of output from a computer code. Technometrics 21 (1979) 239--245. doi:10.2307/1268522
 \end{thebibliography}
 \end{document}

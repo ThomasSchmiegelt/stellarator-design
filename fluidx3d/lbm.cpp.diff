@@ -1,0 +1,13 @@
+diff --git a/src/lbm.cpp b/src/lbm.cpp
+index 0373623..6ddfaf2 100644
+--- a/src/lbm.cpp
++++ b/src/lbm.cpp
+@@ -452,6 +452,8 @@ string LBM_Domain::device_defines(const Device_Info& device_info) const { return
+ #ifdef TEMPERATURE
+ 	"\n	#define TEMPERATURE"
+ 	"\n	#define def_w_T "+to_string(1.0f/(2.0f*alpha+0.5f))+"f" // wT = dt/tauT = 1/(2*alpha+1/2), alpha = thermal diffusion coefficient
++	"\n	#define def_q_T "+(getenv("FX_Q_T") ? string(getenv("FX_Q_T")) : string("0.0"))+"f"
++	+"\n	#define def_q_u0 "+(getenv("FX_Q_U0") ? string(getenv("FX_Q_U0")) : string("0.0"))+"f" // geaendert: Waermequelle aus Umgebungsvariable FX_Q_T (Zahl mit Punkt oder Exponent)
+ 	"\n	#define def_beta "+to_string(beta)+"f" // thermal expansion coefficient
+ 	"\n	#define def_T_avg "+to_string(T_avg)+"f" // average temperature
+ #endif // TEMPERATURE

@@ -455,3 +455,61 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
   Erstwand; Kondensator-Abwaerme (~2200 MW, ~33 C) nutzen, geschlossener Kreislauf. Vorschlaege (Divertor-Vorwaermer
   ~2000 m2/7 m3, Gyroid-Dampferzeuger ~23000 m2/75 m3, Kondensator: Dampf 0,05 bar ~25000 m3/s -> kleine Zellen ersticken,
   Trockenkuehlturm, Tritium-Zwischenkreis) werden AB FREITAG 2026-10-30 gebaut. Erst fragen: Kondensator oder Vorwaermer.
+- 2026-10-28 Fahrplan Richtung Forschung (Nutzer: der Reihe nach, Versuch teuer -> Gelder; Firma hat CFD- und
+  Festigkeitsleute, vorher guter Stand noetig): Frage/Hypothese -> Literatur mit Messwerten -> Validierung + Netzstudie ->
+  Bandbreiten -> Review-Paket mit konkreten Fragen -> Fachleute/Gelder -> Versuch. Erstes Thema: Gyroid-Tauscher ab Fr.
+- 2026-10-28 Forschungsthema Mensch+KI (Nutzer: "ernsthaft angehen", "was du weisst, jetzt schon rein"):
+  docs/forschung/ereignisprotokoll.md mit Kategorien IN/IK/FK/FA/EN/EK/V/K/R/S, 52 Ereignisse (45 rekonstruiert, 7 live),
+  erste Auszaehlung. AB JETZT: in jeder Sitzung Ereignisse live nachtragen (Spalte Erf. = live). README-Absatz ergaenzt.
+- 2026-10-29 Ereignisprotokoll erweitert (Nutzer): Projekte EMA (ai-workspace, aus Buch-Zeitleiste + Commit-Texten),
+  H2 (wasserstoff LESSONS_LEARNED), Doom, AI_Framework (nur Doku). IDs F-/E-/W-/D-/A-, 94 Ereignisse, neue Spalten
+  "Unerw. KI" (–/!/!!) und "Unerw. N" (fuer den Nutzer, leer). 8 Muster als Hypothesen. Nicht gepusht.
+- 2026-10-31 Ereignisprotokoll VERSCHOBEN ins Buchprojekt (lokal, nicht im Repo) (Nutzer: gehoert
+  nur zum Buch). Aus dem Fusion-Repo entfernt (war nie gepusht), README-Absatz zurueckgenommen. Weiterhin live fuehren, dort.
+- 2026-10-31 Weiter mit Gyroid-Zwei-Fluid-Tauscher: Nutzer waehlt DIVERTOR-VORWAERMER als Start (Fahrplan Schritt 1).
+- 2026-10-31 Schritt 2 Vorwaermer gestartet: docs/recherche/vorwaermer/lauf.sh (PI, 5 Themen: Divertor EU-DEMO/ITER/W7-X,
+  DWR-Speisewasser, Vorwaermkette), Log lauf.log, Ende PI_FERTIG. Teil 3 (Gyroid/Platte/Rohr Nu, f) macht Claude.
+  Frage (Nutzer: Effizienz zaehlt): welche Bauart holt den meisten Netto-Strom aus 305 MW Divertor-Waerme.
+- 2026-10-31 Nutzer: DANACH dem PLASMA widmen (nach dem Vorwaermer).
+- 2026-10-31 FEHLER korrigiert: Siedetemperatur 16 MPa = 347,4 C (nicht 344,8 = 15,5 MPa; SIEDE-Tabelle in erstwand_kanal.py
+  endete bei 15,5). Tabelle bis 17 MPa ergaenzt, gradient_waerme neu gerechnet (ueber Sieden 2,7 statt 3,0 %, Kupfer
+  Reserve 7,9 K), Berichte/README korrigiert (w1000 Abstand 7 statt 5 K). CoolProp in .venv installiert.
+- 2026-10-31 VORWAERMER gerechnet: stellarator/vorwaermer.py (CoolProp-Expansionslinie 78 bar sat, ZUE 11 bar/270 C,
+  eta 0,85/0,88 ANNAHMEN; Kondensat 1820 kg/s, 2 MPa; Gegenstrom, Scan Annaeherung/d_h/Verhaeltnis/v/n Durchgaenge,
+  Pareto Netto ueber Volumen). Ergebnis: Obergrenze 73,3 MW (24 %), alle Bauarten ab ~30 m3 72,9-73,1 MW -> Wirkungsgrad
+  entscheidet NICHT; Volumen 99 %: Gyroid abgestuft ~4, Diamond/Gyroid 4,5-5, Platte 7, Rohr 30 m3. Korrektur Bilanz:
+  Divertor zaehlte mit 0,35 -> Pfus ~3140 statt 3053 MW (+3 %, im Bericht als Befund, Tabelle oben NICHT geaendert).
+  Re_warm/Re_kalt ~7 geometrieunabhaengig -> n Durchgaenge. 50 mbar: 63,5 MW; 75 % Kondensat: 68,7 MW.
+  Rechte: Lizenzen in docs/recherche/vorwaermer/*.md, Zitierhinweis §§ 51/63 UrhG in Berichten. Berichte DE 50/EN 48 S.,
+  README, Prozess-Doku Abschnitt 10. NICHT gepusht. Naechst: Kassettenkoerper 180-210 C als hoehere Stufe? danach PLASMA.
+- 2026-10-31 Tauscher-CFD (FluidX3D periodisch, Kernel-Mods siehe fluidx3d/*.diff): Gyroid Re~3000 n48: f 0,805, Nu 194;
+  n96 (18,5 Mio Zellen): f 0,674 (Re 3224), Temperatur stabil bis ~160k Schritte (T_m 0,51 -> Nu ~150), dann divergiert.
+  Nu faellt mit Gitter (194 -> ~150), bleibt ~1,9x Renon (80). Thermik bei n96 instabil -> Ursache klaeren vor Reihe.
+  Gyroid-Video fertig: sim/tauscher/cfd/gyroid_re3000_n48/video/gyroid_stroemung.mp4. Chevron-FreeCAD (zu speicherhungrig)
+  ohne STL beendet -> sparsamer neu bauen. Einflussgraph Plasma->Netz als Artifact (privat). NICHT dokumentiert/gepusht.
+- 2026-10-31 Doku: Leistungsfluss-Bild (stellarator/einflussgraph.py, docs/bilder/einflussgraph*.png) + Bauteiltexte
+  (Sonnet-Teilagent, geprueft: bauteile_de.tex/components_en.tex/bauteile_bib.tex, docs/bauteile.md) als Abschnitt
+  nach der Waermebilanz; CFD-Kapitel tauscher_cfd_de/en.tex nach dem Vorwaermer (Bilder via tauscher_cfd_bild.py).
+  Berichte DE 55/EN 52 S., README, Prozess-Doku Abschnitt 11. Laeuft: video_alle.sh (Diamond, Chevron n48 + Videos).
+  Offen: Protokoll-Zeilen im Buch, fluidx3d/README, Helium-Abpumpen belegen. NICHT gepusht.
+- 2026-10-31 abends: n96-Instabilitaet = BGK-Temperaturstoss nahe tau 0,5 -> TRT (Ginzburg, Lambda 1/4) im Kernel;
+  Quelle wahlweise ~u_z (--quelle u, Patankar 1977; Platte exakt 8,235: 8,9 -> 8,5). Reihe reihe_trt.sh (n48/n96):
+  n96 Gyroid f 0,73 Nu 102 j/f^1/3 0,038 | Diamond 0,60/101/0,039 | Chevron 0,86/104/0,033. Nu/Renon 1,8 (n48) ->
+  1,5 (n96) -> Richardson ~1,2. BGK ueberschaetzte Nu ~25 %. Berichte DE 56/EN 53 S. aktualisiert (Tabelle, Bilder
+  tauscher_cfd_bild.py), README, Prozess-Doku, fluidx3d/README+Diffs. Naechst: n144 (60 Mio Zellen) oder Surrogat;
+  gestufte Geometrie rechnen. NICHT gepusht.
+- 2026-10-31 Sitzungsende: alles beendet, keine Laeufe aktiv. Videos gesammelt in sim/tauscher/videos/. Morgen:
+  Entscheidung n144 / gestufte Geometrie / Surrogat; vor Push picogk/GyroidTauscher auf bin/obj pruefen; Push nur mit OK.
+- 2026-11-01: Surrogat-Laeufe gestartet: sim/tauscher/cfd/surrogat/ (auftraege.txt 36 Auftraege, runner.sh,
+  steuerung.sh pause|sofort|weiter|stop|abbruch|start|status). Phase A n144 Gyroid/Diamond, B 28 LHS-Punkte n48
+  (Re 500-10000, Pr 1,2-2,0, a 0,75-1,6 x Standard), C 6 Kontrollen n96. Monitoring: Sonnet-Teilagent -> monitor.md.
+  tauscher_cfd.py hat --tag. Danach: Gitterfehler bestimmen, Co-Kriging-Surrogat, Anwendung Stufung im Vorwaermer.
+- 2026-11-01 12:40: Auftragsliste fertig, 36/36 ohne Fehlschlag (Sonnet-Monitor 2x, kein Eingriff).
+  n144: Gyroid Nu/Renon 1,36, Diamond 1,30 -> Reihe 48/96/144 NICHT asymptotisch (d96/d144 = 0,58 < ln2/ln3).
+  stellarator/tauscher_surrogat.py: GP je Bauart auf ln(Nu/Renon), ln(f/Renon) ueber (ln Re, Pr, a); Gitterkorrektur
+  linear in ln Re aus n96, Stufen n144 (gerechnet) und inf (Richardson letzter Schritt, p 1,33). Ergebnis: Nu extrapoliert
+  = Renon (0,97-1,14); f-Extrapolation unbrauchbar -> f aus n144. LOO Nu 2,8/0,9 %, f 9,5/1,1 %. Daten daten/tauscher_surrogat.json.
+  stellarator/vorwaermer_stufung.py: Segmentmodell 8 Segmente, Zelle je Segment frei -> STUFUNG BRINGT NICHTS, kleinste
+  Zelle (a 0,75 a_std, d_h 1,33 mm) gewinnt ueberall, Pumpen < 1 MW; 95 % von 73,3 MW bei 1,3-1,5 m3.
+  Oh-Faktor 1,28 = Abstand Renon -> n144. Berichte DE/EN sec:tauschersurrogat / sec:exchangersurrogate (59/55 S.).
+  Offen: feinere Zellen als Surrogat-Rand, Wand 0,5 mm gegen 3 MPa, Stufung evtl. Kondensator-Dampfseite. NICHT gepusht.

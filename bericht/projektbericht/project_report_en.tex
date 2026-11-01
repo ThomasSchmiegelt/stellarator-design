@@ -552,9 +552,9 @@ primary circuit: pressurised water at about \SI{289}{\celsius} $\rightarrow$ \SI
 as in the VVER-1000. Steam generators, main coolant pumps and pressuriser are off-the-shelf. Lead (freezing at
 \SI{327}{\celsius}, braking in the magnetic field) and helium (\SI{8}{MPa}, blowers) are dropped. The first-wall
 channels ($6\times\SI{6}{mm}$, three passes) were recomputed for these conditions: steel at most
-\SI{441}{\celsius}, channel wall \SI{340}{\celsius} (boiling at \SI{345}{\celsius}), pressure drop \SI{0.24}{MPa}.
+\SI{441}{\celsius}, channel wall \SI{340}{\celsius} (boiling at \SI{347}{\celsius}), pressure drop \SI{0.24}{MPa}.
 The steel thus sits in the working range of EUROFER (about \SIrange{300}{550}{\celsius}); with water at
-\SIrange{60}{150}{\celsius} it was below it. The margin to boiling, \SI{5}{K}, is tight.
+\SIrange{60}{150}{\celsius} it was below it. The margin to boiling, \SI{7}{K}, is tight (first stated as \SI{5}{K} with a wrong saturation temperature).
 
 \subsection{Derivation of the heat balance}
 The chain runs backwards from the grid to the plasma, with the same assumptions as the power balance of stage~0
@@ -625,6 +625,8 @@ pressurised-water conditions and breed tritium at the same time. The EU-DEMO WCL
 lead-lithium as breeder) aims at exactly this; sourced values are still missing here because the publishers'
 sites block automated access. Whether a turbine from a decommissioned plant is actually available was not
 checked; the reference plants only show the matching size class.
+
+\input{leistungsfluss_en.tex}
 
 \subsection{Do the pipes fit through the gaps between the coils?}
 All the cooling water has to go from the vessel through the coils to the steam generators and back. On the
@@ -788,7 +790,7 @@ steel, hot spot & \SI{588}{\celsius} & \SI{399}{\celsius} & 95\,\% & 6.9\,\%\\
 tungsten + steel, spot & \SI{535}{\celsius} & \SI{377}{\celsius} & 95\,\% & 5.6\,\%\\
 copper alloy, spot & \SI{351}{\celsius} & \SI{340}{\celsius} & 62\,\% & 5.8\,\%\\
 steel, spot, $h$ doubled & \SI{559}{\celsius} & \SI{363}{\celsius} & 98\,\% & 7.0\,\%\\\bottomrule
-\end{tabular}\caption{Heat test on wall g1. Saturation temperature at \SI{16}{MPa}: \SI{344.8}{\celsius}.
+\end{tabular}\caption{Heat test on wall g1. Saturation temperature at \SI{16}{MPa}: \SI{347.4}{\celsius}.
 “Removed within \SI{10}{mm}”: share of heat entering the water within \SI{10}{mm} behind the plasma side of the steel skin.
 “Removed under spot”: share leaving within the spot radius. The spot receives 9.4\,\% of the heat;
 any shortfall was spread sideways.}\end{table}
@@ -798,7 +800,7 @@ the middle; heat given to the water per footprint area (red: spot); cumulative h
 \paragraph{Result.}
 \begin{itemize}
 \item \textbf{In steel the heat does not travel into the depth.} 95\,\% leaves the steel within the first \SI{5}{mm} behind the skin, through the back of the skin and the roots of the struts. The struts themselves stay almost at water temperature. The wetted area is about 15 times the footprint but is hardly used. In steel the graded structure is a load-bearing structure, not a heat exchanger. This confirms the estimate.
-\item \textbf{The saturation temperature is exceeded even under uniform load.} 3\,\% of the wet wall is above \SI{344.8}{\celsius}, where the struts join the skin and less area cools locally. With the hot spot the wall reaches \SI{399}{\celsius}.
+\item \textbf{The saturation temperature is exceeded even under uniform load.} 3\,\% of the wet wall is above \SI{347.4}{\celsius}, where the struts join the skin and less area cools locally. With the hot spot the wall reaches \SI{399}{\celsius}.
 \item \textbf{Tungsten spreads the hot spot sideways}: \SI{53}{K} less at the hottest point. Because the extra \SI{3}{mm} of tungsten must also conduct the heat, the plasma side is \SI{12}{K} warmer on average.
 \item \textbf{Faster water} lowers the wall temperature most for the same material, but barely helps the spot.
 \item \textbf{Copper alloy is the only case that carries heat into the depth.} Only 62\,\% leaves within the first \SI{5}{mm}; the rest leaves further back through the struts. The plasma side stays below \SI{351}{\celsius} and the wet wall below saturation. The fins now work because $1/m=\sqrt{k t/(2h)}$ grows to \SI{6}{mm} with $k=320$.
@@ -819,6 +821,123 @@ Limits of the calculation:
 \end{itemize}
 Script: \texttt{stellarator/gradient\_waerme.py}.
 
+\subsection{Divertor preheater: which design yields the most electricity?}\label{sec:preheater}
+The divertor heat arrives at low temperature. In EU-DEMO the target coolant enters at \SI{130}{\celsius} and
+\SI{5}{MPa} and heats up by \SI{6}{K}. The authors plan to use this heat for preheating \cite{you2022}. In this
+design it amounts to \SI{305}{MW} (see heat balance).
+
+\paragraph{Question and hypothesis.} Which preheater design extracts the most net electricity from these
+\SI{305}{MW}? The candidates are a tube bundle, a plate exchanger, gyroid (uniform and graded) and diamond.
+\[
+P_\text{net} = \Delta P_\text{turbine} - P_\text{pump, divertor side} - P_\text{pump, condensate side}.
+\]
+Hypothesis H1: at equal pumping effort, a TPMS structure reaches a smaller approach temperature and therefore
+more net electricity.
+
+\paragraph{1. Plant side.} The divertor water preheats condensate, which saves bleed steam. The saved steam still
+does work on its way to the condenser. For heating by $\mathrm{d}T$:
+\[
+\mathrm{d}W = \dot m_k\,c_p\,\mathrm{d}T\;\frac{h_A - h_\text{exh}}{h_A - h'_A},\qquad
+p_A = p_s(T + \Delta T_\text{TTD}).
+\]
+Here $h_A$ is the bleed steam enthalpy, $h'_A$ the enthalpy of saturated condensate at bleed pressure and
+$h_\text{exh}$ the enthalpy at the turbine exhaust. $\Delta T_\text{TTD}$ is the terminal temperature difference
+of the heater. All states come from CoolProp \cite{coolprop}.
+
+The expansion line starts with saturated steam at \SI{78}{bar}, as in the EPR \cite{epr_de}; English Wikipedia
+gives \SI{77.2}{bar} at the turbine inlet \cite{epr_en}. It ends at a condenser at \SI{24.7}{mbar}
+(\SI{20.9}{\celsius}). The condensate flow is the EPR steam flow (\SI{2443}{kg/s}) scaled to our \SI{3419}{MW}
+thermal, i.e.\ \SI{1820}{kg/s}. The condensate then heats up by $Q/(\dot m_k c_p) = \SI{39.8}{K}$. It can reach
+at most \SI{136}{\celsius}.
+
+Without approach temperature and without pumping this gives an \textbf{upper limit of \SI{73.3}{MW}}, i.e.\ 24\,\%
+of the divertor heat.
+
+\paragraph{2. Heat exchanger side.} Counterflow with $UA = Q/\Delta T_\text{lm}$. The approach at the hot end is
+$\Delta T_1 = \SI{136}{\celsius} - T_{k,\text{out}}$. At the cold end
+$\Delta T_2 = \SI{130}{\celsius} - T_{k,\text{in}} = \Delta T_1 + \SI{33.8}{K}$. The divertor water acts almost like a
+source at fixed temperature. $\Delta T_\text{lm}$ therefore stays large even for a small $\Delta T_1$, e.g.\
+\SI{7}{K} at $\Delta T_1 = \SI{0.3}{K}$.
+
+Both sides share the wall area $A$. With $d_h = 4V_f/A$ the fluid volume per side is $V_f = A\,d_h/4$. For equal
+path length this gives
+\[
+\frac{\mathit{Re}_\text{hot}}{\mathit{Re}_\text{cold}} = \frac{\dot m_\text{hot}\,\mu_\text{cold}}{\dot m_\text{cold}\,\mu_\text{hot}} \approx 7,
+\]
+independent of geometry. The reason is the unequal mass flows: \SI{12000}{kg/s} of divertor water against
+\SI{1820}{kg/s} of condensate. A symmetric TPMS structure therefore cannot keep both sides inside the valid range
+of the correlation ($2961 < \mathit{Re} < 18254$). Several passes on the condensate side ($n$) solve this, because
+the condensate path becomes $n$ times longer:
+\[
+A_{f,\text{hot}} = n\,A_{f,\text{cold}}\,\frac{d_{h,\text{hot}}}{d_{h,\text{cold}}},\qquad
+\Delta p = 4f\,\frac{L}{d_h}\,\frac{\rho v^2}{2},\qquad P_\text{pump} = \frac{\Delta p\,\dot V}{\eta_P}.
+\]
+Core volume: $V = A\,(d_{h,\text{hot}} + d_{h,\text{cold}})/4 + A\,t$, without headers and manifolds.
+
+For each design the scan covers 40 approaches (\SIrange{0.3}{25}{K}), 12 hydraulic diameters, 13 ratios of the two
+diameters, 24 velocities and $n = 1$ to $8$. For each volume the best valid design counts (Pareto front).
+
+\begin{table}[H]\centering\small
+\begin{tabular}{p{3.2cm}p{6.4cm}p{3.6cm}}\toprule
+Design & Heat transfer and friction (Fanning) & Band\\\midrule
+Diamond & $\mathit{Nu} = 0.2644\,\mathit{Re}^{0.69}\mathit{Pr}^{1/3}$, $f = 1.850\,\mathit{Re}^{-0.17}$, CFD \cite{renon2024} &
+  Li 2020, Li 2022 \cite{alsafadi2026}\\
+Gyroid uniform & as diamond, $f \times 1.145$ (12.3--16.7\,\% more friction \cite{renon2024}) & Li 2020, Li 2022\\
+Gyroid graded & $j/f^{1/3}$ 28\,\% better (measured \cite{oh2025}), here $\mathit{Nu}\times 1.28$ & as above\\
+Plate (stopgap) & as uniform gyroid; measured gyroid is ``slightly lower'' \cite{oh2025} & up to +10\,\%\\
+Tube bundle & Gnielinski and Petukhov, shell side as tube side (weakest assumption) & --\\\bottomrule
+\end{tabular}\caption{Correlations; verbatim quotes in \texttt{docs/recherche/vorwaermer/}.}\end{table}
+Hydraulic diameters: tube \SIrange{10}{25}{mm}, plate \SIrange{3}{10}{mm}, TPMS \SIrange{2}{15}{mm}.
+Assumptions: wall \SI{0.5}{mm} stainless steel (printed as in \cite{oh2025}), terminal temperature difference
+\SI{3}{K}, isentropic turbine efficiency 0.85 (HP) and 0.88 (LP), reheat at \SI{11}{bar} to \SI{270}{\celsius},
+pumps 0.8, condensate pressure \SI{2}{MPa}.
+
+\bild{vorwaermer_netto.png}{1.0}{Net extra power versus core volume (labels in German). The line is the central
+correlation, the band the literature spread. Dashed: plate (stopgap).}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrr}\toprule
+Design & Volume for 95\,\% & Volume for 99\,\% & Net up to \SI{50}{m^3}\\\midrule
+Tube bundle & \SI{11}{m^3} & \SI{30}{m^3} & \SI{72.9}{MW}\\
+Plate (stopgap) & \SIrange{2.8}{3.0}{m^3} & \SIrange{6.7}{7.3}{m^3} & \SI{73.1}{MW}\\
+Gyroid uniform & \SIrange{1.8}{2.1}{m^3} & \SIrange{4.5}{5.0}{m^3} & \SI{73.1}{MW}\\
+Gyroid graded & \SIrange{1.6}{1.8}{m^3} & \SIrange{3.8}{4.2}{m^3} & \SI{73.1}{MW}\\
+Diamond & \SIrange{1.7}{2.1}{m^3} & \SIrange{4.4}{4.9}{m^3} & \SI{73.1}{MW}\\\bottomrule
+\end{tabular}\caption{Core volume for 95 and 99\,\% of the upper limit. The range comes from the correlations.}\end{table}
+
+\paragraph{3. Findings.}
+\begin{itemize}
+\item \textbf{Efficiency does not decide the design.} From about \SI{30}{m^3} on, every design reaches
+  \SIrange{72.9}{73.1}{MW}. Pumping power is then \SIrange{0.01}{0.14}{MW}. H1 holds only at small volume. Given
+  enough size, all designs exhaust the upper limit.
+\item \textbf{The designs differ in volume.} For 99\,\% a TPMS exchanger needs \SIrange{4}{5}{m^3}, a plate about
+  \SI{7}{m^3} and a tube bundle about \SI{30}{m^3}. The graded gyroid is smallest, diamond close behind. The choice
+  must therefore be made on volume, cost, manufacturing, fouling and strength, not on efficiency.
+\item \textbf{Correction of the heat balance.} The balance above counted the divertor heat at the full efficiency
+  of 0.35, i.e.\ \SI{107}{MW} of electricity. As preheating it yields at most \SI{73}{MW}. For \SI{1}{GW} net the
+  required fusion power thus rises by about 3\,\%, from \SI{3053}{MW} to roughly \SI{3140}{MW}.
+\item \textbf{Mass flows.} Divertor water and condensate flow at a ratio of 7:1. A symmetric exchanger therefore
+  needs several passes on the condensate side. The best designs use $n = 8$ and sit at the lower limit
+  $\mathit{Re} \approx 3000$. Slower flow would be even better, but verified correlations for it are missing.
+\item \textbf{Bigger levers than the design.} A condenser at \SI{50}{mbar} (river cooling) lowers the upper limit to
+  \SI{63.5}{MW}. A condensate flow of 75\,\% lowers it to \SI{68.7}{MW}. In EU-DEMO the cassette body also removes
+  heat at \SIrange{180}{210}{\celsius} (\SI{4.2}{MW} per cassette) \cite{you2022}. Heat at higher temperature is
+  worth more. That is the next calculation step.
+\end{itemize}
+Limits of the calculation:
+\begin{itemize}
+\item The correlations scatter widely, and the plate curve is not a model of its own.
+\item The expansion line is simplified: one efficiency per section, bleeds without feedback on the steam flow.
+\item Headers, manifolds and flow distribution are missing. The best TPMS designs are only about \SI{1.3}{m} long
+  and need a large frontal area for that.
+\item Whether a \SI{0.5}{mm} printed wall holds \SI{5}{MPa} against \SI{2}{MPa} has not been checked. That is a
+  question for strength experts.
+\end{itemize}
+Script: \texttt{stellarator/vorwaermer.py}, results in \texttt{stellarator/daten/vorwaermer.json}.
+
+\input{tauscher_cfd_en.tex}
+\input{surrogat_en.tex}
+
 \subsection{Collaboration}
 From the user came: the thinner wall with a larger outlet (f12), pairwise comparison as a tool for decisions and
 optimisation loops together with the judgements, the point that the walls of the pressure space must withstand
@@ -828,6 +947,10 @@ assistant did the calculations, built the tools, checked the research and named 
 \section*{Code and data}
 Software: ElmerFEM, gmsh, FreeCAD, simsopt, DESC, PyVista, ParaView, Blender, FluidX3D 3.8 \cite{fluidx3d}, PicoGK \cite{picogk}.
 \url{https://github.com/ThomasSchmiegelt/stellarator-design} (MIT licence): pipeline code, findings log, figures.
+
+Citations: only numbers, formulas and short verbatim quotes with source are taken over (German copyright act, §§ 51, 63
+UrhG); no figures from other works are reproduced. Source licences are listed in the evidence files under
+\texttt{docs/recherche/}.
 
 \begin{thebibliography}{99}\small
 \bibitem{bosch2013} H.-S. Bosch, R.\,C. Wolf, T. Andreeva et al.: Technical challenges in the construction of
@@ -889,5 +1012,29 @@ Software: ElmerFEM, gmsh, FreeCAD, simsopt, DESC, PyVista, ParaView, Blender, Fl
   Lithium Breeding Blanket. \emph{Energies} 16 (2023) 2069. doi:10.3390/en16042069
 \bibitem{bejan1997} A. Bejan: Constructal-theory network of conducting paths for cooling a heat generating volume.
   \emph{Int. J. Heat Mass Transfer} 40 (1997) 799--816. doi:10.1016/0017-9310(96)00175-5
+\bibitem{you2022} J.\,H. You, G. Mazzone, E. Visca et al.: Divertor of the European DEMO: Engineering and technologies
+  for power exhaust. \emph{Fusion Eng.\ Des.} 175 (2022) 113010. doi:10.1016/j.fusengdes.2022.113010;
+  open copy: doi:10.5445/IR/1000142224
+\bibitem{renon2024} C. Renon, X. Jeanningros: A numerical investigation of heat transfer and pressure drop correlations in
+  Gyroid and Diamond TPMS-based heat exchanger channels. \emph{Int.\ J.\ Heat Mass Transfer} (2024) 126599.
+  doi:10.1016/j.ijheatmasstransfer.2024.126599; manuscript: HAL cea-04896410
+\bibitem{alsafadi2026} M. Al-Safadi, F. Ejaz, S.\,Z. Shuja, S.\,M. Zubair: Quantitative synthesis and correlations of heat
+  transfer and friction factor in triply periodic minimal surface (TPMS) structures. \emph{Results Eng.} 29 (2026)
+  109402. doi:10.1016/j.rineng.2026.109402
+\bibitem{oh2025} S.-H. Oh, J.\,E. Kim, C.\,H. Jang, J. Kim, C.\,Y. Park, K. Park: Multifunctional gradations of TPMS
+  architected heat exchanger for enhancements in flow and heat exchange performances. \emph{Sci.\ Rep.} 15 (2025)
+  19931. doi:10.1038/s41598-025-04940-2
+\bibitem{coolprop} I.\,H. Bell, J. Wronski, S. Quoilin, V. Lemort: Pure and pseudo-pure fluid thermophysical property
+  evaluation and the open-source thermophysical property library CoolProp. \emph{Ind.\ Eng.\ Chem.\ Res.} 53 (2014)
+  2498--2508. doi:10.1021/ie4033999
+\bibitem{epr_de} Wikipedia: EPR (Kernkraftwerk). \url{https://de.wikipedia.org/wiki/EPR_(Kernkraftwerk)}, accessed 2026-10-31.
+\bibitem{epr_en} Wikipedia: EPR (nuclear reactor). \url{https://en.wikipedia.org/wiki/EPR_(nuclear_reactor)}, accessed 2026-10-31.
+\bibitem{patankar1977} S.\,V. Patankar, C.\,H. Liu, E.\,M. Sparrow: Fully developed flow and heat transfer in ducts having streamwise-periodic variations of cross-sectional area. J. Heat Transfer 99(2) (1977) 180--186. \url{https://doi.org/10.1115/1.3450666}
+\bibitem{ginzburg2005} I. Ginzburg: Equilibrium-type and link-type lattice Boltzmann models for generic advection and anisotropic-dispersion equation. Adv. Water Resour. 28(11) (2005) 1171--1195. \url{https://doi.org/10.1016/j.advwatres.2005.03.004}
+\input{bauteile_bib.tex}
+\bibitem{kennedy2000} M.\,C. Kennedy, A. O'Hagan: Predicting the output from a complex computer code when fast
+  approximations are available. Biometrika 87 (2000) 1--13. doi:10.1093/biomet/87.1.1
+\bibitem{mckay1979} M.\,D. McKay, R.\,J. Beckman, W.\,J. Conover: A comparison of three methods for selecting values
+  of input variables in the analysis of output from a computer code. Technometrics 21 (1979) 239--245. doi:10.2307/1268522
 \end{thebibliography}
 \end{document}

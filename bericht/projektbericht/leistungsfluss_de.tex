@@ -1,0 +1,26 @@
+\subsection{Vom Plasma ins Netz: Leistungsfluss und Einflüsse}\label{sec:leistungsfluss}
+Die Wärmebilanz oben ist als Formelkette hergeleitet. Abbildung~\ref{fig:leistungsfluss} zeigt dieselben Zahlen
+als Fluss: Die Breite jedes Bandes ist proportional zur Leistung. Unter den Knoten stehen die Stellgrößen, die den
+jeweiligen Wert festlegen. Eine interaktive Fassung, in der man jeden Knoten und jede Stellgröße anklicken kann,
+liegt als Webseite vor; das Bild wird mit \texttt{stellarator/einflussgraph.py} erzeugt.
+
+\begin{figure}[H]\centering\includegraphics[width=\linewidth]{bilder/einflussgraph.png}
+\caption{Leistungsfluss vom Fusionsplasma bis zum Netzanschluss (Grundfall der Wärmebilanz, MW).}\label{fig:leistungsfluss}
+\end{figure}
+
+\paragraph{Lesart.} Von \SI{3053}{MW} Fusionsleistung kommen \SI{1000}{MW} im Netz an, knapp ein Drittel. Den
+größten Verlust erleidet die Leistung nicht im Kraftwerksteil mit Plasma und Magneten, sondern in der Turbine: Der
+Kondensator gibt \SI{2223}{MW} als Abwärme ab. Das ist bei jedem Dampfkraftwerk so und folgt aus der
+Frischdampftemperatur. Die Kette hat drei Stellen, an denen der Entwurf den Wirkungsgrad direkt beeinflusst:
+\begin{itemize}
+\item die \textbf{Kühlmitteltemperatur} von Blanket und Wand (etwa \SI{300}{\celsius}). Sie setzt den
+  Frischdampfdruck von \SI{78}{bar} und damit $\eta=0{,}35$;
+\item die \textbf{Divertortemperatur} (\SI{136}{\celsius}). Sie macht aus \SI{305}{MW} Wärme nur Vorwärmung, die
+  höchstens \SI{73}{MW} Strom bringt (Abschnitt~\ref{sec:vorwaermer});
+\item die \textbf{Druckverluste} in Kanälen und Tauschern. Sie gehen über die Pumpen (\SI{137}{MW}) direkt vom
+  Netto ab.
+\end{itemize}
+Die Stellgrößen der Physik ($f_\alpha$, $M$) bestimmen, wie viel Fusionsleistung für \SI{1}{GW} netto nötig ist,
+nicht den Wirkungsgrad danach.
+
+\IfFileExists{bauteile_de.tex}{\input{bauteile_de.tex}}{}

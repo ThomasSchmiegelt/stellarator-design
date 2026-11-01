@@ -1,0 +1,97 @@
+\subsection{Tauschermodule gebaut und mit FluidX3D durchströmt}\label{sec:tauschercfd}
+Die Bauartwahl des Vorwärmers stützt sich bisher auf Korrelationen aus der Literatur, deren Gültigkeitsbereich
+($\Pr = 3$--5) das Divertorwasser mit $\Pr \approx 1{,}3$--1,8 nicht trifft. Deshalb wurden die Module gebaut und
+die Strömung selbst gerechnet. OpenFOAM schafft der vorhandene Rechner nicht; gerechnet wird mit dem
+Lattice-Boltzmann-Löser FluidX3D auf der Grafikkarte \cite{fluidx3d,lehmann2022fp}.
+
+\paragraph{1. Module.} PicoGK baut je einen abgestuften Zwei-Fluid-Block ($48\times48\times96$\,mm, Wand \SI{0,5}{mm},
+Hülle \SI{1,5}{mm}): Gyroid mit Zellgröße \SI{4,33}{mm} $\to$ \SI{5,8}{mm} und Diamond mit \SI{5,37}{mm} $\to$
+\SI{7,2}{mm}. Beide ergeben denselben hydraulischen Durchmesser $d_h = 2 \to 2{,}9$\,mm. Die Zellgröße wächst
+logarithmisch längs des Blocks, die Phase dazu ist $p_z = 2\pi L/(a_1 - a_0)\,\ln(a/a_0)$. Endkappen schließen die
+kalte Seite, Seitenfenster die warme. Bei \SI{0,2}{mm} Voxelgröße sind 39,7\,\% Stahl, je 30\,\% warme und kalte
+Seite. Die Platten (glatt und Chevron, $\beta = \pm 60^\circ$) entstehen parametrisch in FreeCAD.
+
+\bild{tauscher_module.jpg}{1.0}{Abgestufte Zwei-Fluid-Module, aufgeschnitten. Links Gyroid, rechts Diamond. Rot die
+warme (Divertor-), blau die kalte (Kondensat-)Seite, grau die Stahlwand.}
+
+\paragraph{2. Rechengebiet.} Ein Gebiet mit Ein- und Auslass scheitert bei $\mathrm{Re}\approx3000$: Der nötige
+Druckabfall verlangt im Lattice-Boltzmann-Verfahren mehr als 25\,\% Dichteunterschied, weit außerhalb der
+Gültigkeit. Gerechnet wird deshalb ein in allen Richtungen periodischer Ausschnitt einer Seite. Eine Volumenkraft
+$f_z$ treibt die Strömung, eine gleichmäßige Wärmequelle $q$ heizt das Fluid, die Wand hält $T_w=0$. Daraus folgen
+\[
+f = \frac{f_z\,d_h}{2\,u^2},\qquad h = \frac{q\,V_f}{A\,T_m},\qquad \mathrm{Nu} = \frac{h\,d_h}{D},\qquad
+T_m = \frac{\sum u_z T}{\sum u_z}.
+\]
+$f_z$ wird iteriert, bis Re auf 15\,\% stimmt.
+
+\paragraph{3. Änderungen an FluidX3D.} Fünf Punkte mussten geändert werden (Quellen mit Lizenzhinweis in
+\texttt{fluidx3d/}):
+\begin{itemize}
+\item Das Temperaturmodell (D3Q7) hat $c_s^2 = 1/4$. Die tatsächliche Diffusivität ist $D = \alpha/2$; ein reiner
+  Diffusionstest bestätigte das (gemessen $D/\alpha = 0{,}44$--0,53). Übergeben wird daher $\alpha = 2D$.
+\item Die Wand lag eine Zelle zu weit im Fluid, wenn die Wandtemperatur in Fluidzellen gesetzt wurde. Das ergab ein
+  etwa dreimal zu hohes Nu. Jetzt gilt an Festzellen ein Anti-Bounce-Back: $g_\text{ein} = -g_\text{aus} +
+  \tfrac14(T_w - 1)$.
+\item Bei $\mathrm{Re}=3000$ liegt die Zell-Péclet-Zahl bei etwa 185. Aus dem Smagorinsky-Modell des Lösers kommt
+  deshalb eine turbulente Diffusivität $D_t = \nu_t/0{,}85$ dazu.
+\item Der einfache BGK-Stoß der Temperatur wurde bei 96 Zellen je $d_h$ nach \num{172000} Schritten schlagartig
+  instabil (Temperatur in 500 Schritten auf $10^{20}$). Die Relaxationszeit liegt mit $\tau \approx 0{,}504$ dicht an
+  der Stabilitätsgrenze 0,5. Ersetzt wurde er durch einen TRT-Stoß nach Ginzburg \cite{ginzburg2005}: Der antisymmetrische Anteil
+  relaxiert mit der Rate, die $D$ festlegt, der symmetrische mit der „magischen“ Kombination
+  $\Lambda = (1/\omega^+ - \tfrac12)(1/\omega^- - \tfrac12) = 1/4$.
+\item Die Wärmequelle ist wahlweise gleichmäßig oder proportional zu $u_z$. Die zweite Form ist die übliche
+  Formulierung für voll ausgebildete periodische Strömung mit axial gleichmäßigem Wärmestrom (Patankar, Liu und
+  Sparrow 1977 \cite{patankar1977}). Eine gleichmäßige Quelle erhöht Nu schon im laminaren Spalt von 8,235 auf 10.
+\end{itemize}
+
+\paragraph{4. Prüfung.} Für den laminaren Plattenkanal sind die Werte exakt bekannt: $f\,\mathrm{Re}=24$, dazu
+$\mathrm{Nu}=10$ (gleichmäßige Quelle) bzw.\ 8,235 (Quelle $\propto u$). Die Rechnung liefert $f\,\mathrm{Re} = 29{,}7
+\to 25{,}7 \to 24{,}7$ bei 12, 24, 48 Zellen je Kanalhöhe. Für Nu ergeben sich $10{,}6 \to 10{,}3$ (BGK, gleichmäßig)
+und $8{,}9 \to 8{,}5$ (TRT, $\propto u$). Der Fehler fällt mit der Ordnung $p \approx 1{,}3$. Die Wahl von $\Lambda$
+(1/4 oder 3/16) änderte den Prüffall nicht.
+
+\bild{tauscher_cfd_pruefung.png}{1.0}{Links: Prüffall laminarer Plattenkanal, Abweichung vom exakten Wert. Rechts:
+Nusselt-Zahl bezogen auf Renon bei derselben Re, über der Gitterfeinheit; offene Kreise: Richardson-Schätzung.}
+
+\paragraph{5. Vergleich der Bauarten.} Alle Rechnungen mit TRT und Quelle $\propto u_z$, $\Pr = 1{,}5$. Der Antrieb
+wird nachgeregelt, bis Re auf 15\,\% stimmt; bei 96 Zellen blieben Gyroid und Diamond etwas darunter. $j/f^{1/3}$
+mit $j = \mathrm{Nu}/(\mathrm{Re}\,\Pr^{1/3})$ ist die Flächengüte: wie viel Wärmeübergang je Pumpaufwand.
+
+\begin{table}[H]\centering\small
+\begin{tabular}{llrrrrr}\toprule
+Bauart & Gitter & Re & $f$ & Nu & $j/f^{1/3}$ & Nu/Nu$_\text{Renon}$ \\\midrule
+Gyroid  & 48 & 2952 & 0,805 & 139,8 & 0,0445 & 1,86 \\
+Gyroid  & 96 & 2583 & 0,732 & 102,0 & 0,0383 & 1,49 \\
+Diamond & 48 & 2974 & 0,668 & 133,4 & 0,0448 & 1,77 \\
+Diamond & 96 & 2676 & 0,596 & 100,9 & 0,0391 & 1,44 \\
+Chevron $\pm60^\circ$ & 48 & 2908 & 1,006 & 121,5 & 0,0364 & -- \\
+Chevron $\pm60^\circ$ & 96 & 2921 & 0,863 & 103,5 & 0,0325 & -- \\\bottomrule
+\end{tabular}
+\caption{FluidX3D-Ergebnisse je Seite (periodischer Ausschnitt). Renon gilt nur für TPMS.}
+\end{table}
+
+\paragraph{Befund.}
+\begin{itemize}
+\item \textbf{Hydraulik:} $f$ liegt im Band der Korrelationen (Renon 0,48--0,56, Li 2022 0,81--0,83
+  \cite{renon2024,alsafadi2026}). Diamond hat bei gleichem $d_h$ etwa 20\,\% weniger Reibung als Gyroid; Renon gibt
+  12--17\,\%.
+\item \textbf{Wärmeübergang:} Nu liegt über den Korrelationen, aber der Abstand schrumpft mit dem Gitter: Faktor 1,8
+  bei 48 und 1,5 bei 96 Zellen. Mit der Ordnung aus dem Prüffall ergibt eine Richardson-Schätzung etwa 1,2--1,25. Das
+  war eine grobe Schätzung aus zwei Stufen. Die dritte Stufe (144 Zellen, 62,5 Mio.\ Zellen) ergab 1,36 (Gyroid) und
+  1,30 (Diamond) und zeigt, dass die Reihe noch nicht asymptotisch ist; extrapoliert liegt Nu bei Renon
+  (Abschnitt~\ref{sec:tauschersurrogat}).
+\item \textbf{Stoßmodell:} BGK hatte Nu auch ohne Absturz um etwa 25\,\% überschätzt (194 statt 154 bei 48 Zellen,
+  gleiche Quelle).
+\item \textbf{Bauarten:} Gyroid und Diamond sind bei der Flächengüte gleichauf (0,038 bzw.\ 0,039 bei 96 Zellen).
+  Chevron-Platten liegen etwa 15\,\% darunter: Sie erreichen ähnliches Nu nur mit mehr Reibung. Das stützt die
+  Rangfolge aus Abschnitt~\ref{sec:vorwaermer} (TPMS kompakter als Platten). Einen Vorteil des Gyroids gegenüber
+  Diamond zeigt die Rechnung nicht.
+\item \textbf{Grenzen:} gleichmäßig große Zellen (die Stufung wurde nicht gerechnet), nur eine Re, $\Pr = 1{,}5$,
+  Wand isotherm und ohne Wärmeleitung im Stahl, Turbulenz über ein LES-Modell bei nur mäßiger Auflösung.
+\end{itemize}
+
+\bild{tauscher_stroemung_drei.jpg}{1.0}{Teilchenbahnen in Gyroid, Diamond und Chevron-Platten (von links), Re 3000,
+48 Zellen je $d_h$. Die Wand ist im Röntgenblick dargestellt. Aus den Bahnen entstand je ein Video. Die Farbe der
+Bahnen stammt aus den Läufen mit BGK-Stoß und dient nur der Anschauung.}
+
+Aus diesen und weiteren 30 Läufen entstand das Ersatzmodell in Abschnitt~\ref{sec:tauschersurrogat}.

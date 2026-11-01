@@ -1,0 +1,57 @@
+diff --git a/src/kernel.cpp b/src/kernel.cpp
+index 98279e9..f23ba11 100644
+--- a/src/kernel.cpp
++++ b/src/kernel.cpp
+@@ -1521,6 +1521,11 @@ string opencl_c_container() { return R( // ########################## begin of O
+ 		neighbors_temperature(n, j7);
+ 		float ghn[7]; // read from gA and stream to gh (D3Q7 subset, periodic boundary conditions)
+ 		load_g(n, ghn, gi, j7, t); // perform streaming (part 2)
++		for(uint i=1u; i<7u; i++) { // geaendert: Anti-Bounce-Back an Festzellen mit TYPE_S|TYPE_T -> Wandtemperatur T[Festzelle] halbwegs zwischen den Zellen
++			const uxx js = j7[i%2u ? i+1u : i-1u]; // Herkunftszelle der Verteilung i
++			const uchar fs = flags[js];
++			if((fs&TYPE_BO)==TYPE_S && (fs&TYPE_T)) ghn[i] = 0.25f*(T[js]-1.0f)-ghn[i]; // g_ein = -g_aus + 2 w T_w (verschoben um w)
++		}
+ 		float Tn;
+ 		if(flagsn&TYPE_T) {
+ 			Tn = T[n]; // apply preset temperature
+@@ -1537,12 +1542,39 @@ string opencl_c_container() { return R( // ########################## begin of O
+ )+"#ifdef UPDATE_FIELDS"+R(
+ 			T[n] = Tn; // update temperature field
+ )+"#endif"+R( // UPDATE_FIELDS
+-			for(uint i=0u; i<7u; i++) ghn[i] = fma(1.0f-def_w_T, ghn[i], def_w_T*geq[i]); // perform collision
++			float wT = def_w_T; // geaendert: turbulente Temperaturleitfaehigkeit D_t = nu_t/Pr_t (Pr_t = 0,85) aus dem Smagorinsky-Modell
++)+"#ifdef SUBGRID"+R(
++			{
++				float feqt[def_velocity_set]; calculate_f_eq(rhon, uxn, uyn, uzn, feqt);
++				float Hxx=0.0f, Hyy=0.0f, Hzz=0.0f, Hxy=0.0f, Hxz=0.0f, Hyz=0.0f;
++				for(uint i=1u; i<def_velocity_set; i++) {
++					const float fneqi = fhn[i]-feqt[i];
++					const float cxi=c(i), cyi=c(def_velocity_set+i), czi=c(2u*def_velocity_set+i);
++					Hxx += cxi*cxi*fneqi; Hxy += cxi*cyi*fneqi; Hyy += cyi*cyi*fneqi;
++					Hxz += cxi*czi*fneqi; Hyz += cyi*czi*fneqi; Hzz += czi*czi*fneqi;
++				}
++				const float Q = sq(Hxx)+sq(Hyy)+sq(Hzz)+2.0f*(sq(Hxy)+sq(Hxz)+sq(Hyz));
++				const float tau0 = 1.0f/def_w, taue = 0.5f*(tau0+sqrt(sq(tau0)+0.76421222f*sqrt(Q)/rhon)); // wie im Stroemungsteil
++				const float Dt = (taue-tau0)/3.0f/0.85f; // nu_t/Pr_t
++				wT = 1.0f/(1.0f/def_w_T+4.0f*Dt); // D3Q7: 1/wT - 1/2 = 4 D
++			}
++)+"#endif"+R( // SUBGRID
++			{ // geaendert: TRT-Stoss (Ginzburg) statt BGK; antisymmetrisch mit wT (setzt D), symmetrisch ueber Lambda = 1/4 (stabil bei tau nahe 0,5)
++				const float wp = 1.0f/(0.5f+0.25f/(1.0f/wT-0.5f));
++				ghn[0] = fma(1.0f-wp, ghn[0], wp*geq[0]);
++				for(uint i=1u; i<7u; i+=2u) {
++					const float np = 0.5f*(ghn[i]+ghn[i+1u]-geq[i]-geq[i+1u]), nm = 0.5f*(ghn[i]-ghn[i+1u]-geq[i]+geq[i+1u]);
++					ghn[i] -= wp*np+wT*nm; ghn[i+1u] -= wp*np-wT*nm;
++				}
++			}
++			ghn[0] += def_q_u0>0.0f ? def_q_T*uzn/def_q_u0 : def_q_T; // geaendert: Waermequelle je Schritt, gleichmaessig oder proportional u_z (Patankar 1977)
+ 		}
+ 		store_g(n, ghn, gi, j7, t); // perform streaming (part 1)
++		if(def_beta!=0.0f) { // geaendert: ohne Auftrieb keine Rueckwirkung der Temperatur (sonst 0*NaN = NaN bei instabiler Temperatur)
+ 		fxn -= fx*def_beta*(Tn-def_T_avg);
+ 		fyn -= fy*def_beta*(Tn-def_T_avg);
+ 		fzn -= fz*def_beta*(Tn-def_T_avg);
++		}
+ 	}
+ )+"#endif"+R( // TEMPERATURE
+ 

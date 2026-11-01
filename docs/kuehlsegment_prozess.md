@@ -254,3 +254,95 @@ Was dabei auffiel:
 - Die Rückfrage des Nutzers („noch nicht fertig, oder?“) war berechtigt: Die Wärmebilanz hatte das Blanket nur als
   Zahl geführt. Erst die Liste nach Wärmemenge zeigte, wo das eigentliche Kühlsystem liegt.
 - Die Sorge über den 0,58-m-Spalt war zu pessimistisch; sie galt nur innen. Rechnen statt schätzen hat sich gelohnt.
+
+## 10. Divertor-Vorwärmer als Zwei-Fluid-Tauscher (2026-10-31)
+
+| Nutzer | KI |
+|---|---|
+| Gyroid lieber als Zwei-Fluid-Tauscher, Kondensator-Abwärme „verrückt“, der Reihe nach Richtung Forschung | Fahrplan: Frage, Literatur, Validierung, Bandbreiten, Review-Paket, Fachleute, Versuch; Start mit dem Divertor-Vorwärmer |
+| „Effizienz ist für mich wichtiger, danach ist der Vorwärmer auszuwählen“ | Frage und Maß: Netto = Mehrleistung der Turbine − Pumpleistung; H1: TPMS gewinnt bei gleichem Pumpaufwand |
+| Lädt gesperrte Volltexte von Hand herunter (Renon, Übersicht 2026) | 23 + 13 + 9 Belege wörtlich geprüft; PI fand zum Divertor nichts, die KIT-Kopie fand Claude |
+| „Nimm den Notbehelf“ (Platte ohne eigene Korrelation) | Platte = gleichmäßiger Gyroid mit Band bis +10 %, abgestuft +28 %, Rohr nach Gnielinski |
+| Englische Wikipedia ist bei Technik oft besser | EPR gegengeprüft: 77,2 bar am Eintritt; Kreislaufdaten stehen nur in der deutschen Fassung |
+| Rechtlich korrekt zitieren | Lizenzen aus den Volltexten geprüft (CC BY, CC BY-NC, CC BY-NC-ND, KIT ohne CC) und in die Belegdateien geschrieben; Hinweis zu §§ 51, 63 UrhG in beiden Berichten |
+| Fragt, ob der kompakteste Tauscher auch der effizienteste ist | Nur bei knappem Bauraum: Ab ~30 m³ liefern alle Bauarten dasselbe |
+
+Was dabei auffiel:
+- Das Ergebnis widerspricht der Erwartung beider Seiten: Nach Wirkungsgrad lässt sich die Bauart nicht wählen, die
+  Unterschiede liegen im Volumen. Gewählt wird also nach anderen Kriterien.
+- Die Rechnung hat eine ältere Vereinfachung aufgedeckt: Die Wärmebilanz zählte die Divertorwärme mit vollem
+  Wirkungsgrad.
+- Ein Modellfehler (gleiche Re auf beiden Seiten unmöglich) zeigte sich erst, als eine Empfindlichkeitsrechnung keine
+  gültigen Punkte mehr fand. Daraus wurde ein Befund: Das Verhältnis 7:1 der Massenströme verlangt mehrere Durchgänge.
+
+## 11. Leistungsfluss, Bauteile und Strömungsrechnung der Tauscher (2026-10-31)
+
+**Anstoß durch den Nutzer.** Drei Wünsche kamen nacheinander: die Module „mal bauen“, sie mit FluidX3D gegeneinander
+rechnen (Platten lieber in FreeCAD) und die Rechnung als Video zeigen. Dann kam eine neue Frage: ein Wissens- oder
+Einflussgraph vom Plasma bis dorthin, wo der Strom das Kraftwerk verlässt. Der Nutzer wollte ihn in der Doku sehen,
+dazu eine Erklärung jedes Bauteils („Divertor, was macht der, wozu wird der gebraucht“). Diese Arbeit schlug er vor,
+an ein kleineres Modell (Sonnet) auszulagern.
+
+**Arbeitsteilung.** Claude baute den Graphen zuerst als interaktive Webseite und dann als Bild für den Bericht. Ein
+Sonnet-Teilagent schrieb die 13 Bauteiltexte (DE, EN, Markdown) mit abgerufenen Quellen, bevorzugt englische
+Wikipedia. Claude prüfte danach jede Projektzahl der Texte gegen den Bericht. Eine Aussage ohne Beleg wurde
+gestrichen: dass Transformatorverluste „im Eigenbedarf stecken“. Der Teilagent hatte selbst offene Punkte gemeldet,
+zum Beispiel dass keine Quelle ausdrücklich sagt, der Divertor pumpe Helium ab.
+
+**Strömungsrechnung.** OpenFOAM schafft der Rechner nach Aussage des Nutzers nicht; deshalb FluidX3D. Der Weg dahin
+hatte mehrere Fehlschläge:
+- Ein- und Auslass bei Re 3000 sind im Lattice-Boltzmann-Verfahren nicht machbar (über 25 % Dichteunterschied).
+  Deshalb wurde auf ein periodisches Gebiet umgestellt.
+- Das Temperaturmodell hat eine andere Schallgeschwindigkeit. Die Diffusivität ist halb so groß wie angenommen;
+  ein Diffusionstest belegte das.
+- Die Wand lag eine Zelle zu tief, das ergab Nu dreimal zu hoch. Abhilfe brachte ein Anti-Bounce-Back an Festzellen.
+- Die Temperatur wurde bei Re 3000 instabil. Abhilfe brachte eine turbulente Diffusivität aus dem LES-Modell.
+- Ergebnis: Der laminare Prüffall stimmt. Die Hydraulik des Gyroids liegt im Literaturband, der Wärmeübergang noch
+  etwa doppelt zu hoch. Die feinste Rechnung divergierte. Das ist offen und steht so im Bericht.
+
+**Ressourcen.** Der FreeCAD-Bau der Chevron-Platten brauchte zu viel Arbeitsspeicher und endete ohne STL. Er muss
+sparsamer neu gebaut werden.
+
+**Nachtrag: Instabilität gefunden und Bauarten verglichen.** Der Nutzer gab die drei offenen Posten frei
+(„ja mach die drei posten“) und wollte danach den Bericht vervollständigt haben. Die Spur zur Ursache:
+- Die feinste Rechnung war nicht langsam weggelaufen, sondern in wenigen hundert Schritten explodiert. Das wies auf
+  den BGK-Stoß nahe τ = 0,5 hin, nicht auf einen Fehler in Geometrie oder Quelle.
+- Der TRT-Stoß lief stabil. Er senkte Nu auch auf dem groben Gitter um etwa 25 %. Der alte Wert war also schon vor dem
+  Absturz verfälscht.
+- Danach prüfte Claude, ob die Korrelation (Renon) Geschwindigkeit, d_h und Reibung gleich definiert. Das tut sie.
+  Übrig blieb ein Unterschied in der Randbedingung: Eine gleichmäßige Wärmequelle hebt Nu. Die Quelle ∝ u_z (Patankar
+  1977) hat im Plattenkanal einen exakten Prüfwert. Damit ließ sich zeigen, dass der Rest ein Gitterfehler ist.
+- Die Reihe mit sechs Läufen lief in gut 40 Minuten. Gyroid und Diamond sind gleich gut, Chevron etwa 15 % schlechter.
+  Nu liegt bei 96 Zellen noch 1,5-fach über der Korrelation, geschätzt etwa 1,2-fach bei unendlich feinem Gitter.
+
+Gelernt: Ein Prüffall mit exakter Lösung je Randbedingung ist mehr wert als ein Vergleich mit streuenden
+Korrelationen. Jeder Schritt (Wand, Diffusivität, Stoß, Quelle) wurde erst daran bestätigt.
+
+## 12. Surrogat aus 40 Strömungsrechnungen und die Frage der Stufung (2026-11-01)
+
+**Anstoß durch den Nutzer.** Er fragte: „würde eine dritte gitterstufe das surrogat besser machen“ und danach, was man
+mit dem Surrogat anfangen könne. Claude schlug ein mehrstufiges Surrogat vor: wenige feine Läufe für den Gitterfehler,
+viele grobe für die Fläche. Der Nutzer gab es mit Auflagen frei: „führe es so aus, das ich es pausieren kann.
+monitoring mach mit sonnet. schreib auch das ereignissprotokoll mit.“
+
+**Umsetzung.**
+- Eine Auftragsliste mit Runner und Steuerskript: `pause`, `sofort` (hält die GPU an), `weiter`, `stop`, `abbruch`,
+  `start`. Fertige Aufträge werden beim Neustart übersprungen.
+- Ein Sonnet-Teilagent prüfte etwa alle fünf Minuten Speicher, Platte, GPU und Divergenz. Er durfte nur pausieren.
+  Er lief zweimal je 40 Runden und musste nie eingreifen.
+
+**Überraschung.** Die dritte Gitterstufe passte nicht zur Ordnung aus dem Plattentest. Der Schritt 96→144 war größer
+als erwartet, keine positive Konvergenzordnung erklärt die drei Werte. Die Schätzung von gestern (Nu etwa 1,2-mal
+Renon) war deshalb zu hoch; extrapoliert liegt Nu bei Renon. Für die Reibung ging die Extrapolation sogar ins
+Unphysikalische. Claude hat deshalb zwei obere Stufen eingeführt: gerechnet (n144) und geschätzt (Gitter → ∞). Der
+Abstand zwischen beiden dient als Unsicherheit, statt eine Zahl vorzutäuschen.
+
+**Antwort auf die Ausgangsfrage.** Die Stufung bringt im Divertor-Vorwärmer nichts. Ein Segmentmodell mit freier Zelle
+je Segment wählt überall die kleinste Zelle. Der Literaturfaktor 1,28 für die Stufung entspricht hier ungefähr dem
+Abstand zwischen der Korrelation und dem gerechneten Surrogat. Eine erste Fassung des Vergleichs war unfair: Die
+Literaturkurve stammte aus einem anderen Modell mit anderem Zellbereich. Claude hat sie im selben Segmentmodell
+neu gerechnet.
+
+Gelernt: Eine dritte Gitterstufe lohnt sich gerade dann, wenn sie die Schätzung aus zweien widerlegt. Eine
+Optimierung, deren Bestwert am Rand des erlaubten Bereichs liegt, beantwortet vor allem die Frage nach dem Rand.
+

@@ -1,0 +1,123 @@
+\subsection{Surrogate model from the flow simulations and the question of grading}\label{sec:exchangersurrogate}
+
+\paragraph{Why a surrogate?} For every design, the preheater calculation needs Nu and $f$ on both sides. So far there
+were three ways to get them, each with a catch:
+\begin{enumerate}
+\item \textbf{Correlations from the literature} are fast but scatter widely. At Re 3000, Renon, Li 2020 and Li 2022
+  give $f$ = 0.54, 0.15 and 0.81 for the same gyroid, more than a factor of 5, and Nu = 75, 63 and 79
+  \cite{renon2024,alsafadi2026}. They also apply only to the cells and walls they were measured or computed for.
+\item \textbf{Our own flow simulations} match our geometry exactly but cost 1--70 minutes per point. The segment model
+  below evaluates about 440,000 combinations of approach, velocity, passes, cell and segment per variant. At two
+  minutes each, that would take almost two years.
+\item \textbf{Fitting our own correlation} (power law $\mathrm{Nu} = c\,\mathrm{Re}^m\Pr^n$) to the computed points
+  would be fast, but it fixes the form in advance and does not say how reliable it is between the points.
+\end{enumerate}
+A \emph{surrogate} combines the advantages. It is trained once on a few expensive runs and afterwards delivers values
+for any input in microseconds, together with a measure of how reliable they are. The concrete question here is whether
+grading the cells along the flow path pays off. The literature only gives a blanket factor for that (Nu $\times$ 1.28
+\cite{oh2025}). To check it ourselves, we need to know how Nu and $f$ depend on cell size, and that is exactly what the
+surrogate learns from our own runs.
+
+\paragraph{How a Gaussian process works.} The surrogate is a Gaussian process (kriging). It assumes no formula, only that
+similar inputs give similar results. A kernel describes this similarity:
+\[
+  k(x,x') = \sigma^2 \exp\Big(-\sum_i \frac{(x_i-x_i')^2}{2\ell_i^2}\Big) + \sigma_n^2\,\delta_{xx'}.
+\]
+The length scale $\ell_i$ says over what distance in input $i$ the result changes noticeably. A large $\ell_i$ means
+input $i$ hardly matters. $\sigma_n^2$ absorbs the noise of the runs, such as the time fluctuation of the mixed-mean
+temperature. All parameters are determined from the data (maximum marginal likelihood). At a new point the process
+returns a mean, a weighted blend of the known points, and a standard deviation. The latter is small near computed points
+and grows in gaps, so one can see where the model is guessing. The length scales are a result in their own right: they
+show which input really matters.
+
+\paragraph{Why multi-level?} Fine grids are accurate but expensive (n144: 30--70 minutes, 8\,GB of graphics memory);
+coarse grids are cheap (n48: 1--2 minutes) but systematically too high. A multi-level surrogate (co-kriging
+\cite{kennedy2000}) uses both. Many coarse runs describe the \emph{shape} of the dependence on Re, Pr and cell. A few
+fine runs determine the \emph{shift} caused by the grid. This works well if the grid error varies slowly and smoothly
+across the input space, and that is checked below.
+
+\paragraph{Design of experiments.} For each of gyroid and diamond, 14 points were chosen by Latin hypercube
+\cite{mckay1979}: Re 500--10,000 (logarithmic), Pr 1.2--2.0, cell size $a$ = 0.75--1.6 times the standard cell, wall
+fixed at 0.5\,mm. These points ran on the coarse grid (48 cells per $d_h$). Three control points ran on the medium grid
+(96), and one run per type on the fine grid (144 cells per $d_h$, 62.5 million cells). Together with the runs of
+Section~\ref{sec:exchangercfd} that makes 40 runs. The series ran unattended from a job queue that could be paused at any
+time. A second AI agent watched memory, disk and divergence. No run failed.
+
+\paragraph{Structure.} The data are referred to the correlation of Renon \cite{renon2024}, so that the Gaussian process
+only has to learn the deviation:
+\[
+  y_\mathrm{Nu} = \ln\frac{\mathrm{Nu}}{\mathrm{Nu}_\mathrm{Renon}(\mathrm{Re},\Pr)},\qquad
+  y_f = \ln\frac{f}{f_\mathrm{Renon}(\mathrm{Re})},\qquad x = (\ln\mathrm{Re},\ \Pr,\ a).
+\]
+\begin{enumerate}
+\item \textbf{Coarse level:} per type, a Gaussian process with an anisotropic RBF kernel and a noise term over the 15
+  points on 48 cells. Leave-one-out gives a mean error of 2.8\,\% (gyroid) and 0.9\,\% (diamond) for Nu. For $f$ it is
+  9.5\,\% and 1.1\,\%: the gyroid friction scatters noticeably.
+\item \textbf{Grid correction:} at each control point, $d_{96} = y_{96} - y_{48}(x)$. Over Re this is a straight line in
+  $\ln\mathrm{Re}$ (residual 0.03 in $\ln$). This is co-kriging after Kennedy and O'Hagan \cite{kennedy2000} with
+  $\rho = 1$ in the logarithmic quantity.
+\item \textbf{Finest level:} the series 48/96/144 at Re 3000 is \emph{not} in the asymptotic range. We get
+  $d_{96}/d_{144} = 0.58$, while a grid error $\propto n^{-p}$ needs more than $\ln 2/\ln 3 = 0.63$; no positive order
+  fits. There are therefore two upper levels. \emph{n144} is computed: $d_{96}(x)$ is scaled by
+  $d_{144}/d_{96} \approx 1.7$. \emph{Grid $\to\infty$} is estimated, with Richardson over the last step only and the
+  order from the plate test: $d_\infty = d_{144} + (d_{144}-d_{96})/(1.5^{1.33}-1)$. Half the distance between the two
+  levels serves as the uncertainty.
+\end{enumerate}
+
+\begin{table}[ht]\centering\small
+\begin{tabular}{llcccc}\toprule
+& & \multicolumn{2}{c}{$\mathrm{Nu}/\mathrm{Nu}_\mathrm{Renon}$} & \multicolumn{2}{c}{$f/f_\mathrm{Renon}$} \\
+Type & Re & n144 & grid $\to\infty$ & n144 & grid $\to\infty$ \\\midrule
+Gyroid & 1000 & 1.20 & $1.03\pm11\,\%$ & $0.94\pm15\,\%$ & (uncertain) \\
+Gyroid & 3000 & 1.29 & $1.03\pm14\,\%$ & $1.06\pm15\,\%$ & (uncertain) \\
+Gyroid & 8000 & 1.49 & $1.14\pm16\,\%$ & $1.35\pm15\,\%$ & (uncertain) \\
+Diamond & 1000 & 1.14 & $0.97\pm12\,\%$ & $0.98\pm6\,\%$ & (uncertain) \\
+Diamond & 3000 & 1.23 & $1.00\pm14\,\%$ & $1.01\pm6\,\%$ & (uncertain) \\
+Diamond & 8000 & 1.40 & $1.08\pm16\,\%$ & $1.06\pm6\,\%$ & (uncertain) \\\bottomrule
+\end{tabular}
+\caption{Surrogate at Pr 1.5 and standard cell. The extrapolated friction cannot be used: it would drop below Renon,
+because $f$ does not converge monotonically between the grids.}
+\end{table}
+
+\bild{tauscher_surrogat_en.png}{1.0}{Surrogate for gyroid (blue) and diamond (orange). Left, Nu: dotted the coarse level,
+dashed n144, solid with band grid $\to\infty$, grey dashed Renon. Centre, $f$ (n144 with band). Right, the
+cross-check of the coarse level.}
+
+\paragraph{What the surrogate says.}
+\begin{itemize}
+\item Extrapolated to an infinitely fine grid, Nu lands on the Renon correlation (0.97--1.14). The excess of 1.5 at 96
+  cells was therefore grid error, not physics. The estimate of 1.2 from only two levels was too high.
+\item At equal $d_h$, Nu and $f$ hardly depend on the cell size: for the gyroid, the kernel length scale for $a$ sits at
+  its upper bound. A smaller cell gives a smaller $d_h$ but hardly changes the dimensionless numbers.
+\item Gyroid and diamond are level for heat transfer. For pressure drop, the gyroid is higher at high Re.
+\end{itemize}
+
+\paragraph{Application: does grading pay off?} The preheater of Section~\ref{sec:preheater} was set up again as a
+segment model (\texttt{stellarator/vorwaermer\_stufung.py}):
+\begin{itemize}
+\item Counterflow, two-fluid TPMS; both channel networks share the cell, so $d_h$ is the same on both sides.
+\item 8 segments of equal heat duty, each with local temperatures, properties, Pr and LMTD.
+\item Nu and $f$ from the surrogate (level n144; Nu additionally at grid $\to\infty$ as a band).
+\item \emph{Uniform:} one cell for all segments. \emph{Graded:} each segment chooses its own cell so that
+  $P_i + \lambda V_i$ is minimal, with $\lambda$ sampled.
+\item Also free: approach, condensate velocity, and number of passes on the warm side.
+\end{itemize}
+
+\bild{vorwaermer_stufung_en.png}{0.85}{Net extra power over exchanger volume. Graded (dashed) and uniform coincide. For
+comparison, Renon and Renon with Nu $\times$ 1.28 (grading after Oh et al.) in the same model.}
+
+\paragraph{Result.}
+\begin{itemize}
+\item \textbf{Grading brings nothing.} In every segment the smallest allowed cell wins ($a = 0.75\,a_\mathrm{std}$,
+  $d_h = 1.33$\,mm). The graded design is therefore identical to the uniform one. The reason is that pumping power is
+  small here (below 1\,MW). Power is lost mainly through the approach at the warm end, and the cheapest way to reduce
+  that is more area per volume, i.e.\ fine cells everywhere.
+\item \textbf{Volume:} the preheater reaches 95\,\% of the 73.3\,MW upper limit with 1.3\,m$^3$ (n144) to 1.5\,m$^3$
+  (grid $\to\infty$). At 1\,m$^3$, CFD and Renon give 66.0--67.6\,MW, a small difference.
+\item The literature factor for grading (Nu $\times$ 1.28 \cite{oh2025}) here matches almost exactly the gap between
+  Renon and the n144 surrogate. The improvement reported by Oh et al.\ cannot be reproduced at the cell level. It must
+  come from effects this model does not contain, such as the distribution in the headers.
+\item \textbf{Limits:} the best cell lies at the edge of the surrogate range; finer cells have not been computed. Whether
+  the 0.5\,mm wall carries the 3\,MPa pressure difference has not been checked. Manufacturing such fine cells is an open
+  question. Grading may pay off where pumping power matters, for example on the steam side of the condenser.
+\end{itemize}

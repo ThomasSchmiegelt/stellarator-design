@@ -1,0 +1,127 @@
+\subsection{Ersatzmodell (Surrogat) aus den Strömungsrechnungen und die Frage der Stufung}\label{sec:tauschersurrogat}
+
+\paragraph{Warum ein Surrogat?} Die Auslegung des Vorwärmers braucht für jeden Entwurf Nu und $f$ auf beiden
+Seiten. Dafür gab es bisher drei Wege, und alle haben einen Haken:
+\begin{enumerate}
+\item \textbf{Korrelationen aus der Literatur} sind schnell, streuen aber stark. Bei Re 3000 liefern Renon, Li 2020
+  und Li 2022 für denselben Gyroid $f$ = 0,54, 0,15 und 0,81, also mehr als den Faktor 5, und Nu = 75, 63 und 79
+  \cite{renon2024,alsafadi2026}. Sie gelten außerdem nur für die Zellen und Wände, mit denen sie gemessen oder
+  gerechnet wurden.
+\item \textbf{Eigene Strömungsrechnungen} passen genau zur eigenen Geometrie, kosten aber 1--70 Minuten je Punkt.
+  Das Segmentmodell weiter unten wertet je Variante etwa 440\,000 Kombinationen aus Annäherung, Geschwindigkeit,
+  Durchgängen, Zelle und Segment aus. Mit je zwei Minuten Rechenzeit wären das fast zwei Jahre.
+\item \textbf{Eine eigene Korrelation} (Potenzgesetz $\mathrm{Nu} = c\,\mathrm{Re}^m\Pr^n$) an die Rechenpunkte
+  anzupassen wäre schnell, legt die Form aber vorher fest und sagt nicht, wie sicher sie zwischen den Punkten ist.
+\end{enumerate}
+Ein \emph{Surrogat} (Ersatzmodell) verbindet die Vorteile. Es wird einmal an wenigen teuren Rechnungen angelernt und
+liefert danach in Mikrosekunden Werte für beliebige Eingänge, samt einer Angabe, wie verlässlich diese sind. Hier
+geht es um eine konkrete Frage: Lohnt sich eine Stufung der Zellen längs des Wegs? Die Literatur gibt dafür nur einen
+pauschalen Faktor (Nu $\times$ 1,28 \cite{oh2025}). Um das selbst zu prüfen, muss man wissen, wie Nu und $f$ von der
+Zellgröße abhängen, und genau das lernt das Surrogat aus den eigenen Rechnungen.
+
+\paragraph{Wie ein Gauß-Prozess funktioniert.} Als Surrogat dient ein Gauß-Prozess (Kriging). Er nimmt nicht eine
+Formel an, sondern nur, dass ähnliche Eingänge ähnliche Ergebnisse geben. Diese Ähnlichkeit beschreibt ein Kern
+\[
+  k(x,x') = \sigma^2 \exp\Big(-\sum_i \frac{(x_i-x_i')^2}{2\ell_i^2}\Big) + \sigma_n^2\,\delta_{xx'}.
+\]
+Die Längenskala $\ell_i$ sagt, über welche Entfernung in Eingang $i$ sich das Ergebnis merklich ändert. Ein großes
+$\ell_i$ heißt, Eingang $i$ ist fast bedeutungslos. $\sigma_n^2$ fängt das Rauschen der Rechnungen auf, etwa die
+zeitliche Schwankung der Mischtemperatur. Alle Größen werden aus den Daten bestimmt (größte Randwahrscheinlichkeit).
+An einem neuen Punkt liefert der Prozess einen Mittelwert, eine gewichtete Mischung der bekannten Punkte, und eine
+Standardabweichung. Diese ist nahe an Rechenpunkten klein und wächst in Lücken. Damit sieht man, wo das Modell rät.
+Die Längenskalen sind selbst ein Ergebnis: Sie zeigen, welcher Eingang wirklich zählt.
+
+\paragraph{Warum mehrstufig?} Feine Gitter sind genau, aber teuer (n144: 30--70 Minuten, 8\,GB Grafikspeicher); grobe
+Gitter sind billig (n48: 1--2 Minuten), aber systematisch zu hoch. Ein mehrstufiges Surrogat (Co-Kriging
+\cite{kennedy2000}) nutzt beides. Viele grobe Rechnungen beschreiben die \emph{Form} der Abhängigkeit von Re, Pr und
+Zelle. Wenige feine Rechnungen bestimmen die \emph{Verschiebung} durch das Gitter. Das geht gut, wenn der Gitterfehler
+sich langsam und glatt über den Eingangsraum ändert, und das wird unten geprüft.
+
+\paragraph{Versuchsplan.} Für Gyroid und Diamond wurden je 14 Punkte per Latin Hypercube \cite{mckay1979} gewählt:
+Re 500--10\,000 (logarithmisch), Pr 1,2--2,0, Zelle $a$ = 0,75--1,6 Standardzelle, Wand fest 0,5\,mm. Diese Punkte
+liefen auf dem groben Gitter (48 Zellen je $d_h$). Dazu kamen drei Kontrollpunkte auf dem mittleren Gitter (96) und je
+ein Lauf auf dem feinen Gitter (144 Zellen je $d_h$, 62,5 Mio.\ Zellen). Mit den Läufen aus
+Abschnitt~\ref{sec:tauschercfd} sind es 40 Läufe. Die Reihe lief unbeaufsichtigt über eine Auftragsliste, die
+jederzeit angehalten werden konnte. Ein zweiter KI-Agent prüfte Speicher, Platte und Divergenz. Es gab keinen
+Fehlschlag.
+
+\paragraph{Aufbau.} Damit der Gauß-Prozess nur die Abweichung lernen muss, wird auf die Korrelation von Renon
+\cite{renon2024} bezogen:
+\[
+  y_\mathrm{Nu} = \ln\frac{\mathrm{Nu}}{\mathrm{Nu}_\mathrm{Renon}(\mathrm{Re},\Pr)},\qquad
+  y_f = \ln\frac{f}{f_\mathrm{Renon}(\mathrm{Re})},\qquad x = (\ln\mathrm{Re},\ \Pr,\ a).
+\]
+\begin{enumerate}
+\item \textbf{Grobe Stufe:} je Bauart ein Gauß-Prozess mit anisotropem RBF-Kern und Rauschterm über die 15 Punkte auf
+  48 Zellen. Die Kreuzprüfung (jeweils ein Punkt weggelassen) ergibt für Nu 2,8\,\% (Gyroid) bzw.\ 0,9\,\% (Diamond)
+  mittleren Fehler. Für $f$ sind es 9,5\,\% bzw.\ 1,1\,\%; die Gyroid-Reibung streut also deutlich.
+\item \textbf{Gitterkorrektur:} An jedem Kontrollpunkt ist $d_{96} = y_{96} - y_{48}(x)$. Über Re verläuft das als
+  Gerade in $\ln\mathrm{Re}$ (Rest 0,03 in $\ln$). Das entspricht einem Co-Kriging nach Kennedy und O'Hagan
+  \cite{kennedy2000} mit $\rho = 1$ in der logarithmischen Größe.
+\item \textbf{Feinste Stufe:} Die Reihe 48/96/144 bei Re 3000 ist \emph{nicht} im asymptotischen Bereich. Es gilt
+  $d_{96}/d_{144} = 0{,}58$, ein Gitterfehler $\propto n^{-p}$ verlangt aber mehr als $\ln 2/\ln 3 = 0{,}63$; keine
+  positive Ordnung passt. Darum gibt es zwei obere Stufen. \emph{n144} ist gerechnet: $d_{96}(x)$ wird mit
+  $d_{144}/d_{96} \approx 1{,}7$ skaliert. \emph{Gitter $\to\infty$} ist geschätzt, mit Richardson nur über den letzten
+  Schritt und der Ordnung aus dem Plattentest:
+  $d_\infty = d_{144} + (d_{144}-d_{96})/(1{,}5^{1{,}33}-1)$. Als Unsicherheit dient der halbe Abstand zwischen beiden
+  Stufen.
+\end{enumerate}
+
+\begin{table}[ht]\centering\small
+\begin{tabular}{llcccc}\toprule
+& & \multicolumn{2}{c}{$\mathrm{Nu}/\mathrm{Nu}_\mathrm{Renon}$} & \multicolumn{2}{c}{$f/f_\mathrm{Renon}$} \\
+Bauart & Re & n144 & Gitter $\to\infty$ & n144 & Gitter $\to\infty$ \\\midrule
+Gyroid & 1000 & 1,20 & $1{,}03\pm11\,\%$ & $0{,}94\pm15\,\%$ & (unsicher) \\
+Gyroid & 3000 & 1,29 & $1{,}03\pm14\,\%$ & $1{,}06\pm15\,\%$ & (unsicher) \\
+Gyroid & 8000 & 1,49 & $1{,}14\pm16\,\%$ & $1{,}35\pm15\,\%$ & (unsicher) \\
+Diamond & 1000 & 1,14 & $0{,}97\pm12\,\%$ & $0{,}98\pm6\,\%$ & (unsicher) \\
+Diamond & 3000 & 1,23 & $1{,}00\pm14\,\%$ & $1{,}01\pm6\,\%$ & (unsicher) \\
+Diamond & 8000 & 1,40 & $1{,}08\pm16\,\%$ & $1{,}06\pm6\,\%$ & (unsicher) \\\bottomrule
+\end{tabular}
+\caption{Surrogat bei Pr 1,5 und Standardzelle. Die extrapolierte Reibung ist nicht verwertbar: Sie fiele unter Renon,
+weil $f$ zwischen den Gittern nicht monoton konvergiert.}
+\end{table}
+
+\bild{tauscher_surrogat.png}{1.0}{Surrogat für Gyroid (blau) und Diamond (orange). Links Nu: punktiert grobe Stufe,
+gestrichelt n144, durchgezogen mit Band Gitter $\to\infty$, grau gestrichelt Renon. Mitte $f$ (n144 mit Band).
+Rechts die Kreuzprüfung der groben Stufe.}
+
+\paragraph{Was das Surrogat sagt.}
+\begin{itemize}
+\item Auf das unendlich feine Gitter extrapoliert, landet Nu bei der Korrelation von Renon (0,97--1,14). Der
+  Überschuss von 1,5 bei 96 Zellen war also Gitterfehler, nicht Physik. Die Schätzung von 1,2 aus nur zwei Stufen war
+  zu hoch.
+\item Bei gleichem $d_h$ hängen Nu und $f$ kaum von der Zellgröße ab: Die Längenskala des Kerns für $a$ liegt beim
+  Gyroid am oberen Rand. Wer die Zelle verkleinert, verkleinert $d_h$, ändert die Kennzahlen aber kaum.
+\item Gyroid und Diamond sind beim Wärmeübergang gleichauf. Beim Druckverlust liegt der Gyroid bei hoher Re höher.
+\end{itemize}
+
+\paragraph{Anwendung: lohnt sich die Stufung?} Dazu wurde der Vorwärmer aus Abschnitt~\ref{sec:vorwaermer}
+als Segmentmodell neu aufgesetzt (\texttt{stellarator/vorwaermer\_stufung.py}):
+\begin{itemize}
+\item Gegenstrom, Zwei-Fluid-TPMS, beide Kanalnetze teilen die Zelle (gleiches $d_h$ beiderseits).
+\item 8 Segmente gleicher Wärmeleistung, je Segment lokale Temperaturen, Stoffwerte, Pr und LMTD.
+\item Nu und $f$ aus dem Surrogat (Stufe n144; Nu zusätzlich Gitter $\to\infty$ als Band).
+\item \emph{Gleichmäßig:} eine Zelle für alle Segmente. \emph{Abgestuft:} jedes Segment wählt seine Zelle selbst, und
+  zwar so, dass $P_i + \lambda V_i$ minimal ist, mit $\lambda$ abgetastet.
+\item Frei sind außerdem Annäherung, Kondensatgeschwindigkeit und Zahl der Durchgänge der warmen Seite.
+\end{itemize}
+
+\bild{vorwaermer_stufung.png}{0.85}{Netto-Mehrleistung über dem Bauvolumen. Abgestuft (gestrichelt) und gleichmäßig
+fallen zusammen. Zum Vergleich Renon und Renon mit Nu $\times$ 1,28 (Stufung nach Oh et al.) im selben Modell.}
+
+\paragraph{Ergebnis.}
+\begin{itemize}
+\item \textbf{Die Stufung bringt nichts.} In jedem Segment gewinnt die kleinste zulässige Zelle ($a = 0{,}75\,a_\mathrm{std}$,
+  $d_h = 1{,}33$\,mm). Damit ist der abgestufte Entwurf identisch mit dem gleichmäßigen. Der Grund: Die Pumpleistung
+  ist hier klein (unter 1\,MW). Verloren geht die Leistung vor allem über die Annäherung am warmen Ende, und die
+  verringert man am billigsten mit mehr Fläche je Volumen, also mit feinen Zellen überall.
+\item \textbf{Bauvolumen:} 95\,\% der Obergrenze von 73,3\,MW erreicht der Vorwärmer mit 1,3\,m$^3$ (n144) bis
+  1,5\,m$^3$ (Gitter $\to\infty$). Bei 1\,m$^3$ liefern CFD und Renon 66,0--67,6\,MW, der Unterschied ist klein.
+\item Der Literaturfaktor für die Stufung (Nu $\times$ 1,28 \cite{oh2025}) entspricht hier fast genau dem Abstand
+  zwischen Renon und dem n144-Surrogat. Die von Oh et al.\ berichtete Verbesserung lässt sich auf Zellebene nicht
+  nachbilden. Sie muss aus Effekten stammen, die dieses Modell nicht enthält, etwa der Verteilung in den Sammlern.
+\item \textbf{Grenzen:} Die beste Zelle liegt am Rand des Surrogatbereichs; noch feinere Zellen sind ungerechnet. Ob
+  die Wand von 0,5\,mm die Druckdifferenz von 3\,MPa trägt, ist nicht geprüft. Die Fertigung so feiner Zellen ist offen.
+  Eine Stufung kann sich dort lohnen, wo die Pumpleistung zählt, zum Beispiel auf der Dampfseite des Kondensators.
+\end{itemize}

@@ -1,0 +1,26 @@
+\subsection{From plasma to grid: power flow and influences}\label{sec:powerflow}
+The heat balance above is derived as a chain of formulas. Figure~\ref{fig:powerflow} shows the same numbers as a
+flow: the width of each band is proportional to the power. Below the nodes are the parameters that set each value.
+An interactive version, in which every node and every parameter can be clicked, exists as a web page; the figure
+is produced by \texttt{stellarator/einflussgraph.py}.
+
+\begin{figure}[H]\centering\includegraphics[width=\linewidth]{bilder/einflussgraph_en.png}
+\caption{Power flow from the fusion plasma to the grid connection (base case of the heat balance, MW).}\label{fig:powerflow}
+\end{figure}
+
+\paragraph{How to read it.} Of \SI{3053}{MW} fusion power, \SI{1000}{MW} reach the grid, just under one third. The
+largest loss is not in the plasma and magnet part of the plant but in the turbine: the condenser rejects
+\SI{2223}{MW} as waste heat. This is true of every steam plant and follows from the live-steam temperature. The
+chain has three places where the design directly affects the efficiency:
+\begin{itemize}
+\item the \textbf{coolant temperature} of blanket and wall (about \SI{300}{\celsius}). It sets the live-steam
+  pressure of \SI{78}{bar} and thus $\eta=0.35$;
+\item the \textbf{divertor temperature} (\SI{136}{\celsius}). It turns \SI{305}{MW} of heat into preheating only,
+  which yields at most \SI{73}{MW} of electricity (Section~\ref{sec:preheater});
+\item the \textbf{pressure losses} in channels and exchangers. Through the pumps (\SI{137}{MW}) they come directly
+  off the net output.
+\end{itemize}
+The physics parameters ($f_\alpha$, $M$) determine how much fusion power is needed for \SI{1}{GW} net, not the
+efficiency downstream.
+
+\IfFileExists{components_en.tex}{\input{components_en.tex}}{}

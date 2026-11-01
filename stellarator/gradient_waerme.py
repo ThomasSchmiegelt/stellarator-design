@@ -11,7 +11,7 @@ groesser als die glatte Flaeche (Faktor |nx| + |ny| + |nz|, Normale aus dem Abst
 durch diesen Faktor geteilt. Seiten und Schnitt hinten (z = tiefe) adiabat (Struktur periodisch mit 80 mm).
 Fall "wolfram": zusaetzlich 3 mm Wolfram vor der Haut (Panzerung wie DEMO), Waermestrom auf die Wolframseite.
 Gegenproben mit Fleck: "kupfer" (Haut und Struktur k = 320 wie CuCrZr am Divertor), "h_doppelt" (schnelleres Wasser).
-Auswertung: hoechste Temperatur Plasmaseite und benetzte Wand (Siedegrenze 344,8 C bei 16 MPa), abgegebene Waerme je
+Auswertung: hoechste Temperatur Plasmaseite und benetzte Wand (Siedegrenze 347,4 C bei 16 MPa), abgegebene Waerme je
 Tiefe, seitliche Ausbreitung (Waermeabgabe je Spalte x, y gegen Einstrahlung). Ausgabe sim/gradient_waerme/.
 Naeherungen: k konstant (Stahl 25, Wolfram 130 W/mK, grobe Werte), h ueberall gleich (keine Stroemungsrechnung),
 keine Neutronen-Volumenwaerme, Voxelnetz (Treppen), Seiten adiabat statt periodisch.
@@ -26,7 +26,7 @@ WURZEL = PROJEKT / "sim" / "gradient_waerme"
 # Lagen wie picogk/GradientWand/Program.cs: Zelle a, Wanddicke t, Lagenende z [mm]
 ZELLE, DICKE, ENDE = (20, 40, 80, 160), (2.5, 3.0, 4.5, 8.0), (30, 80, 180, 600)
 HAUT, RUND = 5.0, 1.5
-K_STAHL, K_WOLFRAM, T_WASSER, T_SIEDEN = 25.0, 130.0, 304.0, 344.8
+K_STAHL, K_WOLFRAM, T_WASSER, T_SIEDEN = 25.0, 130.0, 304.0, 347.4
 # Fall: (Fleck, Wolframschicht, k der Struktur W/mK, Faktor auf h)
 FAELLE = {"gleich": (False, False, K_STAHL, 1.0), "fleck": (True, False, K_STAHL, 1.0),
           "wolfram": (True, True, K_STAHL, 1.0), "kupfer": (True, False, 320.0, 1.0), "h_doppelt": (True, False, K_STAHL, 2.0)}

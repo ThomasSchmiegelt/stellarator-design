@@ -1,0 +1,96 @@
+\subsection{Exchanger modules built and simulated with FluidX3D}\label{sec:exchangercfd}
+The choice of preheater design so far rests on literature correlations whose range of validity ($\Pr = 3$--5)
+does not cover divertor water with $\Pr \approx 1.3$--1.8. The modules were therefore built and the flow computed
+directly. The available computer cannot handle OpenFOAM; the lattice Boltzmann solver FluidX3D runs on the
+graphics card \cite{fluidx3d,lehmann2022fp}.
+
+\paragraph{1. Modules.} PicoGK builds one graded two-fluid block each ($48\times48\times96$\,mm, wall \SI{0.5}{mm},
+shell \SI{1.5}{mm}): gyroid with cell size \SI{4.33}{mm} $\to$ \SI{5.8}{mm} and diamond with \SI{5.37}{mm} $\to$
+\SI{7.2}{mm}. Both give the same hydraulic diameter $d_h = 2 \to 2.9$\,mm. The cell size grows logarithmically
+along the block, with phase $p_z = 2\pi L/(a_1 - a_0)\,\ln(a/a_0)$. End caps close the cold side, side windows the
+warm side. At \SI{0.2}{mm} voxel size the block is 39.7\,\% steel and 30\,\% each warm and cold side. The plates
+(flat and chevron, $\beta = \pm 60^\circ$) are built parametrically in FreeCAD.
+
+\bild{tauscher_module.jpg}{1.0}{Graded two-fluid modules, cut open. Left gyroid, right diamond. Red is the warm
+(divertor) side, blue the cold (condensate) side, grey the steel wall.}
+
+\paragraph{2. Domain.} A domain with inlet and outlet fails at $\mathrm{Re}\approx3000$: the required pressure drop
+needs more than 25\,\% density difference in the lattice Boltzmann method, far outside its validity. The domain is
+therefore a section of one side, periodic in all directions. A body force $f_z$ drives the flow, a uniform heat
+source $q$ heats the fluid, and the wall holds $T_w=0$. Then
+\[
+f = \frac{f_z\,d_h}{2\,u^2},\qquad h = \frac{q\,V_f}{A\,T_m},\qquad \mathrm{Nu} = \frac{h\,d_h}{D},\qquad
+T_m = \frac{\sum u_z T}{\sum u_z}.
+\]
+$f_z$ is iterated until Re matches within 15\,\%.
+
+\paragraph{3. Changes to FluidX3D.} Five points had to be changed (sources with licence note in
+\texttt{fluidx3d/}):
+\begin{itemize}
+\item The temperature model (D3Q7) has $c_s^2 = 1/4$. The actual diffusivity is $D = \alpha/2$; a pure diffusion
+  test confirmed this (measured $D/\alpha = 0.44$--0.53). The code therefore passes $\alpha = 2D$.
+\item The wall sat one cell too far into the fluid when the wall temperature was set in fluid cells. This gave a
+  Nu about three times too high. Solid cells now use anti-bounce-back: $g_\text{in} = -g_\text{out} +
+  \tfrac14(T_w - 1)$.
+\item At $\mathrm{Re}=3000$ the cell Péclet number is about 185. A turbulent diffusivity $D_t = \nu_t/0.85$ from the
+  solver's Smagorinsky model is therefore added.
+\item The simple BGK collision for temperature became abruptly unstable at 96 cells per $d_h$ after \num{172000} steps
+  (temperature to $10^{20}$ within 500 steps). The relaxation time $\tau \approx 0.504$ is close to the stability
+  limit 0.5. It was replaced by a TRT collision after Ginzburg \cite{ginzburg2005}: the antisymmetric part relaxes at the rate that sets
+  $D$, the symmetric part with the ``magic'' combination
+  $\Lambda = (1/\omega^+ - \tfrac12)(1/\omega^- - \tfrac12) = 1/4$.
+\item The heat source is either uniform or proportional to $u_z$. The second form is the usual formulation for
+  fully developed periodic flow with axially uniform heat flux (Patankar, Liu and Sparrow 1977 \cite{patankar1977}). A uniform source
+  raises Nu even in the laminar gap from 8.235 to 10.
+\end{itemize}
+
+\paragraph{4. Verification.} For the laminar plate channel the values are known exactly: $f\,\mathrm{Re}=24$, and
+$\mathrm{Nu}=10$ (uniform source) or 8.235 (source $\propto u$). The simulation gives $f\,\mathrm{Re} = 29.7 \to 25.7
+\to 24.7$ at 12, 24, 48 cells per channel height. For Nu it gives $10.6 \to 10.3$ (BGK, uniform) and
+$8.9 \to 8.5$ (TRT, $\propto u$). The error falls with order $p \approx 1.3$. The choice of $\Lambda$ (1/4 or 3/16)
+did not change the test case.
+
+\bild{tauscher_cfd_pruefung_en.png}{1.0}{Left: test case laminar plate channel, deviation from the exact value.
+Right: Nusselt number relative to Renon at the same Re, over grid resolution; open circles: Richardson estimate.}
+
+\paragraph{5. Comparison of designs.} All runs with TRT and source $\propto u_z$, $\Pr = 1.5$. The driving force is
+adjusted until Re matches within 15\,\%; at 96 cells gyroid and diamond stayed somewhat below. $j/f^{1/3}$ with
+$j = \mathrm{Nu}/(\mathrm{Re}\,\Pr^{1/3})$ is the area goodness: heat transfer per pumping effort.
+
+\begin{table}[H]\centering\small
+\begin{tabular}{llrrrrr}\toprule
+Design & Grid & Re & $f$ & Nu & $j/f^{1/3}$ & Nu/Nu$_\text{Renon}$ \\\midrule
+Gyroid  & 48 & 2952 & 0.805 & 139.8 & 0.0445 & 1.86 \\
+Gyroid  & 96 & 2583 & 0.732 & 102.0 & 0.0383 & 1.49 \\
+Diamond & 48 & 2974 & 0.668 & 133.4 & 0.0448 & 1.77 \\
+Diamond & 96 & 2676 & 0.596 & 100.9 & 0.0391 & 1.44 \\
+Chevron $\pm60^\circ$ & 48 & 2908 & 1.006 & 121.5 & 0.0364 & -- \\
+Chevron $\pm60^\circ$ & 96 & 2921 & 0.863 & 103.5 & 0.0325 & -- \\\bottomrule
+\end{tabular}
+\caption{FluidX3D results per side (periodic section). Renon applies to TPMS only.}
+\end{table}
+
+\paragraph{Finding.}
+\begin{itemize}
+\item \textbf{Hydraulics:} $f$ lies within the band of the correlations (Renon 0.48--0.56, Li 2022 0.81--0.83
+  \cite{renon2024,alsafadi2026}). At equal $d_h$ diamond has about 20\,\% less friction than gyroid; Renon gives
+  12--17\,\%.
+\item \textbf{Heat transfer:} Nu lies above the correlations, but the gap shrinks with the grid: factor 1.8 at 48
+  and 1.5 at 96 cells. With the order from the test case, a Richardson estimate gives about 1.2--1.25. This is a rough
+  estimate from two levels. The third level (144 cells, 62.5 million cells) gave 1.36 (gyroid) and 1.30 (diamond) and
+  shows that the series is not yet asymptotic; extrapolated, Nu lands on Renon (Section~\ref{sec:exchangersurrogate}).
+\item \textbf{Collision model:} BGK had overestimated Nu by about 25\,\% even without blowing up (194 instead of 154
+  at 48 cells, same source).
+\item \textbf{Designs:} Gyroid and diamond are level in area goodness (0.038 and 0.039 at 96 cells). Chevron plates
+  are about 15\,\% lower: they reach similar Nu only with more friction. This supports the ranking of
+  Section~\ref{sec:preheater} (TPMS more compact than plates). The simulation shows no advantage of gyroid over
+  diamond.
+\item \textbf{Limits:} uniform cell size (the grading was not simulated), a single Re, $\Pr = 1.5$, isothermal wall
+  without conduction in the steel, turbulence via an LES model at only moderate resolution.
+\end{itemize}
+
+\bild{tauscher_stroemung_drei.jpg}{1.0}{Particle paths in gyroid, diamond and chevron plates (from left), Re 3000,
+48 cells per $d_h$. The wall is shown in X-ray view. A video was made from each set of paths. The colour of the paths
+comes from the runs with BGK collision and is for illustration only.}
+
+These and 30 further runs went into the surrogate model of Section~\ref{sec:exchangersurrogate}.
