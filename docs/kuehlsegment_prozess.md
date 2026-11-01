@@ -346,3 +346,31 @@ neu gerechnet.
 Gelernt: Eine dritte Gitterstufe lohnt sich gerade dann, wenn sie die Schätzung aus zweien widerlegt. Eine
 Optimierung, deren Bestwert am Rand des erlaubten Bereichs liegt, beantwortet vor allem die Frage nach dem Rand.
 
+## 13. Plasma: Woher kommt die Wärme? (2026-11-01)
+
+**Anstoß durch den Nutzer.** Nach dem Push des Surrogats kam der Wunsch: „danach plasma also woher kommt die wärme
+und wie entsteht sie“. Während der Arbeit kamen zwei Ergänzungen: das Ereignisprotokoll mitschreiben und die README
+und die Kurzbeschreibung auf GitHub ergänzen.
+
+**Vorgehen.** Claude hat keine neue Physik eingeführt, sondern die Zahlen der eigenen Stufe-0-Auslegung von unten her
+nachgerechnet:
+- Massendefekt mit Atommassen, Coulombwall, Gamow-Fenster, Lawson-Minimum.
+- Leistungsdichte mit denselben Profilen wie Stufe 0. Die Summe trifft die 3053 MW auf 0,1 % und bestätigt so die
+  Kette.
+- Fremde Fakten (Li-6-Reaktion, Heizung von W7-X) wurden in der englischen Wikipedia abgerufen und wörtlich geprüft,
+  Fachartikel per Crossref.
+
+**Befund, der zurückwirkt.** Die Plasmabilanz (611 MW Alphaheizung = 482 MW Transport + 129 MW Strahlung) zeigt, dass
+die frühere Annahme „Hälfte auf den Divertor“ nur mit zusätzlicher Abstrahlung am Rand gilt. Das geht als offene
+Aufgabe in die Divertor-Auslegung. Damit stellt die Rechnung eine frühere eigene Annahme in Frage, statt sie nur
+zu erklären.
+
+
+## 14. Bilder für Nicht-Physiker erklären (2026-11-01)
+
+Der Nutzer bat darum, alle Bilder im Bericht so zu erklären, dass auch Nicht-Physiker sie verstehen. Die KI hat
+dazu alle 41 Abbildungen noch einmal angesehen und unter jede einen kurzen Absatz „So liest man das Bild“ gesetzt,
+auf Deutsch und auf Englisch. Er sagt, was zu sehen ist (Achsen, Farben, Linien in Alltagssprache), worauf man
+achten soll und was daraus folgt. Fachwörter wie Vergleichsspannung, Poincaré-Schnitt oder Reynolds-Zahl werden
+dort in einem Halbsatz erklärt. Das gilt ab jetzt als feste Regel für jedes neue Bild. Die Bildunterschriften
+allein waren für Fachleute geschrieben; erst der Nutzer machte die Leserschaft ohne Physikstudium zum Maßstab.

@@ -7,6 +7,12 @@ is produced by \texttt{stellarator/einflussgraph.py}.
 \begin{figure}[H]\centering\includegraphics[width=\linewidth]{bilder/einflussgraph_en.png}
 \caption{Power flow from the fusion plasma to the grid connection (base case of the heat balance, MW).}\label{fig:powerflow}
 \end{figure}
+\lesehilfe{The bands flow from left (plasma) to right (grid), and each band's width is proportional to
+the power. The colours show the form of energy: violet nuclear, orange heat around \SI{300}{\celsius}, ochre heat
+around \SI{130}{\celsius}, blue electricity, grey waste heat. Follow one band, for example neutrons $\to$ blanket
+$\to$ cooling loop $\to$ steam generator $\to$ turbine $\to$ generator $\to$ grid. The small italic notes under the
+nodes are the quantities that set each value. The wide grey band to the condenser is the largest loss.}
+
 
 \paragraph{How to read it.} Of \SI{3053}{MW} fusion power, \SI{1000}{MW} reach the grid, just under one third. The
 largest loss is not in the plasma and magnet part of the plant but in the turbine: the condenser rejects

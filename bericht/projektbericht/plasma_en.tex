@@ -1,0 +1,120 @@
+\section{Plasma: where does the heat come from, and how is it produced?}\label{sec:plasma}
+
+So far the calculation started with the plasma as a source of \SI{3053}{MW} (Section~\ref{sec:balance}). This section
+asks how that power arises and by which routes it leaves the plasma. All numbers refer to the HTS design from stage~0:
+$R_0 = \SI{10.4}{m}$, $a = \SI{2.31}{m}$, $B_0 = \SI{6.5}{T}$, plasma volume \SI{1096}{m^3}, central temperature
+$T_0 = \SI{14}{keV}$. The script \texttt{stellarator/plasma\_waerme.py} recomputes every step.
+
+\subsection{The reaction: mass becomes energy}
+In the plasma, deuterium (one proton, one neutron) and tritium (one proton, two neutrons) fuse:
+\[ \mathrm{D} + \mathrm{T} \;\rightarrow\; {}^4\mathrm{He}\;(\SI{3.5}{MeV}) + \mathrm{n}\;(\SI{14.1}{MeV}). \]
+The products are lighter than the original nuclei. With the atomic masses \cite{ame2020},
+\[ \Delta m = m_\mathrm{D} + m_\mathrm{T} - m_\mathrm{He} - m_\mathrm{n} = \SI{0.01888}{u}
+   \quad\Rightarrow\quad Q = \Delta m\,c^2 = 0.01888 \cdot \SI{931.494}{MeV} = \SI{17.59}{MeV}. \]
+That is 0.38\,\% of the mass involved. Momentum conservation decides the split: both products fly apart with equal
+momentum, so the lighter particle receives the larger share,
+\[ E_\alpha = Q\,\frac{m_\mathrm{n}}{m_\mathrm{n} + m_\alpha} \approx \SI{3.54}{MeV},\qquad E_\mathrm{n} \approx \SI{14.05}{MeV}. \]
+The usual rounded values are \SI{3.5}{} and \SI{14.1}{MeV} \cite{wiki_tritium}; the balance uses \SI{3.52}{} and
+\SI{14.07}{MeV}. The 0.6\,\% difference is irrelevant for the balance. What matters is the ratio: \textbf{the neutron
+carries four fifths of the energy, the helium nucleus (alpha particle) one fifth.} Everything else follows from this.
+
+\subsection{Why it has to be so hot}
+Both nuclei are positively charged and repel each other. For the nuclear force to act they must come as close as the
+sum of their radii ($r \approx 1.2\,\mathrm{fm}\cdot A^{1/3}$, \SI{3.2}{fm} together). There the repulsion is
+\[ E_C = \frac{e^2}{4\pi\varepsilon_0\,r} \approx \SI{444}{keV}. \]
+The plasma centre is at \SI{14}{keV}, i.e.\ 162~million kelvin, but that is 32 times less than the barrier. Fusion
+still happens because of two effects acting together:
+\begin{itemize}
+\item \textbf{Maxwell distribution:} some particles are much faster than average; their share falls like
+  $e^{-E/kT}$.
+\item \textbf{Tunnelling:} quantum mechanics lets a nucleus pass through the barrier without climbing over it. The
+  probability rises with energy like $e^{-\sqrt{E_G/E}}$, with the Gamow energy $E_G = \SI{1182}{keV}$ for D-T
+  \cite{boschhale1992}.
+\end{itemize}
+The product of the two curves is the \emph{Gamow window}. At \SI{14}{keV} it lies at
+$E_0 = (\sqrt{E_G}\,kT/2)^{2/3} \approx \SI{39}{keV}$, about 2.8 times $kT$ (Figure~\ref{fig:plasma}, top right).
+So almost only the fast particles in the tail of the distribution fuse.
+
+The reactivity $\langle\sigma v\rangle$ sums up the reaction rate (formula of Bosch and Hale \cite{boschhale1992}). It
+peaks at about \SI{67}{keV}. For a power plant, however, a different question counts: can heating by the alpha particles
+cover the losses on its own (ignition)? With the energy confinement time $\tau_E$ the condition is (Lawson, without
+radiation)
+\[ n\,T\,\tau_E \;\ge\; \frac{12\,T^2}{E_\alpha\,\langle\sigma v\rangle}, \]
+and the right-hand side is smallest at \SI{13.6}{keV}: $\SI{2.8e21}{keV\,s\,m^{-3}}$. \textbf{That is why the design
+temperature is \SI{14}{keV} and not at the reactivity maximum.} In the centre, the design reaches
+$n_0 T_0 \tau_E = \SI{8.0e21}{keV\,s\,m^{-3}}$. It is above the limit because density and temperature fall off outwards
+and bremsstrahlung adds to the losses.
+
+\subsection{Where in the plasma the heat is produced}
+The power density is
+\[ p_\mathrm{fus}(\rho) = n_\mathrm{D}\,n_\mathrm{T}\,\langle\sigma v\rangle(T)\;Q,\qquad
+   n_\mathrm{D} = n_\mathrm{T} = 0.425\,n_e, \]
+with the stage-0 profiles $n_e = n_0(1-\rho^2)^{0.5}$, $T = T_0(1-\rho^2)$, $n_0 = \SI{3.1e20}{m^{-3}}$ (the remaining
+ions are helium ash and impurities). Integrated over the volume this gives \SI{3051}{MW}; stage~0 gave \SI{3053}{MW}.
+\begin{itemize}
+\item The centre produces \SI{12}{MW/m^3}, the mean is \SI{2.8}{MW/m^3}.
+\item Half the power is produced inside $\rho = 0.38$, i.e.\ in only 14\,\% of the volume, and 90\,\% inside
+  $\rho = 0.62$. The heat comes from the hot core; the edge contributes almost nothing.
+\item There are $1.08\cdot10^{21}$ reactions per second. They consume \SI{0.47}{kg} of tritium and \SI{0.31}{kg} of
+  deuterium per day, of which \SI{2.9}{g} of mass is converted into energy.
+\end{itemize}
+
+\subsection{Two routes out of the plasma}
+\paragraph{The neutron leaves at once.} It is uncharged, so the magnetic field does not act on it. At 17\,\% of the
+speed of light it crosses the minor radius in about \SI{45}{ns} without heating the plasma. It deposits its energy only
+in the wall, mostly in the blanket: by collisions with nuclei that slow it down, and by capture. The most important
+capture reaction also produces new tritium:
+\[ {}^6\mathrm{Li} + \mathrm{n} \;\rightarrow\; {}^4\mathrm{He} + \mathrm{T} + \SI{4.8}{MeV} \quad\text{\cite{wiki_tritium}}. \]
+Such reactions release additional energy. The factor $M = 1.15$ (assumption as in stage~0) turns \SI{2442}{MW} of
+neutron power into \SI{2808}{MW} of heat in the blanket. \textbf{So more than four fifths of the plant's heat is not
+produced in the plasma at all, but in the volume of the blanket.}
+
+\paragraph{The alpha particle stays and heats.} It carries a double positive charge and gyrates around the field lines
+with a Larmor radius of
+\[ r_L = \frac{m_\alpha v_\alpha}{2e\,B_0} = \SI{4.2}{cm} \ll a = \SI{2.31}{m}. \]
+It thus stays confined and hands its \SI{3.5}{MeV} to the plasma through Coulomb collisions. The slowing-down time on
+the electrons is $\tau_s \approx \SI{0.2}{s}$ \cite{stix1972}. Above the critical energy
+$E_c \approx 14.8\,A_\alpha T_e\,(\sum n_i Z_i^2/n_e A_i)^{2/3} \approx \SI{415}{keV}$ mainly the electrons slow it
+down, below it the ions. Over the whole path, about 80\,\% therefore goes to the electrons and 20\,\% to the ions. This
+\emph{self-heating} of \SI{611}{MW} keeps the plasma hot. The design is ignited (no external heating in operation), but
+only reaches this with 1.29 times the confinement of the ISS04 scaling \cite{yamada2005}.
+
+\paragraph{Equilibrium: what comes in must go out.} In steady state,
+\[ P_\alpha = \frac{W}{\tau_E} + P_\mathrm{brems}:\qquad
+   \SI{611}{MW} = \frac{\SI{877}{MJ}}{\SI{1.82}{s}} + \SI{129}{MW} = \SI{482}{MW} + \SI{129}{MW}. \]
+\begin{itemize}
+\item \textbf{Bremsstrahlung} (\SI{129}{MW}): electrons emit X-rays in collisions with ions. This hits the whole first
+  wall evenly.
+\item \textbf{Transport} (\SI{482}{MW}): heat and particles slowly migrate outwards across the field, reach the
+  scrape-off layer and flow along the field lines onto the divertor.
+\end{itemize}
+
+\bild{plasma_waerme_en.png}{1.0}{Where the heat comes from. Top left: reactivity and the $nT\tau_E$ required for
+ignition, with the design point. Top right: Gamow window at \SI{14}{keV}. Bottom left: profiles and power density over
+the minor radius. Bottom right: routes of the energy in MW.\label{fig:plasma}}
+\lesehilfe{Top left, in blue: how often deuterium and tritium fuse at a given temperature
+(\emph{reactivity}). In orange: how well the heat must be confined for the plasma to heat itself (\emph{ignition}).
+Temperature is in keV; \SI{1}{keV} is about 11.6 million degrees. The orange curve has its minimum near
+\SI{14}{keV}, where the design point sits. Top right: the \emph{Gamow window}. Blue is the share of particles with a
+given energy, which falls steeply. Orange is the chance of overcoming the electric repulsion, which rises steeply.
+Their product (green) shows that most fusions happen near \SI{39}{keV}, among the few fast particles rather than at
+the average. Bottom left, across the radius (0 centre, 1 edge): temperature, density and, in red, the power produced
+per volume. Half of it comes from the innermost seventh of the volume. Bottom right: where the energy goes, in MW.}
+
+
+\subsection{What this means for the plant}
+\begin{enumerate}
+\item \textbf{The 80/20 split is nuclear physics, not design.} The blanket has to take 82\,\% of the heat, and in its
+  volume rather than at its surface. This fits the thick, water-cooled WCLL-type blanket (Section~\ref{sec:balance}).
+\item \textbf{The heat balance has probably set the divertor too favourably.} It splits the alpha power half and half
+  between first wall and divertor ($f_\mathrm{div} = 0.5$). Without further measures, however, 79\,\% goes to the
+  divertor as transport, i.e.\ \SI{482}{MW} instead of \SI{305}{MW}. At \SI{10}{MW/m^2} that needs at least
+  \SI{48}{m^2} of divertor area instead of \SI{31}{m^2}. The 50/50 split assumes that about \SI{180}{MW} extra is
+  radiated at the edge, for example by deliberately injected impurity gas. That is a task for the divertor design.
+\item \textbf{Start-up needs external heating.} Until alpha heating takes over, the plasma has to be brought to
+  temperature from outside. W7-X uses microwaves (electron cyclotron resonance heating, up to \SI{15}{MW}), neutral beam
+  injection (up to \SI{8}{MW}) and ion cyclotron heating \cite{wiki_w7x}.
+\item \textbf{Limits of this calculation:} 0-D balance with fixed profiles, bremsstrahlung only (no line or cyclotron
+  radiation), Lawson limit without profiles, slowing down with $\ln\Lambda = 17$ and central values. A transport
+  calculation, for example with a 1-D code, would be the next step.
+\end{enumerate}

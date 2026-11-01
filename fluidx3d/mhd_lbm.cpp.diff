@@ -1,0 +1,16 @@
+diff --git a/src/lbm.cpp b/src/lbm.cpp
+index 0373623..b235578 100644
+--- a/src/lbm.cpp
++++ b/src/lbm.cpp
+@@ -449,6 +449,11 @@ string LBM_Domain::device_defines(const Device_Info& device_info) const { return
+ 	"\n	#define def_6_sigma "+to_string(6.0f*sigma)+"f" // rho_laplace = 2*o*K, rho = 1-rho_laplace/c^2 = 1-(6*o)*K
+ #endif // SURFACE
+ 
++#ifdef MHD
++	"\n	#define MHD"
++	"\n	#define def_mhd_k "+(getenv("FX_MHD_K") ? string(getenv("FX_MHD_K")) : string("0.0"))+"f" // geaendert: K = sigma B^2 / rho in Gittereinheiten (Kehrwert der Bremszeit in Schritten)
++	"\n	#define def_mhd_b "+(getenv("FX_MHD_B") ? string(getenv("FX_MHD_B")) : string("0.0f, 1.0f, 0.0f"))+"" // Einheitsvektor von B als "bx f, by f, bz f"
++#endif // MHD
+ #ifdef TEMPERATURE
+ 	"\n	#define TEMPERATURE"
+ 	"\n	#define def_w_T "+to_string(1.0f/(2.0f*alpha+0.5f))+"f" // wT = dt/tauT = 1/(2*alpha+1/2), alpha = thermal diffusion coefficient

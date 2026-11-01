@@ -85,6 +85,15 @@ weil $f$ zwischen den Gittern nicht monoton konvergiert.}
 \bild{tauscher_surrogat.png}{1.0}{Surrogat für Gyroid (blau) und Diamond (orange). Links Nu: punktiert grobe Stufe,
 gestrichelt n144, durchgezogen mit Band Gitter $\to\infty$, grau gestrichelt Renon. Mitte $f$ (n144 mit Band).
 Rechts die Kreuzprüfung der groben Stufe.}
+\lesehilfe{Ein \emph{Surrogat} ist ein schnelles Ersatzmodell. Es lernt aus 40 aufwendigen
+Strömungsrechnungen und liefert dann für beliebige Werte sofort eine Schätzung samt Unsicherheit. Links die
+Nusselt-Zahl (Wärmeübergang) über der \emph{Reynolds-Zahl}, einem Maß dafür, wie schnell und verwirbelt die
+Strömung ist; beide Achsen sind logarithmisch. Die Punkte sind Rechnungen (Kreise grob, Quadrate fein, Rauten am
+feinsten), die Linien das Surrogat, das helle Band seine Unsicherheit, die grau gestrichelte Linie die Literatur.
+In der Mitte dasselbe für den Reibungsbeiwert $f$, der den Druckverlust bestimmt. Rechts die Kreuzprüfung: Jede
+Rechnung wurde einmal weggelassen und aus den übrigen vorhergesagt. Liegen die Punkte auf der Diagonale, stimmt die
+Vorhersage; die Abweichung beträgt nur 1 bis 3\,\%.}
+
 
 \paragraph{Was das Surrogat sagt.}
 \begin{itemize}
@@ -109,6 +118,12 @@ als Segmentmodell neu aufgesetzt (\texttt{stellarator/vorwaermer\_stufung.py}):
 
 \bild{vorwaermer_stufung.png}{0.85}{Netto-Mehrleistung über dem Bauvolumen. Abgestuft (gestrichelt) und gleichmäßig
 fallen zusammen. Zum Vergleich Renon und Renon mit Nu $\times$ 1,28 (Stufung nach Oh et al.) im selben Modell.}
+\lesehilfe{Aufbau wie bei der Netto-Mehrleistung weiter oben, jetzt mit dem Surrogat. Die
+gestrichelten Linien gehören zu Tauschern, deren Zellgröße sich entlang des Wegs in acht Abschnitten ändert
+(\emph{abgestuft}). Die durchgezogenen gehören zu Tauschern mit überall gleichen Zellen. Sie liegen praktisch
+übereinander. Das Band reicht vom fein gerechneten bis zum hochgerechneten Wärmeübergang. Die Stufung bringt also
+keinen Vorteil; die kleinste Zelle ist überall die beste.}
+
 
 \paragraph{Ergebnis.}
 \begin{itemize}

@@ -13,6 +13,11 @@ warm side. At \SI{0.2}{mm} voxel size the block is 39.7\,\% steel and 30\,\% eac
 
 \bild{tauscher_module.jpg}{1.0}{Graded two-fluid modules, cut open. Left gyroid, right diamond. Red is the warm
 (divertor) side, blue the cold (condensate) side, grey the steel wall.}
+\lesehilfe{Two exchanger blocks cut open, gyroid lattice on the left, diamond lattice on the right
+(two different lattice shapes). Red is the space for the warm water from the divertor, blue for the cold
+condensate, grey the steel wall between them. These are two separate, intertwined channel systems; the two waters
+never touch, only the heat passes through the wall.}
+
 
 \paragraph{2. Domain.} A domain with inlet and outlet fails at $\mathrm{Re}\approx3000$: the required pressure drop
 needs more than 25\,\% density difference in the lattice Boltzmann method, far outside its validity. The domain is
@@ -52,6 +57,13 @@ did not change the test case.
 
 \bild{tauscher_cfd_pruefung_en.png}{1.0}{Left: test case laminar plate channel, deviation from the exact value.
 Right: Nusselt number relative to Renon at the same Re, over grid resolution; open circles: Richardson estimate.}
+\lesehilfe{Left: a check of the flow program on a case with an exactly known answer, flow between
+two plates. Vertically is the deviation in percent, horizontally how fine the computational grid is. The finer, the
+more accurate; at 48 cells it is about 3\,\%. Right: the \emph{Nusselt number}, a measure of how well heat passes
+from the wall into the water, divided by the literature value (Renon, $=1$). The open circles extrapolate to an
+infinitely fine grid (Richardson) and lie about 25\,\% above the literature. The grey cross comes from an older,
+too inaccurate method.}
+
 
 \paragraph{5. Comparison of designs.} All runs with TRT and source $\propto u_z$, $\Pr = 1.5$. The driving force is
 adjusted until Re matches within 15\,\%; at 96 cells gyroid and diamond stayed somewhat below. $j/f^{1/3}$ with
@@ -92,5 +104,9 @@ Chevron $\pm60^\circ$ & 96 & 2921 & 0.863 & 103.5 & 0.0325 & -- \\\bottomrule
 \bild{tauscher_stroemung_drei.jpg}{1.0}{Particle paths in gyroid, diamond and chevron plates (from left), Re 3000,
 48 cells per $d_h$. The wall is shown in X-ray view. A video was made from each set of paths. The colour of the paths
 comes from the runs with BGK collision and is for illustration only.}
+\lesehilfe{Stills of the paths of water particles (bright lines) through three designs: gyroid,
+diamond and chevron plates. The wall is shown semi-transparent. The more the paths swirl and cross, the better the
+water mixes and the more heat it picks up from the wall. The colour has no meaning here.}
+
 
 These and 30 further runs went into the surrogate model of Section~\ref{sec:exchangersurrogate}.

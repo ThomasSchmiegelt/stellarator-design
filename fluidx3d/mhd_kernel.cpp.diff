@@ -1,0 +1,23 @@
+diff --git a/src/kernel.cpp b/src/kernel.cpp
+index 98279e9..fe0418c 100644
+--- a/src/kernel.cpp
++++ b/src/kernel.cpp
+@@ -1546,6 +1546,18 @@ string opencl_c_container() { return R( // ########################## begin of O
+ 	}
+ )+"#endif"+R( // TEMPERATURE
+ 
++)+"#ifdef MHD"+R( // geaendert: Lorentzkraft f = sigma (u x B) x B = -K rho u_senkrecht, halbimplizit (Guo: u = u* + F/2rho)
++	{
++		const float3 bb = (float3)(def_mhd_b); // Einheitsvektor von B
++		const float r2 = 0.5f/rhon;
++		const float vx = fma(fxn, r2, uxn), vy = fma(fyn, r2, uyn), vz = fma(fzn, r2, uzn); // Geschwindigkeit mit den uebrigen Kraeften
++		const float vb = vx*bb.x+vy*bb.y+vz*bb.z;
++		const float c = def_mhd_k/(1.0f+0.5f*def_mhd_k)*rhon; // aus u_s = (u*_s + F_s/2rho)/(1+K/2), F_L = -K rho u_s
++		fxn -= c*(vx-vb*bb.x);
++		fyn -= c*(vy-vb*bb.y);
++		fzn -= c*(vz-vb*bb.z);
++	}
++)+"#endif"+R( // MHD
+ 	{ // separate block to avoid variable name conflicts
+ )+"#ifdef VOLUME_FORCE"+R( // apply force and collision operator, write to fi in video memory
+ 		const float rho2 = 0.5f/rhon; // apply external volume force (Guo forcing, Krueger p.233f)

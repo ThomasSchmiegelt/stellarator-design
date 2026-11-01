@@ -506,6 +506,41 @@ Skripte: `stellarator/kuehlung_segment.py` (Auslegung, Geometrie über `picogk/S
 `blender_stroemung.py` (Filme, Schnitt mit `picogk/StlSchnitt`), `gesamtbild_kuehlung.py`; Skizzen:
 `skizze.py`/`skizze.html`, `draufsicht.py`, `modell_ansicht.py`.
 
+### Plasma: Woher kommt die Wärme, und wie entsteht sie?
+
+Bisher war das Plasma nur die Quelle von 3053 MW. `stellarator/plasma_waerme.py` rechnet für die HTS-Auslegung
+(R₀ 10,4 m, B₀ 6,5 T, 1096 m³, Zentrum 14 keV) nach, wie diese Leistung entsteht und wohin sie geht:
+- **Masse wird Energie:** Bei D + T → He-4 + n fehlen danach 0,019 u. Das sind nach E = mc² genau 17,59 MeV.
+  Nach der Impulserhaltung bekommt das leichte Neutron vier Fünftel (14,1 MeV), der Heliumkern ein Fünftel (3,5 MeV).
+- **Warum so heiß:** Die Kerne stoßen sich ab, der Coulombwall liegt bei 444 keV, 32-mal höher als die
+  Plasmatemperatur. Fusion gelingt nur schnellen Teilchen aus dem Ausläufer der Maxwell-Verteilung, und zwar per
+  Tunneleffekt (Gamow-Fenster um 39 keV).
+- **Warum 14 keV:** Die Zündbedingung n·T·τ_E ist bei 13,6 keV am leichtesten zu erfüllen (2,8·10²¹ keV s/m³).
+  Das Maximum der Reaktivität bei 67 keV spielt dafür keine Rolle.
+- **Wo:** Die Hälfte der Leistung entsteht in den inneren 14 % des Volumens, im Zentrum 12 MW/m³. Pro Sekunde laufen
+  1,1·10²¹ Reaktionen. Am Tag verbraucht das 0,47 kg Tritium, 2,9 g Masse werden zu Energie.
+- **Neutron (80 %):** ist ungeladen und fliegt in 45 ns aus dem Plasma. Seine Wärme entsteht erst im Blanket, wo sie
+  um Kernreaktionen wie ⁶Li + n → He + T + 4,8 MeV vermehrt wird (2808 MW).
+- **Alphateilchen (20 %):** ist geladen und kreist mit 4 cm Radius um die Feldlinien. In etwa 0,2 s gibt es seine
+  Energie an das Plasma ab, zu 80 % an die Elektronen, und heizt es so selbst. Hinaus geht die Energie als Transport
+  zum Divertor (482 MW) und als Bremsstrahlung auf die Wand (129 MW).
+- **Folge:** Die Wärmebilanz hatte für den Divertor nur 305 MW angesetzt. Ohne zusätzliche Abstrahlung am Rand
+  (etwa 180 MW, z. B. durch Fremdgas) bräuchte er mindestens 48 statt 31 m².
+
+![Woher die Wärme kommt: Reaktivität, Gamow-Fenster, Profile, Energiewege](docs/bilder/plasma_waerme.png)
+
+### Flüssigmetall im Magnetfeld (MHD), Stufe 1
+
+Fließt ein leitendes Metall wie Blei quer durch ein Magnetfeld, entstehen darin Ströme, die es bremsen. Damit
+FluidX3D das abbilden kann, ist die bremsende Lorentzkraft in eine eigene Kopie eingebaut (Änderungen in
+[`fluidx3d/`](fluidx3d/README.md), FluidX3D-Lizenz). Geprüft wird an der Hartmann-Strömung zwischen zwei Platten,
+für die es eine exakte Lösung gibt: Die Abweichung beträgt 0,03 % ohne Feld und 0,1 % bei Ha = 5. Bei starkem Feld
+werden die Randschichten dünn. Sie brauchen mindestens zwei Rechenzellen, sonst wächst der Fehler (4,3 % bei
+Ha = 30 mit 32 Zellen); bei feinerem Gitter fällt er mit der zweiten Ordnung. Stufe 2 ergänzt das elektrische
+Potential, das in Kanälen mit Seitenwänden die Ströme umlenkt.
+
+![Hartmann-Strömung: FluidX3D gegen exakte Lösung und Gitterstudie](docs/bilder/mhd_hartmann.png)
+
 ### Doppeltes Filament, Platz zu den Spulen, Flüssigblei (grobe Abschätzungen)
 
 Aus den Vorschlägen oben: Die Plasmaseite bekommt eigene feine Kanäle (innen, Kühlung), dahinter trägt ein
@@ -661,7 +696,12 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 - [x] Kühlsegment des Plasmagefäßes: Gyroid-Wasserweg (PicoGK), Strömung (FluidX3D), Verteilung 8 % Streuung
 - [x] Wärmebilanz bis zur Turbine, Leistungsfluss Plasma → Netz, Bauteile erklärt
 - [x] Divertor-Vorwärmer: Bauarten verglichen, Tauscherzellen mit FluidX3D gerechnet, Surrogat, Stufung geprüft
-- [ ] Plasma: woher die Wärme kommt und wie sie entsteht (in Arbeit)
+- [x] Plasma: woher die Wärme kommt und wie sie entsteht (0-D)
+- [ ] Plasma: Transport radial (1-D), Linien- und Zyklotronstrahlung, Divertorlast mit Randstrahlung
+- [x] Alle Bilder im Bericht mit Lesehilfe für Nicht-Physiker (DE+EN)
+- [x] Flüssigmetall im Magnetfeld, Stufe 1: Lorentzkraft in FluidX3D, geprüft an der Hartmann-Strömung
+- [ ] Flüssigmetall im Magnetfeld, Stufe 2: elektrisches Potential für Kanäle mit Seitenwänden
+- [ ] Alphateilchen im Spulenfeld: Verluste und Wandtreffer (Lauf mit 1000 Teilchen)
 - [ ] Erstwand-Kühlung: dünne Innenhaut, schnelle Kanäle, Wärme gekoppelt rechnen
 - [ ] Wandstärken und Verbinder auslegen (zulässige Spannung einhalten)
 - [ ] Verguss (Quarzsand-Epoxid) zwischen Wickelpaket und Gehäuse in Geometrie und Rechnung

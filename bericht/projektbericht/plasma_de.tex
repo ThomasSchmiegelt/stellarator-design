@@ -1,0 +1,127 @@
+\section{Plasma: Woher kommt die Wärme, und wie entsteht sie?}\label{sec:plasma}
+
+Bisher begann die Rechnung beim Plasma als Quelle von \SI{3053}{MW} (Abschnitt~\ref{sec:bilanz}). Dieser Abschnitt
+fragt, wie diese Leistung entsteht und auf welchen Wegen sie das Plasma verlässt. Alle Zahlen gelten für die
+HTS-Auslegung aus Stufe~0: $R_0 = \SI{10,4}{m}$, $a = \SI{2,31}{m}$, $B_0 = \SI{6,5}{T}$, Plasmavolumen
+\SI{1096}{m^3}, zentrale Temperatur $T_0 = \SI{14}{keV}$. Das Skript \texttt{stellarator/plasma\_waerme.py} rechnet
+jeden Schritt nach.
+
+\subsection{Die Reaktion: Masse wird zu Energie}
+Im Plasma verschmelzen Deuterium (ein Proton, ein Neutron) und Tritium (ein Proton, zwei Neutronen):
+\[ \mathrm{D} + \mathrm{T} \;\rightarrow\; {}^4\mathrm{He}\;(\SI{3,5}{MeV}) + \mathrm{n}\;(\SI{14,1}{MeV}). \]
+Die Produkte sind leichter als die Ausgangskerne. Mit den Atommassen \cite{ame2020} ist
+\[ \Delta m = m_\mathrm{D} + m_\mathrm{T} - m_\mathrm{He} - m_\mathrm{n} = \SI{0,01888}{u}
+   \quad\Rightarrow\quad Q = \Delta m\,c^2 = 0{,}01888 \cdot \SI{931,494}{MeV} = \SI{17,59}{MeV}. \]
+Das sind 0,38\,\% der eingesetzten Masse. Die Energie verteilt sich nach der Impulserhaltung: Beide Produkte fliegen
+mit gleich großem Impuls auseinander, also erhält das leichtere Teilchen den größeren Teil,
+\[ E_\alpha = Q\,\frac{m_\mathrm{n}}{m_\mathrm{n} + m_\alpha} \approx \SI{3,54}{MeV},\qquad E_\mathrm{n} \approx \SI{14,05}{MeV}. \]
+Üblich sind gerundet \SI{3,5}{} und \SI{14,1}{MeV} \cite{wiki_tritium}; die Bilanz rechnet mit \SI{3,52}{} und
+\SI{14,07}{MeV}. Der Unterschied von 0,6\,\% ist für die Bilanz bedeutungslos. Wichtig ist das Verhältnis: \textbf{Vier
+Fünftel der Energie trägt das Neutron, ein Fünftel der Heliumkern (Alphateilchen).} Das bestimmt alles Weitere.
+
+\subsection{Warum es so heiß sein muss}
+Beide Kerne sind positiv geladen und stoßen sich ab. Damit die Kernkraft greift, müssen sie sich bis auf die Summe ihrer
+Radien nähern ($r \approx 1{,}2\,\mathrm{fm}\cdot A^{1/3}$, zusammen \SI{3,2}{fm}). Dort ist die Abstoßung
+\[ E_C = \frac{e^2}{4\pi\varepsilon_0\,r} \approx \SI{444}{keV}. \]
+Das Plasma hat im Zentrum \SI{14}{keV}, das sind 162~Millionen Kelvin, aber 32-mal weniger als der Wall. Dass
+trotzdem Fusion stattfindet, liegt an zwei Effekten zugleich:
+\begin{itemize}
+\item \textbf{Maxwell-Verteilung:} Einige Teilchen sind viel schneller als der Durchschnitt; ihr Anteil fällt wie
+  $e^{-E/kT}$.
+\item \textbf{Tunneleffekt:} Quantenmechanisch kann ein Kern den Wall durchdringen, ohne über ihn zu steigen. Die
+  Wahrscheinlichkeit steigt mit der Energie wie $e^{-\sqrt{E_G/E}}$, mit der Gamow-Energie $E_G = \SI{1182}{keV}$ für
+  D-T \cite{boschhale1992}.
+\end{itemize}
+Das Produkt beider Kurven ist das \emph{Gamow-Fenster}. Bei \SI{14}{keV} liegt es bei
+$E_0 = (\sqrt{E_G}\,kT/2)^{2/3} \approx \SI{39}{keV}$, etwa beim 2,8-Fachen von $kT$
+(Bild~\ref{fig:plasma}, oben rechts). Es fusionieren also fast nur die schnellen Teilchen aus dem Ausläufer der
+Verteilung.
+
+Die Reaktionsrate fasst die Reaktivität $\langle\sigma v\rangle$ zusammen (Formel von Bosch und Hale
+\cite{boschhale1992}). Sie ist bei etwa \SI{67}{keV} am größten. Für ein Kraftwerk zählt aber eine andere Frage:
+Kann die Heizung durch die Alphateilchen die Verluste allein decken (Zündung)? Mit der Energieeinschlusszeit $\tau_E$
+lautet die Bedingung (Lawson, ohne Strahlung)
+\[ n\,T\,\tau_E \;\ge\; \frac{12\,T^2}{E_\alpha\,\langle\sigma v\rangle}, \]
+und die rechte Seite ist bei \SI{13,6}{keV} am kleinsten: $\SI{2,8e21}{keV\,s\,m^{-3}}$. \textbf{Darum liegt die
+Auslegungstemperatur bei \SI{14}{keV} und nicht beim Maximum der Reaktivität.} Die Auslegung erreicht im Zentrum
+$n_0 T_0 \tau_E = \SI{8,0e21}{keV\,s\,m^{-3}}$. Der Wert liegt höher als die Grenze, weil Dichte und Temperatur nach
+außen abfallen und die Bremsstrahlung hinzukommt.
+
+\subsection{Wo im Plasma die Wärme entsteht}
+Die Leistungsdichte ist
+\[ p_\mathrm{fus}(\rho) = n_\mathrm{D}\,n_\mathrm{T}\,\langle\sigma v\rangle(T)\;Q,\qquad
+   n_\mathrm{D} = n_\mathrm{T} = 0{,}425\,n_e, \]
+mit den Profilen der Stufe~0: $n_e = n_0(1-\rho^2)^{0{,}5}$, $T = T_0(1-\rho^2)$, $n_0 = \SI{3,1e20}{m^{-3}}$
+(Rest der Ionen: Heliumasche und Verunreinigungen). Über das Volumen integriert ergibt das \SI{3051}{MW}; die Stufe~0
+nannte \SI{3053}{MW}.
+\begin{itemize}
+\item Im Zentrum entstehen \SI{12}{MW/m^3}, im Mittel \SI{2,8}{MW/m^3}.
+\item Die Hälfte der Leistung entsteht innerhalb $\rho = 0{,}38$, also in nur 14\,\% des Volumens, 90\,\% innerhalb
+  $\rho = 0{,}62$. Die Wärme entsteht im heißen Kern, der Rand trägt fast nichts bei.
+\item Es laufen $1{,}08\cdot10^{21}$ Reaktionen je Sekunde. Das verbraucht am Tag \SI{0,47}{kg} Tritium und
+  \SI{0,31}{kg} Deuterium. Davon werden \SI{2,9}{g} Masse in Energie umgewandelt.
+\end{itemize}
+
+\subsection{Zwei Wege aus dem Plasma}
+\paragraph{Das Neutron fliegt sofort hinaus.} Es ist ungeladen, also wirkt das Magnetfeld nicht auf es. Mit 17\,\% der
+Lichtgeschwindigkeit durchquert es den kleinen Radius in etwa \SI{45}{ns}, ohne das Plasma zu heizen. Seine Energie
+gibt es erst in der Wand ab, vor allem im Blanket: durch Stöße mit Kernen, die es abbremsen, und durch Einfang. Die
+wichtigste Einfangreaktion erzeugt zugleich neues Tritium:
+\[ {}^6\mathrm{Li} + \mathrm{n} \;\rightarrow\; {}^4\mathrm{He} + \mathrm{T} + \SI{4,8}{MeV} \quad\text{\cite{wiki_tritium}}. \]
+Solche Reaktionen setzen zusätzliche Energie frei. Der Faktor $M = 1{,}15$ (Annahme wie in Stufe~0) macht aus
+\SI{2442}{MW} Neutronenleistung \SI{2808}{MW} Wärme im Blanket. \textbf{Gut vier Fünftel der Kraftwerkswärme
+entstehen also gar nicht im Plasma, sondern im Volumen des Blankets.}
+
+\paragraph{Das Alphateilchen bleibt und heizt.} Es ist doppelt positiv geladen und kreist um die Feldlinien, mit einem
+Larmorradius von
+\[ r_L = \frac{m_\alpha v_\alpha}{2e\,B_0} = \SI{4,2}{cm} \ll a = \SI{2,31}{m}. \]
+So bleibt es eingeschlossen und gibt seine \SI{3,5}{MeV} über Coulomb-Stöße an das Plasma ab. Die Abbremszeit an den
+Elektronen ist $\tau_s \approx \SI{0,2}{s}$ \cite{stix1972}. Oberhalb der kritischen Energie
+$E_c \approx 14{,}8\,A_\alpha T_e\,(\sum n_i Z_i^2/n_e A_i)^{2/3} \approx \SI{415}{keV}$ bremsen vor allem die
+Elektronen, darunter die Ionen. Über den ganzen Weg gehen daher etwa 80\,\% an die Elektronen und 20\,\% an die
+Ionen. Diese \emph{Selbstheizung} von \SI{611}{MW} hält das Plasma heiß. Die Auslegung ist gezündet (keine
+Fremdheizung im Betrieb), erreicht das aber nur mit dem 1,29-Fachen des Einschlusses nach der Skalierung ISS04
+\cite{yamada2005}.
+
+\paragraph{Gleichgewicht: was hereinkommt, muss hinaus.} Im stationären Betrieb gilt
+\[ P_\alpha = \frac{W}{\tau_E} + P_\mathrm{Brems}:\qquad
+   \SI{611}{MW} = \frac{\SI{877}{MJ}}{\SI{1,82}{s}} + \SI{129}{MW} = \SI{482}{MW} + \SI{129}{MW}. \]
+\begin{itemize}
+\item \textbf{Bremsstrahlung} (\SI{129}{MW}): Elektronen strahlen bei Stößen mit Ionen Röntgenlicht ab. Das trifft
+  gleichmäßig die ganze Erstwand.
+\item \textbf{Transport} (\SI{482}{MW}): Wärme und Teilchen wandern langsam quer zum Feld nach außen, erreichen die
+  Abschälschicht (scrape-off layer) und strömen dort entlang der Feldlinien auf den Divertor.
+\end{itemize}
+
+\bild{plasma_waerme.png}{1.0}{Woher die Wärme kommt. Oben links: Reaktivität und nötiges $nT\tau_E$ für Zündung, mit
+dem Auslegungspunkt. Oben rechts: Gamow-Fenster bei \SI{14}{keV}. Unten links: Profile und Leistungsdichte über dem
+kleinen Radius. Unten rechts: Wege der Energie in MW.\label{fig:plasma}}
+\lesehilfe{Oben links in Blau, wie häufig Deuterium und Tritium bei einer Temperatur fusionieren
+(\emph{Reaktivität}). In Orange, wie gut man die Wärme einschließen muss, damit das Plasma sich selbst heizt
+(\emph{Zündung}). Die Temperatur steht in keV; \SI{1}{keV} entspricht etwa 11,6 Millionen Grad. Die orange Kurve
+hat ihr Minimum bei etwa \SI{14}{keV}, dort liegt der Auslegungspunkt. Oben rechts das \emph{Gamow-Fenster}: Blau
+ist der Anteil der Teilchen mit einer bestimmten Energie, der steil abfällt. Orange ist die Chance, die
+elektrische Abstoßung zu überwinden, die steil ansteigt. Ihr Produkt (grün) zeigt, dass die meisten Fusionen bei
+etwa \SI{39}{keV} stattfinden, also bei den wenigen schnellen Teilchen, nicht beim Durchschnitt. Unten links über
+dem Radius (0 Mitte, 1 Rand) Temperatur, Dichte und in Rot die erzeugte Leistung je Volumen: Die Hälfte entsteht im
+innersten Siebtel des Volumens. Unten rechts, wohin die Energie geht, in MW.}
+
+
+\subsection{Was daraus für die Anlage folgt}
+\begin{enumerate}
+\item \textbf{Die Aufteilung 80/20 ist Kernphysik, nicht Auslegung.} Das Blanket muss 82\,\% der Wärme aufnehmen, und
+  zwar im Volumen, nicht an der Oberfläche. Das passt zu dem dicken, wassergekühlten Blanket nach WCLL
+  (Abschnitt~\ref{sec:bilanz}).
+\item \textbf{Die Wärmebilanz hat den Divertor wohl zu günstig angesetzt.} Sie teilt die Alphaleistung je zur Hälfte
+  auf Erstwand und Divertor ($f_\mathrm{div} = 0{,}5$). Ohne weitere Maßnahmen gehen aber 79\,\% als Transport zum
+  Divertor, also \SI{482}{MW} statt \SI{305}{MW}. Bei \SI{10}{MW/m^2} wären dann mindestens \SI{48}{m^2}
+  Divertorfläche nötig statt \SI{31}{m^2}. Die Aufteilung 50/50 setzt voraus, dass etwa \SI{180}{MW} zusätzlich am
+  Rand abgestrahlt werden, etwa durch gezielt eingeblasenes Fremdgas. Das ist eine Aufgabe für die Auslegung des
+  Divertors.
+\item \textbf{Anfahren braucht Fremdheizung.} Bis die Alphaheizung trägt, muss das Plasma von außen auf Temperatur
+  gebracht werden. W7-X nutzt dafür Mikrowellen (Elektron-Zyklotron-Resonanzheizung, bis \SI{15}{MW}),
+  Neutralteilcheninjektion (bis \SI{8}{MW}) und Ionen-Zyklotron-Heizung \cite{wiki_w7x}.
+\item \textbf{Grenzen dieser Rechnung:} 0-D-Bilanz mit festen Profilen, nur Bremsstrahlung (keine Linien- und
+  Zyklotronstrahlung), Lawson-Grenze ohne Profile, Abbremsung mit $\ln\Lambda = 17$ und Zentralwerten. Eine
+  Transportrechnung, etwa mit einem 1-D-Code, wäre der nächste Schritt.
+\end{enumerate}

@@ -82,6 +82,14 @@ because $f$ does not converge monotonically between the grids.}
 \bild{tauscher_surrogat_en.png}{1.0}{Surrogate for gyroid (blue) and diamond (orange). Left, Nu: dotted the coarse level,
 dashed n144, solid with band grid $\to\infty$, grey dashed Renon. Centre, $f$ (n144 with band). Right, the
 cross-check of the coarse level.}
+\lesehilfe{A \emph{surrogate} is a fast stand-in model. It learns from 40 expensive flow
+calculations and then gives an instant estimate, with its uncertainty, for any input. Left: the Nusselt number (heat
+transfer) versus the \emph{Reynolds number}, a measure of how fast and turbulent the flow is; both axes are
+logarithmic. Dots are calculations (circles coarse, squares fine, diamonds finest), lines are the surrogate, the
+light band its uncertainty, and the grey dashed line the literature. Centre: the same for the friction factor $f$,
+which sets the pressure drop. Right: the cross-check. Each calculation was left out once and predicted from the
+others. Dots on the diagonal mean a correct prediction; the deviation is only 1 to 3\,\%.}
+
 
 \paragraph{What the surrogate says.}
 \begin{itemize}
@@ -105,6 +113,12 @@ segment model (\texttt{stellarator/vorwaermer\_stufung.py}):
 
 \bild{vorwaermer_stufung_en.png}{0.85}{Net extra power over exchanger volume. Graded (dashed) and uniform coincide. For
 comparison, Renon and Renon with Nu $\times$ 1.28 (grading after Oh et al.) in the same model.}
+\lesehilfe{Same layout as the net-gain figure above, now with the surrogate. The dashed lines are
+exchangers whose cell size changes in eight steps along the flow path (\emph{graded}). The solid lines are
+exchangers with the same cells everywhere. They lie practically on top of each other. The band spans from the
+finely computed to the extrapolated heat transfer. Grading brings no benefit; the smallest cell is best
+everywhere.}
+
 
 \paragraph{Result.}
 \begin{itemize}

@@ -9,6 +9,7 @@
   \includegraphics[width=0.9\linewidth,height=0.4\textheight,keepaspectratio]{bilder/#1}\par\medskip
   \includegraphics[width=0.9\linewidth,height=0.4\textheight,keepaspectratio]{bilder/#2}\caption{#3}\label{#4}\end{figure}}
 \usepackage{titlesec}\newcommand{\sectionbreak}{\clearpage}
+\newcommand{\lesehilfe}[1]{\begin{quote}\small\textit{So liest man das Bild:} #1\end{quote}}
 \newcommand{\kasten}[2]{\par\smallskip\noindent\fcolorbox{gray}{gray!8}{\parbox{0.96\linewidth}{\textbf{#1} #2}}\par\smallskip}
 \title{\textbf{Spulengehäuse eines Stellarators}\\[2pt]\large Vom offenen Datensatz zur Spannungsrechnung --
   ein Projektbericht mit Irrwegen}
@@ -105,6 +106,13 @@ Ellipsen und Bändern gebaut und der Strom auf \SI{2,5}{T} kalibriert. Der Vergl
 Amperewindungen je Spule $0{,}90\times$ des realen Werts.
 \zwei{v01_spulen_iso.png}{v01_feld_verteilung.png}{Bericht v0.1: Ersatzmodell und Feldverteilung. Plausible
 Zahlen -- aber kein Stellarator.}{fig:v01}
+\lesehilfe{Oben ein frühes Ersatzmodell der Spulen aus dünnen Drähten; die Farbe zeigt nur den Abstand
+von der Mitte des Rings. Unten links die Stärke des Magnetfelds (in Tesla, T; ein Kühlschrankmagnet hat etwa
+\SI{0,01}{T}) entlang einer Linie quer durch die Anlage: Die Spitzen liegen dort, wo die Linie dicht an Drähten
+vorbeiläuft. Unten rechts dieselbe Größe als Farbkarte in einem Querschnitt. Die Zahlen wirken vernünftig, aber
+die Spulen sind ebene Ringe und schräge Bündel. Ein solches Feld hält das Plasma nicht wie ein Stellarator. Darum
+begann das Projekt danach mit echten Spulendaten von Wendelstein~7-X neu.}
+
 
 Eine einfache topologische Prüfung zeigte den Fehler: 20 der 50 „nichtplanaren“ Spulen umschlossen die
 Plasmaachse gar nicht, die „planaren“ Spulen lagen als waagrechte Bänder über und unter dem Plasma. Die gute
@@ -125,6 +133,15 @@ bohnenförmigen Flussflächen (Abb.~\ref{fig:feld}). Kalibriert auf \SI{2,5}{T} 
 sich ein Strom von \SI{13,5}{kA} je Windung.
 \zwei{w7x_feldlinien_3d.png}{w7x_poincare_bewertung.png}{Feldlinien auf Flussflächen (oben), Poincaré-Schnitt
 und Verdrillung der Feldlinien über dem Radius (unten).}{fig:feld}
+\lesehilfe{Oben die 70 Spulen (braun) und einige Magnetfeldlinien. Sie laufen viele Male um den Ring,
+ihre Farbe zeigt die Feldstärke. Unten links ein \emph{Poincaré-Schnitt}: Man schneidet den Ring gedanklich an einer
+Stelle auf und setzt jedes Mal einen Punkt, wenn eine Feldlinie die Schnittfläche durchstößt. Ergeben die Punkte
+geschlossene, ineinanderliegende Kurven wie Zwiebelschalen (\emph{Flussflächen}), bleibt das Plasma eingeschlossen.
+Das rote Kreuz ist die Mitte (magnetische Achse). Ganz außen zerfallen die Kurven in kleine Inseln und verstreute
+Punkte; dort endet der Einschluss. Unten rechts die \emph{Verdrillung}: wie oft eine Feldlinie den Querschnitt
+umrundet, während sie einmal den Ring entlangläuft. Wo sie den Wert~1 erreicht, entstehen die Randinseln, wie bei
+W7-X beabsichtigt. Das Modell gibt also das bekannte W7-X-Feld wieder.}
+
 
 \subsection{Wickelpakete als Volumennetz}
 Der ursprüngliche Plan war eine CAD-Modellierung. Robuster war der direkte Weg: an jedem Bahnpunkt ein
@@ -137,8 +154,27 @@ Die Magnetostatik mit allen 70 Spulen (3,3 Mio.\ Tetraeder, \SI{680}{s}, \SI{10}
 Linienleiterrechnung (Biot-Savart) auf der Achse im Median auf \SI{0,24}{\%} (Abb.~\ref{fig:elmer}).
 \zwei{w7x_wickelpakete.png}{elmer_70_spulen_vergleich.png}{70 Wickelpakete direkt aus den Bahndaten (oben);
 FEM gegen Biot-Savart entlang einer Spulennormalen (unten).}{fig:elmer}
+\lesehilfe{Oben die 70 Spulen von W7-X als Wickelpakete mit ihrem echten Querschnitt von
+$19{,}2\times\SI{16}{cm}$, erzeugt aus veröffentlichten Bahndaten. Die Farben unterscheiden die sieben Spulentypen, die
+rote Linie ist die Mitte des Plasmas. Unten die Feldstärke entlang einer Geraden, die senkrecht durch die Mitte
+einer Spule läuft ($0$ = Spulenmitte). Zwei völlig verschiedene Rechenwege liefern sie: die schwarze Linie direkt
+aus der Formel für das Feld eines Stroms (Biot-Savart), die rote gestrichelte aus einer Finite-Elemente-Rechnung
+(FEM), die den Raum in viele kleine Zellen zerlegt. Die Kurven decken sich. Nur an den Spitzen bei
+$\pm\SI{2,5}{m}$, wo die Gerade durch den Spulenleiter selbst geht, löst das FEM-Netz weniger fein auf. Der
+FEM-Weg rechnet also richtig.}
+
 \zwei{validierung_draht.png}{w7x_voxelsolver_validierung.png}{Validierungen: FEM am geraden Leiter (oben),
 eigener FFT-Feldlöser gegen Biot-Savart (unten).}{fig:valid}
+\lesehilfe{Oben eine Prüfung mit bekannter Lösung: das Magnetfeld um einen geraden Draht über dem
+Abstand von der Drahtmitte, beide Achsen logarithmisch (jeder Hauptstrich ist das Zehnfache). Im Draht wächst das
+Feld nach außen, außerhalb fällt es ab; der Knick liegt an der Drahtoberfläche (gestrichelt). Die schwarze Linie
+ist exakt, die roten Punkte sind Elmer. Rechts daneben die Abweichung: innerhalb von $\pm2\,\%$. Nur ganz außen
+wächst sie, weil dort der künstliche Rand des Rechengebiets stört. Unten links die Feldstärke entlang der Mitte
+des Plasmas über den Umlaufwinkel; die fünf Berge sind die fünffache Symmetrie von W7-X. Schwarz ist die Formel,
+orange der eigene schnelle Löser (FFT), der den Raum in \SI{5}{cm}-Würfel teilt. Unten rechts ist jeder Punkt
+ein Messpunkt: waagrecht sein Abstand zur nächsten Spule, senkrecht die Abweichung. Weiter als \SI{0,3}{m} von den
+Spulen, also im ganzen Plasmabereich, liegt sie unter $1\,\%$. Beide Werkzeuge sind dort verlässlich.}
+
 
 \subsection{Abstecher: Auslegung auf 1\,GW}
 Auf dieselbe Kette setzte eine Studie auf, die vom Ziel her rechnet: \SI{1}{GW} elektrische Leistung $\to$
@@ -148,6 +184,17 @@ rund \SI{1}{GN}, etwa das Tausendfache von W7-X -- ab hier ist die Tragstruktur 
 Konstruktionsaufgabe.
 \zwei{uebersicht_1GW_A6_A45.png}{struktur_A6_HTS.png}{1-GW-Auslegung (oben) und erste Stützschale mit
 gekoppelter Rechnung Feld $\to$ Kraft $\to$ Spannung (unten).}{fig:gw}
+\lesehilfe{Oben drei Entwürfe für ein Kraftwerk mit \SI{1}{GW} Netzleistung, jeweils Spulen
+(braun) und Feldlinien (Farbe = Feldstärke). $A$ ist das \emph{Aspektverhältnis}, großer durch kleinen Radius;
+ein kleineres $A$ heißt ein dickerer, kürzerer Ring. Mit $A=4{,}5$ und Hochtemperatur-Supraleiter (HTS) schrumpft
+der große Radius von \SI{12,1}{m} auf \SI{10,4}{m}. Das Diagramm links unten im oberen Bild ist der
+\emph{Auslegungsraum}: waagrecht das Feld in der Plasmamitte, senkrecht der große Radius. Jede farbige Linie ist
+eine Grenze (Wärmelast auf der Wand, Plasmadruck, Einschluss, Platz zwischen Spule und Plasma). Grün ist der
+Bereich, in dem alle Grenzen eingehalten sind; die schwarzen Punkte sind die gewählten Entwürfe. Das untere Bild
+zeigt Stützschale und Wickelpakete, gefärbt nach \emph{Vergleichsspannung}: Diese Zahl fasst zusammen, wie stark
+das Material insgesamt beansprucht ist; Stahl hält einige hundert MPa. Rot heißt hoch belastet. Die Rechenkette
+Feld $\to$ Kraft $\to$ Spannung funktioniert, die Schale ist aber stellenweise überlastet.}
+
 
 %======================================================================
 \section{Parametrisches CAD-Modell der Gehäuse}
@@ -159,6 +206,12 @@ parametrisch umgesetzt: Parametertabelle, Skizzenmaße als Ausdrücke, Wandstär
 Linienlast, Symmetrien als Klone und Verbinder zwischen benachbarten Spulen.
 \zwei{freecad_gui_w7x.png}{gehaeuse_A45_HTS_verbunden.png}{Parametrisches FreeCAD-Modell: W7-X-ähnliche
 Gehäuse mit Verbindern (oben), kompakte 1-GW-Form (unten).}{fig:fc}
+\lesehilfe{Oben ein Bildschirmfoto des CAD-Programms FreeCAD. Links steht der Baum der Bauteile
+(je Spule Wickelpaket und Gehäuse), rechts das 3D-Modell: graue Gehäuse um alle 70 Spulen, blaue Stäbe als
+Verbinder zwischen den Gehäusen. \emph{Parametrisch} heißt: Alle Maße sind Zahlen in einer Tabelle; ändert man sie,
+baut sich das Modell von selbst neu auf. Unten dasselbe Verfahren für die kompakte 1-GW-Form mit 16 Spulen. Die
+Geometrie lässt sich also automatisch für ganz verschiedene Entwürfe erzeugen.}
+
 
 \subsection{Was nicht funktionierte}
 \begin{enumerate}\itemsep1pt
@@ -179,6 +232,13 @@ Gehäuse mit Verbindern (oben), kompakte 1-GW-Form (unten).}{fig:fc}
 \zwei{struktur_A45_HTS_gehaeuse.png}{gehaeuse_A45_HTS_keil_oben.png}{Erste Spannungsrechnung der FreeCAD-Gehäuse
 mit zu dünnen Wänden (oben); Gehäuse mit Keil auf der Innenseite -- im CAD gültig, nicht vernetzbar
 (unten).}{fig:keil}
+\lesehilfe{Oben links Gehäuse und Verbinder (aufgeschnitten), rechts die Wickelpakete,
+gefärbt nach Vergleichsspannung. Die Skala reicht bis über \SI{6000}{MPa}; das ist ein Vielfaches dessen, was
+Stahl aushält (grob \SIrange{500}{1000}{MPa}). Die Verformung beträgt bis zu \SI{646}{mm}. Unten ein Gehäuse mit
+einem Keil auf der Innenseite als Verstärkung, von oben gesehen. Im CAD-Programm ist es gültig, das Programm, das
+das Rechennetz erzeugt, scheitert aber daran. Die Wände waren also viel zu dünn, und die naheliegende Verstärkung
+ließ sich nicht rechnen. Darum entstand der zweite Weg ohne CAD-Kern.}
+
 \kasten{Lehre:}{Ein gültiger Volumenkörper ist noch kein vernetzbarer. Je mehr Boolesche Operationen auf
 dieselben Flächen treffen, desto eher entstehen Splitterflächen, an denen der Vernetzer scheitert.}
 
@@ -220,10 +280,28 @@ Die Spannungen liegen weit unter dem Vergleichswert. Das ist wegen der vereinfac
 \emph{kein} Festigkeitsnachweis, aber ein durchgängiger, reproduzierbarer Rechenweg, auf dem sich aufbauen lässt.
 \zwei{aufbau_schritt35.png}{struktur_w7x_gehaeuse_netz.png}{Schrittweise Aufbauprüfung im CAD-Ast, Schritt 35/70,
 0 Kollisionen (oben); Vergleichsspannung im Rechenweg ohne CAD-Kern (unten).}{fig:aufbau}
+\lesehilfe{Oben wird das Modell Spule für Spule aufgebaut. Nach jedem Schritt prüft ein Programm,
+ob sich Teile berühren. Orange ist die gerade eingesetzte Spule; bei Schritt 35 von 70 gibt es keine einzige
+Berührung. Unten die Spannung im W7-X-ähnlichen Modell aus dem zweiten Rechenweg. Die Farbskala reicht nur bis
+\SI{50}{MPa}: Die Gehäuse erreichen höchstens \SI{110}{MPa}, 99\,\% des Materials bleiben unter \SI{43}{MPa}, die
+Wickelpakete verformen sich um \SI{1}{mm}. Bei der Feldstärke von W7-X (etwa \SI{2,5}{T}) ist die Belastung also
+gering und weit unter der Grenze von Stahl.}
+
 \zwei{w7x_feldlinien_spannung.png}{w7x_feldlinien_spannung_geschlossen.png}{Gehäusespannung mit
 Magnetfeldlinien auf Flussflächen, aufgeschnitten und geschlossen.}{fig:fls}
+\lesehilfe{Beide Bilder zeigen dasselbe Modell mit zwei Farbskalen. Die Gehäuse sind nach
+Vergleichsspannung gefärbt (linke Skala, 0 bis \SI{50}{MPa}). Die dünnen Linien sind Magnetfeldlinien, gefärbt nach
+Feldstärke (rechte Skala). Oben ist der Ring aufgeschnitten, sodass man die Feldlinien im Inneren sieht, unten
+geschlossen. So erkennt man, wie das Plasma durch den Käfig aus Spulen läuft und wo die Gehäuse am stärksten
+beansprucht werden (gelbe und rote Stellen).}
+
 \bild{freecad_und_elmer.png}{1.0}{Beide Wege nebeneinander: parametrisches CAD-Modell (links) und
 Spannungsrechnung aus dem Rechenweg (rechts).}
+\lesehilfe{Links das CAD-Modell in FreeCAD, rechts das Rechenergebnis für die Spannung. Es sind
+zwei getrennte Wege. Der CAD-Weg liefert eine genaue, bearbeitbare Geometrie für Konstruktion und Fertigung. Der
+Rechenweg erzeugt das Netz direkt aus den Bahndaten und ist dadurch robust für die Festigkeitsrechnung. Beide
+beschreiben dieselben Spulen.}
+
 
 %======================================================================
 \section{Schichtaufbau im 3D-Modell}
@@ -232,8 +310,19 @@ Helium), Aluminiummantel, Windungsisolation, Grundisolierung, Verguss (Quarzsand
 Stahlgehäuse; $12\times9=108$ Leiter je Spule.
 \zwei{w7x_spule_querschnitt.png}{w7x_torus3d_detail.png}{Schichtaufbau einer Spule (schematisch, oben) und im
 3D-Schnittmodell (unten).}{fig:quer}
+\lesehilfe{Oben eine Schemazeichnung einer Spule im Querschnitt (nicht maßstäblich). Innen
+liegt das Wickelpaket aus 108 Windungen des Leiters. Darum folgen Isolation, ein Verguss aus Quarzsand und Epoxid
+und außen ein Stahlgehäuse, das die Magnetkräfte trägt. Rechts der Leiter selbst: ein Aluminiummantel mit einem
+Kabel aus 243 Strängen. Durch die Zwischenräume fließt flüssiges Helium und kühlt auf etwa \SI{4}{K}, also
+\SI{-269}{\celsius}. Unten derselbe Aufbau als 3D-Schnitt durch zwei Spulen; die Legende nennt die Schichten.
+Das Bild zeigt, wie viele Schichten eine supraleitende Spule braucht.}
+
 \zwei{w7x_torus3d_schnitt.png}{w7x_torus3d_sektor.png}{3D-Modell aller 70 Spulen, aufgeschnitten und als
 Sektor.}{fig:torus}
+\lesehilfe{Oben alle 70 Spulen mit Gehäuse, die obere Hälfte teilweise entfernt. Die violetten
+Linien sind Magnetfeldlinien und markieren, wo das Plasma liegt. Unten ein Ausschnitt aus der Nähe mit den
+Schnittflächen aller Schichten. Man sieht, wie eng das Plasma vom Spulenkäfig umschlossen ist.}
+
 
 \subsection{Wo fließt der Strom?}
 Im Betrieb fast vollständig im supraleitenden NbTi, ohne Widerstand. Das Kupfer ist Stabilisator: Es übernimmt
@@ -241,7 +330,16 @@ den Strom nur kurzzeitig, wenn der Supraleiter örtlich normalleitend wird (Quen
 tragen keinen Strom; der Mantel gibt dem Leiter Form und Festigkeit und schließt das Helium ein.
 \zwei{w7x_leiter3d.png}{w7x_leiter3d_blender.png}{Leiterstück: aufgeschnittener Aluminiummantel, verdrillte
 Stränge, daneben ein Strang zwölffach vergrößert mit NbTi-Filamenten (türkis, Anzahl symbolisch).}{fig:leiter}
+\lesehilfe{Ein kurzes Leiterstück mit aufgeschnittenem Aluminiummantel (grau). Darin liegen die
+verdrillten Stränge (kupferfarben). Daneben ist ein einzelner Strang zwölffach vergrößert, mit den türkisen Fäden
+aus dem Supraleiter Niob-Titan (NbTi). Der Strom fließt nur im Supraleiter, und zwar ohne Widerstand. Das Kupfer
+übernimmt ihn kurzzeitig, falls die Supraleitung zusammenbricht (\emph{Quench}). Unten dasselbe in Blender
+gerendert.}
+
 \bild{w7x_torus3d_blender.png}{1.0}{Gesamtes Spulensystem mit Feldlinien (gerendert in Blender \cite{blender}).}
+\lesehilfe{Ein gerendertes Gesamtbild nur zur Anschauung: graue Spulengehäuse, braune
+Schnittflächen der Wickelpakete und violette Magnetfeldlinien, die zeigen, wo das Plasma umläuft.}
+
 
 %======================================================================
 \section{Fazit für die Praxis}
@@ -271,6 +369,12 @@ der größte Hebel; bei 1~GW reichen Einzelgehäuse mit Verbindern grundsätzlic
 \bild{gyroid_gefaess_1GW_gesamt.jpg}{1.0}{Ausblick aus dem Surrogat-Bericht: 1-GW-Anlage mit Spulenspannung
 (Surrogat, \SI{1000}{MW}), Feldlinien und aufgeschnittenem Plasmagefäß, dessen Wand einen Gyroid-Kühlkern aus
 PicoGK hat. Darstellung in Blender, keine Auslegung der Kühlung.}
+\lesehilfe{Ein Ausblick, kein fertiger Entwurf. Die Spulengehäuse der 1-GW-Anlage sind nach
+Spannung gefärbt (linke Skala; rote Stellen wären für Stahl zu hoch belastet). Die Feldlinien sind nach Feldstärke
+gefärbt (mittlere Skala), das Plasma ist rosa. Das Plasmagefäß (silbern) ist aufgeschnitten. Seine Wand besteht aus
+einem \emph{Gyroid}, einer schwammartigen, sich regelmäßig wiederholenden Gitterstruktur. Sie ist leicht und steif
+und hat Kanäle für ein Kühlmittel; die Schnittfläche ist orange.}
+
 
 %======================================================================
 \section{Fortsetzung: Kühlung des Plasmagefäßes}\label{sec:kuehlung}
@@ -329,6 +433,13 @@ der Voxel direkt in eine Datei, und FluidX3D liest sie ein. Ein Abgleich mit dem
 abgewickelt über den Umfang (waagerecht) und den Weg vom Eintritt zum Austritt (senkrecht), Farbe = Geschwindigkeit
 in Umfangsrichtung. Die dunklen Blöcke bei etwa $\pm\ang{50}$ werden nicht durchströmt, weil dort eine Gitterlage
 fälschlich Stahl ist. Unten vergrößert.}
+\lesehilfe{Man stellt sich die wassergefüllte Schicht direkt hinter der Plasmawand wie eine
+ausgerollte Landkarte vor. Waagrecht geht es einmal um den Querschnitt herum (in Grad), senkrecht vom Eintritt (0)
+zum Austritt (1). Die Farbe zeigt, wie schnell das Wasser in Umfangsrichtung fließt; dunkel heißt, es steht. Bei
+etwa $\pm\ang{50}$ sieht man zwei dunkle Rechtecke: Dort fließt nichts, weil das Programm eine Lage von
+Gitterzellen fälschlich als Stahl markiert hatte. Unten ist ein Ausschnitt vergrößert. Solche Bilder decken Fehler
+auf, die in Mittelwerten nicht auffallen. Der Fehler wurde danach behoben.}
+
 
 Danach ließ sich die Verteilung in einem Schritt abgleichen. Die Wand der vorderen Filamente ist jetzt je nach
 Radius verschieden dick: innen \SI{5,8}{mm}, oben und unten \SI{4,9}{mm}, außen \SI{5,2}{mm}. Damit sank die
@@ -336,17 +447,43 @@ Streuung von 36\,\% auf 8\,\%.
 \bild{kuehl_auswertung_f11.png}{0.95}{Auswertung der FluidX3D-Rechnung f11: Druckverlust über der Zeit (stationär
 nach etwa \SI{5}{s}), Durchfluss über den Umfang an Kerneintritt und -austritt, Durchfluss durch den Gyroid-Kern
 je Sektor (Streuung 8\,\%) und Querschnitt der Kernmitte.}
+\lesehilfe{Vier Teilbilder. Oben links der \emph{Druckverlust}, also wie viel Druck die Pumpe
+aufbringen muss, über der Zeit. Er steigt in den ersten Sekunden und bleibt dann bei etwa \SI{22}{kPa}
+(\SI{0,22}{bar}) flach: Die Strömung hat sich eingeschwungen. Oben rechts der Durchfluss an jeder Stelle des Umfangs
+am Eintritt (blau) und am Austritt (rot) in den Kern. Die gestrichelte Linie wäre die perfekt gleichmäßige
+Verteilung; die Abweichung beträgt etwa 10\,\%. Unten links der Durchfluss durch den Gyroid-Kern je Sektor: Die
+Balken sind ähnlich hoch (Streuung 8\,\%). Unten rechts ein Querschnitt der Kernmitte. Das Wasser verteilt sich
+also recht gleichmäßig, und der Pumpaufwand ist klein.}
+
 \bild{kuehl_schnitt_f11.png}{1.0}{Querschnitt durch das Strömungsfeld f11 bei $\varphi=\ang{90}$, jede
 \SI{8}{mm}-Gitterzelle mit Wasser als Punkt, Farbe = Geschwindigkeit (logarithmisch). Links tritt das Wasser
 innen ein. Fast der ganze Durchfluss läuft durch die feine Gyroid-Schicht an der Plasmaseite (rechts vergrößert,
 \SIrange{0,1}{1}{m/s}). Im groben, dichten Gyroid dahinter steht das Wasser in abgeschlossenen Poren; er trägt
 nur.}
+\lesehilfe{Ein Schnitt quer durch das Kühlsegment. Jede Zelle mit Wasser ist ein Punkt, die Farbe
+zeigt die Geschwindigkeit auf einer logarithmischen Skala (rot etwa \SI{1}{m/s}, dunkelblau etwa
+\SI{0,001}{m/s}). Links bei $R\approx\SI{5}{m}$ tritt das Wasser ein. Der rote Ring an der Plasmaseite zeigt: Fast
+das ganze Wasser fließt durch die feine Schicht direkt an der Wand. Der Rahmen ist rechts vergrößert. Die dunklen
+Punkte dahinter sind Wasser, das im groben Gyroid steht. Gekühlt wird also dort, wo die Wärme ankommt; der grobe
+Gyroid trägt nur.}
+
 \bild{kuehl_gesamt.jpg}{1.0}{Gesamtbild der 1-GW-Anlage, ergänzt um die Kühlung: Gyroid-Filamente an der
 Plasmaseite mit Wasserbahnen (links), Durchfluss je Umfangssektor vor und nach dem Abgleich (Mitte),
 Erkenntnisse (rechts).}
+\lesehilfe{Eine Zusammenfassung auf einer Tafel. Oben die Anlage. Unten links die Gyroid-Fäden an der
+Plasmaseite mit den Bahnen des Wassers. In der Mitte der Durchfluss je Sektor vor dem Abgleich (grau, sehr
+ungleich, 36\,\% Streuung) und danach (türkis, 8\,\%). Rechts die Erkenntnisse: Der Abgleich hat die Verteilung
+stark verbessert, die Wärme der Plasmaseite (\SI{0,5}{MW/m^2}) führt diese Anordnung aber noch nicht sicher ab.}
+
 \zwei{kuehl_durchsichtig.jpg}{kuehl_gyroid_nah.jpg}{Bilder aus den Strömungsfilmen (Blender \cite{blender}):
 das Segment durchsichtig, Eintritt innen rechts, Austritt außen links (oben); die untere Hälfte ohne
 Innenhaut, Blick auf die Filamente der Plasmaseite (unten). Farbe = Geschwindigkeit.}{fig:kuehlfilm}
+\lesehilfe{Standbilder aus den Strömungsfilmen. Jeder kurze Strich ist die Spur eines gedachten
+Wasserteilchens, die Farbe zeigt seine Geschwindigkeit (blau langsam, gelb schnell). Oben das ganze Segment
+durchsichtig: Das Wasser tritt rechts innen ein, verteilt sich um den ganzen Querschnitt und verlässt ihn links
+außen. Unten eine Nahansicht auf die Gyroid-Fäden ohne Innenhaut. Viele schnelle Spuren laufen in den Spalten am
+Rand, weniger durch das Gitter selbst. Das Wasser nimmt den bequemsten Weg.}
+
 
 \subsection{Reicht das? Eine grobe Wärmeabschätzung}
 Die Strömungsrechnung enthält keine Wärme. Eine eindimensionale Abschätzung für Druckwasser bei
@@ -408,6 +545,11 @@ Sammelkammer. Der Gyroid führt kein Wasser mehr. Er darf deshalb offener sein u
 Kühlnetz angepasst werden.
 \bild{kuehl_wandstueck.png}{1.0}{Wandstück mit doppeltem Filament (PicoGK, Blender), Ausschnitt
 $450\times450\times\SI{900}{mm}$. In der Innenhaut ist ein Fenster freigeschnitten; darunter die Kühlkanäle (blau).}
+\lesehilfe{Ein Ausschnitt der Gefäßwand, etwa so groß wie ein Schuhkarton mal zwei. Unten liegt die
+Plasmaseite (Innenhaut \SI{5}{mm}). Ein Fenster ist herausgeschnitten, darunter sieht man die blauen Kühlkanäle,
+in denen Wasser von \SIrange{60}{150}{\celsius} erwärmt wird. Darüber ein trockener Gyroid, der nur für Steifigkeit
+sorgt, ganz oben die Außenhaut. Die Aufgaben sind getrennt: Gekühlt wird dicht an der Wärme, getragen dahinter.}
+
 
 \subsection{Wasser mit 60 bis 150\,°C}
 Das Segment (\ang{85}--\ang{95}) nimmt an der Plasmaseite bei \SI{0,5}{MW/m^2} etwa \SI{12,6}{MW} auf. Mit
@@ -424,6 +566,12 @@ Stahl höchstens & \SI{300}{\celsius}\\
 Kanalwand höchstens & \SI{202}{\celsius} (Sieden ab \SI{212}{\celsius} bei \SI{2}{MPa})\\\bottomrule
 \end{tabular}\caption{Erstwand-Kanäle mit Wasser \SI{60}{\celsius} $\rightarrow$ \SI{150}{\celsius} bei \SI{2}{MPa} (Variante n5).}\end{table}
 \bild{erstwand_n5_querschnitt.png}{1.0}{Temperatur im Stahl um die Kanäle (Elmer, halbe Teilung gespiegelt).}
+\lesehilfe{Ein Schnitt durch die Wand quer zu drei Kühlkanälen (blau, Wasser
+\SI{150}{\celsius}). Von oben trifft die Wärme des Plasmas auf (rote Pfeile, \SI{0,5}{MW} je Quadratmeter). Die
+Farbe ist die Temperatur im Stahl: hell oben etwa \SI{300}{\celsius}, dunkel unten etwa \SI{160}{\celsius}. Der
+Stahl bleibt damit im erlaubten Bereich. Die Kanalwand erreicht höchstens \SI{202}{\celsius} und bleibt unter der
+Siedetemperatur von \SI{212}{\celsius} bei diesem Druck; das Wasser kocht also nicht.}
+
 Hohe Drücke sind bei \SI{150}{\celsius} also nicht nötig, \SI{2}{MPa} lassen genug Abstand zum Sieden. Der
 eigentliche Nachteil liegt woanders: Wärme mit \SI{150}{\celsius} lässt sich kaum in Strom umwandeln.
 
@@ -434,6 +582,12 @@ zum Gehäuse und \SI{1,70}{m} zu den Verbindern. Im gerechneten Segment sind es 
 Wand braucht mit Spalt \SI{1,05}{m}; mit \SI{5}{cm} Sicherheitsabstand passt sie überall.
 \bild{kuehl_abstand.png}{1.0}{Abstand vom Plasmarand zu Gehäusen und Verbindern, abgewickelt über den Torus.
 Rot: Grenze, ab der die Wand nicht mehr passen würde; sie wird nirgends erreicht.}
+\lesehilfe{Eine Landkarte der ganzen Plasmaoberfläche, ausgerollt: waagrecht einmal den Ring entlang,
+senkrecht einmal um den Querschnitt. Die Farbe ist der freie Platz zwischen Plasmarand und dem nächsten Gehäuse
+oder Verbinder (gelb drei Meter und mehr, dunkelviolett etwa \SI{1,25}{m}). Die Wand braucht \SI{1,05}{m} plus
+\SI{5}{cm} Rand, das kleinste Maß von \SI{1,25}{m} reicht also überall. Die schrägen Bänder folgen den Spulen. Der
+helle Streifen markiert das gerechnete Segment.}
+
 
 \subsection{Flüssiges Blei statt Wasser?}
 Der Nutzer schlug als nächsten Schritt einen \emph{Gyroid im Gyroid} vor: plasmanah mit flüssigem Blei
@@ -453,6 +607,14 @@ Stellarators ist überwiegend toroidal. Toroidal laufende Kanäle liegen daher f
 Steigung der Feldlinien wurde mit etwa \ang{6} geschätzt.
 \bild{blei_druckverlust.png}{1.0}{Druckverlust im Segment für Blei und Bleilithium je Kanalrichtung bei
 \SI{6}{T}, logarithmisch. Zum Vergleich Wasser (n5).}
+\lesehilfe{Jeder Balken gibt an, wie viel Druck nötig ist, um flüssiges Metall durch die Kanäle eines
+Segments zu pumpen (blau Blei, orange Bleilithium). Die Skala ist logarithmisch, jeder Hauptstrich bedeutet das
+Zehnfache. Die gestrichelte Linie ist Wasser zum Vergleich. Bewegt sich ein leitendes Metall durch ein
+Magnetfeld, entstehen darin elektrische Ströme, die es bremsen (\emph{MHD-Effekt}). Fließt es entlang des Feldes
+(toroidal) oder sind die Wände elektrisch isoliert, bleibt der Druck klein. Quer zum Feld (poloidal) oder im Gyroid
+wird er tausendfach größer, über \SI{10}{MPa}. Flüssigmetall kommt also nur für Kanäle entlang des Feldes in
+Frage.}
+
 \begin{table}[H]\centering\small
 \begin{tabular}{lrrr}\toprule
 Kanalrichtung & Druckverlust & Pumpleistung / Wärme & \\\midrule
@@ -464,6 +626,11 @@ Gyroid, Stahlwand & \SI{14}{MPa} & 11\,\% & ungeeignet\\\bottomrule
 \SI{0,87}{m/s}, \SI{103}{l/s} je Segment (Variante b5).}\end{table}
 \bild{blei_querschnitt.png}{1.0}{Temperatur im Stahl mit Blei (b5, Innenhaut \SI{3}{mm}): höchstens
 \SI{537}{\celsius}. Mit \SI{500}{\celsius} Austritt und \SI{20}{mm}-Kanälen wären es \SI{711}{\celsius}.}
+\lesehilfe{Wie die Wasserrechnung weiter oben, aber mit flüssigem Blei von \SI{420}{\celsius} in
+größeren Kanälen und einer dünneren Innenhaut von \SI{3}{mm}. Die Farbe ist die Stahltemperatur, höchstens
+\SI{537}{\celsius} an der Plasmaseite. Das geht, liegt aber nahe an der Grenze des Stahls. Mit heißerem Blei am
+Austritt würde es zu heiß.}
+
 Ergebnis: \textbf{Für Flüssigmetall eignet sich der Gyroid nicht}, weil er die Strömung ständig quer zum Feld
 lenkt. Toroidale Kanäle gehen dagegen gut. Sinnvoll wäre: Blei oder Bleilithium in toroidalen Kanälen an der
 Plasmaseite, der trockene Gyroid dahinter trägt, und ein Dampferzeuger außerhalb der Spulen gibt die Wärme an
@@ -500,6 +667,11 @@ Temperaturabfall in der Innenhaut bei \SI{0,5}{MW/m^2} & \SI{600}{K} & \SI{100}{
 \end{tabular}\caption{f11 und f12 im Vergleich.}\end{table}
 \bild{kuehlung_f12_auswertung.png}{1.0}{Auswertung f12: Druckverlust über der Zeit, Verteilung über den Umfang
 und Durchfluss im Gyroid-Kern.}
+\lesehilfe{Aufbau wie bei der Auswertung von f11: oben links der Druckverlust über der Zeit
+(eingeschwungen bei \SI{19,4}{kPa}), oben rechts die Verteilung über den Umfang, unten links der Durchfluss durch
+den Gyroid-Kern je Sektor (Streuung 11\,\%). Die Variante f12 braucht etwas weniger Pumpdruck bei ähnlicher
+Verteilung.}
+
 Die Wand ist damit kein Engpass mehr. Es bleibt der Übergang ins langsame Wasser an der Plasmaseite mit etwa
 \SI{410}{K}.
 
@@ -523,6 +695,12 @@ Daraus folgen die Gewichte Temperatur 0,61, Druckverlust 0,23, Streuung 0,08 und
 $\mathrm{CR} = 0{,}10$, also gerade an der Grenze.
 \bild{varianten_vergleich.png}{1.0}{Links: Varianten nach Temperaturanstieg und Streuung, Farbe Druckverlust, rot
 umrandet die Pareto-Front. Rechts: Rangfolge mit den Gewichten des Nutzers.}
+\lesehilfe{Links ist jeder Punkt eine gerechnete Variante (f1 bis f12). Waagrecht steht, wie
+ungleich das Wasser verteilt ist, senkrecht, wie stark sich die Plasmaseite erwärmt. Beides soll klein sein:
+Unten links ist also besser. Die Farbe zeigt den Druckverlust. Rot umrandet ist die \emph{Pareto-Front}: Keine andere
+Variante ist in allen Punkten zugleich besser. Rechts die Rangliste nach Punkten. Wie wichtig jedes Merkmal ist,
+hat der Nutzer im Paarvergleich festgelegt. f12 liegt vorn.}
+
 Rang: f12 (0,73) vor f5 (0,69), f2 (0,58), f11 (0,42), f10 (0,38) und f1 (0,30). Bemerkenswert: f11 war auf die
 gleichmäßige Verteilung optimiert, die der Nutzer am Ende gering gewichtet. Der Paarvergleich hat so offengelegt,
 dass Aufwand in ein nachrangiges Ziel geflossen war.
@@ -544,6 +722,13 @@ Hautdicke & Spannung je MPa Druck & zulässiger Druck bei \SI{150}{MPa}\\\midrul
 \end{tabular}\caption{Innenhaut über dem Gyroid (Elmer, linear elastisch, ohne Temperaturspannungen).}\end{table}
 \bild{haut_festigkeit.png}{1.0}{Links: Vergleichsspannung in der \SI{5}{mm}-Haut bei \SI{15,5}{MPa}, blau die
 Gyroid-Wände. Rechts: höchste Spannung je Kühlmittel und Hautdicke.}
+\lesehilfe{Links eine Draufsicht auf ein $20\times\SI{20}{cm}$ großes Stück der Haut, auf das der
+Kühlwasserdruck von \SI{15,5}{MPa} (\SI{155}{bar}) drückt. Gestützt wird es von Gyroid-Wänden (blau). Die Farbe ist
+die Spannung; hell und gelb heißt hoch, vor allem zwischen den Stützwänden. Rechts die höchste Spannung je
+Kühlmittel und Hautdicke auf logarithmischer Skala. Die rote Linie ist der zulässige Wert von etwa \SI{150}{MPa}.
+Mit Wasser unter hohem Druck braucht man rund \SI{15}{mm} Haut, mit Helium \SI{10}{mm}. Bei Blei, das fast drucklos
+fließt, spielt die Dicke kaum eine Rolle.}
+
 Für Druckwasser wie in einem Kernkraftwerk ($\approx\SI{16}{MPa}$) taugt der wassergeführte Gyroid also nicht.
 Hochdruckwasser gehört in kleine Kanäle: Ein \SI{6}{mm}-Kanal unter \SI{5}{mm} Haut kommt nach derselben Formel nur
 auf etwa \SI{11}{MPa}. Das ist das doppelte Filament aus Abschnitt~\ref{sec:filament}.
@@ -636,6 +821,12 @@ $(1-\eta)P_\text{th} = \SI{2223}{MW}$. Vergleich mit belegten Anlagen:
 \end{itemize}
 \bild{waermebilanz.png}{1.0}{Wärmebilanz für \SI{1}{GW} netto mit Druckwasser und einer Turbine aus einem
 Druckwasserreaktor.}
+\lesehilfe{Die Säulen lesen sich von links nach rechts, ihre Höhe ist die Leistung. Die Fusion liefert
+Neutronen und Alphateilchen (Heliumkerne). Daraus wird Wärme im Blanket (vermehrt durch Kernreaktionen im
+Blanket), in der ersten Wand und im Divertor. Die Turbine macht daraus Strom (brutto), der größere Teil geht als
+Abwärme in den Kondensator. Nach Abzug von Pumpen und Eigenbedarf kommen \SI{1000}{MW} im Netz an. Nur etwa ein
+Drittel der Wärme wird Strom; das ist bei jedem Dampfkraftwerk so.}
+
 
 \paragraph{6. Empfindlichkeit.} Der Wirkungsgrad bestimmt die nötige Fusionsleistung am stärksten:
 \begin{table}[H]\centering\small
@@ -681,6 +872,12 @@ gezählt wurde gierig, die freiesten Stellen zuerst.
 \bild{rohr_durchfuehrung.png}{1.0}{Links: größter Innendurchmesser eines geraden Rohrs über die abgewickelte
 Gefäßoberfläche ($\theta = 0$ außen, \ang{180} innen). Die Fenster zwischen Spulen und Verbindern sind gut zu erkennen.
 Rechts: mögliche und nötige Rohre je Nennweite.}
+\lesehilfe{Links wieder die ausgerollte Gefäßoberfläche. Die Farbe ist der größte Rohrdurchmesser,
+der von dieser Stelle aus gerade nach außen zwischen den Spulen hindurchpasst. Dunkel heißt: Eine Spule ist im
+Weg. Die hellen Inseln sind die Fenster; die rote Linie umrandet Stellen mit mindestens \SI{0,3}{m}. Rechts zeigen
+grüne Balken, wie viele Rohre einer Weite hineinpassen, rote, wie viele man für das Kühlmittel hin und zurück
+braucht (logarithmisch). Grün liegt überall weit über Rot: Der Platz reicht reichlich.}
+
 \begin{table}[H]\centering\small
 \begin{tabular}{rrrr}\toprule
 $d_i$ & nötig ($v = \SI{10}{m/s}$) & nötig ($v = \SI{5}{m/s}$, Schild \SI{0,3}{m}) & möglich (Standard / vorsichtig)\\\midrule
@@ -777,8 +974,16 @@ Lage & Zelle & Wanddicke & bis Tiefe & Stahlanteil\\\midrule
 \end{tabular}\caption{Lagen des Wandstücks g1 ($240\times240\times\SI{600}{mm}$, Voxel \SI{1}{mm}); insgesamt 84\,\% Wasser.}\end{table}
 \bild{gradientwand_gesamt.jpg}{1.0}{Abgestufte Wand g1 von der Plasmaseite aus, ein Viertel weggeschnitten: unten an
 der Haut kleine Zellen, nach außen verdoppelt sich die Zelle je Lage.}
+\lesehilfe{Ein 3D-Bild der abgestuften Wand, ein Viertel weggeschnitten. Unten liegt die glatte
+Haut zur Plasmaseite, darüber ein Gitter. Mit jeder Lage nach außen verdoppelt sich die Zellgröße: fein an der Haut,
+wo Wärme und Druck ankommen, grob weiter außen. Ähnlich ist ein Knochen gebaut.}
+
 \bild{gradientwand_haut_nah.jpg}{1.0}{Nahaufnahme der Haut mit Fenster: Die feine Lage stützt die Haut nahezu
 flächig, Stützabstand etwa \SI{10}{mm}.}
+\lesehilfe{Eine Nahaufnahme der Haut, in die ein Fenster geschnitten ist. Darunter sieht man die
+feinste Gitterlage, die die Haut etwa alle \SI{10}{mm} abstützt. Die Haut liegt also fast flächig auf und kann
+dünn bleiben.}
+
 Offen ist der Test auf Durchströmung (FluidX3D: geht das Wasser durch die dichte Hautlage oder weicht es nach außen
 aus?) und Festigkeit (Elmer: Haut und Verzweigungen unter \SI{16}{MPa}). Das Wandstück schreibt dafür auch den
 Wasserraum heraus.
@@ -827,6 +1032,14 @@ Stahl, Fleck, $h$ doppelt & \SI{559}{\celsius} & \SI{363}{\celsius} & 98\,\% & 7
 was weniger abgeht, wurde seitlich verteilt.}\end{table}
 \bild{gradientwand_waerme.jpg}{1.0}{Wärmetest der Wand g1. Spalten von links: Temperatur der Plasmaseite; Schnitt
 durch die Mitte; an das Wasser abgegebene Wärme je Grundfläche (rot: Fleck); abgegebene Wärme über der Tiefe.}
+\lesehilfe{Fünf Zeilen für fünf Fälle (von oben): Stahl bei gleichmäßiger Wärme, Stahl mit einem
+heißen Fleck, Stahl mit Wolframbelag, eine Kupferlegierung und Stahl mit doppelt so guter Wasserkühlung. In der
+ersten Spalte die Temperatur der Plasmaseite von oben (der Fleck leuchtet), in der zweiten ein Schnitt durch die
+Wand (schwarz ist Wasser). Die dritte Spalte zeigt, wo die Wärme ans Wasser geht, die vierte, welcher Anteil der
+Wärme bis zu welcher Tiefe abgegeben ist. Bei Stahl steigt die Kurve in den ersten \SI{5}{mm} fast auf
+100\,\%: Nur die vorderste feine Lage arbeitet. Nur bei Kupfer (vierte Zeile) steigt sie langsamer, und die Wärme
+erreicht tiefere Lagen.}
+
 
 \paragraph{Ergebnis.}
 \begin{itemize}
@@ -926,6 +1139,13 @@ Kondensatdruck \SI{2}{MPa}.
 
 \bild{vorwaermer_netto.png}{1.0}{Netto-Mehrleistung über dem Bauvolumen. Die Linie zeigt die mittlere
 Korrelation, das Band die Streuung der Literatur. Gestrichelt: Platte (Notbehelf).}
+\lesehilfe{Waagrecht das Bauvolumen eines Wärmetauschers in Kubikmetern (logarithmisch, von 1 bis
+1000). Senkrecht die zusätzliche elektrische Leistung, die man gewinnt, wenn man mit der Divertorwärme das
+Speisewasser der Turbine vorwärmt; die Pumpleistung ist schon abgezogen. Jede Linie ist eine Bauart. Alle nähern
+sich der Obergrenze von \SI{73,3}{MW}. Je weiter links eine Kurve ansteigt, desto kleiner darf der Tauscher sein.
+Gyroid und Diamond schaffen fast das Maximum mit wenigen Kubikmetern, das Rohrbündel braucht etwa zehnmal so viel.
+Das Band zeigt die Streuung der Literatur.}
+
 
 \begin{table}[H]\centering\small
 \begin{tabular}{lrrr}\toprule
@@ -978,6 +1198,8 @@ Vom Nutzer kamen: die dünnere Wand mit größerem Austritt (f12), der Paarvergl
 und Optimierungsschleifen samt den Urteilen dazu, der Hinweis, dass die Wandung des Druckraums dem Druck
 standhalten muss, der Hinweis auf den knappen Kontext des lokalen Modells und die Festlegung auf eine bestehende
 Turbine. Der Assistent hat gerechnet, die Werkzeuge gebaut, die Recherche geprüft und die Folgen benannt.
+
+\input{plasma_de.tex}
 
 \section*{Software und Daten}
 ElmerFEM 9.0 \cite{elmer}, FluidX3D 3.8 \cite{fluidx3d}, PicoGK \cite{picogk}, gmsh \cite{gmsh}, FreeCAD 1.1 \cite{freecad}, simsopt \cite{simsopt}, DESC
@@ -1071,5 +1293,16 @@ anderer Werke sind nicht übernommen. Die Lizenzen der Quellen stehen in den Bel
   approximations are available. Biometrika 87 (2000) 1--13. doi:10.1093/biomet/87.1.1
 \bibitem{mckay1979} M.\,D. McKay, R.\,J. Beckman, W.\,J. Conover: A comparison of three methods for selecting values
   of input variables in the analysis of output from a computer code. Technometrics 21 (1979) 239--245. doi:10.2307/1268522
+\bibitem{boschhale1992} H.-S. Bosch, G.\,M. Hale: Improved formulas for fusion cross-sections and thermal
+  reactivities. Nuclear Fusion 32 (1992) 611--631. doi:10.1088/0029-5515/32/4/I07
+\bibitem{ame2020} M. Wang, W.\,J. Huang, F.\,G. Kondev, G. Audi, S. Naimi: The AME 2020 atomic mass evaluation (II).
+  Chinese Physics C 45 (2021) 030003. doi:10.1088/1674-1137/abddaf
+\bibitem{stix1972} T.\,H. Stix: Heating of toroidal plasmas by neutral injection. Plasma Physics 14 (1972) 367--384.
+  doi:10.1088/0032-1028/14/4/002
+\bibitem{yamada2005} H. Yamada, J.\,H. Harris, A. Dinklage, E. Ascasibar et al.: Characterization of energy confinement
+  in net-current free plasmas using the extended International Stellarator Database. Nuclear Fusion 45 (2005)
+  1684--1693. doi:10.1088/0029-5515/45/12/024
+\bibitem{wiki_tritium} Wikipedia (en): Tritium. \url{https://en.wikipedia.org/wiki/Tritium}, abgerufen 2026-11-01.
+\bibitem{wiki_w7x} Wikipedia (en): Wendelstein 7-X. \url{https://en.wikipedia.org/wiki/Wendelstein_7-X}, abgerufen 2026-11-01.
 \end{thebibliography}
 \end{document}

@@ -13,6 +13,11 @@ Seite. Die Platten (glatt und Chevron, $\beta = \pm 60^\circ$) entstehen paramet
 
 \bild{tauscher_module.jpg}{1.0}{Abgestufte Zwei-Fluid-Module, aufgeschnitten. Links Gyroid, rechts Diamond. Rot die
 warme (Divertor-), blau die kalte (Kondensat-)Seite, grau die Stahlwand.}
+\lesehilfe{Zwei aufgeschnittene Tauscherblöcke, links mit Gyroid-, rechts mit Diamond-Gitter (zwei
+verschiedene Gitterformen). Rot ist der Raum für das warme Wasser aus dem Divertor, blau der für das kalte
+Kondensat, grau die Stahlwand dazwischen. Es sind zwei getrennte, ineinander verschlungene Kanalsysteme; die beiden
+Wässer berühren sich nie, nur die Wärme geht durch die Wand.}
+
 
 \paragraph{2. Rechengebiet.} Ein Gebiet mit Ein- und Auslass scheitert bei $\mathrm{Re}\approx3000$: Der nötige
 Druckabfall verlangt im Lattice-Boltzmann-Verfahren mehr als 25\,\% Dichteunterschied, weit außerhalb der
@@ -52,6 +57,13 @@ und $8{,}9 \to 8{,}5$ (TRT, $\propto u$). Der Fehler fällt mit der Ordnung $p \
 
 \bild{tauscher_cfd_pruefung.png}{1.0}{Links: Prüffall laminarer Plattenkanal, Abweichung vom exakten Wert. Rechts:
 Nusselt-Zahl bezogen auf Renon bei derselben Re, über der Gitterfeinheit; offene Kreise: Richardson-Schätzung.}
+\lesehilfe{Links eine Prüfung des Strömungsprogramms an einem Fall mit exakt bekannter
+Lösung: Strömung zwischen zwei Platten. Senkrecht steht die Abweichung in Prozent, waagrecht, wie fein das
+Rechengitter ist. Je feiner, desto genauer; bei 48 Zellen sind es etwa 3\,\%. Rechts die \emph{Nusselt-Zahl},
+ein Maß dafür, wie gut Wärme von der Wand ins Wasser übergeht, geteilt durch den Wert aus der Literatur (Renon, $=1$).
+Die offenen Kreise rechnen auf ein unendlich feines Gitter hoch (Richardson) und liegen etwa 25\,\% über der
+Literatur. Das graue Kreuz stammt aus einem älteren, zu ungenauen Verfahren.}
+
 
 \paragraph{5. Vergleich der Bauarten.} Alle Rechnungen mit TRT und Quelle $\propto u_z$, $\Pr = 1{,}5$. Der Antrieb
 wird nachgeregelt, bis Re auf 15\,\% stimmt; bei 96 Zellen blieben Gyroid und Diamond etwas darunter. $j/f^{1/3}$
@@ -93,5 +105,10 @@ Chevron $\pm60^\circ$ & 96 & 2921 & 0,863 & 103,5 & 0,0325 & -- \\\bottomrule
 \bild{tauscher_stroemung_drei.jpg}{1.0}{Teilchenbahnen in Gyroid, Diamond und Chevron-Platten (von links), Re 3000,
 48 Zellen je $d_h$. Die Wand ist im Röntgenblick dargestellt. Aus den Bahnen entstand je ein Video. Die Farbe der
 Bahnen stammt aus den Läufen mit BGK-Stoß und dient nur der Anschauung.}
+\lesehilfe{Standbilder der Bahnen von Wasserteilchen (helle Linien) durch drei Bauarten:
+Gyroid, Diamond und Chevron-Platten. Die Wand ist durchscheinend dargestellt. Je stärker sich die Bahnen verwirbeln
+und kreuzen, desto besser mischt sich das Wasser und desto mehr Wärme nimmt es von der Wand auf. Die Farbe hat
+hier keine Bedeutung.}
+
 
 Aus diesen und weiteren 30 Läufen entstand das Ersatzmodell in Abschnitt~\ref{sec:tauschersurrogat}.

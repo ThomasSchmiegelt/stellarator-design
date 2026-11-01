@@ -40,6 +40,22 @@ getrennte Arbeitskopie (Pfad im Skript).
 Verwendung „Kühlsegment“: FluidX3D v3.8 selbst klonen, die beiden Dateien an ihre Stelle kopieren, dann
 `stellarator/kuehlung_cfd.py` (erwartet eine eigene Arbeitskopie, Pfad im Skript).
 
+### Fall „MHD“ (Flüssigmetall im Magnetfeld, 2026-11-01)
+
+Eigene, getrennte Arbeitskopie von FluidX3D v3.8 (Commit `50150a7`). Geändert:
+
+| Datei | Änderung |
+|---|---|
+| `setup_mhd_hartmann.cpp` | ersetzt `src/setup.cpp`: Hartmann-Kanal (Platten in y, B in y, x und z periodisch) |
+| `mhd_defines.hpp.diff` | `VOLUME_FORCE` und neuer Schalter `MHD` an, `FP16S` und `BENCHMARK` aus |
+| `mhd_lbm.cpp.diff` | `def_mhd_k` (K = σB²/ρ in Gittereinheiten) und `def_mhd_b` (Richtung von B) aus den Umgebungsvariablen `FX_MHD_K`, `FX_MHD_B` |
+| `mhd_kernel.cpp.diff` | Lorentzkraft f = σ(u×B)×B = −Kρu⊥ in `stream_collide`, halbimplizit zur Guo-Kraft: u⊥ = (u*⊥ + F⊥/2ρ)/(1 + K/2) |
+
+Gilt nur, solange das elektrische Potential keine Rolle spielt (unendlich ausgedehnte Platten). Für Kanäle mit
+Seitenwänden fehlt noch der Potentialanteil −σ∇φ×B (Poisson-Gleichung ∇²φ = ∇·(u×B)).
+Prüfung: `stellarator/mhd_hartmann.py` (Abweichung zur exakten Lösung 0,03 % bei Ha = 0, 0,1 % bei Ha = 5,
+zweite Ordnung im Gitter).
+
 ## Quellen / References
 
 Wer Ergebnisse aus FluidX3D veröffentlicht, zitiert laut Lizenz das Repository und diese Arbeiten:

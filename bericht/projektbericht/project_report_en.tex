@@ -8,6 +8,7 @@
   \includegraphics[width=0.9\linewidth,height=0.4\textheight,keepaspectratio]{bilder/#1}\par\medskip
   \includegraphics[width=0.9\linewidth,height=0.4\textheight,keepaspectratio]{bilder/#2}\caption{#3}\label{#4}\end{figure}}
 \usepackage{titlesec}\newcommand{\sectionbreak}{\clearpage}
+\newcommand{\lesehilfe}[1]{\begin{quote}\small\textit{How to read the figure:} #1\end{quote}}
 \newcommand{\kasten}[2]{\par\smallskip\noindent\fcolorbox{gray}{gray!8}{\parbox{0.96\linewidth}{\textbf{#1} #2}}\par\smallskip}
 \title{\textbf{Two AI Agents, One Stellarator}\\[2pt]\large Building an engineering simulation pipeline from an
   open dataset -- including the dead ends}
@@ -107,6 +108,13 @@ parametric surrogate: ellipses and bands, current calibrated to 2.5\,T. Compared
 coil matched to $0.90\times$. A report was written.
 \zwei{v01_spulen_iso.png}{v01_feld_verteilung.png}{Report v0.1: the surrogate coil set and its field. Plausible
 numbers -- but not a stellarator.}{fig:v01}
+\lesehilfe{Top: an early stand-in model of the coils made of thin wires; the colour only shows the distance
+from the centre of the ring. Bottom left: the magnetic field strength (in tesla, T; a fridge magnet has about
+\SI{0.01}{T}) along a line across the machine. The peaks are where the line passes close to wires. Bottom right:
+the same quantity as a colour map in a cross-section. The numbers look reasonable, but the coils are flat rings and
+slanted bundles. Such a field does not hold a plasma the way a stellarator does. That is why the project then
+restarted from real Wendelstein~7-X coil data.}
+
 
 A topological check by the coding agent -- does each coil actually encircle the plasma axis? -- failed for 20 of
 50 coils; the ``planar'' coils were horizontal bands above and below the plasma. The good match was a
@@ -127,6 +135,14 @@ Biot-Savart to 1.3\,\% but destroyed the flux surfaces during field-line tracing
 the device's symmetry -- so field lines are always traced with Biot-Savart.
 \zwei{w7x_feldlinien_3d.png}{w7x_poincare_bewertung.png}{Field lines on flux surfaces (top), Poincaré section
 and rotational transform (bottom).}{fig:feld}
+\lesehilfe{Top: the 70 coils (brown) and a few magnetic field lines. They run around the ring many
+times, and their colour shows the field strength. Bottom left: a \emph{Poincaré section}. Imagine cutting the ring
+at one place and putting a dot wherever a field line pierces the cut. If the dots form closed, nested curves like
+onion layers (\emph{flux surfaces}), the plasma stays confined. The red cross is the centre (magnetic axis). At the
+very edge the curves break up into small islands and scattered dots; confinement ends there. Bottom right: the
+\emph{twist}, i.e.\ how often a field line goes round the cross-section while it travels once along the ring.
+Where it reaches~1, the edge islands appear, as intended in W7-X. The model reproduces the known W7-X field.}
+
 
 The plan had been to model coils in CAD. Generating the mesh directly was faster and more robust: a rectangle
 at every path point, two ruled half-surfaces per coil, meshed by gmsh. Sweeps and smooth lofts failed with
@@ -135,8 +151,26 @@ instead of more than 45\,min). Elmer with all 70 coils (3.3\,M tetrahedra, 680\,
 on the axis to a median of 0.24\,\%.
 \zwei{w7x_wickelpakete.png}{elmer_70_spulen_vergleich.png}{70 winding packs meshed straight from the path data
 (top); FEM vs.\ Biot-Savart along a coil normal (bottom).}{fig:elmer}
+\lesehilfe{Top: the 70 W7-X coils as winding packs with their real $19.2\times\SI{16}{cm}$ cross-section,
+built from published path data. Colours mark the seven coil types; the red line is the centre of the plasma.
+Bottom: the field strength along a straight line through the centre of one coil, perpendicular to it ($0$ = coil
+centre). Two completely different methods give it. The black line comes directly from the formula for the field of
+a current (Biot--Savart). The red dashed line comes from a finite-element (FEM) calculation, which splits space into
+many small cells. The curves agree. Only at the peaks near $\pm\SI{2.5}{m}$, where the line passes through the
+conductor itself, is the FEM mesh coarser. So the FEM route computes correctly.}
+
 \zwei{validierung_draht.png}{w7x_voxelsolver_validierung.png}{Validation: FEM on a straight wire (top), FFT
 voxel solver vs.\ Biot-Savart (bottom).}{fig:valid}
+\lesehilfe{Top: a check against a known answer, the magnetic field around a straight wire versus
+distance from its centre. Both axes are logarithmic (each major tick is a factor of ten). Inside the wire the field
+grows outwards, outside it falls; the kink is at the wire surface (dashed). Black is exact, red dots are Elmer.
+Right of it, the deviation: within $\pm2\,\%$. Only at the far edge does it grow, because the artificial boundary of
+the computational domain interferes. Bottom left: the field strength along the centre of the plasma versus the
+angle around the ring; the five humps are the five-fold symmetry of W7-X. Black is the formula, orange the project's
+own fast solver (FFT), which divides space into \SI{5}{cm} cubes. Bottom right: each dot is one test point,
+horizontally its distance to the nearest coil, vertically the deviation. More than \SI{0.3}{m} from the coils, i.e.\
+everywhere in the plasma region, it stays below $1\,\%$. Both tools are reliable there.}
+
 
 A side study ran the pipeline backwards from a target of 1\,GW net electric power: plasma size and field
 $\to$ own plasma shape (DESC) $\to$ coils (simsopt). With high-temperature superconductors the device ends up at
@@ -144,6 +178,17 @@ about 10\,m major radius with forces of roughly 1\,GN per coil -- about a thousa
 support structure is the real problem.
 \zwei{uebersicht_1GW_A6_A45.png}{struktur_A6_HTS.png}{1\,GW sizing study (top) and a first support shell with
 coupled field $\to$ force $\to$ stress analysis (bottom).}{fig:gw}
+\lesehilfe{Top: three designs for a power plant with \SI{1}{GW} delivered to the grid, each
+showing coils (brown) and field lines (colour = field strength). $A$ is the \emph{aspect ratio}, major over minor
+radius; a smaller $A$ means a fatter, shorter ring. With $A=4.5$ and high-temperature superconductor (HTS) the major
+radius shrinks from \SI{12.1}{m} to \SI{10.4}{m}. The chart at the lower left of the top figure is the \emph{design
+space}: horizontally the field at the plasma centre, vertically the major radius. Each coloured line is a limit
+(heat load on the wall, plasma pressure, confinement, space between coil and plasma). Green is where all limits are
+met; the black dots are the chosen designs. The bottom figure shows the support shell and winding packs coloured by
+\emph{equivalent stress}. This single number sums up how hard the material is loaded; steel withstands a few hundred
+MPa. Red means highly loaded. The chain field $\to$ force $\to$ stress works, but the shell is overloaded in
+places.}
+
 
 %======================================================================
 \section{The parametric CAD branch}
@@ -154,6 +199,12 @@ fully parametric model: spreadsheet parameters, sketch dimensions as expressions
 connectors between neighbours.
 \zwei{freecad_gui_w7x.png}{gehaeuse_A45_HTS_verbunden.png}{Parametric FreeCAD model: W7-X-like casings with
 connectors (top), compact 1\,GW design (bottom).}{fig:fc}
+\lesehilfe{Top: a screenshot of the CAD program FreeCAD. On the left is the parts tree (winding pack
+and casing for each coil), on the right the 3D model: grey casings around all 70 coils and blue bars connecting
+them. \emph{Parametric} means all dimensions are numbers in a table; change them and the model rebuilds itself.
+Bottom: the same procedure for the compact 1~GW shape with 16 coils. The geometry can thus be generated
+automatically for very different designs.}
+
 
 What went wrong:
 \begin{enumerate}\itemsep1pt
@@ -170,6 +221,13 @@ What went wrong:
 \end{enumerate}
 \zwei{struktur_A45_HTS_gehaeuse.png}{gehaeuse_A45_HTS_keil_oben.png}{First stress run of the CAD casings (top);
 casings with inner wedges -- valid in CAD, not meshable (bottom).}{fig:keil}
+\lesehilfe{Top left: casings and connectors (cut open); top right: the winding packs, coloured
+by equivalent stress. The scale goes above \SI{6000}{MPa}, several times what steel can bear (roughly
+\SIrange{500}{1000}{MPa}). Deformation reaches \SI{646}{mm}. Bottom: a casing with a wedge on the inside as
+reinforcement, seen from above. It is valid in CAD, but the program that builds the computational mesh fails on it.
+So the walls were far too thin, and the obvious reinforcement could not be computed. That is why the second route
+without a CAD kernel was created.}
+
 \kasten{Lesson -- valid is not meshable.}{The more boolean operations meet on the same faces, the more sliver
 faces appear, and the mesher fails far away from where the problem was created. Keep the analysis model separate
 from the design model.}
@@ -196,10 +254,26 @@ Because of the simplified supports and walls as thin as 3\,mm in places this is 
 but it is a reproducible end-to-end pipeline.
 \zwei{aufbau_schritt35.png}{struktur_w7x_gehaeuse_netz.png}{Incremental collision check in the CAD branch, step
 35/70 (top); von Mises stress from the CAD-free branch (bottom).}{fig:aufbau}
+\lesehilfe{Top: the model is built coil by coil. After each step a program checks whether any parts
+touch. Orange is the coil just placed; at step 35 of 70 there is not a single contact. Bottom: the stress in the
+W7-X-like model from the second route. The colour scale only goes to \SI{50}{MPa}. The casings reach at most
+\SI{110}{MPa}, 99\,\% of the material stays below \SI{43}{MPa}, and the winding packs deform by \SI{1}{mm}. At the
+W7-X field strength (about \SI{2.5}{T}) the load is small, far below the limit of steel.}
+
 \zwei{w7x_feldlinien_spannung.png}{w7x_feldlinien_spannung_geschlossen.png}{Casing stress with magnetic field
 lines on flux surfaces, cut open and closed.}{fig:fls}
+\lesehilfe{Both images show the same model with two colour scales. The casings are coloured by
+equivalent stress (left scale, 0 to \SI{50}{MPa}). The thin lines are magnetic field lines, coloured by field
+strength (right scale). The top image is cut open so the field lines inside are visible; the bottom one is closed.
+You can see how the plasma runs through the cage of coils and where the casings are loaded most (yellow and red
+spots).}
+
 \bild{freecad_und_elmer.png}{1.0}{Both branches side by side: parametric CAD (left), stress analysis from the
 CAD-free pipeline (right).}
+\lesehilfe{Left: the CAD model in FreeCAD; right: the computed stress. These are two separate routes.
+The CAD route gives exact, editable geometry for design and manufacture. The computational route builds the mesh
+directly from the path data and is therefore robust for the strength calculation. Both describe the same coils.}
+
 
 %======================================================================
 \section{Visualisation: from mesh to Blender}
@@ -209,13 +283,34 @@ separate conductor model answers the question ``where does the current flow?'': 
 superconducting NbTi; copper only takes over briefly during a quench; jacket and helium carry none.
 \zwei{w7x_spule_querschnitt.png}{w7x_torus3d_detail.png}{Coil layers (schematic, top) and in the 3D model
 (bottom).}{fig:quer}
+\lesehilfe{Top: a schematic cross-section of one coil (not to scale). Inside is the winding pack
+of 108 turns of conductor. Around it come insulation, a filling of quartz sand and epoxy, and an outer steel casing
+that carries the magnetic forces. On the right is the conductor itself: an aluminium jacket holding a cable of 243
+strands. Liquid helium flows through the gaps and cools it to about \SI{4}{K}, i.e.\ \SI{-269}{\celsius}. Bottom:
+the same build-up as a 3D cut through two coils; the legend names the layers. The figure shows how many layers a
+superconducting coil needs.}
+
 \zwei{w7x_leiter3d.png}{w7x_leiter3d_blender.png}{Conductor: opened jacket, twisted strands, one strand
 magnified with NbTi filaments (count symbolic). PyVista (top), Blender Cycles (bottom).}{fig:leiter}
+\lesehilfe{A short piece of conductor with the aluminium jacket (grey) cut open. Inside are the twisted
+strands (copper coloured). Next to it one strand is magnified twelve times, showing the turquoise filaments of the
+superconductor niobium--titanium (NbTi). The current flows only in the superconductor, without resistance. The copper
+takes it over briefly if superconductivity breaks down (a \emph{quench}). Bottom: the same rendered in Blender.}
+
 \bild{w7x_torus3d_blender.png}{1.0}{The full coil system with field lines, rendered in Blender.}
+\lesehilfe{A rendered overall image for illustration only: grey coil casings, brown cut faces of
+the winding packs, and violet field lines showing where the plasma circulates.}
+
 
 \bild{gyroid_gefaess_1GW_gesamt.jpg}{1.0}{Later step: the 1\,GW design with casing stress from the surrogate
 model (1000\,MW), field lines, and a cut-open plasma vessel whose wall has a gyroid cooling core built with
 PicoGK. A rendering, not a cooling design.}
+\lesehilfe{An outlook, not a finished design. The coil casings of the 1~GW plant are coloured
+by stress (left scale; red spots would be too highly loaded for steel). The field lines are coloured by field
+strength (middle scale), and the plasma is pink. The plasma vessel (silver) is cut open. Its wall is a \emph{gyroid},
+a sponge-like, regularly repeating lattice. It is light and stiff and has channels for a coolant; its cut face is
+orange.}
+
 
 Getting PyVista's glTF export into Blender needed three fixes, each found by measuring instead of guessing:
 colours arrived as sRGB values in a linear slot (washed out; fixed by linearising), the scene was rotated by
@@ -299,6 +394,13 @@ directly; it matches the mesh 100\,\%. The numbers of f6 to f9 are therefore dis
 circumference (horizontal) and the path from inlet to outlet (vertical), colour = toroidal speed. The dark blocks
 at about $\pm\ang{50}$ carry no flow because one lattice layer there was wrongly set to steel. Zoom below.
 Labels in German.}
+\lesehilfe{Imagine the water-filled layer directly behind the plasma wall unrolled like a map.
+Horizontally it goes once around the cross-section (in degrees), vertically from inlet (0) to outlet (1). The colour
+shows how fast the water flows around the circumference; dark means it is standing still. Near $\pm\ang{50}$ there
+are two dark rectangles. Nothing flows there because the program had wrongly marked one layer of grid cells as
+steel. The bottom image is a close-up. Pictures like this reveal errors that averages hide. The bug was fixed
+afterwards.}
+
 
 After that, the distribution could be balanced in one step. The wall of the front filaments now varies with
 radius: \SI{5.8}{mm} inboard, \SI{4.9}{mm} top and bottom, \SI{5.2}{mm} outboard. The spread dropped from 36\,\%
@@ -306,17 +408,41 @@ to 8\,\%.
 \bild{kuehl_auswertung_f11.png}{0.95}{Evaluation of the FluidX3D run f11: pressure drop over time (steady
 after about \SI{5}{s}), flow over the circumference at core inlet and outlet, flow through the gyroid core per
 sector (spread 8\,\%), and cross-section at mid core. Labels in German.}
+\lesehilfe{Four panels. Top left: the \emph{pressure drop}, i.e.\ how much pressure the pump must
+supply, over time. It rises during the first seconds and then stays flat at about \SI{22}{kPa} (\SI{0.22}{bar}),
+so the flow has settled. Top right: the flow rate at each point around the circumference, entering (blue) and
+leaving (red) the core. The dashed line would be a perfectly even distribution; the deviation is about 10\,\%.
+Bottom left: the flow through the gyroid core per sector. The bars are similar in height (8\,\% scatter). Bottom
+right: a cross-section of the core centre. The water spreads fairly evenly, and the pumping effort is small.}
+
 \bild{kuehl_schnitt_f11.png}{1.0}{Cross-section through the f11 flow field at $\varphi=\ang{90}$; every
 \SI{8}{mm} lattice cell with water is a dot, colour = speed (log scale). Water enters on the left (inboard).
 Almost all the flow passes through the fine gyroid layer on the plasma side (zoom on the right,
 \SIrange{0.1}{1}{m/s}). In the coarse dense gyroid behind it the water sits in closed pores; it only carries
 load. Labels in German.}
+\lesehilfe{A cut across the cooling segment. Each cell with water is one dot, and the colour shows
+its speed on a logarithmic scale (red about \SI{1}{m/s}, dark blue about \SI{0.001}{m/s}). The water enters on the
+left at $R\approx\SI{5}{m}$. The red ring on the plasma side shows that almost all the water flows through the fine
+layer right at the wall; the frame is magnified on the right. The dark dots behind it are water standing still in
+the coarse gyroid. So cooling happens where the heat arrives, and the coarse gyroid only carries load.}
+
 \bild{kuehl_gesamt.jpg}{1.0}{Overview of the 1\,GW device extended by the cooling results: gyroid filaments on
 the plasma side with water paths (left), flow per circumferential sector before and after balancing (middle),
 findings (right). Labels in German.}
+\lesehilfe{A summary on one board. Top: the plant. Bottom left: the gyroid filaments on the plasma side with
+the water paths. Centre: the flow per sector before balancing (grey, very uneven, 36\,\% scatter) and after
+(turquoise, 8\,\%). Right: the findings. Balancing greatly improved the distribution, but this layout does not yet
+reliably remove the plasma-side heat (\SI{0.5}{MW/m^2}).}
+
 \zwei{kuehl_durchsichtig.jpg}{kuehl_gyroid_nah.jpg}{Frames from the flow films (Blender \cite{blender}): the
 segment rendered transparent, inlet inboard right, outlet outboard left (top); the lower half without the inner
 skin, looking at the plasma-side filaments (bottom). Colour = speed.}{fig:coolfilm}
+\lesehilfe{Stills from the flow videos. Each short streak is the track of an imagined water particle,
+and its colour shows its speed (blue slow, yellow fast). Top: the whole segment, transparent. The water enters at
+the inner right, spreads around the whole cross-section and leaves at the outer left. Bottom: a close-up of the
+gyroid filaments without the inner skin. Many fast tracks run in the gaps at the edge, fewer through the lattice
+itself. The water takes the easiest path.}
+
 
 \subsection{Is it enough? A rough heat estimate}
 The flow computation contains no heat. A one-dimensional estimate for pressurised water at \SI{300}{\celsius}
@@ -376,6 +502,11 @@ network.
 \bild{kuehl_wandstueck.png}{1.0}{Wall piece with double filament (PicoGK, Blender), cut-out
 $450\times450\times\SI{900}{mm}$. A window is cut into the inner skin; the cooling channels (blue) lie below.
 Labels in German.}
+\lesehilfe{A piece of the vessel wall, roughly the size of two shoe boxes. At the bottom is the plasma
+side (inner skin \SI{5}{mm}). A window is cut out, showing the blue cooling channels beneath it, where water heats
+from \SIrange{60}{150}{\celsius}. Above them is a dry gyroid that only provides stiffness, and the outer skin is at
+the top. The jobs are separated: cooling close to the heat, load bearing behind it.}
+
 
 \subsection{Water at 60 to 150\,°C}
 At \SI{0.5}{MW/m^2} the segment (\ang{85}--\ang{95}) takes up about \SI{12.6}{MW} on the plasma side. With a
@@ -393,6 +524,12 @@ Channel wall maximum & \SI{202}{\celsius} (boiling from \SI{212}{\celsius} at \S
 \end{tabular}\caption{First-wall channels with water \SI{60}{\celsius} $\rightarrow$ \SI{150}{\celsius} at \SI{2}{MPa} (variant n5).}\end{table}
 \bild{erstwand_n5_querschnitt.png}{1.0}{Steel temperature around the channels (Elmer, half pitch mirrored).
 Labels in German.}
+\lesehilfe{A cut through the wall across three cooling channels (blue, water at
+\SI{150}{\celsius}). The plasma's heat arrives from above (red arrows, \SI{0.5}{MW} per square metre). The colour is
+the temperature in the steel: bright at the top, about \SI{300}{\celsius}; dark at the bottom, about
+\SI{160}{\celsius}. The steel stays within its allowed range. The channel wall reaches at most \SI{202}{\celsius},
+below the boiling point of \SI{212}{\celsius} at this pressure, so the water does not boil.}
+
 So high pressures are not needed at \SI{150}{\celsius}; \SI{2}{MPa} leaves enough margin to boiling. The real
 drawback lies elsewhere: heat at \SI{150}{\celsius} can hardly be turned into electricity.
 
@@ -403,6 +540,12 @@ model was computed (\texttt{stellarator/gefaess\_abstand.py}). The minimum is \S
 needs \SI{1.05}{m}; with \SI{5}{cm} margin it fits everywhere.
 \bild{kuehl_abstand.png}{1.0}{Distance from the plasma boundary to casings and connectors, unrolled over the
 torus. Red: limit at which the wall would no longer fit; it is reached nowhere. Labels in German.}
+\lesehilfe{A map of the whole plasma surface, unrolled: horizontally once along the ring, vertically once
+around the cross-section. The colour is the free space between the plasma edge and the nearest casing or connector
+(yellow three metres or more, dark violet about \SI{1.25}{m}). The wall needs \SI{1.05}{m} plus a \SI{5}{cm}
+margin, so the smallest gap of \SI{1.25}{m} is enough everywhere. The slanted bands follow the coils. The light
+stripe marks the segment that was computed.}
+
 
 \subsection{Liquid lead instead of water?}
 As a next step the user proposed a \emph{gyroid within a gyroid}: cooled near the plasma with liquid lead, which
@@ -422,6 +565,13 @@ mainly toroidal, so toroidal channels run almost along the field; the pitch of t
 about \ang{6}.
 \bild{blei_druckverlust.png}{1.0}{Pressure drop in the segment for lead and lead-lithium per channel direction at
 \SI{6}{T}, logarithmic. Water (n5) for comparison. Labels in German.}
+\lesehilfe{Each bar is the pressure needed to pump liquid metal through the channels of one segment
+(blue lead, orange lead--lithium). The scale is logarithmic; each major tick means ten times more. The dashed line
+is water for comparison. When a conducting metal moves through a magnetic field, electric currents arise in it that
+brake it (the \emph{MHD effect}). If it flows along the field (toroidal) or the walls are electrically insulated, the
+pressure stays small. Across the field (poloidal) or in the gyroid it becomes a thousand times larger, above
+\SI{10}{MPa}. Liquid metal is therefore only an option for channels along the field.}
+
 \begin{table}[H]\centering\small
 \begin{tabular}{lrrr}\toprule
 Channel direction & Pressure drop & Pumping power / heat & \\\midrule
@@ -434,6 +584,11 @@ gyroid, steel wall & \SI{14}{MPa} & 11\,\% & unsuitable\\\bottomrule
 \bild{blei_querschnitt.png}{1.0}{Steel temperature with lead (b5, inner skin \SI{3}{mm}): at most
 \SI{537}{\celsius}. With a \SI{500}{\celsius} outlet and \SI{20}{mm} channels it would be \SI{711}{\celsius}.
 Labels in German.}
+\lesehilfe{Like the water calculation above, but with liquid lead at \SI{420}{\celsius} in larger
+channels and a thinner \SI{3}{mm} inner skin. The colour is the steel temperature, at most \SI{537}{\celsius} on the
+plasma side. That works, but it is close to the limit of the steel. With hotter lead at the outlet it would get too
+hot.}
+
 Result: \textbf{the gyroid is not suitable for liquid metal}, because it keeps turning the flow across the
 field. Toroidal channels, on the other hand, work well. A sensible layout: lead or lead-lithium in toroidal
 channels on the plasma side, the dry gyroid behind it for stiffness, and a steam generator outside the coils
@@ -471,6 +626,10 @@ Temperature drop across the inner skin at \SI{0.5}{MW/m^2} & \SI{600}{K} & \SI{1
 \end{tabular}\caption{f11 and f12 compared.}\end{table}
 \bild{kuehlung_f12_auswertung.png}{1.0}{Evaluation of f12: pressure drop over time, distribution around the
 circumference and flow through the gyroid core.}
+\lesehilfe{Same layout as the f11 evaluation: top left the pressure drop over time (settled at
+\SI{19.4}{kPa}), top right the distribution around the circumference, bottom left the flow through the gyroid core
+per sector (11\,\% scatter). Variant f12 needs slightly less pumping pressure with a similar distribution.}
+
 The wall is no longer the bottleneck. What remains is the transfer into the slow water on the plasma side, about
 \SI{410}{K}.
 
@@ -494,6 +653,12 @@ weights of 0.61 for temperature, 0.23 for pressure drop, 0.08 for spread and 0.0
 $\mathrm{CR} = 0.10$, right at the limit.
 \bild{varianten_vergleich.png}{1.0}{Left: variants by temperature rise and spread, colour pressure drop, red
 outline the Pareto front. Right: ranking with the user's weights.}
+\lesehilfe{Left: each dot is one computed variant (f1 to f12). Horizontally is how unevenly the
+water is spread, vertically how much the plasma side heats up. Both should be small, so lower left is better. The
+colour shows the pressure drop. Circled in red is the \emph{Pareto front}: no other variant is better in every
+respect at once. Right: the ranking by points. How much each criterion counts was set by the user in a pairwise
+comparison. f12 comes first.}
+
 Ranking: f12 (0.73) ahead of f5 (0.69), f2 (0.58), f11 (0.42), f10 (0.38) and f1 (0.30). Notably, f11 had been
 optimised for an even distribution, which the user in the end weighted low. The pairwise comparison thus showed
 that effort had gone into a secondary goal.
@@ -515,6 +680,13 @@ Skin thickness & Stress per MPa of pressure & Allowable pressure at \SI{150}{MPa
 \end{tabular}\caption{Inner skin over the gyroid (Elmer, linear elastic, no thermal stresses).}\end{table}
 \bild{haut_festigkeit.png}{1.0}{Left: von Mises stress in the \SI{5}{mm} skin at \SI{15.5}{MPa}, gyroid walls in
 blue. Right: peak stress per coolant and skin thickness.}
+\lesehilfe{Left: a top view of a $20\times\SI{20}{cm}$ piece of skin pressed by the cooling-water pressure
+of \SI{15.5}{MPa} (\SI{155}{bar}). It is supported by gyroid walls (blue). The colour is the stress; bright yellow
+means high, mainly between the supports. Right: the highest stress for each coolant and skin thickness on a
+logarithmic scale. The red line is the allowed value of about \SI{150}{MPa}. With high-pressure water the skin
+must be about \SI{15}{mm}, with helium \SI{10}{mm}. For lead, which flows almost without pressure, the thickness
+hardly matters.}
+
 For pressurised water as in a nuclear plant ($\approx\SI{16}{MPa}$) a water-filled gyroid is therefore unsuitable.
 High-pressure water belongs in small channels: a \SI{6}{mm} channel under a \SI{5}{mm} skin reaches only about
 \SI{11}{MPa} by the same formula. That is the double filament of Section~\ref{sec:filament}.
@@ -606,6 +778,12 @@ $(1-\eta)P_\text{th} = \SI{2223}{MW}$. Comparison with sourced plants:
 \end{itemize}
 \bild{waermebilanz.png}{1.0}{Heat balance for \SI{1}{GW} net with pressurised water and a turbine from a
 pressurised water reactor (labels in German).}
+\lesehilfe{Read the columns from left to right; their height is the power. Fusion delivers neutrons and
+alpha particles (helium nuclei). These become heat in the blanket (increased by nuclear reactions in the blanket),
+in the first wall and in the divertor. The turbine turns this into electricity (gross), and the larger part goes to
+the condenser as waste heat. After subtracting pumps and auxiliary loads, \SI{1000}{MW} reach the grid. Only about a
+third of the heat becomes electricity, as in every steam power plant.}
+
 
 \paragraph{6. Sensitivity.} Efficiency has the largest effect on the required fusion power:
 \begin{table}[H]\centering\small
@@ -650,6 +828,12 @@ coils are cryogenic. Pipes must be at least $D + \SI{0.2}{m}$ apart; counting wa
 \bild{rohr_durchfuehrung.png}{1.0}{Left: largest inner diameter of a straight pipe over the unrolled vessel
 surface ($\theta = 0$ outboard, \ang{180} inboard); the windows between coils and connectors are clearly visible. Right:
 possible and required pipes per size (labels in German).}
+\lesehilfe{Left: again the unrolled vessel surface. The colour is the largest pipe diameter that
+fits straight outwards between the coils from that spot. Dark means a coil is in the way. The bright islands are
+the windows; the red line outlines spots of at least \SI{0.3}{m}. Right: green bars show how many pipes of a given
+size fit, red bars how many are needed for the coolant out and back (logarithmic). Green is far above red
+everywhere, so there is plenty of room.}
+
 \begin{table}[H]\centering\small
 \begin{tabular}{rrrr}\toprule
 $d_i$ & required ($v = \SI{10}{m/s}$) & required ($v = \SI{5}{m/s}$, shield \SI{0.3}{m}) & possible (default / cautious)\\\midrule
@@ -746,8 +930,16 @@ Layer & Cell & Wall & to depth & Steel fraction\\\midrule
 \end{tabular}\caption{Layers of wall piece g1 ($240\times240\times\SI{600}{mm}$, voxel \SI{1}{mm}); 84\,\% water overall.}\end{table}
 \bild{gradientwand_gesamt.jpg}{1.0}{Graded wall g1 seen from the plasma side, one quarter cut away: small cells at the
 skin at the bottom, the cell doubles with each layer further out.}
+\lesehilfe{A 3D image of the graded wall with a quarter cut away. At the bottom is the smooth skin
+facing the plasma, above it a lattice. With each layer outwards the cell size doubles: fine at the skin, where
+heat and pressure arrive, coarse further out. A bone is built in a similar way.}
+
 \bild{gradientwand_haut_nah.jpg}{1.0}{Close-up of the skin with a window: the fine layer supports the skin almost over
 its full area, support spacing about \SI{10}{mm}.}
+\lesehilfe{A close-up of the skin with a window cut into it. Beneath it is the finest lattice
+layer, supporting the skin about every \SI{10}{mm}. The skin rests on an almost continuous support and can stay
+thin.}
+
 Still open are the flow test (FluidX3D: does the water pass through the dense skin layer or bypass it further out?)
 and the strength test (Elmer: skin and branches at \SI{16}{MPa}). The wall piece also writes out the water volume for
 this.
@@ -796,6 +988,14 @@ steel, spot, $h$ doubled & \SI{559}{\celsius} & \SI{363}{\celsius} & 98\,\% & 7.
 any shortfall was spread sideways.}\end{table}
 \bild{gradientwand_waerme.jpg}{1.0}{Heat test of wall g1. Columns from left: plasma-side temperature; section through
 the middle; heat given to the water per footprint area (red: spot); cumulative heat removal over depth.}
+\lesehilfe{Five rows for five cases (from the top): steel with even heating, steel with a hot spot,
+steel with a tungsten layer, a copper alloy, and steel with twice as good water cooling. The first column shows the
+temperature of the plasma side seen from above (the hot spot glows); the second a cut through the wall (black is
+water). The third column shows where heat passes into the water, and the fourth what share of the heat has been
+released by which depth. For steel the curve rises almost to 100\,\% within the first \SI{5}{mm}, so only the
+front, finest layer does any work. Only with copper (fourth row) does it rise more slowly, letting heat reach deeper
+layers.}
+
 
 \paragraph{Result.}
 \begin{itemize}
@@ -894,6 +1094,12 @@ pumps 0.8, condensate pressure \SI{2}{MPa}.
 
 \bild{vorwaermer_netto.png}{1.0}{Net extra power versus core volume (labels in German). The line is the central
 correlation, the band the literature spread. Dashed: plate (stopgap).}
+\lesehilfe{Horizontally: the volume of a heat exchanger in cubic metres (logarithmic, 1 to 1000).
+Vertically: the extra electrical power gained by using divertor heat to preheat the turbine feedwater, with pumping
+power already subtracted. Each line is one exchanger type. All approach the upper limit of \SI{73.3}{MW}. The
+further left a curve rises, the smaller the exchanger can be. Gyroid and diamond reach nearly the maximum with a
+few cubic metres; the tube bundle needs about ten times as much. The band shows the scatter in the literature.}
+
 
 \begin{table}[H]\centering\small
 \begin{tabular}{lrrr}\toprule
@@ -943,6 +1149,8 @@ From the user came: the thinner wall with a larger outlet (f12), pairwise compar
 optimisation loops together with the judgements, the point that the walls of the pressure space must withstand
 the pressure, the point about the small context of the local model, and the decision for an existing turbine. The
 assistant did the calculations, built the tools, checked the research and named the consequences.
+
+\input{plasma_en.tex}
 
 \section*{Code and data}
 Software: ElmerFEM, gmsh, FreeCAD, simsopt, DESC, PyVista, ParaView, Blender, FluidX3D 3.8 \cite{fluidx3d}, PicoGK \cite{picogk}.
@@ -1036,5 +1244,16 @@ UrhG); no figures from other works are reproduced. Source licences are listed in
   approximations are available. Biometrika 87 (2000) 1--13. doi:10.1093/biomet/87.1.1
 \bibitem{mckay1979} M.\,D. McKay, R.\,J. Beckman, W.\,J. Conover: A comparison of three methods for selecting values
   of input variables in the analysis of output from a computer code. Technometrics 21 (1979) 239--245. doi:10.2307/1268522
+\bibitem{boschhale1992} H.-S. Bosch, G.\,M. Hale: Improved formulas for fusion cross-sections and thermal
+  reactivities. Nuclear Fusion 32 (1992) 611--631. doi:10.1088/0029-5515/32/4/I07
+\bibitem{ame2020} M. Wang, W.\,J. Huang, F.\,G. Kondev, G. Audi, S. Naimi: The AME 2020 atomic mass evaluation (II).
+  Chinese Physics C 45 (2021) 030003. doi:10.1088/1674-1137/abddaf
+\bibitem{stix1972} T.\,H. Stix: Heating of toroidal plasmas by neutral injection. Plasma Physics 14 (1972) 367--384.
+  doi:10.1088/0032-1028/14/4/002
+\bibitem{yamada2005} H. Yamada, J.\,H. Harris, A. Dinklage, E. Ascasibar et al.: Characterization of energy confinement
+  in net-current free plasmas using the extended International Stellarator Database. Nuclear Fusion 45 (2005)
+  1684--1693. doi:10.1088/0029-5515/45/12/024
+\bibitem{wiki_tritium} Wikipedia (en): Tritium. \url{https://en.wikipedia.org/wiki/Tritium}, accessed 2026-11-01.
+\bibitem{wiki_w7x} Wikipedia (en): Wendelstein 7-X. \url{https://en.wikipedia.org/wiki/Wendelstein_7-X}, accessed 2026-11-01.
 \end{thebibliography}
 \end{document}
