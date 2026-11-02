@@ -27,6 +27,7 @@ import numpy as np
 from . import spulen as sp, cad
 from .lauf import PROJEKT
 
+LAGER_ORT = "aussen"                                # Lagerflecken, siehe baue_netz
 QUER = {"n_wand": 2, "n_verguss": 1, "n_wp": 4}      # Zellen je Schicht quer (je Richtung)
 MAT_NAMEN = {1: "wickelpaket", 2: "verguss", 3: "stahl", 4: "verbinder"}
 UDF_QUELLE = Path(__file__).resolve().parent / "elmer_udf" / "lorentz.f90"
@@ -98,19 +99,23 @@ def baue_netz(spulen, br: float, ho: float, W: list[dict], verguss: float, r_lag
         mat.append(np.broadcast_to(mat_q, (N, A, A)).ravel()); spule.append(np.full(N * A * A, k))
         wp_kn.append(idx[:, w0:w0 + nq + 1, w0:w0 + nq + 1]); tang.append(t)
         gitter.append((idx, Xk, t, n, b))
-        # Lagerflecken: Aussenseite (a = A) um den Bahnpunkt mit groesstem Radius
-        il = int(np.argmax(np.hypot(s.punkte[:, 0], s.punkte[:, 1])))
-        p_l = s.punkte[il] + n[il] * (br / 2 + w["aussen"][il])
+        # Lagerflecken: Aussenseite (a = A, vom Spulenschwerpunkt weg) um den Bahnpunkt mit groesstem Radius
+        # (LAGER_ORT "aussen", Standard), kleinstem Radius ("innen": Flaeche zeigt zur Torusachse, nimmt die
+        # Zentrierkraft auf wie ein Stuetzzylinder) oder beiden ("beide").
+        Rk = np.hypot(s.punkte[:, 0], s.punkte[:, 1])
+        orte = {"aussen": [np.argmax(Rk)], "innen": [np.argmin(Rk)], "beide": [np.argmax(Rk), np.argmin(Rk)]}[LAGER_ORT]
         ii, cc = np.meshgrid(np.arange(N), np.arange(A), indexing="ij")
         jj = (ii + 1) % N
         q4 = np.stack([idx[ii, A, cc], idx[jj, A, cc], idx[jj, A, cc + 1], idx[ii, A, cc + 1]], -1).reshape(-1, 4)
         eltern = (len(np.concatenate(spule)) - N * A * A) + (ii * A * A + (A - 1) * A + cc).ravel()
         mitte = Xk.reshape(-1, 3)[q4 - versatz].mean(1)
-        d = np.linalg.norm(mitte - p_l, axis=1)
-        wahl = np.where(d <= r_lager)[0]
-        if len(wahl) < 2:
-            wahl = np.argsort(d)[:2]
-        lager.append(np.c_[eltern[wahl], q4[wahl]])
+        for il in orte:
+            p_l = s.punkte[il] + n[il] * (br / 2 + w["aussen"][il])
+            d = np.linalg.norm(mitte - p_l, axis=1)
+            wahl = np.where(d <= r_lager)[0]
+            if len(wahl) < 2:
+                wahl = np.argsort(d)[:2]
+            lager.append(np.c_[eltern[wahl], q4[wahl]])
         versatz += N * (A + 1) ** 2
 
     # Verbinder zwischen toroidal benachbarten Gehaeusen

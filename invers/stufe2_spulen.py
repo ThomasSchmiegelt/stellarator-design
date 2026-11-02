@@ -8,7 +8,24 @@ Groesse/B0 werden in Stufe 3 durch Skalierung gesetzt.
 
   .venv-opt/bin/python invers/stufe2_spulen.py --wout sim/invers/<fall>/wout_<fall>.nc --name <fall>_spulen
       [--n_spulen 4 --ordnung 6 --laenge_max 18 --abstand_ss 0.1 --abstand_sp 0.3 --kruemmung_max 5
-       --maxiter 400]
+       --maxiter 400 --kraft_gewicht 0 --kraft_p 2 --kraft_schwelle 0]
+
+Optionales Kraftziel (--kraft_gewicht > 0): simsopt LpCurveForce (field/force.py) auf den Basisspulen,
+Quellen sind alle Spulen. Dessen Zielwert J = 1/p * Mittel_Spulen(1/L * Integral max(|dF/dl| - F0, 0)^p dl)
+steht in (MN/m)^p; --kraft_schwelle F0 wird in N/m angegeben und intern durch 1e6 geteilt. Die Zielfunktion
+bekommt Weight(kraft_gewicht) * J, also Gewicht in 1/(MN/m)^p. Ableitungen (JAX) sind vorhanden. Gewicht 0
+(Default) = Verhalten wie bisher, die Kraft wird dann nur ausgewertet (Kennzahlen), nicht optimiert.
+Einheiten der Kraft: dF/dl = I t x B in N/m. Die Einheitsgeometrie hat R0 ~ 1,03 m und den festen
+Basisstrom 1e5 A je Spule; die Zahlen gelten NUR dafuer. Skalierung auf die Anlage (Stufe 3): bei
+Groessenfaktor lam (Laenge ~ lam) und gleicher Feldstaerke gilt B ~ I/lam bei festem Strom, also
+I ~ B0*lam; Kraft je Laenge F ~ I*B ~ lam*B0^2 (Magnetdruck-Skalierung), d.h. bei fester Feldstaerke B0
+wachsen Kraft je Laenge ~ lam; das ist nicht neu erfunden, sondern die uebliche Skalierung; massgeblich
+ist Stufe 3. Die Selbstkraft braucht einen Leiterquerschnitt: kreisfoermig, Radius --kraft_leiter_a
+(Default 0,05 m in Einheitsgeometrie, nur fuer die Regularisierung des Selbstfeldes).
+
+Zusaetzliche Kennzahlen (immer): kraft_je_laenge_max_N_m / kraft_je_laenge_mittel_N_m (Basisspulen,
+Einheitsgeometrie, Mittel ist laengengewichtet), B_mittellinie_max_T (max |B| auf den Spulen-
+Mittellinien: Feld der anderen Spulen plus regularisiertes Selbstfeld; Naeherung fuer das Feld am Leiter).
 
 Ausgabe sim/invers/<name>/: spulen.json (Austauschformat fuer .venv-Pipeline: alle Spulen als
 Punkte + Strom, nfp, Basisanzahl), biot_savart.json (simsopt), stufe2.json (Kennzahlen),
@@ -48,6 +65,10 @@ def main(argv=None):
     ap.add_argument("--kruemmung_max", type=float, default=5.0, help="max. Kruemmung (1/m) -> R_min = 1/k")
     ap.add_argument("--msk_max", type=float, default=5.0, help="max. mittlere quadratische Kruemmung")
     ap.add_argument("--maxiter", type=int, default=400)
+    ap.add_argument("--kraft_gewicht", type=float, default=0.0, help="Gewicht Kraftziel LpCurveForce in 1/(MN/m)^p (0 = aus)")
+    ap.add_argument("--kraft_p", type=float, default=2.0, help="Exponent p von LpCurveForce")
+    ap.add_argument("--kraft_schwelle", type=float, default=0.0, help="Kraftschwelle in N/m (Einheitsgeometrie)")
+    ap.add_argument("--kraft_leiter_a", type=float, default=0.05, help="Leiterradius (m) fuer Selbstfeld/Kraft")
     a = ap.parse_args(argv)
 
     from scipy.optimize import minimize
@@ -64,7 +85,10 @@ def main(argv=None):
     basis = create_equally_spaced_curves(a.n_spulen, s.nfp, stellsym=True, R0=R0, R1=a.R1, order=a.ordnung)
     stroeme = [Current(1e5) for _ in range(a.n_spulen)]
     stroeme[0].fix_all()
-    spulen = coils_via_symmetries(basis, stroeme, s.nfp, True)
+    from simsopt.field import LpCurveForce, BiotSavart as _BS
+    from simsopt.field.selffield import regularization_circ
+    reg = [regularization_circ(a.kraft_leiter_a) for _ in range(a.n_spulen)]
+    spulen = coils_via_symmetries(basis, stroeme, s.nfp, True, regularizations=reg)
     kurven = [c.curve for c in spulen]
     bs = BiotSavart(spulen); bs.set_points(s.gamma().reshape((-1, 3)))
 
@@ -77,6 +101,10 @@ def main(argv=None):
     JF = (Jf + Weight(1e-6) * QuadraticPenalty(sum(Jl), a.laenge_max, "max") + Weight(1000) * Jss
           + Weight(10) * Jsp + Weight(1e-6) * sum(Jk)
           + Weight(1e-6) * sum(QuadraticPenalty(J, a.msk_max, "max") for J in Jmsk))
+    # Kraftterm: Ziele = Basisspulen (erste n_spulen Eintraege, Rotation 0), Quellen = alle Spulen
+    Jkraft = LpCurveForce(spulen[:a.n_spulen], spulen, p=a.kraft_p, threshold=a.kraft_schwelle / 1e6)
+    if a.kraft_gewicht > 0:
+        JF = JF + Weight(a.kraft_gewicht) * Jkraft
     verlauf = []
 
     def fun(x):
@@ -97,6 +125,17 @@ def main(argv=None):
     res2 = minimize(fun2, JF2.x, jac=True, method="L-BFGS-B",
                     options={"maxiter": a.maxiter // 2, "maxcor": 300}, tol=1e-15)
 
+    # Kraft und Feld auf den Mittellinien der Basisspulen (Einheitsgeometrie, N/m bzw. T)
+    kr_max, kr_sum, l_sum, B_max = 0.0, 0.0, 0.0, 0.0
+    for i in range(a.n_spulen):
+        c = spulen[i]
+        andere = _BS([x for j, x in enumerate(spulen) if j != i])
+        g = c.curve.gamma(); andere.set_points(g)
+        Bg = andere.B() + np.asarray(c.B_regularized())
+        gd = c.curve.gammadash(); dl = np.linalg.norm(gd, axis=1); t = gd / dl[:, None]
+        F = np.linalg.norm(np.cross(c.current.get_value() * t, Bg), axis=1)
+        kr_max = max(kr_max, float(F.max())); kr_sum += float(np.sum(F * dl)); l_sum += float(np.sum(dl))
+        B_max = max(B_max, float(np.linalg.norm(Bg, axis=1).max()))
     # Kennzahlen auf der vollen Flaeche
     bs.set_points(s_voll.gamma().reshape((-1, 3)))
     B = bs.B().reshape(s_voll.gamma().shape)
@@ -109,6 +148,8 @@ def main(argv=None):
            "laenge_basis_m": [float(J.J()) for J in Jl], "laenge_summe_m": float(sum(J.J() for J in Jl)),
            "abstand_ss_min_m": float(Jss.shortest_distance()), "abstand_sp_min_m": float(Jsp.shortest_distance()),
            "kruemmung_max_1_m": max(kr), "biegeradius_min_m": 1 / max(kr),
+           "kraft_je_laenge_max_N_m": kr_max, "kraft_je_laenge_mittel_N_m": kr_sum / l_sum,
+           "B_mittellinie_max_T": B_max, "kraft_ziel_J_MN_m_p": float(Jkraft.J()),
            "stroeme_basis_A": [float(c.get_value()) for c in stroeme],
            "optimierer": {"iter_1": int(res.nit), "iter_2": int(res2.nit), "meldung": str(res2.message)},
            "squared_flux_verlauf": verlauf[:: max(1, len(verlauf) // 50)],
@@ -140,7 +181,8 @@ def main(argv=None):
     except Exception as e:
         print("Bild fehlgeschlagen:", e)
     print("FERTIG", ordner, json.dumps({k: erg[k] for k in ("Bn_rel_mittel", "Bn_rel_max", "laenge_summe_m",
-          "abstand_ss_min_m", "abstand_sp_min_m", "biegeradius_min_m", "laufzeit_s")}))
+          "abstand_ss_min_m", "abstand_sp_min_m", "biegeradius_min_m", "kraft_je_laenge_max_N_m",
+          "kraft_je_laenge_mittel_N_m", "B_mittellinie_max_T", "laufzeit_s")}))
 
 
 if __name__ == "__main__":

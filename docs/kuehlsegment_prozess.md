@@ -452,3 +452,63 @@ wiederholen („nachher“).
 Technisch: Das Feld der Form wurde mit `booz_xform` in Boozer-Koordinaten umgerechnet. Zwei Stolpersteine in simsopt
 (die VMEC-Anbindung wird nur mit mpi4py geladen; ein Hilfsobjekt wurde von Python zu früh aufgeräumt, dann fehlte eine
 Feldgröße) kosteten Zeit, sind aber im Skript kommentiert. Der Lauf dauerte 27 Minuten.
+
+## 18. Ein Film vom Plasma: realistischer, ehrlich, und Bild für Bild geprüft (2026-11-02)
+
+Der Nutzer wünschte ein Video des „Plasmastroms“ mit höherem Realismus. Statt zu raten, fragte die KI nach: was zeigen
+(Wahl: Plasma und strömende Teilchen) und wie realistisch leuchten (Wahl: physikalisch ehrlich). Ehrlich heißt hier:
+Der 150 Millionen Grad heiße Kern sendet kaum sichtbares Licht; sichtbar leuchtet der kühlere Rand, vor allem
+Wasserstoff, und das wirkt rosa. Die Teilchen sind zur Veranschaulichung vergrößert und etwa 50 000-fach verlangsamt;
+das steht im Film.
+
+Werkzeug ist Blender (Cycles auf der Grafikkarte). Alle Formen stammen aus den eigenen Rechnungen: Plasmarand aus dem
+Gleichgewicht, 16 Spulen aus Stufe 2, die Teilchenbahnen sind Feldlinien im Feld dieser Spulen. Vor dem Rendern wurde
+eine Erwartung festgelegt und gegen die Daten geprüft (Form, Verdrillung iota ≈ 0,42, Abstand Spulen–Plasma). Dabei
+zeigte sich zweimal, dass nicht die Daten, sondern die eigene Kontrolle oder Erwartung falsch war – auch das gehört
+ins Protokoll.
+
+Die Regel „jedes Bild selbst ansehen“ fand vor dem Endlauf vier Fehler. Der lehrreichste: Die Innenansicht war
+gleichmäßig rosa, auch bei viel weniger Belichtung. Messen statt raten ergab, dass die Flächen der leuchtenden
+Randschicht verkehrt herum orientiert waren; Blender ließ deshalb den Kern und den Außenraum leuchten statt der dünnen
+Schicht dazwischen. Nach dem Umdrehen entstand das erwartete Bild: heller Rand, dunkler Kern, Kacheln der Wand.
+
+Während der Arbeit kam der Wunsch, den Film als **Rauszoomen** zu bauen: erst im Plasma (Detail), dann hinaus durch
+den aufgeschnittenen Teil des Gefäßes bis zur Gesamtansicht. Die Kamerafahrt wurde entsprechend umgedreht. Jedes Bild
+wird einzeln gespeichert; das Rendern lässt sich jederzeit anhalten (`~/bin/rechnung pause`) und nach einem Abbruch
+fortsetzen.
+
+
+## 19. Festigkeit: vom Killer zum ersten haltbaren Entwurf (2026-11-02)
+
+**Anstoß durch den Nutzer.** Die Frage war, die offenen Punkte anzugehen, vor allem die Festigkeit, und dabei zu
+überlegen, was kleinere Modelle übernehmen können. Auf die Rückfrage der KI, ob zuerst Wände, Spulen oder Plasma
+optimiert werden sollen, kam die entscheidende Antwort: *„Wand, Spulen und Festigkeit sind ein Thema, das gehört
+zusammen. Auch das Plasma gehört dazu … das ist auch cool für ein Surrogat.“* Später ergänzte der Nutzer das Package
+und ein 3D-Modell als Ziel. Als der erste Testpunkt 2129 MPa zeigte, lenkte der Nutzer um: *„2000 MPa ist ein Killer,
+auch 500 MPa ist viel. Vielleicht brauchen wir mehr Spulen, oder wir müssen verstehen, wie die Kraft entsteht.“*
+Statt sofort viele Varianten zu rechnen, wurde daraufhin zuerst die Ursache gesucht. Das war der Wendepunkt.
+
+**Arbeitsteilung.** Opus plante, legte vor jeder Rechnung eine Erwartung fest (Ereignisprotokoll F-112 bis F-125),
+schrieb die Kopplung und bewertete. Sonnet recherchierte Grenzwerte mit Crossref-Prüfung (Opus prüfte eine
+Stichprobe nach) und baute das Kraftziel in die Spulenoptimierung ein (Opus prüfte die Zahlen in den Ergebnisdateien
+nach). Haiku erkundete die Schnittstellen des Festigkeitsmodells und übersetzte das Berichtskapitel.
+
+**Was die Ursache war.** Die Kraftanalyse zeigte: Die größte Last sitzt auf dem fast geraden inneren Schenkel jeder
+Spule, und ein gerades Stück kann eine Querlast nur durch Biegung tragen. Eine Handrechnung als Balken traf die FEM
+(2100 gegen 2129 MPa). Zugleich zog jede Spule mit über 1 GN zur Anlagenmitte, war im Modell aber außen gelagert.
+Tokamaks lösen genau das mit der D-Form und einem Stützzylinder innen. Daraus folgten die Versuche: Lager innen,
+dann innen und außen, dann mehr und steifere Verbinder, dann dickere Wände: 2129 → 481 MPa.
+
+**Was schiefging und was daraus wurde.**
+- Das Feld am Leiter kam zuerst mit 6,4 T statt etwa 15 T heraus: auf der Mittellinie gemessen, wo sich das Eigenfeld
+  aufhebt. Die Abweichung von der Erwartung fiel sofort auf.
+- In der ersten Kraftgrafik sprangen die Anteile künstlich: Das Bezugssystem der Krümmung kippt an geraden Stücken.
+  Beim Ansehen des Bildes erkannt, auf ein stabiles Bezugssystem umgestellt.
+- Der Maßstab des alten Festigkeitsmodells war um 3 % zu groß, beim Bau der Kette entdeckt.
+- Der erste Start der Entwurfsstudie brach nach 3 Minuten ab (Speicher bei 24 Spulen). Die Überwachung meldete das
+  30 Minuten lang nicht, weil sie nur Logzeilen beobachtete. Seitdem überwacht sie auch das Prozessende, und jeder
+  Entwurf läuft in einem eigenen Speicherrahmen. Der Ausweichlöser war zu langsam; stattdessen bleibt das Netz bei mehr
+  Spulen gleich groß.
+
+**Stand.** Drei Entwürfe halten alle Grenzen ein (20–24 Spulen, 22,6–28 kt Stahl). Sie gelten erst nach Nachrechnung
+mit feinem Netz und nachgiebigem Stützzylinder. Bericht: Abschnitt „Festigkeit“ (DE/EN).

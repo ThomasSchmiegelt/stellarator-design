@@ -601,6 +601,48 @@ So liest man das Bild: links die Zeit seit der Geburt (logarithmisch) und der ve
 ab einer Millisekunde stetig auf 16,6 %, blau (Form allein) springt ganz am Anfang auf 0,3 % und bleibt dann flach.
 Die gestrichelte Linie ist die vorher festgelegte Erwartung. Rechts die Kennzahlen.
 
+### Festigkeit: Woher die Kraft kommt und wie ein Tragwerk sie aufnimmt (Zwischenstand)
+
+Ausgangslage: Die Spulengehäuse der 1-GW-Anlage kamen auf rund **2000 MPa**, viermal mehr als der Stahl bei 4 K auf
+Dauer erträgt (Grenze hier 500 MPa). Dickere Wände allein halfen nicht. Der Nutzer gab vor, Plasma, Spulen, Wand,
+Festigkeit und Temperatur **gemeinsam** zu betrachten, und lenkte dann auf die Frage, *wie die Kraft entsteht*.
+
+**Gekoppelte Kette** (`stellarator/kopplung.py`, 1–3 min je Entwurf): Spulen (simsopt) → Strom auf B0 = 6,5 T →
+Festigkeit (Hex-Netz, Elmer) → Package (Freiraum Plasma–Gehäuse, Abschirmung, Neutronenheizung) → Supraleiter
+(Feld am Leiter, Auslastung) → Bewertung gegen geprüfte Grenzwerte (`docs/recherche/kopplung_festigkeit/quellen.md`).
+
+**Woher die Kraft kommt** (`stellarator/kraft_analyse.py`): 50–140 MN je Meter Spule, am stärksten am inneren
+Schenkel, der fast gerade ist. Ein gerades Stück kann eine Querlast nicht als Zug tragen, nur durch Biegung. Die
+Handrechnung (Balken auf zwei Stützen, M = q·l²/8, σ = M/W) ergibt 2100 MPa, die FEM 2129 MPa. Dazu zieht jede Spule
+mit bis zu 1,1 GN zur Mitte der Anlage, war aber außen gelagert. Mehr Spulen senken die Kraft je Meter, nicht die
+Summe (58 GN), machen das Feld aber zehnmal genauer – Spielraum für kürzere, glattere Spulen.
+
+![Kraft entlang der Spulen](docs/bilder/kraft_analyse_16.png)
+
+So liest man das Bild: jede Spalte eine Spule, waagrecht der Weg entlang der Spule. Oben die Kraft je Meter (schwarz
+gesamt, blau nach außen, rot seitlich), Mitte die Seilkraft, mit der die Spule die Last als reinen Zug tragen könnte
+(Lücken = fast gerade, dort unmöglich), unten die Krümmung. Die größte Kraft sitzt genau auf dem geraden Stück.
+
+**Tragwerk statt Wandstärke** (gleiche 16 Spulen): Lager außen 2129 MPa → Lager innen (wie ein Stützzylinder)
+1454 → innen + außen 1372 → 12 steife Verbinder je Spulenpaar 947 → dickste Wände **481 MPa**, Verformung 41 mm.
+Der Preis: 37 000 t Stahl. Aus „hält nicht“ wird „zu schwer“.
+
+![Tragwerksversuche](docs/bilder/festigkeit_tragwerk.png)
+
+So liest man das Bild: oben vier Balkendiagramme für die Varianten A–E (rot über der Grenze, blau darunter), unten die
+Spannung von oben gesehen für A (rot = über 1200 MPa an den inneren Schenkeln) und E (fast alles unter 400 MPa).
+
+**Entwurfsstudie** (200 Entwürfe, 11 Stellgrößen, läuft): Nach 17 Entwürfen halten drei **alle** Grenzen ein
+(Festigkeit, Dehnung des Supraleiters, Package, Neutronenheizung, Feldgenauigkeit): 20–24 Spulen, kürzere Spulen,
+Kraftziel, steife Verbinder oder dicke Innenwand; 305–389 MPa, 18–31 mm, 22,6–28 kt Stahl. Vorbehalte: Lager starr
+(idealer Stützzylinder), Verbinder als volle Blöcke, gröberes Netz bei 24 Spulen – die besten Entwürfe werden mit
+feinem Netz nachgerechnet. Ausführlich mit Herleitung im Bericht, Abschnitt „Festigkeit“.
+
+![Entwurfsstudie Zwischenstand](docs/bilder/festigkeit_doe.png)
+
+So liest man das Bild: jeder Punkt ein vollständig gerechneter Entwurf; links Spannung über Stahlmasse (Farbe =
+Spulenzahl, schwarz umrandet = alle Grenzen eingehalten, gestrichelt = 500 MPa), rechts über der Zahl der Verbinder.
+
 ### Doppeltes Filament, Platz zu den Spulen, Flüssigblei (grobe Abschätzungen)
 
 Aus den Vorschlägen oben: Die Plasmaseite bekommt eigene feine Kanäle (innen, Kühlung), dahinter trägt ein
@@ -766,7 +808,9 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 - [x] Alphas: Ursache getrennt – Spulen (16,6 %) gegen Form allein (0,3 %)
 - [ ] Alphas: Spulen mit Alpha-Ziel nachoptimieren und Vergleich wiederholen, Stöße
 - [ ] Erstwand-Kühlung: dünne Innenhaut, schnelle Kanäle, Wärme gekoppelt rechnen
-- [ ] Wandstärken und Verbinder auslegen (zulässige Spannung einhalten)
+- [x] Festigkeit: Ursache verstanden (Biegung der geraden Innenschenkel, Lagerung außen), Kraftziel in Stufe 2
+- [x] Gekoppelte Kette Plasma–Spulen–Package–Festigkeit–Temperatur, erste Entwürfe unter 500 MPa
+- [ ] Entwurfsstudie abschließen, leichtesten zulässigen Entwurf mit feinem Netz und elastischem Stützzylinder prüfen, 3D-Modell
 - [ ] Verguss (Quarzsand-Epoxid) zwischen Wickelpaket und Gehäuse in Geometrie und Rechnung
 - [ ] Verbinder und Tragring im Rechenweg statt eingespannter Bereiche; Keil und Gehäuse aus einem Stück
 - [ ] Stufe 0 genauer: Divertor-Wärmelast, Zyklotronstrahlung, Blanket-Dicke aus Neutronik
