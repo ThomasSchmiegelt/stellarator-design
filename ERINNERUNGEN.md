@@ -641,3 +641,14 @@ stellarator/constellaration_bewertung.py, constellaration_bruecke.py, qi_verglei
 
 **Am Sitzungsende fragen:** Temp-Ordner sim/_temp_2026-11-03b/ (alte Vorspannbilder, QI-Fehllauf) löschen?
 sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht weg.
+- 18:15 Nachtrag: Proximas Spulensatz (CoilStellaration DnFiaMhotvUCEFyC7wg9opq, 30 Spulen, nfp 3) eingelesen,
+  Kontrolle Feldfehler 8,17e-4 = Proxima 8,2e-4 (F-171). Skript stellarator/proxima_spulen.py (vmec | spulen).
+  Läuft: Tragwerk/Package `kopplung punkt --studie qi_proxima --nr 0` (losgelöst), fertig wenn in
+  sim/constellaration/bruecke_lauf.log „ENDE qi_proxima 0“ steht; Ergebnis sim/kopplung/qi_proxima/punkte/0000/
+  (ergebnis.json oder Fehler im Log). Danach Vergleich mit Erwartung F-171 ins Ereignisprotokoll.
+- 18:30 Nachtrag: Proxima-Spulen in unserer Kette erledigt (F-172 bis F-175). Satz 1 (DnFia…): Netz scheitert
+  (Biegeradius 0,40 m < Gehäusetiefe 1,29 m). In 8058 Sätzen keiner mit Bn < 3e-3 und Biegeradius ≥ 0,7 a.
+  Satz 2 (DRb36s…, Ordner sim/kopplung/qi_proxima_b36): mit dünnem Gehäuse Netz ok, aber σ99 1358 MPa, u 650 mm.
+  Gegenprobe 0169 dünn (sim/kopplung/gegenprobe_0169_duenn): 426 MPa, alles ok, 3648 t Stahl (Netzprüfung offen!).
+  Bild docs/bilder/qa_qi_proxima_spulen.png. Nichts läuft mehr außer dem Video. Noch nicht committet: proxima_spulen.py,
+  qi_vergleich_bild.py (b36), Bild. Offen mit Nutzer: Lager/Verbinder für QI nachoptimieren? Gespräch mit Proxima?

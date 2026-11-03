@@ -22,6 +22,13 @@ QI = {"titel": "QI-Plasma aus Proximas Rangliste (3 Perioden, A = 10)",
       "spulen": ROOT / "sim/kopplung/qi_nfp3_s068/punkte" / (sys.argv[1] if len(sys.argv) > 1 else "0001") / "spulen.json"}
 
 
+if len(sys.argv) > 2 and sys.argv[2] == "b36":                      # Proximas Spulensatz (CoilStellaration)
+    QI = {"titel": "QI-Plasma + Spulen von Proxima (CoilStellaration, 3 Perioden, A = 9,2)",
+          "wout": ROOT / "sim/constellaration/qi/proxima_spulen_b36/wout_skaliert.nc",
+          "spulen": ROOT / "sim/kopplung/qi_proxima_b36/punkte/0000/spulen.json", "aus": "qa_qi_proxima_spulen.png",
+          "fuss": "Links Spulen aus unserer Kette (simsopt), rechts Spulen von Proxima (CoilStellaration, MIT; Feldfehler 9,3e-4 nachgerechnet)"}
+
+
 def rand(wout, nphi=240, nth=120):
     from scipy.io import netcdf_file
     with netcdf_file(str(wout), "r", mmap=False) as f:
@@ -82,9 +89,9 @@ def main():
         ax2.set_xlabel("Abstand von der Anlagenmitte R (m)"); ax2.set_ylabel("Höhe z (m)")
         ax2.grid(color="#dddddd", lw=0.6); ax2.legend(fontsize=8, loc="lower left", frameon=True, framealpha=0.9)
         ax2.set_title("Querschnitte des Plasmas", fontsize=10)
-    fig.text(0.5, 0.005, "Gleiches Plasmavolumen (1096 m³). Spulenbahnen aus unserer Kette (simsopt), Plasmarand aus VMEC. "
+    fig.text(0.5, 0.005, "Gleiches Plasmavolumen (1096 m³). " + QI.get("fuss", "Spulenbahnen aus unserer Kette (simsopt)") + ", Plasmarand aus VMEC. "
              "Thomas Schmiegelt", ha="center", fontsize=8, color="#555555")
-    aus = ROOT / "docs" / "bilder" / "qa_qi_vergleich.png"; fig.savefig(aus); print(aus)
+    aus = ROOT / "docs" / "bilder" / QI.get("aus", "qa_qi_vergleich.png"); fig.savefig(aus); print(aus)
     for i in (0, 1):
         (tmp / f"_ansicht_{i}.png").unlink()
 
