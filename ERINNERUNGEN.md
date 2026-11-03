@@ -663,3 +663,7 @@ sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht 
   (b) Voxel direkt als Hex-Elemente nach Elmer (Vorbild stellarator/gradient_waerme.py, 808), 0,1–0,15 m Voxel,
   Lorentzlast im WP über Tangente der nächsten Bahnstelle (UDF lorentz.f90 prüfen). (c) Gegenprobe zuerst an 0169:
   Voxel-Ergebnis gegen Hex-Ergebnis 308 MPa, erst dann Proxima-Satz 2 und 1. Speicher: Voxelzahl vorher abschätzen.
+- Stand 18:45: Innenkontur-Läufe fertig (F-181). Nichts läuft außer dem Video. Um 23:30 stoppt der Timer
+  hermes-abschalten-2330 alles (sim/abschalten_2330.sh, Log sim/abschalten.log). Offen mit Nutzer: Rest-Umstülpung
+  Satz 2 (6–12 Elemente, Spulentyp 2) untersuchen oder QI-Tragwerk eigens auslegen; Voxel-FE zu groß für 32 GB.
+  Video: wenn „FERTIG Vorspann neu“ im Log → Probebilder prüfen, Film schneiden, dem Nutzer zeigen.
