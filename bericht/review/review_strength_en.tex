@@ -69,6 +69,30 @@ quartz-sand epoxy, $E=\SI{10}{GPa}$. Connectors steel, $E$ as a design variable 
 radius.
 \end{description}
 
+\section{How the variants come about: computed automatically, rejected automatically}\label{sec:auto}
+No design was drawn by hand. A chain of programs turns eleven design variables into coils, package, strength model,
+temperatures and a 3D model, and assesses the result against eight limits. A Latin hypercube plan spreads the
+variables evenly over their ranges. The AI wrote and started the chain; the 200 designs ran unattended in 8.5 hours.
+
+\bild{ablauf_en}{0.98}{The automatic chain of the design study and what remains of it.}
+\lesehilfe{Top: the stations every design passes through. Bottom left, the funnel: of 200 planned designs one
+failed in the solver (aborted without result), in 11 the casings intersect (not buildable). Of the remaining 188, 7 meet all limits and
+3 more miss one narrowly. Bottom right: why the 181 rejected designs fail, i.e.\ the limit with the smallest margin.
+Mostly it is the steel stress, but almost half fail on something else (field accuracy, superconductor strain,
+neutron fluence). A pure strength design would not filter them out.}
+
+\bild{galerie_en}{0.98}{16 rejected designs, evenly spread over the ranking (3D models in PicoGK).}
+\lesehilfe{Top left the design furthest from the limits, bottom right the one that fails most narrowly. Above each
+image: number, coil count, σ99 and the limit it fails. "Margin" is the distance to the limit relative to the limit
+($-100$\% means twice the allowable). Red frame: clearly missed, yellow: narrowly. High stress alone does not decide:
+0021 has only \SI{558}{MPa}, but its superconductor would receive a multiple of the allowable neutron fluence. The
+catalogue in the variant report shows all 188 buildable designs like this.}
+
+\bild{film_feld}{0.82}{Still from the film of all variants (second 30): the rejected designs sink.}
+\lesehilfe{Each ring is a complete design from the study. Red: clearly missed, yellow: narrowly, blue: admissible.
+The inadmissible ones sink in turn, worst first; at the end the seven blue ones remain. The film is in the repository
+(\texttt{docs/filme/varianten.mp4}).}
+
 \section{How the structure came about}
 The structure was not prescribed but derived from a force analysis. The first model reached \SI{2129}{MPa}. Instead
 of varying parameters, we first examined how the force arises.

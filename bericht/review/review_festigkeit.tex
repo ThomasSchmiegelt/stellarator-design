@@ -70,6 +70,33 @@ Studie mit 200 Entwürfen variierte Spulenzahl, Spulenabstand, Verbinderzahl und
 Lagerradius.
 \end{description}
 
+\section{Wie die Varianten entstehen: automatisch gerechnet, automatisch verworfen}\label{sec:auto}
+Kein Entwurf wurde von Hand gezeichnet. Eine Kette von Programmen erzeugt aus elf Stellgrößen Spulen, Package,
+Festigkeitsmodell, Temperaturen und ein 3D-Modell und bewertet das Ergebnis gegen acht Grenzen. Die Stellgrößen
+verteilt ein Latin-Hypercube-Plan gleichmäßig über den Bereich. Die KI schrieb die Kette und startete sie; die 200
+Entwürfe liefen ohne Eingriff in 8,5 Stunden durch.
+
+\bild{ablauf}{0.98}{Die automatische Kette der Entwurfsstudie und was davon übrig bleibt.}
+\lesehilfe{Oben die Stationen, die jeder Entwurf durchläuft. Links unten der Trichter: Von 200 geplanten Entwürfen
+scheiterte bei einem der Löser (Abbruch ohne Ergebnis), bei 11 durchdringen sich die Gehäuse (nicht baubar). Von den übrigen 188
+halten 7 alle Grenzen ein, 3 weitere verfehlen eine knapp. Rechts unten, woran die 181 verworfenen scheitern: an der
+Grenze mit der kleinsten Reserve. Meist ist es die Spannung im Stahl, aber fast die Hälfte scheitert an anderem
+(Feldgenauigkeit, Dehnung des Supraleiters, Neutronenbelastung). Ein reiner Festigkeitsentwurf würde sie nicht
+aussortieren.}
+
+\bild{galerie}{0.98}{16 verworfene Entwürfe, gleichmäßig über die Rangfolge verteilt (3D-Modelle in PicoGK).}
+\lesehilfe{Oben links der Entwurf, der am weitesten von den Grenzen entfernt ist, unten rechts der, der am knappsten
+scheitert. Über jedem Bild: Nummer, Spulenzahl, σ99 und die Grenze, an der er scheitert. „Reserve“ ist der Abstand
+zur Grenze relativ zur Grenze ($-100$~\% heißt doppelt so viel wie zulässig). Roter Rahmen: deutlich verfehlt, gelb:
+knapp. Hohe Spannung allein entscheidet nicht: 0021 hat nur \SI{558}{MPa}, aber sein Supraleiter bekäme ein
+Vielfaches der zulässigen Neutronenbelastung. Im Katalog des Variantenberichts sind alle 188 baubaren Entwürfe so
+abgebildet.}
+
+\bild{film_feld}{0.82}{Bild aus dem Film aller Varianten (Sekunde 30): Die verworfenen versinken.}
+\lesehilfe{Jeder Ring ist ein ganzer Entwurf aus der Studie. Rot: deutlich verfehlt, gelb: knapp, blau: zulässig.
+Die unzulässigen versinken der Reihe nach, die schlechtesten zuerst; am Ende bleiben die sieben blauen. Der Film
+liegt im Repository (\texttt{docs/filme/varianten.mp4}).}
+
 \section{Wie das Tragwerk entstanden ist}
 Das Tragwerk wurde nicht vorgegeben, sondern aus einer Kraftanalyse abgeleitet. Das erste Modell kam auf
 \SI{2129}{MPa}. Statt Parameter zu verändern, wurde zuerst untersucht, wie die Kraft entsteht.
