@@ -867,7 +867,6 @@ Reihenfolge und Begründung: [docs/plan_offene_punkte.md](docs/plan_offene_punkt
 - [ ] Örtlich schwächen: weiche Verbinderenden, steifer Kern (Idee des Nutzers)
 - [ ] Netzkonvergenz und Ausrundung am Verbinderanschluss
 - [ ] Abkühlspannung, Eigengewicht, nachgiebiger Stützzylinder
-- [ ] Review-Paket Festigkeit für Fachleute
 - [x] Verguss (Quarzsand-Epoxid) zwischen Wickelpaket und Gehäuse in der Rechnung (2 cm, 10 GPa)
 - [ ] Verbinder und Tragring im Rechenweg statt eingespannter Bereiche; Keil und Gehäuse aus einem Stück
 - [ ] Stufe 0 genauer: Divertor-Wärmelast, Zyklotronstrahlung, Blanket-Dicke aus Neutronik
