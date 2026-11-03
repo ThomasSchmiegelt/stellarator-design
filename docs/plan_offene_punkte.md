@@ -12,7 +12,7 @@ Berichtskapitel DE + EN, README, Prozess-Doku.
 
 | # | Thema | Warum jetzt | Aufwand | Ergebnis |
 |---|---|---|---|---|
-| 0 | Katalog fertig, Variantenvideo | läuft schon | 0,5 Tag | Video aller Varianten (Blender), Katalog vollständig |
+| 0 | ~~Katalog fertig, Variantenvideo~~ erledigt | | 0,5 Tag | Video aller Varianten (Blender), Katalog vollständig |
 | 1 | ~~Verbinder von 0169: Platte oder Stege?~~ erledigt | prüft die Vermutung aus F-145 | 1 Tag | Stege netzstabil (+1 %), Platte nicht (+47 %), Vermutung widerlegt |
 | 2 | Örtlich schwächen (Idee des Nutzers) | erste, globale Form ging nach hinten los | 2 Tage | weiche Enden, steifer Kern, Spitzen −30 % (Ziel) |
 | 3 | Netzkonvergenz am Anschluss, Ausrundung | Spitzen wachsen mit dem Netz | 1–2 Tage | belastbarer Höchstwert statt σ99 allein |

@@ -679,6 +679,14 @@ So liest man das Bild: jede Schicht unter einem anderen Winkel aufgeschnitten �
 Berichte: Projektbericht Abschnitt „Festigkeit“ (beste und knapp an der Grenze) und **Variantenbericht**
 (`bericht/variantenbericht/`, DE/EN) mit allen Varianten, Steckbriefen und Katalog.
 
+[Film aller Varianten](docs/filme/varianten.mp4) (68 s, Blender): erst 0169 als PicoGK-Voxelfeld, dann 15 „wilde“
+Entwürfe, das Feld aller 188 baubaren Entwürfe, aus dem die unzulässigen versinken, die 7 zulässigen in einer Reihe
+und 0169 im Schnitt. Zeitmarken und Farbcode: [Begleittext](docs/filme/varianten.md).
+
+**Verbinder: Platte oder Stege?** In 0169 liegen die Verbinder so dicht, dass sie fast eine Platte bilden. Nachgerechnet
+(σ99 Standard-/Feinnetz): getrennte Stege 387/392 MPa (+1 %), durchgehende Platte 336/493 MPa (+47 %), bisher
+308/319 MPa. Getrennte Stege sind netzstabil, die Platte nicht; 0169 bleibt auch mit Stegen zulässig.
+
 ### Doppeltes Filament, Platz zu den Spulen, Flüssigblei (grobe Abschätzungen)
 
 Aus den Vorschlägen oben: Die Plasmaseite bekommt eigene feine Kanäle (innen, Kühlung), dahinter trägt ein
@@ -850,8 +858,8 @@ Reihenfolge und Begründung: [docs/plan_offene_punkte.md](docs/plan_offene_punkt
 - [x] Gekoppelte Kette Plasma–Spulen–Package–Festigkeit–Temperatur, erste Entwürfe unter 500 MPa
 - [x] Entwurfsstudie ausgewertet: 7 zulässige Entwürfe, 0169 robust gegen feineres Netz, Werkstoff 1.4429 hergeleitet
 - [x] 3D-Modelle komplett in PicoGK, Variantenbericht mit Steckbriefen und Katalog
-- [ ] Variantenvideo (Blender): alle Varianten, am Schluss die zulässigen
-- [ ] Verbinder von 0169: durchgehende Platte gegen einzelne Stege (Netzstabilität)
+- [x] Variantenvideo (Blender): alle Varianten, am Schluss die zulässigen
+- [x] Verbinder von 0169: durchgehende Platte gegen einzelne Stege (Stege netzstabil, Platte nicht)
 - [ ] Örtlich schwächen: weiche Verbinderenden, steifer Kern (Idee des Nutzers)
 - [ ] Netzkonvergenz und Ausrundung am Verbinderanschluss
 - [ ] Abkühlspannung, Eigengewicht, nachgiebiger Stützzylinder

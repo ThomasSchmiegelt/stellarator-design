@@ -604,10 +604,7 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
 - 2026-11-03: Plan für offene Punkte in docs/plan_offene_punkte.md (STL → STEP auf Wunsch herausgenommen). Nutzer wünscht Variantenvideo (Blender, wilde zuerst, am Schluss die zulässigen).
 
 ## Übergabe 2026-11-03 (Claude Code, Kontext läuft aus)
-- Variantenfilm: Mittelteil A_C (Bilder 240–1499) rendert losgelöst (`sim/video_varianten/lauf.sh A_C`, Log lauf.log,
-  Bilder auf zweiter Platte). Danach: `.venv/bin/python -m stellarator.varianten_video_schnitt` → docs/filme/varianten.mp4,
-  Bilder ansehen (Feld 18–42 s, Reihe 42–50 s), mit Erwartung F-147 vergleichen, README-Eintrag + Checkliste abhaken, committen.
-  Begleittext docs/filme/varianten.md steht. Einzelbilder erst nach Freigabe löschen.
+- Variantenfilm FERTIG (docs/filme/varianten.mp4, F-156). Die 2040 Einzelbilder (zweite Platte) erst nach Freigabe löschen.
 - Punkt 1 erledigt (F-153): getrennt 387/392, platte 336/493, standard 308/319 MPa. Nächster Schritt: Review-Paket
   docs/review_festigkeit_entwurf.md als fertige Fassung DE/EN mit Bildern (PDF).
 - Temp-Ordner sim/_temp_2026-11-03/ (verworfene Bilder, alte PicoGK-voll-Netze): Nutzer fragen, ob löschen.
