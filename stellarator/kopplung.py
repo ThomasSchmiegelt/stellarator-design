@@ -160,7 +160,10 @@ def struktur_netz(p: dict, po: Path, geo: dict):
     I *= L
     for s in spulen:
         s.strom = np.sign(s.strom) * I
-        s.punkte = cad.neu_abtasten(s.punkte, stationen)
+        if p.get("abtastung") == "kruemmung":                       # dichter an engen Biegungen (F-176)
+            s.punkte = cad.neu_abtasten_kruemmung(s.punkte, stationen, np.radians(float(p.get("winkel_max_grad", 10))))
+        else:
+            s.punkte = cad.neu_abtasten(s.punkte, stationen)
     br = ho = wp = WP_M * np.sqrt(I / 22.11e6)                     # gleiche Stromdichte wie 16 Spulen (Stufe 0)
     w = Namespace(wand_innen=p["wand_innen_m"], wand_seite=p["wand_seite_m"], t_min=p["t_min_m"],
                   t_max=p["t_min_m"] + p["t_zusatz_m"], spiel=FEST["spiel_m"], wand_min=0.003)
@@ -370,7 +373,7 @@ def main(argv=None):
     ap.add_argument("--von", default="", help="studie/NNNN: Spulen und Parameter uebernehmen (Netzstudie)")
     a = ap.parse_args(argv)
     if a.befehl == "punkt":
-        p = {k: (v if k in ("lager_ort", "loeser", "verb_modus") else float(v)) for k, v in (x.split("=") for x in a.p)}
+        p = {k: (v if k in ("lager_ort", "loeser", "verb_modus", "abtastung") else float(v)) for k, v in (x.split("=") for x in a.p)}
         if a.von:                                     # Parameter + Spulen eines frueheren Punkts uebernehmen
             q = ROOT_PUNKT(a.von)
             p = json.loads((q / "param.json").read_text()) | p

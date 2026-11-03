@@ -134,6 +134,24 @@ def neu_abtasten(P: np.ndarray, N: int) -> np.ndarray:
     return CubicSpline(s, Q, bc_type="periodic")(np.linspace(0, s[-1], N, endpoint=False))
 
 
+def neu_abtasten_kruemmung(P: np.ndarray, N_min: int, winkel_max: float = np.radians(10)) -> np.ndarray:
+    """Wie neu_abtasten, aber dichter an engen Biegungen: Stationsabstand <= Laenge/N_min und Tangentendrehung je
+    Station <= winkel_max. Fuer eng gebogene Spulen (Proxima-QI, F-176), bei denen gleichmaessige Abtastung Ecken
+    abschneidet und der Querschnitt zwischen zwei Stationen um bis zu 70 Grad springt. Stationszahl gerade."""
+    from scipy.interpolate import CubicSpline
+    Q = np.vstack([P, P[:1]])
+    s = np.r_[0, np.cumsum(np.linalg.norm(np.diff(Q, axis=0), axis=1))]
+    cs = CubicSpline(s, Q, bc_type="periodic")
+    u = np.linspace(0, s[-1], 4000, endpoint=False); du = u[1] - u[0]
+    d1, d2 = cs(u, 1), cs(u, 2)
+    kappa = np.linalg.norm(np.cross(d1, d2), axis=1) / np.linalg.norm(d1, axis=1) ** 3
+    dichte = np.maximum(N_min / s[-1], kappa / winkel_max)          # Stationen je Meter
+    kum = np.r_[0, np.cumsum(dichte * du)]
+    N = int(2 * np.ceil(kum[-1] / 2))
+    ziel = np.linspace(0, kum[-1], N, endpoint=False)
+    return cs(np.interp(ziel, kum, np.r_[u, s[-1]]))
+
+
 def rohr_netz(s: sp.Spule, breite: float, hoehe: float, h: float, normale=None) -> tuple[np.ndarray, np.ndarray]:
     """Wasserdichtes Rechteckrohr mit gemeinsamen Knoten, Kantenlaenge ~h.
 

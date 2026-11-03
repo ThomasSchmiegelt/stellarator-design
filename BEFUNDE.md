@@ -6,6 +6,30 @@
 ---
 
 
+### B-028 | ConStellaration/CoilStellaration (Proxima) an unsere Kette angebunden – QI-Grenzen der Kette (2026-11-03)
+- **Beobachtung:** Unser QA-Plasma (nfp 2, A 4,5) ist in Proximas Benchmark unzulässig (Aufgabe 1: A 4,5 > 4,
+  Dreieckigkeit +0,06, ι/nfp 0,21) bzw. nicht bewertbar (Aufgabe 2 verlangt QI). Drei zulässige Ranglisten-Ränder
+  (nfp 3/4/2, Wertung 0,681/0,488/0,330) mit VMEC++ exakt nachgerechnet.
+- **Unsere Spulenstufe (invers/stufe2_spulen.py) kann QI nicht:** Bn 0,02–0,19 (Grenze 3e-3), Spulen fallen ans Plasma.
+  Geprüft und ausgeschlossen: Einheiten (Rand auf Volumen von 0169 skaliert), Abstand (0,7 a), Fourier-Ordnung (3/4),
+  Proxima-Vorgaben (30 Spulen, Ordnung 7, Krümmung·a ≤ 3,5). Ursache nach Ausschluss: Start mit runden Ringen statt
+  REGCOIL-Hüllflächenstrom (Proxima: REGCOIL → DESC).
+- **Proximas Spulen in unserer Kette:** Feldfehler nachgerechnet 8,17e-4 / 9,34e-4 = Proxima. In 8058 Sätzen keiner mit
+  Feldfehler < 3e-3 UND Biegeradius ≥ 0,7 a. Satz 2 (36 Spulen, Biegeradius 1,0 m) mit dünnem Gehäuse: σ99 1358 MPa,
+  u 650 mm, Kraft je Spule 1187 MN (0169: 500 MN). Gegenprobe 0169 dünn: 426 MPa, alle Grenzen ok, 3648 t Stahl.
+- **Korrektur (F-176):** Das Hex-Netz scheitert/verfälscht bei engen Biegungen, weil es nur 52 Stationen je Spule hat
+  (0,8–1,7 m Abstand, Querschnitt dreht bis 73° je Station, Bahn bis 0,8 m daneben) – nicht wegen der Wandtiefe
+  (zuerst falsch addiert: beide Seiten statt nur der Seite innen in der Kurve). Abhilfe 1: Abtastung nach Krümmung
+  (`abtastung=kruemmung`, ≤ 10° je Station); Abhilfe 2 (Nutzeridee): Voxel-Gehäuse, dann Tetraedernetz.
+- **Grenze unabhängig vom Gehäuse:** Das Wickelpaket (0,71 m) muss sich biegen lassen; bei 0,40 m Biegeradius liegt die
+  innerste Windung ≈ 5 cm vom Krümmungsmittelpunkt.
+- **Messung:** sim/constellaration/ (bewertung_*.json, qi/*/bewertung.json, skaliert.json), sim/kopplung/qi_*/,
+  gegenprobe_0169_duenn/; Bilder docs/bilder/qa_qi_vergleich.png, qa_qi_proxima_spulen.png.
+- **Fundstelle:** Ereignisprotokoll (Buch) F-162 bis F-177; Daten huggingface.co/datasets/proxima-fusion/
+  constellaration, constellaration-bench-results, coilstellaration (MIT); constellaration 0.2.6.
+- **Status:** ✅ Bewertung/Einlesen gesichert · ⚠ Festigkeit QI unsicher (Netzauflösung, Lager nicht nachoptimiert) ·
+  ⚠ 0169 dünn erst nach Netzprüfung glauben.
+
 ### B-027 | Surrogat-Rechenmodell: Hex-Netz fester Topologie, J x B per UDF, Elmer MUMPS (2026-10-25)
 - **Beobachtung:** `stellarator/hexmodell.py` baut Wickelpaket, Verguss, Stahlgehaeuse und Verbinder
   als strukturiertes Hex-Netz direkt im Elmer-Format (kein gmsh, keine Luft). W7-X: 545 000 Knoten,

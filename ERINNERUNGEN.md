@@ -652,3 +652,8 @@ sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht 
   Gegenprobe 0169 dünn (sim/kopplung/gegenprobe_0169_duenn): 426 MPa, alles ok, 3648 t Stahl (Netzprüfung offen!).
   Bild docs/bilder/qa_qi_proxima_spulen.png. Nichts läuft mehr außer dem Video. Noch nicht committet: proxima_spulen.py,
   qi_vergleich_bild.py (b36), Bild. Offen mit Nutzer: Lager/Verbinder für QI nachoptimieren? Gespräch mit Proxima?
+- 18:50 Nachtrag (Nutzer: „erst 1 dann 2“): Läuft `sim/constellaration/feinlauf.sh` (losgelöst): Hex-Netz mit
+  krümmungsabhängiger Abtastung (cad.neu_abtasten_kruemmung, Option abtastung=kruemmung), Punkte
+  qi_proxima_b36/0001 und qi_proxima/0001. Fertig bei „FERTIG feinlauf“ in sim/constellaration/bruecke_lauf.log.
+  Vergleich mit Erwartung F-177 ins Ereignisprotokoll. DANACH Schritt 2: Voxel-Gehäuse (PicoGK) aus den echten
+  Spulenbahnen von Satz 2 → Tetraedernetz (gmsh) → Elmer; Erwartung vorher festlegen, Speicher beachten.
