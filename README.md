@@ -819,6 +819,8 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 
 ## Stand und nächste Schritte
 
+Reihenfolge und Begründung: [docs/plan_offene_punkte.md](docs/plan_offene_punkte.md).
+
 - [x] W7-X: Geometrie, Feld, Feldlinien, Kräfte, Spalt, CAD/STL, ElmerFEM (70 Spulen)
 - [x] Bewertungsfunktion als Optimierungsschnittstelle
 - [x] Inverse Kette Plasmaform → Spulen → Prüfung (an der Referenz precise QA verifiziert)
@@ -846,12 +848,18 @@ Das Projekt dokumentiert offen, was geprüft wurde und was sich als falsch herau
 - [ ] Erstwand-Kühlung: dünne Innenhaut, schnelle Kanäle, Wärme gekoppelt rechnen
 - [x] Festigkeit: Ursache verstanden (Biegung der geraden Innenschenkel, Lagerung außen), Kraftziel in Stufe 2
 - [x] Gekoppelte Kette Plasma–Spulen–Package–Festigkeit–Temperatur, erste Entwürfe unter 500 MPa
-- [ ] Entwurfsstudie abschließen, leichtesten zulässigen Entwurf mit feinem Netz und elastischem Stützzylinder prüfen, 3D-Modell
-- [ ] Verguss (Quarzsand-Epoxid) zwischen Wickelpaket und Gehäuse in Geometrie und Rechnung
+- [x] Entwurfsstudie ausgewertet: 7 zulässige Entwürfe, 0169 robust gegen feineres Netz, Werkstoff 1.4429 hergeleitet
+- [x] 3D-Modelle komplett in PicoGK, Variantenbericht mit Steckbriefen und Katalog
+- [ ] Variantenvideo (Blender): alle Varianten, am Schluss die zulässigen
+- [ ] Verbinder von 0169: durchgehende Platte gegen einzelne Stege (Netzstabilität)
+- [ ] Örtlich schwächen: weiche Verbinderenden, steifer Kern (Idee des Nutzers)
+- [ ] Netzkonvergenz und Ausrundung am Verbinderanschluss
+- [ ] Abkühlspannung, Eigengewicht, nachgiebiger Stützzylinder
+- [ ] Review-Paket Festigkeit für Fachleute
+- [x] Verguss (Quarzsand-Epoxid) zwischen Wickelpaket und Gehäuse in der Rechnung (2 cm, 10 GPa)
 - [ ] Verbinder und Tragring im Rechenweg statt eingespannter Bereiche; Keil und Gehäuse aus einem Stück
 - [ ] Stufe 0 genauer: Divertor-Wärmelast, Zyklotronstrahlung, Blanket-Dicke aus Neutronik
 - [ ] Studien-Runner (Agent wählt Ziele, numerischer Optimierer rechnet)
-- [ ] Allgemeiner Weg STL → STEP
 
 ## Quellen und Danksagung
 

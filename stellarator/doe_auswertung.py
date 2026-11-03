@@ -31,7 +31,7 @@ SM = {"C3": 500.0, "C1": 667.0}           # Sm = 2/3 Rp0,2(4 K): Rp0,2 >= 750 (C
 
 # Grenzen: name -> (Wertfunktion, Grenze, "max"|"min", Einheit, DE, EN)
 GRENZEN = {
-    "stahl":  (lambda e: e["struktur"]["stahl"]["vm_p99_MPa"], 500.0, "max", "MPa", "Stahl σ99", "steel σ99"),
+    "stahl":  (lambda e: e["struktur"]["stahl"]["vm_p99_MPa"], 500.0, "max", "MPa", "σ99 Stahl 1.4429", "σ99 steel 1.4429"),
     "dehn":   (lambda e: e["bewertung"]["dehnung_wp"] * 100, 0.3, "max", "%", "Dehnung Wickelpaket", "winding-pack strain"),
     "pack":   (lambda e: e["package"]["abschirmung_m"], 1.0, "min", "m", "Platz Package", "package space"),
     "kern":   (lambda e: e["package"]["kernheizung_wp_W_m3"], 2000.0, "max", "W/m³", "Kernheizung", "nuclear heating"),
@@ -133,7 +133,7 @@ def tabelle() -> dict:
 
 # ---------------------------------------------------------------- Ersatzmodelle
 ZIELE = {  # name: (Funktion auf kurz-Zeile, log?, DE, EN)
-    "stahl": (lambda z: z["wert_stahl"], True, "Stahl σ99", "steel σ99"),
+    "stahl": (lambda z: z["wert_stahl"], True, "σ99 Stahl 1.4429", "σ99 steel 1.4429"),
     "dehn": (lambda z: z["wert_dehn"], True, "Dehnung Wickelpaket", "winding-pack strain"),
     "Bn": (lambda z: z["wert_Bn"], True, "Feldfehler B·n", "field error B·n"),
     "pack": (lambda z: z["wert_pack"], False, "Platz Package", "package space"),
@@ -370,7 +370,7 @@ def bild_uebersicht(en: bool):
         if sk:
             a.set_xscale("log"); a.set_xticks([20, 50, 100, 200], ["20", "50", "100", "200"]); a.minorticks_off()
     for a in ax[:, 0]:
-        a.set_ylabel("steel σ99 [MPa]" if en else "Stahl σ99 [MPa]")
+        a.set_ylabel("σ99 case steel 1.4429 [MPa]" if en else "σ99 Gehäusestahl 1.4429 [MPa]")
     h, l = ax[0, 0].get_legend_handles_labels()
     fig.legend(h, l, fontsize=8, ncol=6, loc="upper center", bbox_to_anchor=(0.5, 0.955), frameon=False)
     fig.suptitle("Design study doe1: 199 designs, 99-% stress of the coil-case steel against the design variables" if en else
@@ -499,7 +499,7 @@ def bild_netz(en: bool):
             lab0.append((y[1], nr))
     _etiketten(ax[0], lab0, 1.06)
     ax[0].set_xticks([0, 1], ["coarse (doe1)" if en else "grob (doe1)", "standard" if en else "Standard"], fontsize=8)
-    ax[0].set_xlim(-0.2, 1.35); ax[0].set_ylabel("steel σ99 [MPa]" if en else "Stahl σ99 [MPa]")
+    ax[0].set_xlim(-0.2, 1.35); ax[0].set_ylabel("σ99 case steel 1.4429 [MPa]" if en else "σ99 Gehäusestahl 1.4429 [MPa]")
     ax[0].set_title("(a) coarse-mesh designs recomputed\n(grey: other designs)" if en else
                     "(a) grob gerechnete Entwürfe nachgerechnet\n(grau: übrige Entwürfe)", fontsize=9)
     # (b, c) Kandidaten

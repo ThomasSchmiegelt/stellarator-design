@@ -67,7 +67,7 @@ def main():
         a3.barh(y, [r[1] for r in zeilen], color="C0", label="untere Grenze")
         a3.barh(y, [r[2] for r in zeilen], color="C3", alpha=.7, label="obere Grenze")
         a3.set_yticks(y, [r[0] for r in zeilen], fontsize=8); a3.axvline(0, color="k", lw=.8)
-        a3.set_xlabel("Aenderung Stahl p99 [%]"); a3.legend(fontsize=8); a3.grid(alpha=.3, axis="x")
+        a3.set_xlabel("Aenderung σ99 Gehäusestahl 1.4429 [%]"); a3.legend(fontsize=8); a3.grid(alpha=.3, axis="x")
         a3.set_title(f"Empfindlichkeit Stahl p99\nBasis {basis['stahl.vm_p99_MPa']:.0f} MPa bei Lastmitte", fontsize=10)
         erg[anlage] = {"mitte": p0, "last": list(map(float, xs)), "kurven": ks, "tornado_proz": zeilen, "basis": basis}
     fig.suptitle("Surrogat (GP, 78 bzw. 79 Proben), uebrige Parameter in Bereichsmitte", fontsize=12, y=0.995)

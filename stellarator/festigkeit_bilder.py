@@ -64,7 +64,7 @@ def tragwerk(en: bool):
     x = np.arange(len(werte)); namen = [w["name"] for w in werte]
     dez = (lambda v, n=0: f"{v:.{n}f}") if en else (lambda v, n=0: f"{v:.{n}f}".replace(".", ","))
     for k, (key, titel, grenze, n) in enumerate([
-            ("p99", tr("Spannung im Gehäusestahl (99 %-Wert) [MPa]", "stress in casing steel (99th percentile) [MPa]"), 500, 0),
+            ("p99", tr("Spannung im Gehäusestahl 1.4429 (99-%-Wert σ99) [MPa]", "stress in case steel 1.4429 (99 % value σ99) [MPa]"), 500, 0),
             ("u", tr("größte Verformung [mm]", "largest deformation [mm]"), None, 0),
             ("dehn", tr("Dehnung Wickelpaket [%]", "winding-pack strain [%]"), 0.3, 2),
             ("masse", tr("Stahl gesamt (Gehäuse + Verbinder) [1000 t]", "total steel (casing + connectors) [1000 t]"), None, 1)]):

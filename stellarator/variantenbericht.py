@@ -257,7 +257,7 @@ def steckbrief(en, name, quelle, erg, K):
     links = [f"{PARAM_NAMEN[k][1 if en else 0]} & {f(p[k], 3 if k in ('abstand_sp', 'kraft_gewicht') else (0 if k in ('verbinder_je_paar', 'E_verbinder_GPa', 'n_basis') else 2))} \\\\" for k in PARAM_NAMEN]
     links.insert(1, f"{tr(en, 'Spulen gesamt', 'coils in total')} & {r['spulen']} \\\\")
     kat = K.get(quelle, {})
-    rechts = [f"$\\sigma_{{99}}$ {tr(en, 'Stahl', 'steel')} & {f(r['wert_stahl'])} MPa \\\\",
+    rechts = [f"$\\sigma_{{99}}$ {tr(en, 'Stahl 1.4429', 'steel 1.4429')} & {f(r['wert_stahl'])} MPa \\\\",
               f"{tr(en, 'größtes Element', 'largest element')} & {f(r['stahl_max_MPa'])} MPa \\\\",
               f"$P_m$ {tr(en, 'max. / 99 %', 'max. / 99 %').replace('%', '\\%')} & {f(kat.get('Pm_max_MPa'))} / {f(kat.get('Pm_p99_MPa'))} MPa \\\\" if kat else "",
               f"$P_m+P_b$ max. & {f(kat.get('PmPb_max_MPa'))} MPa \\\\" if kat else "",
