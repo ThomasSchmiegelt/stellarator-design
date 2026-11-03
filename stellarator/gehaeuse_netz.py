@@ -69,38 +69,44 @@ def waende(spulen, br, ho, a) -> list[dict]:
     return out
 
 
-def biegegrenze(spulen, W, br, ho, grenze: float = 0.8, wand_min: float = 0.003, ausgleich: bool = True):
-    """'Biegen auf der Innenkontur' (Nutzeridee 2026-11-03, F-180): Wo die Spule eng biegt, wird die Wand auf der Seite
+def biegegrenze(spulen, W, br, ho, grenze: float = 0.8, wand_min: float = 0.003, ausgleich: bool = True,
+                rampe: int = 4):
+    """'Biegen auf der Innenkontur' (Nutzeridee 2026-11-03, F-180/182): Wo die Spule eng biegt, wird die Wand auf der Seite
     innen in der Kurve gekappt, bis die Sweep-Jacobi 1 - a*kappa_n - c*kappa_b dort >= 1 - grenze bleibt; das
     abgezogene Material kommt (ausgleich) auf die Gegenseite. Wickelpaket bleibt unveraendert (Strombahn = Feld).
+    STETIG (Nutzerhinweis „achte auf die Startpunkte der Splines, sonst ueberschlagen sich die Flaechen“): der
+    Kappungsfaktor lam je Station wird als untere Huelle von Rampen gebildet, lam_i = min_j(lam_j + (1-lam_j)|i-j|/rampe),
+    sodass die Wandstaerke von Station zu Station nur allmaehlich wechselt (sonst Spruenge -> umgestuelpte Elemente).
     Rueckgabe: neue W, Info (gekappte Stationen, Stationen, an denen schon das Wickelpaket allein die Grenze reisst)."""
-    info = {"gekappt": 0, "wp_reisst": 0, "stationen": 0, "kappung_max_m": 0.0}
+    info = {"gekappt": 0, "wp_reisst": 0, "stationen": 0, "kappung_max_m": 0.0, "rampe": rampe}
     out = []
     for s, w in zip(spulen, W):
         w = {q: v.copy() for q, v in w.items()}
         t, n, b = sp.rahmen(s)
-        P = s.punkte; ds = np.linalg.norm(np.roll(P, -1, 0) - np.roll(P, 1, 0), axis=1) / 2
+        P = s.punkte; N = len(P)
+        ds = np.linalg.norm(np.roll(P, -1, 0) - np.roll(P, 1, 0), axis=1) / 2
         k = (np.roll(t, -1, 0) - np.roll(t, 1, 0)) / (2 * ds[:, None])
         kn, kb = (k * n).sum(1), (k * b).sum(1)
-        sn = np.where(kn > 0, "aussen", "innen"); gn = np.where(kn > 0, "innen", "aussen")
-        sb = np.where(kb > 0, "rechts", "links"); gb = np.where(kb > 0, "links", "rechts")
-        for i in range(len(P)):
-            an, ab = abs(kn[i]), abs(kb[i])
-            wp = an * br / 2 + ab * ho / 2
-            wand = an * w[sn[i]][i] + ab * w[sb[i]][i]
-            info["stationen"] += 1
-            if wp >= grenze:
-                info["wp_reisst"] += 1
-            if wp + wand <= grenze or wand <= 0:
-                continue
-            lam = max(0.0, (grenze - wp) / wand)
-            for seite, gegen in ((sn[i], gn[i]), (sb[i], gb[i])):
-                alt = w[seite][i]; neu = max(wand_min, lam * alt)
-                w[seite][i] = neu
-                if ausgleich:
-                    w[gegen][i] += alt - neu
-                info["kappung_max_m"] = max(info["kappung_max_m"], float(alt - neu))
-            info["gekappt"] += 1
+        an, ab = np.abs(kn), np.abs(kb)
+        wn = np.where(kn > 0, w["aussen"], w["innen"]); wb = np.where(kb > 0, w["rechts"], w["links"])
+        wp = an * br / 2 + ab * ho / 2; wand = an * wn + ab * wb
+        lam = np.ones(N)
+        m = (wp + wand > grenze) & (wand > 0)
+        lam[m] = np.clip((grenze - wp[m]) / wand[m], 0.0, 1.0)
+        info["stationen"] += N; info["wp_reisst"] += int((wp >= grenze).sum())
+        # stetig machen: je Seite eigener Faktor (Seite innen in der Kurve kann wechseln), untere Huelle von Rampen
+        i = np.arange(N); d = np.abs(i[:, None] - i[None]); d = np.minimum(d, N - d)
+        huelle = lambda x: np.min(x[None] + (1 - x[None]) * np.minimum(d / rampe, 1.0), axis=1)
+        info["gekappt"] += int((huelle(lam) < 1).sum())
+        # je Seite kappen; Ausgleich auf die Gegenseite
+        for seite, gegen, maske in (("aussen", "innen", kn > 0), ("innen", "aussen", kn <= 0),
+                                    ("rechts", "links", kb > 0), ("links", "rechts", kb <= 0)):
+            alt = w[seite].copy()
+            neu = np.maximum(wand_min, huelle(np.where(maske, lam, 1.0)) * alt)
+            w[seite] = neu
+            if ausgleich:
+                w[gegen] = w[gegen] + (alt - neu)
+            info["kappung_max_m"] = max(info["kappung_max_m"], float((alt - neu).max()))
         out.append(w)
     return out, info
 

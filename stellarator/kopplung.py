@@ -177,6 +177,23 @@ def struktur_netz(p: dict, po: Path, geo: dict):
     verlauf = entflechten(spulen, W, br, ho, max(br, ho) / 3, w.spiel, w.wand_min)
     netz = hm.baue_netz(spulen, br, ho, W, FEST["verguss_m"], p["r_lager_m"], int(p.get("verbinder_je_paar", FEST["verbinder_je_paar"])),
                         int(p.get("verbinder_halb", FEST["verbinder_halb"])), plan=None)
+    runde = 0
+    while netz.info["elemente_negativ"] and p.get("biegung") == "innenkontur" and runde < 6:
+        # Reparaturschleife (F-182): an den Stationen umgestuelpter Elemente Waende weich um 20 % duennen, neu bauen
+        runde += 1
+        X, H = np.asarray(netz.X), np.asarray(netz.hexa)
+        neg = np.where(hm._jacobi_min(X, H) <= 0)[0]; sid = np.asarray(netz.spule)[neg]
+        for kk in np.unique(sid):
+            P = spulen[kk].punkte; Nk = len(P)
+            for c in X[H[neg[sid == kk]]].mean(1):
+                i0 = int(np.argmin(np.linalg.norm(P - c, axis=1)))
+                for d_ in range(-3, 4):
+                    f_ = 1 - 0.2 * (1 - abs(d_) / 4)
+                    for q in ("innen", "aussen", "links", "rechts"):
+                        W[kk][q][(i0 + d_) % Nk] *= f_
+        netz = hm.baue_netz(spulen, br, ho, W, FEST["verguss_m"], p["r_lager_m"], int(p.get("verbinder_je_paar", FEST["verbinder_je_paar"])),
+                            int(p.get("verbinder_halb", FEST["verbinder_halb"])), plan=None)
+        (po / "reparatur.json").write_text(json.dumps({"runden": runde, "negativ": netz.info["elemente_negativ"]}))
     if netz.info["elemente_negativ"]:
         raise RuntimeError(f"{netz.info['elemente_negativ']} Elemente mit negativer Jacobi-Determinante")
     return netz, spulen, br, ho, wp, I, stationen, verlauf, W

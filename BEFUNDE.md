@@ -29,6 +29,9 @@
   Kurve, Material auf die Gegenseite. 0169 unverändert (305 statt 308 MPa). Satz 1: an 120/3120 Stationen ist schon das
   Wickelpaket zu breit für den Biegeradius → nicht baubar. Satz 2 (0169-Wände): bis auf 6–12 Elemente an einer Stelle
   netzbar; Rest-Ursache offen (Rahmenverdrillung? Entflechten?).
+- **Stetig + Reparatur (F-182/183, Nutzerhinweis Spline-Startpunkte):** Kappung je Seite als Rampenhülle (4 Stationen);
+  Restfehler lag am Start-/Endpunkt der Spulenkurve → Reparaturschleife (Wände dort weich −20 %, neu bauen) → 0 Fehler.
+  Satz 2 mit 0169-Wänden: σ99 1098 MPa, u 306 mm, WP 494 MPa, 24 911 t Stahl → Faktor 2,2 über der Grenze.
 - **Voxel als FE-Netz zu groß:** 0,1-m-Voxel ≈ 1,7 Mio. Elemente (×5 gegenüber feinem Hex-Netz) → MUMPS > 32 GB.
 - **Grenze unabhängig vom Gehäuse:** Das Wickelpaket (0,71 m) muss sich biegen lassen; bei 0,40 m Biegeradius liegt die
   innerste Windung ≈ 5 cm vom Krümmungsmittelpunkt.
