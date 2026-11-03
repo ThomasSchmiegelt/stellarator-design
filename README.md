@@ -679,7 +679,8 @@ So liest man das Bild: jede Schicht unter einem anderen Winkel aufgeschnitten �
 Berichte: Projektbericht Abschnitt „Festigkeit“ (beste und knapp an der Grenze) und **Variantenbericht**
 (`bericht/variantenbericht/`, DE/EN) mit allen Varianten, Steckbriefen und Katalog.
 
-[Film aller Varianten](docs/filme/varianten.mp4) (68 s, Blender): erst 0169 als PicoGK-Voxelfeld, dann 15 „wilde“
+[Film aller Varianten](docs/filme/varianten.mp4) (84 s, Blender): erst 0169 als PicoGK-Voxelfeld, dann seine
+Magnetfeldrechnung (Feldlinien, |B| auf dem Plasmarand) und seine Festigkeitsrechnung (Spannung, Verformung), dann 15 „wilde“
 Entwürfe, das Feld aller 188 baubaren Entwürfe, aus dem die unzulässigen versinken, die 7 zulässigen in einer Reihe
 und 0169 im Schnitt. Zeitmarken und Farbcode: [Begleittext](docs/filme/varianten.md).
 

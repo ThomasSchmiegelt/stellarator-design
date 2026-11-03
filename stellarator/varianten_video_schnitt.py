@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ORDNER = ROOT / "sim" / "video_varianten"
 BILDER = ORDNER / "bilder"
 FPS = 30
-ENDE = 2040                                   # wie varianten_video_blender.ENDE
+ENDE = 2520                                   # wie varianten_video_blender.ENDE
 
 
 def main():

@@ -609,3 +609,35 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
   docs/review_festigkeit_entwurf.md als fertige Fassung DE/EN mit Bildern (PDF).
 - Temp-Ordner sim/_temp_2026-11-03/ (verworfene Bilder, alte PicoGK-voll-Netze): Nutzer fragen, ob löschen.
 - Buch: Kapitel 14a fertig bis auf FRAGEN 37 und Lage des Kapitels.
+
+## Übergabe 2026-11-03 abends (Claude Code) — so kann PI/Hermes übernehmen
+Stand der Aufträge, der Reihe nach. Ereignisprotokoll (Buch) F-163 bis F-168 enthält Erwartungen und Ergebnisse.
+
+**Laufend (losgelöst, überlebt Sitzungsende):**
+1. Video, Rechenszenen: Blender rendert Bilder 240–719 (`sim/video_varianten/lauf.sh`, Fall M_F), ~53 s/Bild,
+   Stand 17:45 Bild 429. Danach startet `sim/video_varianten/kette_vorspann.sh` selbst die Bilder 120–276 neu.
+   Fertig, wenn in `sim/video_varianten/lauf.log` „FERTIG Vorspann neu“ steht. Bilder:
+   /mnt/chaostotal/KI_Werkstatt/cae_projekte/fusion_video_varianten/bilder (2520 Stück, 00000–02519).
+   Prüfen: `ls <bilder> | wc -l` muss 2520 sein; `pgrep -af "blender -b"` leer.
+   Dann: Probebilder 300, 450, 600 ansehen (Feldlinien sichtbar? Farbskala dunkelblau→rot?), danach
+   `.venv/bin/python -m stellarator.varianten_video_schnitt` (→ docs/filme/varianten.mp4, 84 s). Dem Nutzer zeigen,
+   ERST nach Freigabe committen. Einzelbilder NICHT löschen (Nutzer: „die anderen noch nicht“).
+   Pausieren: `~/bin/rechnung pause` / `~/bin/rechnung weiter`.
+
+**Abgeschlossen, noch nicht committet:** stellarator/varianten_video_rechnung.py, varianten_video_blender.py,
+varianten_video_daten.py, varianten_video_schnitt.py, docs/filme/varianten.md, README (84 s),
+stellarator/constellaration_bewertung.py, constellaration_bruecke.py, qi_vergleich_bild.py, kopplung.py
+(plasma.json-Schalter `plasma_laden`, Parameter R1/abstand_ss), docs/bilder/qa_qi_vergleich.png, .gitignore.
+
+**ConStellaration-Brücke (Option 1), Stand:**
+- Umgebung `.venv-constellaration` (constellaration 0.2.6). Ränder: 3 zulässige Einreichungen der Rangliste
+  (`sim/constellaration/qi/<name>/`, Nachrechnung trifft Rangliste exakt). Rohdaten auf zweiter Platte
+  /mnt/chaostotal/KI_Werkstatt/cae_projekte/constellaration/.
+- Ergebnis: Unsere Spulenoptimierung (invers/stufe2_spulen.py) findet für QI keine brauchbaren Spulen
+  (Bn 0,02–0,19 statt ≤ 3e-3, Spulen 0,4–0,9 m am Plasma statt 1,99 m, Krümmung über Grenze). Abstand und
+  Fourier-Ordnung als Ursache geprüft und ausgeschlossen (F-166, F-168). Vermutung: Strafgewichte gegen Feldziel.
+- Nächster Schritt (mit Nutzer abstimmen): Proximas Datensatz „CoilStellaration“ (HF proxima-fusion/coilstellaration,
+  MIT) laden, Spulensätze für QI ansehen und gegen unsere Kette vergleichen. Option 3 (ernsthaft mitmachen) offen.
+
+**Am Sitzungsende fragen:** Temp-Ordner sim/_temp_2026-11-03b/ (alte Vorspannbilder, QI-Fehllauf) löschen?
+sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht weg.

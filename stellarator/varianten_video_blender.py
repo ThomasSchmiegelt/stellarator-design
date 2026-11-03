@@ -4,16 +4,21 @@
   blender -b -P stellarator/varianten_video_blender.py -- --von 0 --bis 2040     # Film; vorhandene Bilder uebersprungen
   (Daten vorher: .venv/bin/python -m stellarator.varianten_video_daten; Schnitt: stellarator/varianten_video_schnitt.py)
 
-Ablauf (30 Bilder/s, 68 s):
-  P  0-8 s    PicoGK-Vorspann: Entwurf 0169 entsteht als Voxelfeld (0,3-m-Wuerfel, Schicht fuer Schicht von unten),
-              dann Ueberblendung in die exakte Flaeche des Rechenmodells (Gehaeuse, Verbinder, Wickelpaket aus
+Ablauf (30 Bilder/s, 84 s):
+  P  0-8 s    PicoGK-Vorspann: Entwurf 0169 entsteht als Voxelfeld (0,3-m-Wuerfel, stilisiert, Schicht fuer Schicht
+              von unten), ab 4 s Ueberblendung in das echte PicoGK-Netz (80-mm-Voxel, glatte Flaeche); in der
+              Magnetfeldszene, wenn die Gehaeuse glasig sind, Wechsel auf die exakte Flaeche des Rechenmodells (Gehaeuse, Verbinder, Wickelpaket aus
               struktur.vtu; Plasma, Package, Lager aus PicoGK) - die PicoGK-Netze (80 mm, 150 k Dreiecke) sind fuer
               Nahaufnahmen zu grob
-  A  8-18 s   die "wilden" Varianten: 15 Entwuerfe mit der kleinsten Reserve, je 0,67 s, Kamera kreist
-  B 18-42 s   alle geometrisch darstellbaren Entwuerfe im Feld; die unzulaessigen versinken der Reihe nach
+  M  8-16 s   Magnetfeld von 0169: Gehaeuse werden glasig, berechnete Feldlinien wachsen, Plasmarand faerbt sich
+              nach |B| (Biot-Savart, echte Stroeme; Daten stellarator/varianten_video_rechnung.py), dann zurueck
+  F 16-24 s   Festigkeit von 0169: Gehaeuse leicht transparent, von-Mises-Spannung aus Elmer erscheint auf derselben
+              Flaeche, Verformung 150-fach ueberhoeht ein- und ausgeblendet, dann zurueck
+  A 24-34 s   die "wilden" Varianten: 15 Entwuerfe mit der kleinsten Reserve, je 0,67 s, Kamera kreist
+  B 34-58 s   alle geometrisch darstellbaren Entwuerfe im Feld; die unzulaessigen versinken der Reihe nach
               (schlechteste zuerst, knapp verfehlte zuletzt); uebrig bleiben die zulaessigen
-  C 42-50 s   die zulaessigen ruecken in eine Reihe
-  D 50-68 s   der empfohlene Entwurf 0169 im Treppenschnitt (Plasma, Erstwand+Blanket, Abschirmung, Vakuumgefaess,
+  C 58-66 s   die zulaessigen ruecken in eine Reihe
+  D 66-84 s   der empfohlene Entwurf 0169 im Treppenschnitt (Plasma, Erstwand+Blanket, Abschirmung, Vakuumgefaess,
               Wickelpaket, Gehaeuse, Verbinder, Lager), Kamera kreist
 Farben: Gehaeuse blau = zulaessig, gelb = knapp verfehlt, rot = deutlich verfehlt. Im Bild steht nur der Name
 (setzt der Schnitt); Erklaerungen im Begleittext.
@@ -33,7 +38,10 @@ ORDNER = ROOT / "sim" / "video_varianten"
 NETZE = ORDNER / "netze"
 BILDER = ORDNER / "bilder"
 FPS = 30
-P0, A0, B0, C0, D0, ENDE = 0, 8 * FPS, 18 * FPS, 42 * FPS, 50 * FPS, 68 * FPS
+P0, M0, F0, A0, B0, C0, D0, ENDE = 0, 8 * FPS, 16 * FPS, 24 * FPS, 34 * FPS, 58 * FPS, 66 * FPS, 84 * FPS
+UEBERHOEHUNG = 150.0              # Verformung in der Festigkeitsszene
+B_SKALA = (5.5, 7.5)              # |B| auf dem Plasmarand [T] -> Farbe
+VM_SKALA = (0.0, 600.0)           # von Mises [MPa] -> Farbe
 WILD_DAUER = 20
 ABSTAND = 42.0                    # Rasterabstand im Feld [m]
 BODEN_Z = -11.0
@@ -129,6 +137,56 @@ def zeige(kinder, an):
         k.hide_render = not an
 
 
+def rampe_mat(name, attr, stopps, grund, leucht=0.0, rau=0.5, grund2=None, attr2=None):
+    """Material mit stufenloser Mischung (Knoten "mischung") von der Grundfarbe zur Farbrampe ueber ein Knotenattribut
+    (0..1). grund2/attr2: zweite Grundfarbe je Knoten (z. B. Verbinder dunkler). Alpha steuerbar wie mat()."""
+    m = bpy.data.materials.new(name); m.use_nodes = True; nt = m.node_tree; N = nt.nodes; L = nt.links
+    b = N["Principled BSDF"]; b.inputs["Roughness"].default_value = rau; b.inputs["Metallic"].default_value = 0.15
+    b.inputs["Coat Weight"].default_value = 0.08
+    at = N.new("ShaderNodeAttribute"); at.attribute_name = attr
+    rp = N.new("ShaderNodeValToRGB"); el = rp.color_ramp.elements
+    el[0].position, el[0].color = stopps[0][0], (*stopps[0][1], 1)
+    el[1].position, el[1].color = stopps[-1][0], (*stopps[-1][1], 1)
+    for pos, c in stopps[1:-1]:
+        e = el.new(pos); e.color = (*c, 1)
+    L.new(at.outputs["Fac"], rp.inputs[0])
+    g = N.new("ShaderNodeMixRGB"); g.inputs["Color1"].default_value = (*grund, 1); g.inputs["Fac"].default_value = 0.0
+    g.inputs["Color2"].default_value = (*(grund2 or grund), 1)
+    if attr2:
+        a2 = N.new("ShaderNodeAttribute"); a2.attribute_name = attr2; L.new(a2.outputs["Fac"], g.inputs["Fac"])
+    mi = N.new("ShaderNodeMixRGB"); mi.name = "mischung"; mi.inputs["Fac"].default_value = 0.0
+    L.new(g.outputs["Color"], mi.inputs["Color1"]); L.new(rp.outputs[0], mi.inputs["Color2"])
+    L.new(mi.outputs["Color"], b.inputs["Base Color"])
+    if leucht:
+        L.new(mi.outputs["Color"], b.inputs["Emission Color"]); b.inputs["Emission Strength"].default_value = leucht
+    m.blend_method = "BLEND"
+    return m
+
+
+def mischung(m, x):
+    m.node_tree.nodes["mischung"].inputs["Fac"].default_value = x
+
+
+def attribut(ob, name, werte):
+    a = ob.data.attributes.new(name, "FLOAT", "POINT"); a.data.foreach_set("value", np.asarray(werte, np.float32))
+
+
+def kurve(name, pts, material, dicke):
+    cu = bpy.data.curves.new(name, "CURVE"); cu.dimensions = "3D"
+    sp = cu.splines.new("POLY"); sp.points.add(len(pts) - 1)
+    sp.points.foreach_set("co", np.c_[pts, np.ones(len(pts))].astype(np.float32).ravel())
+    cu.bevel_depth = dicke; cu.bevel_resolution = 3; cu.bevel_factor_mapping_end = "SPLINE"
+    ob = bpy.data.objects.new(name, cu); ob.data.materials.append(material)
+    bpy.context.scene.collection.objects.link(ob)
+    return ob
+
+
+INFERNO = [(0.0, (0.02, 0.01, 0.12)), (0.3, (0.33, 0.06, 0.43)), (0.55, (0.73, 0.21, 0.33)),
+           (0.8, (0.98, 0.55, 0.04)), (1.0, (0.99, 0.95, 0.55))]
+TURBO = [(0.0, (0.03, 0.08, 0.40)), (0.15, (0.12, 0.38, 0.92)), (0.35, (0.10, 0.80, 0.80)),
+         (0.55, (0.45, 0.98, 0.32)), (0.72, (0.96, 0.78, 0.14)), (0.87, (0.98, 0.40, 0.07)), (1.0, (0.60, 0.05, 0.02))]
+
+
 # ---------------------------------------------------------------- Szene
 def welt(sc):
     """Dunkler Verlauf hinter dem Modell (nur fuer die Kamera), schwaches kuehles Umgebungslicht."""
@@ -210,6 +268,27 @@ def szene(a):
     gmat = {"gehaeuse": mat("g_geh", FARBE["zulaessig"][0]), "verbinder": mat("g_verb", FARBE["zulaessig"][1]),
             "plasma": mat("g_plasma", (0.91, 0.48, 0.64), 0.0, 0.5, leucht=0.45, lack=0.0)}
     _, glatt_k = modell("g0169", NETZE / "0169_glatt.npz", gmat)
+    pmat = {"gehaeuse": mat("p_geh", FARBE["zulaessig"][0]), "verbinder": mat("p_verb", FARBE["zulaessig"][1]),
+            "plasma": mat("p_plasma", (0.91, 0.48, 0.64), 0.0, 0.5, leucht=0.45, lack=0.0)}
+    _, pgk_k = modell("p0169", NETZE / "0169_picogk.npz", pmat)       # echtes PicoGK-Netz (80 mm)
+    pgk = {k.name.split("_", 1)[1]: k for k in pgk_k}
+
+    # Rechenszenen (M, F): Feldlinien, Plasmarand nach |B|, Stahl nach von Mises mit Verformung
+    rd = np.load(NETZE / "0169_rechnung.npz"); gd = np.load(NETZE / "0169_glatt.npz")
+    m_linie = mat("feldlinie", (0.55, 0.88, 1.0), 0.0, 0.4, leucht=6.0, lack=0.0)
+    linien = [kurve(f"feldlinie_{i}", p, m_linie, 0.10) for i, p in enumerate(rd["feldlinien"])]
+    m_pB = rampe_mat("plasma_B", "B", INFERNO, (0.91, 0.48, 0.64), leucht=0.6)
+    pB = netz_objekt("plasma_B", gd["plasma_v"], gd["plasma_f"], m_pB)
+    attribut(pB, "B", np.clip((rd["plasma_B"] - B_SKALA[0]) / (B_SKALA[1] - B_SKALA[0]), 0, 1))
+    m_vm = rampe_mat("stahl_vm", "vm", TURBO, FARBE["zulaessig"][0], leucht=0.25, rau=0.6, grund2=FARBE["zulaessig"][1], attr2="verb")
+    m_vm.node_tree.nodes["Principled BSDF"].inputs["Coat Weight"].default_value = 0.0
+    st = netz_objekt("stahl_vm", rd["stahl_v"], rd["stahl_f"], m_vm)
+    attribut(st, "vm", np.clip((rd["stahl_vm"] - VM_SKALA[0]) / (VM_SKALA[1] - VM_SKALA[0]), 0, 1))
+    attribut(st, "verb", rd["stahl_verb"])
+    st.shape_key_add(name="Basis"); kv = st.shape_key_add(name="verformt", from_mix=False)
+    kv.data.foreach_set("co", (rd["stahl_v"] + UEBERHOEHUNG * rd["stahl_u"]).astype(np.float32).ravel())
+    gk = {k.name.split("_", 1)[1]: k for k in glatt_k}                  # gehaeuse, verbinder, plasma
+    rechnung = dict(linien=linien, m_linie=m_linie, pB=pB, m_pB=m_pB, st=st, m_vm=m_vm, kv=kv, gk=gk)
 
     # Feld aller Entwuerfe (B, C)
     nrs = sorted(var); n = len(nrs); sp = int(math.ceil(math.sqrt(n)))
@@ -232,7 +311,7 @@ def szene(a):
                  leucht=0.45 if t == "plasma" else 0.0) for t, c in SCHNITTFARBE.items()}
     _, k169 = modell("s0169", NETZE / "0169_schnitt.npz", sm)
     return dict(sc=sc, cam=cam, feld=feld, weg=weg, zul=zul, wild=wild, k169=k169, sp=sp,
-                schichten=schichten, vmat=vmat, glatt=glatt_k, gmat=gmat)
+                schichten=schichten, vmat=vmat, glatt=glatt_k, gmat=gmat, R=rechnung, pgk=pgk, pmat=pmat)
 
 
 def kamera(cam, ziel, az_grad, el_grad, dist, schaerfe=False):
@@ -249,17 +328,52 @@ def zustand(S, fr):
     for _, k in S["wild"]: zeige(k, False)
     zeige(S["k169"], False); zeige(S["glatt"], False)
     for obs in S["schichten"]: zeige(obs, False)
-    if fr < A0:                                                      # P: PicoGK-Vorspann
-        aufbau = 4.0 * FPS; ueber = (4.0 * FPS, 6.0 * FPS)
+    R = S["R"]; zeige(R["linien"] + [R["pB"], R["st"]], False)
+    for m in S["gmat"].values(): alpha(m, 1.0)
+    zeige(S["pgk"].values(), False)
+    for m in S["pmat"].values(): alpha(m, 1.0)
+    if fr < M0:                                                      # P: PicoGK-Vorspann
+        aufbau = 4.0 * FPS; ueber = (4.0 * FPS, 5.0 * FPS)
         n = int(math.ceil(len(S["schichten"]) * glatt(fr / aufbau))) if fr < aufbau else len(S["schichten"])
         u = glatt((fr - ueber[0]) / (ueber[1] - ueber[0]))
         if u < 1:
             for obs in S["schichten"][:n]: zeige(obs, True)
             for m in S["vmat"].values(): alpha(m, 1 - u)
-        if u > 0:
-            zeige(S["glatt"], True)
-            for m in S["gmat"].values(): alpha(m, u)
-        kamera(cam, (0, 0, -1.0), -130 + 80 * fr / A0, 30 - 6 * fr / A0, 60 - 8 * glatt(fr / A0), schaerfe=True)
+        if u > 0:                                                    # echtes PicoGK-Netz
+            zeige(S["pgk"].values(), True)
+            for m in S["pmat"].values(): alpha(m, u)
+        kamera(cam, (0, 0, -1.0), -130 + 80 * fr / M0, 30 - 6 * fr / M0, 60 - 8 * glatt(fr / M0), schaerfe=True)
+        return
+    if fr < F0:                                                      # M: Magnetfeld
+        t = (fr - M0) / FPS; u = (fr - M0) / (F0 - M0)
+        glas = glatt(t / 1.2) * (1 - glatt((t - 6.8) / 1.2))           # Gehaeuse glasig
+        pl = glatt((t - 0.8) / 1.2) * (1 - glatt((t - 6.6) / 1.2))     # Plasma durchsichtig
+        fb = glatt((t - 4.3) / 1.5) * (1 - glatt((t - 6.4) / 1.2))     # Plasmarand nach |B|
+        zeige(S["glatt"], True); zeige([R["gk"]["plasma"]], False); zeige([R["pB"]], True)
+        alpha(S["gmat"]["gehaeuse"], 1 - 0.85 * glas); alpha(S["gmat"]["verbinder"], 1 - 0.85 * glas)
+        if t < 1.2:                                                  # noch PicoGK-Netz; Wechsel, wenn glasig
+            zeige([R["gk"]["gehaeuse"], R["gk"]["verbinder"]], False); zeige([S["pgk"]["gehaeuse"], S["pgk"]["verbinder"]], True)
+            alpha(S["pmat"]["gehaeuse"], 1 - 0.85 * glas); alpha(S["pmat"]["verbinder"], 1 - 0.85 * glas)
+        alpha(R["m_pB"], 1 - 0.82 * pl + 0.72 * pl * fb); mischung(R["m_pB"], fb)
+        for i, ob in enumerate(R["linien"]):
+            w = glatt((t - 1.0 - 0.3 * i) / 2.6)
+            ob.data.bevel_factor_end = max(w, 1e-3); ob.hide_render = w <= 0.002 or glas <= 0.01
+        alpha(R["m_linie"], glas)
+        kamera(cam, (0, 0, -1.0), -50 + 60 * u, 24, 52 - 8 * math.sin(math.pi * u), schaerfe=True)
+        return
+    if fr < A0:                                                      # F: Festigkeit
+        t = (fr - F0) / FPS; u = (fr - F0) / (A0 - F0)
+        leicht = glatt(t / 1.0) * (1 - glatt((t - 6.6) / 1.2))          # leicht transparent
+        rech = glatt((t - 1.0) / 1.5) * (1 - glatt((t - 5.9) / 1.0))    # Spannung erscheint
+        zeige(S["glatt"], True)
+        a = 1 - 0.7 * leicht * (1 - rech)
+        if 1.0 < t < 6.9:                                            # Rechenflaeche statt Gehaeuse (gleiche Geometrie)
+            zeige([R["gk"]["gehaeuse"], R["gk"]["verbinder"]], False); zeige([R["st"]], True)
+            alpha(R["m_vm"], a); mischung(R["m_vm"], rech)
+            R["kv"].value = glatt((t - 2.8) / 1.6) * (1 - glatt((t - 4.9) / 1.2))
+        else:
+            alpha(S["gmat"]["gehaeuse"], a); alpha(S["gmat"]["verbinder"], a)
+        kamera(cam, (0, 0, -1.0), 10 + 60 * u, 24, 52 - 6 * math.sin(math.pi * u), schaerfe=True)
         return
     if fr < B0:                                                      # A: wilde Varianten
         i = min((fr - A0) // WILD_DAUER, len(S["wild"]) - 1)
@@ -298,7 +412,7 @@ def main():
     a = args(); BILDER.mkdir(parents=True, exist_ok=True)
     S = szene(a)
     if a["test"]:
-        rahmen = [20, 75, 140, 165, 220, A0 + 100, B0 + 60, B0 + 450, C0 + 200, D0 + 30, D0 + 400]
+        rahmen = [135, 160, 225, M0 + 10, M0 + 50]
         ziel = ORDNER / "test"; ziel.mkdir(exist_ok=True)
     else:
         rahmen = range(a["von"], min(a["bis"], ENDE)); ziel = BILDER

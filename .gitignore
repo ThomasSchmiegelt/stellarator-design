@@ -45,3 +45,4 @@ bericht/**/*.fdb_latexmk
 bericht/**/*.fls
 bericht/**/*.out
 bericht/**/*.toc
+/.venv-constellaration/

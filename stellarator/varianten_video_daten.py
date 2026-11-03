@@ -142,6 +142,7 @@ def main():
     fe169 = KOP / Z["0169"]["quelle"] / "punkte" / "0169" / "struktur.vtu"
     speichere("0169_schnitt", LISTE1 / "0169", SCHNITT, keil=KEIL_BIS, fe=fe169)
     speichere("0169_glatt", LISTE1 / "0169", VOLL, fe=fe169)
+    speichere("0169_picogk", LISTE1 / "0169", {"gehaeuse": 150000, "verbinder": 150000, "plasma": 150000})   # echtes PicoGK-Netz (80 mm)
     voxel("0169_voxel", LISTE1 / "0169", ("gehaeuse", "verbinder", "plasma"))
     rang = {nr: k for k, nr in enumerate(erg["zulaessig"])}
     (ORDNER / "varianten.json").write_text(json.dumps({

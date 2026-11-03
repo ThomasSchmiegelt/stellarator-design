@@ -75,6 +75,15 @@ ANNAHMEN = {
 A = {k: v[0] for k, v in ANNAHMEN.items()}
 
 
+def plasma_laden(studie_ordner: Path) -> None:
+    """Fremdes Plasma (z. B. ConStellaration-QI): sim/kopplung/<studie>/plasma.json setzt WOUT und Massstab L.
+    Ohne Datei bleibt unser QA-Plasma (qa_nfp2_A45). Siehe stellarator/constellaration_bruecke.py."""
+    global WOUT, L
+    f = studie_ordner / "plasma.json"
+    if f.exists():
+        d = json.loads(f.read_text()); WOUT = PROJEKT / d["wout"]; L = float(d["L"])
+
+
 def ordner(studie: str) -> Path:
     o = WURZEL / studie; (o / "punkte").mkdir(parents=True, exist_ok=True); return o
 
@@ -92,7 +101,8 @@ def schritt_spulen(p: dict, po: Path) -> dict:
         return json.loads((po / "stufe2.json").read_text())
     name = f"_kopplung_{po.parent.parent.name}_{po.name}"
     befehl = [str(PY_OPT), "-m", "invers.stufe2_spulen", "--wout", str(WOUT), "--name", name,
-              "--n_spulen", str(int(round(p["n_basis"]))), "--ordnung", "6", "--R1", "0.5", "--abstand_ss", "0.1",
+              "--n_spulen", str(int(round(p["n_basis"]))), "--ordnung", "6", "--R1", str(p.get("R1", 0.5)),
+              "--abstand_ss", str(p.get("abstand_ss", 0.1)),
               "--abstand_sp", str(p["abstand_sp"]), "--laenge_max", str(round(p["n_basis"]) * p["laenge_je"]),
               "--kraft_gewicht", str(p["kraft_gewicht"]), "--maxiter", "400"]
     r = subprocess.run(befehl, cwd=PROJEKT, capture_output=True, text=True, env={"JAX_PLATFORMS": "cpu",
@@ -112,6 +122,7 @@ def geometrie(po: Path) -> None:
     from simsopt import load
     from simsopt.geo import SurfaceRZFourier
     from scipy.io import netcdf_file
+    plasma_laden(po.parent.parent)
     f = SurfaceRZFourier.from_wout(str(WOUT), s=1.0, range="full torus", nphi=200, ntheta=80)
     X = f.gamma() * L
     flaeche = float(f.area() * L ** 2)
@@ -253,6 +264,7 @@ def bewerten(e: dict) -> dict:
 
 def rechne_punkt(studie: str, nr: int, p: dict) -> dict:
     po = ordner(studie) / "punkte" / f"{nr:04d}"; po.mkdir(parents=True, exist_ok=True)
+    plasma_laden(ordner(studie))
     if (po / "ergebnis.json").exists():
         return json.loads((po / "ergebnis.json").read_text())
     p = REFERENZ | {"lager_ort": FEST["lager_ort"]} | p
