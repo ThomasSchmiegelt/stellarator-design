@@ -687,6 +687,9 @@ und 0169 im Schnitt. Zeitmarken und Farbcode: [Begleittext](docs/filme/varianten
 (σ99 Standard-/Feinnetz): getrennte Stege 387/392 MPa (+1 %), durchgehende Platte 336/493 MPa (+47 %), bisher
 308/319 MPa. Getrennte Stege sind netzstabil, die Platte nicht; 0169 bleibt auch mit Stegen zulässig.
 
+**Review-Paket für Festigkeitsfachleute** (7 Seiten, Modell, Herleitung des Tragwerks, Ergebnisse, Schwächen und
+acht konkrete Fragen): [deutsch](bericht/review/review_festigkeit.pdf) · [English](bericht/review/review_strength_en.pdf).
+
 ### Doppeltes Filament, Platz zu den Spulen, Flüssigblei (grobe Abschätzungen)
 
 Aus den Vorschlägen oben: Die Plasmaseite bekommt eigene feine Kanäle (innen, Kühlung), dahinter trägt ein
@@ -860,6 +863,7 @@ Reihenfolge und Begründung: [docs/plan_offene_punkte.md](docs/plan_offene_punkt
 - [x] 3D-Modelle komplett in PicoGK, Variantenbericht mit Steckbriefen und Katalog
 - [x] Variantenvideo (Blender): alle Varianten, am Schluss die zulässigen
 - [x] Verbinder von 0169: durchgehende Platte gegen einzelne Stege (Stege netzstabil, Platte nicht)
+- [x] Review-Paket Festigkeit (DE/EN, acht Fragen an Fachleute)
 - [ ] Örtlich schwächen: weiche Verbinderenden, steifer Kern (Idee des Nutzers)
 - [ ] Netzkonvergenz und Ausrundung am Verbinderanschluss
 - [ ] Abkühlspannung, Eigengewicht, nachgiebiger Stützzylinder

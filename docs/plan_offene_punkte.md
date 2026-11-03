@@ -17,7 +17,7 @@ Berichtskapitel DE + EN, README, Prozess-Doku.
 | 2 | Örtlich schwächen (Idee des Nutzers) | erste, globale Form ging nach hinten los | 2 Tage | weiche Enden, steifer Kern, Spitzen −30 % (Ziel) |
 | 3 | Netzkonvergenz am Anschluss, Ausrundung | Spitzen wachsen mit dem Netz | 1–2 Tage | belastbarer Höchstwert statt σ99 allein |
 | 4 | Abkühlung, Eigengewicht, Stützzylinder/Tragring als Bauteil, Keil + Gehäuse aus einem Stück | Modell bisher nur Magnetkraft, Lager starr | 3–4 Tage | Lastfälle wie im Regelwerk, Lager als Bauteil |
-| 5 | Review-Paket Festigkeit | Stand ist gut genug für Fachleute | 1 Tag | 5–10 Seiten mit konkreten Fragen an die Festigkeitsleute |
+| 5 | ~~Review-Paket Festigkeit~~ erledigt (bericht/review, DE/EN) | Stand ist gut genug für Fachleute | 1 Tag | 5–10 Seiten mit konkreten Fragen an die Festigkeitsleute |
 | 6 | Alphas: Spulen von 0169, dann Spulen mit Alpha-Ziel nachoptimieren, Stöße | Spulen haben sich geändert; 16,6 % Verlust kommt von den Spulen | 3–4 Tage | Verluste für den empfohlenen Entwurf, Spulen mit weniger Verlust, Bahnen mit Abbremsung |
 | 7 | Erstwand-Kühlung gekoppelt | Wärme und Festigkeit der Haut zusammen | 3 Tage | Haut, Kanäle, Temperatur und Spannung in einer Rechnung |
 | 8 | Gyroid-Tauscher: Kondensator-Abwärme | Wunsch des Nutzers, Plan vom 2026-10-28 | 2–3 Tage | ehrliche Antwort, ob sich das lohnt (Carnot ~6 %) |

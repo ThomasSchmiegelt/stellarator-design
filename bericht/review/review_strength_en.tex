@@ -1,0 +1,205 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}\usepackage[T1]{fontenc}\usepackage[english]{babel}
+\usepackage{graphicx,float,booktabs,amsmath,amssymb,siunitx,xcolor,tabularx,enumitem}
+\usepackage[margin=2.0cm]{geometry}\usepackage[hidelinks]{hyperref}
+\usepackage{newunicodechar}\newunicodechar{σ}{$\sigma$}\newunicodechar{–}{--}\newunicodechar{−}{$-$}\newunicodechar{≈}{$\approx$}
+\usepackage{textcomp}
+\graphicspath{{bilder/}{../../docs/bilder/}}
+\hypersetup{pdfauthor={Thomas Schmiegelt},pdftitle={Strength review package: coil support structure of a stellarator}}
+\newcommand{\bild}[3]{\begin{figure}[H]\centering\includegraphics[width=#2\linewidth]{#1}\caption{#3}\end{figure}}
+\newcommand{\lesehilfe}[1]{\begin{quote}\small\textit{How to read the figure:} #1\end{quote}}
+\newcommand{\kasten}[2]{\par\smallskip\noindent\fcolorbox{gray}{gray!8}{\parbox{0.96\linewidth}{\textbf{#1} #2}}\par\smallskip}
+\title{\textbf{Strength Review Package}\\[2pt]\large Coil support structure of a stellarator -- model, results and
+eight questions for structural analysts}
+\author{Thomas Schmiegelt \textbar{} hobby project \texttt{stellarator-design}}
+\date{3 November 2026}
+\begin{document}\maketitle
+
+\kasten{Hobby project, non-commercial.}{No connection to any customer project, research institute or company, not
+peer-reviewed. Calculations, code and draft text were produced with the help of AI agents; the human set goal and
+direction. All numbers come from simplified models (linear elastic, rigid bearings, magnetic load only). That is
+exactly why I am asking for your critical view: the questions are in Section~\ref{sec:fragen}.}
+
+\noindent\textbf{Audience.} Structural analysts (FEM, codes and standards) without a fusion background. Everything
+fusion-specific is briefly explained. Reading time about 20 minutes; for the questions alone,
+Sections~\ref{sec:kurz} and \ref{sec:fragen} are enough.
+
+\section{At a glance}\label{sec:kurz}
+\begin{itemize}[itemsep=1pt]
+\item \textbf{Component:} casings of steel 1.4429 (316LN) around 24 superconducting coils, joined by steel
+connectors, supported on an inner and outer support ring. Load: Lorentz force during magnet operation, up to
+\SI{1.1}{GN} per coil.
+\item \textbf{Criterion:} σ99 = 99\% value of the von Mises stress over the steel volume; limit \SI{500}{MPa}
+($\tfrac23 R_{p0.2}$ at \SI{4}{K}, ITER grade C3).
+\item \textbf{Result:} of 199 evaluated designs in a study, 7 meet all limits. Recommended: design 0169 with
+σ99 = \SI{308}{MPa}, also on a finer mesh (\SI{319}{MPa}).
+\item \textbf{Main issue:} the peak values sit at the connector junctions and grow with every mesh refinement. For
+four of five candidates σ99 rises by 34--58\% on a finer mesh.
+\item \textbf{New (3 Nov):} in 0169 the connectors were so close that they almost formed a plate. Re-computed:
+separate webs are mesh-stable (+1\%), a continuous plate is not (+47\%).
+\end{itemize}
+
+\section{What it is about}
+A stellarator confines a plasma hotter than 100 million degrees in a twisted magnetic field. The field comes from
+superconducting coils with an irregular, three-dimensional shape. The design here: \SI{1}{GW} net electric power,
+major radius $R_0=\SI{10.4}{m}$, field $B_0=\SI{6.5}{T}$, high-temperature superconductor (REBCO), operation at about
+\SIrange{4}{20}{K}. Each coil carries about \SI{20}{MA}. In its own field and that of its neighbours it feels the
+Lorentz force $f=J\times B$: \SIrange{50}{140}{MN/m} along the coil, in total up to \SI{1.1}{GN} per coil towards
+the machine centre. Wanted: a structure of coil casings, connectors and bearings that carries these forces without
+straining the superconductor by more than \SI{0.3}{\%}.
+
+\bild{modell3d_0169_schnitt_en}{0.72}{Design 0169 in a stepped cut (3D model in PicoGK).}
+\lesehilfe{From inside out: plasma (pink), first wall and blanket (yellow), shield (green), vacuum vessel (grey),
+then the 24 steel coil casings (blue) with the superconducting winding pack (orange). Between the casings sit the
+connectors (dark blue). The inner support cylinder and the outer ring are only drawn: they show where the bearing
+forces go, but are neither computed nor designed.}
+
+\section{Model}
+\begin{description}[itemsep=1pt,style=nextline]
+\item[Geometry] Coil centre lines from the optimisation (simsopt \cite{simsopt}). One hexahedral mesh per coil along
+its path: 64 stations for 24 coils; in the cross-section 2 wall cells, \SI{2}{cm} potting and $4\times4$ winding-pack
+cells. Connectors as hexahedral blocks between the casings.
+\item[Materials] Casing 1.4429 (X2CrNiMoN17-13-3, AISI 316LN), $E=\SI{200}{GPa}$. Winding pack homogenised. Potting
+quartz-sand epoxy, $E=\SI{10}{GPa}$. Connectors steel, $E$ as a design variable \SIrange{20}{200}{GPa}.
+\item[Load] Lorentz force density from all coils (Biot--Savart), magnet operation only.
+\item[Bearings] Patches on the casing outer surface at the smallest and largest radius, \textbf{rigidly clamped}.
+\item[Solver] Elmer \cite{elmer}, linear elastic, linear 8-node hexahedra (Elmer type 808), MUMPS.
+\item[Chain] Plasma $\to$ coils $\to$ package $\to$ strength $\to$ temperature, 1--3 minutes per design. A study of
+200 designs varied coil count, coil--plasma distance, connector count and stiffness, wall thicknesses and bearing
+radius.
+\end{description}
+
+\section{How the structure came about}
+The structure was not prescribed but derived from a force analysis. The first model reached \SI{2129}{MPa}. Instead
+of varying parameters, we first examined how the force arises.
+\begin{enumerate}[itemsep=1pt]
+\item \textbf{Force along the coil:} \SIrange{50}{140}{MN/m}, net per coil up to \SI{1.1}{GN} inwards.
+\item \textbf{Rope or beam:} a curved segment carries transverse load as tension ($T=f_N/\kappa$); a straight one is
+bent. The largest load (\SI{\approx130}{MN/m}) sits on the almost straight inner leg ($\kappa<\SI{0.08}{1/m}$ over
+about \SI{7}{m}).
+\item \textbf{Hand calculation:} simply supported beam, $q\approx\SI{130}{MN/m}$, $l\approx\SI{7}{m}$:
+$M=ql^2/8\approx\SI{800}{MNm}$; hollow section $H=\SI{1.36}{m}$, $h=\SI{0.755}{m}$, $W\approx\SI{0.38}{m^3}$, hence
+$\sigma_B\approx\SI{2100}{MPa}$. FEM gave \SI{2129}{MPa}: the stress came from bending of the inner leg.
+\item \textbf{Flaw in the initial model:} supported only on the outside, while the force pulls inwards.
+\item \textbf{Precedents:} in a tokamak the straight leg rests against a bucking cylinder (compression instead of
+bending); in ARIES-CS a continuous shell passes the transverse load from coil to coil.
+\end{enumerate}
+
+\bild{festigkeit_tragwerk_en}{0.95}{Same 16 coils, five support structures A--E.}
+\lesehilfe{Top: four key figures per structure; bottom: the stress seen from above (blue low, red high). A: bearings
+outside, 6 connectors per pair. B: bearings inside ($-32$\%, $-30$ to $-50$\% was expected). C: inside and outside.
+D: 12 stiff connectors per pair (shorter free bending length, $M\propto l^2$). E: additionally thickest walls. The
+stress drops from \SI{2129}{} to \SI{481}{MPa}, steel grows from \SI{15.6}{} to \SI{37}{kt}. Since then
+"inside and outside" is standard; connectors, walls and bearing radius are design variables of the study.}
+
+\section{Criteria and limits}\label{sec:grenzen}
+\begin{table}[H]\centering\small\begin{tabular}{@{}lll@{}}\toprule
+Quantity & Limit & Origin \\\midrule
+σ99 in casing steel & \SI{500}{MPa} & $S_m=\tfrac23R_{p0.2}$ at \SI{4}{K}, ITER grade C3 ($R_{p0.2}\ge\SI{750}{MPa}$) \cite{mitchell}\\
+Membrane stress $P_m$ per wall section & \SI{500}{MPa} & linearisation through the wall thickness \\
+$P_m+P_b$ & \SI{750}{MPa} & $1.5\,S_m$ \\
+Winding-pack strain & \SI{0.3}{\%} & REBCO irreversible from \SIrange{0.45}{0.72}{\%} \\\bottomrule
+\end{tabular}\end{table}
+
+\bild{stahl_kennwerte_en}{0.78}{Strength of 1.4429 / 316LN at room temperature and at \SI{4}{K}.}
+\lesehilfe{Blue: yield strength, green: tensile strength, yellow: resulting allowable stress. At room temperature
+(left, table value \cite{schweizerfn}) only about \SI{200}{MPa} would be allowed. Measured at \SI{4.2}{K}, the yield
+strength is more than three times higher (\SI{1070}{MPa} \cite{fedorikova2023}; with high nitrogen in thick plates
+above \SI{1000}{MPa} \cite{sakurai2024}). The dashed line is the limit used. The casing is cold in operation; no
+current flows during cool-down.}
+
+\section{Results}
+\bild{doe1_uebersicht_en}{0.85}{Design study: 199 designs, σ99 against six design variables.}
+\lesehilfe{Each circle is a design, the colour gives the coil count. Filled circles meet all limits. The dashed line
+is the \SI{500}{MPa} limit, the y axis is logarithmic. Only designs with 20 or 24 coils get below it. The clearest
+trend is the coil--plasma distance (bottom centre): coils further away are more strongly shaped.}
+
+\paragraph{Mesh study.} The candidates were recomputed with 1.5 times as many stations along the coil and with 3
+instead of 2 wall cells.
+\bild{doe1_netz_en}{0.95}{Mesh study: same coils and parameters, different mesh.}
+\lesehilfe{(b) shows σ99, (c) the peak value. A finer resolution through the wall ("cross-section fine") changes
+hardly anything. More stations along the coil ("1.5× stations") raise σ99 by 34--58\% for four of five candidates,
+for 0169 by only 4\%. The peak value rises for all; it depends on the mesh.}
+
+\paragraph{Location of the peaks.} 77--100\% of the 200 most highly stressed elements lie less than \SI{1}{m} from
+a connector junction. For 0169 the peak rises from \SI{717}{} to \SI{1262}{MPa} on the finer mesh, σ99 only from
+\SI{308}{} to \SI{319}{MPa}.
+
+\paragraph{Categories.} The stress was linearised across each wall section into membrane ($P_m$) and membrane plus
+bending ($P_m+P_b$).
+\bild{doe1_kategorien_en}{0.95}{Stress categories of the admissible designs.}
+\lesehilfe{(a) Peak values: they sit at the single peak at the connector end (local membrane stress $P_L$). (b) Value
+met by 99\% of the wall sections: for the best designs $P_m$ stays below \SI{400}{MPa}. E (test) is the earlier
+support structure test E for comparison.}
+
+\paragraph{Connectors as webs or as a plate.} In 0169 (13 connectors per pair) neighbouring connectors were exactly
+one connector width apart. They touched or overlapped, and steel was counted twice in the overlaps. Hypothesis
+before the computation: the almost continuous plate makes 0169 mesh-stable. Three variants with the same coils were
+computed.
+\bild{verbinder_modi_en}{0.72}{Design 0169: three kinds of connectors, standard and fine mesh.}
+\lesehilfe{Blue: standard mesh, orange: 1.5 times as many stations. The number above each pair is the increase due
+to the finer mesh. Separate webs (spacing at least one width) are higher (\SI{387}{MPa}) but stay stable (+1\%). A
+continuous plate with shared nodes jumps by 47\% to almost \SI{500}{MPa}. The hypothesis is refuted: the mesh
+stability of 0169 does not come from the plate. The peaks are in well-shaped elements (scaled Jacobian 0.92--0.96),
+86--96\% of them in the casing. With separate webs 0169 still remains admissible.}
+
+\paragraph{Softer connectors.} If all connectors of 0169 are made uniformly softer, σ99 rises (+16\% at
+\SI{50}{GPa}). The connectors are the relief path.
+
+\section{Known weaknesses}
+\begin{enumerate}[itemsep=1pt]
+\item Bearings rigidly clamped; the support cylinder is missing as a component (optimistic).
+\item Connector junctions sharp-edged, hence mesh-dependent peaks. The assessment applies to the walls, not to the
+junctions.
+\item Primary load only: no cool-down from \SI{293}{} to \SI{4}{K}, no dead weight, no fatigue, no fracture mechanics.
+\item Winding pack homogenised, potting perfectly bonded (no debonding).
+\item σ99 is not a code quantity but a figure of merit for the design search.
+\item Linear hexahedra with only 2 cells through the wall thickness.
+\end{enumerate}
+
+\section{Questions for you}\label{sec:fragen}
+\begin{enumerate}[itemsep=3pt]
+\item \textbf{Criterion:} Is σ99 defensible as a search criterion, or should we assess linearised categories ($P_m$,
+$P_L$, $P_b$) along selected sections from the start?
+\item \textbf{Peaks at the junction:} The peak values at the connector end grow with the mesh (0169: \SI{717}{}
+$\to$ \SI{1262}{MPa}). How do you usually handle this: hot-spot structural stress, notch stress with a fillet
+radius, submodel?
+\item \textbf{Junction shape:} Which shape would you choose for a steel connector between two casings (gap about
+\SIrange{0.2}{1}{m}, forces in the MN range per connector): fillet, tapered thickness, longer contact face,
+continuous shell?
+\item \textbf{Plate or webs:} In the model the continuous plate is mesh-sensitive (+47\%), separate webs are not
+(+1\%). Is this a known effect (stiffness jump at the plate edge)? Does anything speak against a continuous shell
+(assembly, thermal contraction during cool-down, inspectability of welds)?
+\item \textbf{Load cases:} Which are missing, in which order? Proposal: cool-down, dead weight, fast discharge
+(quench), cyclic load for fatigue.
+\item \textbf{Support:} How would you model the support cylinder, as a component with contact or as a spring boundary
+condition? What stiffness would be realistic?
+\item \textbf{Material at 4~K:} Is $\tfrac23R_{p0.2}$ (ITER magnet criteria) sufficient as a limit, or does fracture
+mechanics govern at \SI{4}{K} ($K_{IC}$, crack growth)?
+\item \textbf{Mesh:} How much do linear 8-node hexahedra with 2 cells through the wall underestimate bending stress
+(shear locking)? Are quadratic elements (20 nodes) worth it, or is a third cell enough? Our test with 3 wall cells
+hardly changed σ99.
+\end{enumerate}
+
+\section*{Documents}
+Project report (strength chapter), variant report with data sheets of all admissible designs and a catalogue of all
+188 buildable designs, source code (\texttt{stellarator/kopplung.py}, \texttt{hexmodell.py},
+\texttt{doe\_auswertung.py}) and a film of all variants: \url{https://github.com/ThomasSchmiegelt/stellarator-design}
+(MIT licence).
+
+\begin{thebibliography}{9}\small
+\bibitem{simsopt} M.~Landreman et al.: SIMSOPT: A flexible framework for stellarator optimization. J.\ Open Source
+  Softw.\ 6 (2021) 3525. doi:10.21105/joss.03525.
+\bibitem{elmer} Elmer FEM, CSC -- IT Center for Science, \url{https://www.elmerfem.org}.
+\bibitem{mitchell} N.~Mitchell et al.: ITER TF structure, grades C1--C3 (IAEA FEC contribution IT/1-4); year and
+  wording not verified.
+\bibitem{schweizerfn} Strength values of steel, after Roloff/Matek, Maschinenelemente; schweizer-fn.de,
+  \url{https://www.schweizer-fn.de/festigkeit/festigkeitswerte/stahl/stahl_start.php} (accessed 3 Nov 2026).
+\bibitem{fedorikova2023} A.~Fedoriková, P.~Petroušek, T.~Kvačkaj, R.~Kočiško, M.~Zemko: Development of Mechanical
+  Properties of Stainless Steel 316LN-IG after Cryo-Plastic Deformation. Materials 16 (2023) 6473.
+  doi:10.3390/ma16196473.
+\bibitem{sakurai2024} T.~Sakurai, O.~Umezawa, Y.~Ono: Strength and Fracture Toughness of Type 304 and 316 Austenitic
+  Stainless Steels at 4.2~K. IOP Conf.\ Ser.: Mater.\ Sci.\ Eng.\ 1302 (2024) 012002.
+  doi:10.1088/1757-899X/1302/1/012002.
+\end{thebibliography}
+\end{document}

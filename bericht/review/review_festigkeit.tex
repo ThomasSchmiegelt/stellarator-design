@@ -1,0 +1,209 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}\usepackage[T1]{fontenc}\usepackage[german]{babel}
+\usepackage{graphicx,float,booktabs,amsmath,amssymb,siunitx,xcolor,tabularx,enumitem}
+\usepackage[margin=2.0cm]{geometry}\usepackage[hidelinks]{hyperref}
+\usepackage{newunicodechar}\newunicodechar{σ}{$\sigma$}\newunicodechar{–}{--}\newunicodechar{−}{$-$}\newunicodechar{≈}{$\approx$}
+\usepackage{textcomp}
+\sisetup{output-decimal-marker={,},group-separator={\,},group-minimum-digits=4}
+\graphicspath{{bilder/}{../../docs/bilder/}}
+\hypersetup{pdfauthor={Thomas Schmiegelt},pdftitle={Review-Paket Festigkeit: Spulentragwerk eines Stellarators}}
+\newcommand{\bild}[3]{\begin{figure}[H]\centering\includegraphics[width=#2\linewidth]{#1}\caption{#3}\end{figure}}
+\newcommand{\lesehilfe}[1]{\begin{quote}\small\textit{So liest man das Bild:} #1\end{quote}}
+\newcommand{\kasten}[2]{\par\smallskip\noindent\fcolorbox{gray}{gray!8}{\parbox{0.96\linewidth}{\textbf{#1} #2}}\par\smallskip}
+\title{\textbf{Review-Paket Festigkeit}\\[2pt]\large Spulentragwerk eines Stellarators -- Modell, Ergebnisse und
+acht Fragen an Festigkeitsfachleute}
+\author{Thomas Schmiegelt \textbar{} Hobbyprojekt \texttt{stellarator-design}}
+\date{3.~November 2026}
+\begin{document}\maketitle
+
+\kasten{Hobbyprojekt, nicht kommerziell.}{Keine Verbindung zu einem Kundenprojekt, Forschungsinstitut oder
+Unternehmen, nicht begutachtet. Rechnungen, Programmcode und Textentwurf entstanden mit Unterstützung von
+KI-Agenten; der Mensch gab Ziel und Richtung vor. Alle Zahlen stammen aus vereinfachten Modellen (linear-elastisch,
+starre Lager, nur Magnetkraft). Gerade deshalb bitte ich um euren kritischen Blick: Die Fragen stehen in
+Abschnitt~\ref{sec:fragen}.}
+
+\noindent\textbf{Für wen.} Festigkeitsfachleute (FEM, Regelwerk) ohne Fusionshintergrund. Alles Fusionsspezifische
+ist kurz erklärt. Lesezeit etwa 20 Minuten; für die Fragen allein genügen Abschnitt~\ref{sec:kurz} und
+\ref{sec:fragen}.
+
+\section{Auf einen Blick}\label{sec:kurz}
+\begin{itemize}[itemsep=1pt]
+\item \textbf{Bauteil:} Gehäuse aus Stahl 1.4429 (316LN) um 24 supraleitende Spulen, verbunden durch Stahlverbinder,
+gelagert auf einem inneren und äußeren Stützring. Last: Lorentzkraft im Magnetbetrieb, bis \SI{1,1}{GN} je Spule.
+\item \textbf{Bewertung:} σ99 = 99-\%-Wert der von-Mises-Spannung über das Stahlvolumen; Grenze \SI{500}{MPa}
+($\tfrac23 R_{p0,2}$ bei \SI{4}{K}, ITER-Güte C3).
+\item \textbf{Ergebnis:} Von 199 ausgewerteten Entwürfen einer Studie halten 7 alle Grenzen ein. Empfohlen: Entwurf 0169 mit
+σ99 = \SI{308}{MPa}, auch mit feinerem Netz (\SI{319}{MPa}).
+\item \textbf{Hauptproblem:} Die Höchstwerte sitzen an den Anschlüssen der Verbinder und wachsen mit jeder
+Netzverfeinerung. Bei vier von fünf Kandidaten steigt σ99 mit feinerem Netz um 34--58~\%.
+\item \textbf{Neu (3.11.):} Bei 0169 lagen die Verbinder so dicht, dass sie fast eine Platte bildeten. Nachgerechnet:
+Getrennte Stege sind netzstabil (+1~\%), eine lückenlose Platte nicht (+47~\%).
+\end{itemize}
+
+\section{Worum es geht}
+Ein Stellarator hält ein über 100 Millionen Grad heißes Plasma in einem verdrillten Magnetfeld. Das Feld kommt aus
+supraleitenden Spulen mit unregelmäßiger, dreidimensionaler Form. Der Entwurf hier: \SI{1}{GW} elektrische
+Nettoleistung, großer Radius $R_0=\SI{10,4}{m}$, Feld $B_0=\SI{6,5}{T}$, Hochtemperatur-Supraleiter (REBCO), Betrieb
+bei etwa \SIrange{4}{20}{K}. Jede Spule trägt rund \SI{20}{MA}. Im eigenen und im Feld der Nachbarn wirkt auf sie die
+Lorentzkraft $f=J\times B$: \SIrange{50}{140}{MN/m} entlang der Spule, in Summe bis \SI{1,1}{GN} je Spule zur
+Anlagenmitte. Gesucht ist ein Tragwerk aus Spulengehäusen, Verbindern und Lagern, das diese Kräfte aufnimmt, ohne
+dass der Supraleiter mehr als \SI{0,3}{\%} gedehnt wird.
+
+\bild{modell3d_0169_schnitt}{0.72}{Entwurf 0169 im Treppenschnitt (3D-Modell in PicoGK).}
+\lesehilfe{Von innen nach außen: Plasma (rosa), Erstwand und Blanket (gelb), Abschirmung (grün), Vakuumgefäß (grau),
+dann die 24 Spulengehäuse aus Stahl (blau) mit dem Wickelpaket aus Supraleiter (orange). Zwischen den Gehäusen sitzen
+die Verbinder (dunkelblau). Stützzylinder innen und Ring außen sind nur gezeichnet: Sie zeigen, wohin die Lagerkräfte
+gehen, sind aber weder berechnet noch ausgelegt.}
+
+\section{Modell}
+\begin{description}[itemsep=1pt,style=nextline]
+\item[Geometrie] Spulenmittellinien aus der Optimierung (simsopt \cite{simsopt}). Je Spule ein Hexaedernetz entlang
+der Bahn: 64 Stationen bei 24 Spulen, im Querschnitt 2 Wandzellen, \SI{2}{cm} Verguss und $4\times4$ Zellen
+Wickelpaket. Verbinder als Hexaederblöcke zwischen den Gehäusen.
+\item[Werkstoffe] Gehäuse 1.4429 (X2CrNiMoN17-13-3, AISI 316LN), $E=\SI{200}{GPa}$. Wickelpaket homogenisiert.
+Verguss Quarzsand-Epoxid, $E=\SI{10}{GPa}$. Verbinder Stahl, $E$ als Stellgröße \SIrange{20}{200}{GPa}.
+\item[Last] Lorentzkraftdichte aus allen Spulen (Biot-Savart), nur Magnetbetrieb.
+\item[Lager] Flecken auf der Gehäuseaußenseite am kleinsten und größten Radius, \textbf{starr eingespannt}.
+\item[Löser] Elmer \cite{elmer}, linear-elastisch, lineare 8-Knoten-Hexaeder (Elmer-Typ 808), MUMPS.
+\item[Kette] Plasma $\to$ Spulen $\to$ Package $\to$ Festigkeit $\to$ Temperatur, 1--3 Minuten je Entwurf. Eine
+Studie mit 200 Entwürfen variierte Spulenzahl, Spulenabstand, Verbinderzahl und -steifigkeit, Wanddicken und
+Lagerradius.
+\end{description}
+
+\section{Wie das Tragwerk entstanden ist}
+Das Tragwerk wurde nicht vorgegeben, sondern aus einer Kraftanalyse abgeleitet. Das erste Modell kam auf
+\SI{2129}{MPa}. Statt Parameter zu verändern, wurde zuerst untersucht, wie die Kraft entsteht.
+\begin{enumerate}[itemsep=1pt]
+\item \textbf{Kraft entlang der Spule:} \SIrange{50}{140}{MN/m}, Summe je Spule bis \SI{1,1}{GN} nach innen.
+\item \textbf{Seil oder Balken:} Ein gekrümmtes Stück trägt Querlast als Zug ($T=f_N/\kappa$), ein gerades wird
+gebogen. Die größte Last (\SI{\approx130}{MN/m}) sitzt auf dem fast geraden inneren Schenkel ($\kappa<\SI{0,08}{1/m}$
+über rund \SI{7}{m}).
+\item \textbf{Handrechnung:} Balken auf zwei Stützen, $q\approx\SI{130}{MN/m}$, $l\approx\SI{7}{m}$:
+$M=ql^2/8\approx\SI{800}{MNm}$; Hohlquerschnitt $H=\SI{1,36}{m}$, $h=\SI{0,755}{m}$, $W\approx\SI{0,38}{m^3}$,
+also $\sigma_B\approx\SI{2100}{MPa}$. Die FEM ergab \SI{2129}{MPa}: Die Spannung kam aus der Biegung des inneren
+Schenkels.
+\item \textbf{Fehler im Ausgangsmodell:} Gelagert war nur außen, die Kraft zieht nach innen.
+\item \textbf{Vorbilder:} Beim Tokamak liegt der gerade Schenkel an einem Stützzylinder an (Druck statt Biegung); bei
+ARIES-CS gibt eine durchgehende Schale die Querlast von Spule zu Spule weiter.
+\end{enumerate}
+
+\bild{festigkeit_tragwerk}{0.95}{Gleiche 16 Spulen, fünf Tragwerke A--E.}
+\lesehilfe{Oben vier Kennwerte je Tragwerk, unten die Spannung von oben gesehen (blau niedrig, rot hoch). A: Lager
+außen, 6 Verbinder je Paar. B: Lager innen ($-32$~\%, erwartet waren $-30$ bis $-50$~\%). C: innen und außen. D: 12
+steife Verbinder je Paar (kürzere freie Biegelänge, $M\propto l^2$). E: zusätzlich dickste Wände. Die Spannung sinkt
+von \SI{2129}{} auf \SI{481}{MPa}, der Stahl wächst von \SI{15,6}{} auf \SI{37}{kt}. Seitdem ist „innen und außen“
+Standard; Verbinder, Wände und Lagerradius sind Stellgrößen der Studie.}
+
+\section{Bewertung und Grenzen}\label{sec:grenzen}
+\begin{table}[H]\centering\small\begin{tabular}{@{}lll@{}}\toprule
+Größe & Grenze & Herkunft \\\midrule
+σ99 im Gehäusestahl & \SI{500}{MPa} & $S_m=\tfrac23R_{p0,2}$ bei \SI{4}{K}, ITER-Güte C3 ($R_{p0,2}\ge\SI{750}{MPa}$) \cite{mitchell}\\
+Membranspannung $P_m$ je Wandschnitt & \SI{500}{MPa} & Linearisierung über die Wanddicke \\
+$P_m+P_b$ & \SI{750}{MPa} & $1{,}5\,S_m$ \\
+Dehnung Wickelpaket & \SI{0,3}{\%} & REBCO irreversibel ab \SIrange{0,45}{0,72}{\%} \\\bottomrule
+\end{tabular}\end{table}
+
+\bild{stahl_kennwerte}{0.78}{Festigkeit von 1.4429 / 316LN bei Raumtemperatur und bei \SI{4}{K}.}
+\lesehilfe{Blau die Streckgrenze, grün die Zugfestigkeit, gelb die daraus folgende zulässige Spannung. Bei
+Raumtemperatur (links, Tabellenwert \cite{schweizerfn}) wären nur rund \SI{200}{MPa} zulässig. Bei \SI{4,2}{K}
+gemessen ist die Streckgrenze mehr als dreimal so hoch (\SI{1070}{MPa} \cite{fedorikova2023}; mit hohem Stickstoff
+in dicken Blechen über \SI{1000}{MPa} \cite{sakurai2024}). Die gestrichelte Linie ist die verwendete Grenze. Das
+Gehäuse ist im Betrieb kalt; beim Abkühlen fließt noch kein Strom.}
+
+\section{Ergebnisse}
+\bild{doe1_uebersicht}{0.85}{Entwurfsstudie: 199 Entwürfe, σ99 gegen sechs Stellgrößen.}
+\lesehilfe{Jeder Kreis ist ein Entwurf, die Farbe gibt die Spulenzahl an. Gefüllte Kreise halten alle Grenzen ein.
+Die gestrichelte Linie ist die \SI{500}{MPa}-Grenze, die y-Achse ist logarithmisch. Nur Entwürfe mit 20 oder 24
+Spulen kommen darunter. Den deutlichsten Trend zeigt der Abstand Spule–Plasma (unten Mitte): Liegen die Spulen
+weiter weg, sind sie stärker verformt.}
+
+\paragraph{Netzstudie.} Die Kandidaten wurden mit 1,5-mal so vielen Stationen entlang der Spule und mit 3 statt 2
+Wandzellen nachgerechnet.
+\bild{doe1_netz}{0.95}{Netzstudie: gleiche Spulen und Parameter, anderes Netz.}
+\lesehilfe{(b) zeigt σ99, (c) den Höchstwert. Eine feinere Auflösung der Wanddicke („Querschnitt fein“) ändert kaum
+etwas. Mehr Stationen entlang der Spule („1,5× Stationen“) erhöhen σ99 bei vier von fünf Kandidaten um 34--58~\%,
+bei 0169 nur um 4~\%. Der Höchstwert steigt bei allen, er hängt am Netz.}
+
+\paragraph{Ort der Spitzen.} 77--100~\% der 200 höchstbelasteten Elemente liegen weniger als \SI{1}{m} von einem
+Verbinderanschluss entfernt. Bei 0169 steigt der Höchstwert mit dem feineren Netz von \SI{717}{} auf
+\SI{1262}{MPa}, σ99 nur von \SI{308}{} auf \SI{319}{MPa}.
+
+\paragraph{Kategorien.} Die Spannung wurde über jeden Wandschnitt linearisiert, in Membran ($P_m$) und Membran
+plus Biegung ($P_m+P_b$).
+\bild{doe1_kategorien}{0.95}{Spannungskategorien der zulässigen Entwürfe.}
+\lesehilfe{(a) Höchstwerte: Sie liegen an der Einzelspitze am Verbinderende (örtliche Membranspannung $P_L$). (b)
+Wert, den 99~\% der Wandschnitte einhalten: Bei den besten Entwürfen bleibt $P_m$ unter \SI{400}{MPa}. E (test) ist
+der alte Tragwerksversuch E zum Vergleich.}
+
+\paragraph{Verbinder als Stege oder als Platte.} Bei 0169 (13 Verbinder je Paar) lagen benachbarte Verbinder genau
+eine Verbinderbreite auseinander. Sie berührten oder überlappten sich, und in den Überlappungen wurde Stahl doppelt
+gezählt. Vermutung vor der Rechnung: Die fast durchgehende Platte macht 0169 netzstabil. Nachgerechnet wurden drei
+Varianten mit gleichen Spulen.
+\bild{verbinder_modi}{0.72}{Entwurf 0169: drei Arten der Verbinder, Standard- und feines Netz.}
+\lesehilfe{Blau das Standardnetz, orange 1,5-mal so viele Stationen. Die Zahl über jedem Paar ist der Zuwachs durch
+das feinere Netz. Getrennte Stege (Abstand mindestens eine Breite) liegen höher (\SI{387}{MPa}), bleiben aber stabil
+(+1~\%). Eine lückenlose Platte mit gemeinsamen Knoten springt um 47~\% auf fast \SI{500}{MPa}. Die Vermutung ist
+widerlegt: Die Netzstabilität von 0169 kommt nicht von der Platte. Die Spitzen liegen in gut geformten Elementen
+(skalierte Jacobi-Qualität 0,92--0,96), zu 86--96~\% im Gehäuse. Auch mit getrennten Stegen bleibt 0169
+zulässig.}
+
+\paragraph{Weichere Verbinder.} Werden alle Verbinder von 0169 gleichmäßig weicher, steigt σ99 (+16~\% bei
+\SI{50}{GPa}). Die Verbinder sind der Entlastungsweg.
+
+\section{Bekannte Schwächen}
+\begin{enumerate}[itemsep=1pt]
+\item Lager starr eingespannt; der Stützzylinder fehlt als Bauteil (optimistisch).
+\item Verbinderanschlüsse scharfkantig, daher netzabhängige Spitzen. Die Bewertung gilt für die Wände, nicht für die
+Anschlüsse.
+\item Nur Primärlast: keine Abkühlung von \SI{293}{} auf \SI{4}{K}, kein Eigengewicht, keine Ermüdung, keine
+Bruchmechanik.
+\item Wickelpaket homogenisiert, Verguss ideal verbunden (keine Ablösung).
+\item σ99 ist keine Regelwerksgröße, sondern eine Kenngröße für die Entwurfssuche.
+\item Lineare Hexaeder mit nur 2 Zellen über die Wanddicke.
+\end{enumerate}
+
+\section{Fragen an euch}\label{sec:fragen}
+\begin{enumerate}[itemsep=3pt]
+\item \textbf{Bewertungsgröße:} Ist σ99 als Suchkriterium vertretbar, oder sollten wir von Anfang an mit
+linearisierten Kategorien ($P_m$, $P_L$, $P_b$) entlang ausgewählter Schnitte bewerten?
+\item \textbf{Spitzen am Anschluss:} Die Höchstwerte am Verbinderende wachsen mit dem Netz (0169: \SI{717}{} $\to$
+\SI{1262}{MPa}). Wie behandelt ihr das üblicherweise: Strukturspannung nach dem Hot-Spot-Verfahren, Kerbspannung mit
+Ausrundungsradius, Submodell?
+\item \textbf{Anschlussform:} Welche Form würdet ihr für einen Stahlverbinder zwischen zwei Gehäusen wählen (Spalt
+etwa \SIrange{0,2}{1}{m}, Kräfte im MN-Bereich je Verbinder): Ausrundung, auslaufende Dicke, längere
+Anschlussfläche, durchgehende Schale?
+\item \textbf{Platte oder Stege:} Im Modell ist die lückenlose Platte netzempfindlich (+47~\%), getrennte Stege sind
+es nicht (+1~\%). Ist das ein bekannter Effekt (Steifigkeitssprung am Plattenrand)? Spricht etwas gegen eine
+durchgehende Schale (Montage, Wärmedehnung beim Abkühlen, Prüfbarkeit der Schweißnähte)?
+\item \textbf{Lastfälle:} Welche fehlen, in welcher Reihenfolge? Vorschlag: Abkühlung, Eigengewicht,
+Schnellabschaltung (Quench), zyklische Last für Ermüdung.
+\item \textbf{Lagerung:} Wie würdet ihr den Stützzylinder abbilden, als eigenes Bauteil mit Kontakt oder als
+Federrandbedingung? Welche Steifigkeit wäre realistisch?
+\item \textbf{Werkstoff bei 4~K:} Reicht $\tfrac23R_{p0,2}$ (ITER-Magnetkriterien) als Grenze, oder ist bei \SI{4}{K}
+die Bruchmechanik maßgebend ($K_{IC}$, Rissfortschritt)?
+\item \textbf{Netz:} Wie stark unterschätzen lineare 8-Knoten-Hexaeder mit 2 Zellen über die Wanddicke die
+Biegespannung (Schubversteifung)? Lohnen quadratische Elemente (20 Knoten), oder reicht eine dritte Zelle? Unser
+Versuch mit 3 Wandzellen änderte σ99 kaum.
+\end{enumerate}
+
+\section*{Unterlagen}
+Projektbericht (Kapitel Festigkeit), Variantenbericht mit Steckbriefen aller zulässigen Entwürfe und Katalog aller
+188 baubaren Entwürfe, Quellcode (\texttt{stellarator/kopplung.py}, \texttt{hexmodell.py}, \texttt{doe\_auswertung.py})
+und ein Film aller Varianten: \url{https://github.com/ThomasSchmiegelt/stellarator-design} (MIT-Lizenz).
+
+\begin{thebibliography}{9}\small
+\bibitem{simsopt} M.~Landreman u.\,a.: SIMSOPT: A flexible framework for stellarator optimization. J.\ Open Source
+  Softw.\ 6 (2021) 3525. doi:10.21105/joss.03525.
+\bibitem{elmer} Elmer FEM, CSC -- IT Center for Science, \url{https://www.elmerfem.org}.
+\bibitem{mitchell} N.~Mitchell u.\,a.: ITER-TF-Struktur, Güten C1--C3 (IAEA-FEC-Beitrag IT/1-4); Jahrgang und
+  Wortlaut nicht geprüft.
+\bibitem{schweizerfn} Festigkeitswerte Stahl, nach Roloff/Matek, Maschinenelemente; schweizer-fn.de,
+  \url{https://www.schweizer-fn.de/festigkeit/festigkeitswerte/stahl/stahl_start.php} (abgerufen 3.11.2026).
+\bibitem{fedorikova2023} A.~Fedoriková, P.~Petroušek, T.~Kvačkaj, R.~Kočiško, M.~Zemko: Development of Mechanical
+  Properties of Stainless Steel 316LN-IG after Cryo-Plastic Deformation. Materials 16 (2023) 6473.
+  doi:10.3390/ma16196473.
+\bibitem{sakurai2024} T.~Sakurai, O.~Umezawa, Y.~Ono: Strength and Fracture Toughness of Type 304 and 316 Austenitic
+  Stainless Steels at 4.2~K. IOP Conf.\ Ser.: Mater.\ Sci.\ Eng.\ 1302 (2024) 012002.
+  doi:10.1088/1757-899X/1302/1/012002.
+\end{thebibliography}
+\end{document}

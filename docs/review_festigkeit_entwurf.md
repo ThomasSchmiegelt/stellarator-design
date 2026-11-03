@@ -1,7 +1,7 @@
 # Review-Paket Festigkeit – Entwurf (Stand 2026-11-03)
 
-> **Status: Entwurf.** Gliederung und Fakten stehen, Plan-Punkt 1 (Verbinder als Platte oder Stege) ist gerechnet
-> und eingetragen. Als Nächstes entsteht die fertige Fassung (5–10 Seiten, DE + EN, mit Bildern, PDF).
+> **Status: Arbeitsgrundlage.** Die fertige Fassung (7 Seiten, mit Bildern und Lesehilfen) liegt als PDF vor:
+> `bericht/review/review_festigkeit.pdf` (DE) und `bericht/review/review_strength_en.pdf` (EN).
 > Zielgruppe: Festigkeitsfachleute (FEM, Regelwerk) ohne Fusionshintergrund. Privates Hobbyprojekt, nicht kommerziell.
 
 ## 1 Worum es geht (½ Seite)
