@@ -657,3 +657,9 @@ sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht 
   qi_proxima_b36/0001 und qi_proxima/0001. Fertig bei „FERTIG feinlauf“ in sim/constellaration/bruecke_lauf.log.
   Vergleich mit Erwartung F-177 ins Ereignisprotokoll. DANACH Schritt 2: Voxel-Gehäuse (PicoGK) aus den echten
   Spulenbahnen von Satz 2 → Tetraedernetz (gmsh) → Elmer; Erwartung vorher festlegen, Speicher beachten.
+- 18:45 Schritt 1 FERTIG (F-179): Satz 2 fein 2202 MPa (grob 1358), Satz 1 fein 5370 umgestülpte Elemente.
+  Schritt 2 (Voxel) PLAN: (a) Python: echte Spulenbahn fein (≥ 400 Punkte, ≤ 3° je Segment), je Segment konvexe Hülle
+  zweier Rechtecke (WP bzw. Gehäuse außen) → PicoGK (Vorlage picogk/StellaratorModell) vereinigt → keine Umstülpung möglich.
+  (b) Voxel direkt als Hex-Elemente nach Elmer (Vorbild stellarator/gradient_waerme.py, 808), 0,1–0,15 m Voxel,
+  Lorentzlast im WP über Tangente der nächsten Bahnstelle (UDF lorentz.f90 prüfen). (c) Gegenprobe zuerst an 0169:
+  Voxel-Ergebnis gegen Hex-Ergebnis 308 MPa, erst dann Proxima-Satz 2 und 1. Speicher: Voxelzahl vorher abschätzen.
