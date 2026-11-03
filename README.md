@@ -687,7 +687,7 @@ und 0169 im Schnitt. Zeitmarken und Farbcode: [Begleittext](docs/filme/varianten
 (σ99 Standard-/Feinnetz): getrennte Stege 387/392 MPa (+1 %), durchgehende Platte 336/493 MPa (+47 %), bisher
 308/319 MPa. Getrennte Stege sind netzstabil, die Platte nicht; 0169 bleibt auch mit Stegen zulässig.
 
-**Review-Paket für Festigkeitsfachleute** (7 Seiten, Modell, Herleitung des Tragwerks, Ergebnisse, Schwächen und
+**Review-Paket für Festigkeitsfachleute** (9 Seiten, automatische Kette mit verworfenen Varianten, Modell, Herleitung des Tragwerks, Ergebnisse, Schwächen und
 acht konkrete Fragen): [deutsch](bericht/review/review_festigkeit.pdf) · [English](bericht/review/review_strength_en.pdf).
 
 ### Doppeltes Filament, Platz zu den Spulen, Flüssigblei (grobe Abschätzungen)
