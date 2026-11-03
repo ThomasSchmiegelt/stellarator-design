@@ -21,6 +21,10 @@
   (0,8–1,7 m Abstand, Querschnitt dreht bis 73° je Station, Bahn bis 0,8 m daneben) – nicht wegen der Wandtiefe
   (zuerst falsch addiert: beide Seiten statt nur der Seite innen in der Kurve). Abhilfe 1: Abtastung nach Krümmung
   (`abtastung=kruemmung`, ≤ 10° je Station); Abhilfe 2 (Nutzeridee): Voxel-Gehäuse, dann Tetraedernetz.
+- **Feinlauf (F-179):** Satz 2 mit `abtastung=kruemmung` (≈ 92 Stationen je Spule): Netz ok, σ99 2202 MPa, u 1083 mm –
+  die grobe Abtastung hatte die Spannung unterschätzt. Satz 1 fein: 5370 umgestülpte Elemente, weil die Wand innen in der
+  Kurve (0,63 m) tiefer ist als der echte Biegeradius (0,40 m). Aussage: unser für 0169 ausgelegtes Tragwerk
+  (Einzelgehäuse, Verbinder, zwei Lager je Spule) trägt Proximas QI-Spulen nicht; eigenes QI-Tragwerk nötig.
 - **Grenze unabhängig vom Gehäuse:** Das Wickelpaket (0,71 m) muss sich biegen lassen; bei 0,40 m Biegeradius liegt die
   innerste Windung ≈ 5 cm vom Krümmungsmittelpunkt.
 - **Messung:** sim/constellaration/ (bewertung_*.json, qi/*/bewertung.json, skaliert.json), sim/kopplung/qi_*/,
