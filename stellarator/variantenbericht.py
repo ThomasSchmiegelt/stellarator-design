@@ -221,10 +221,11 @@ def tab_alle(en, erg):
 
 
 # ---------------------------------------------------------------- Steckbriefe
+# Nur die sieben zulaessigen (PDF < 20 MB, 2026-11-03). Frueher zusaetzlich: ("0063", "netz_normal/0063"),
+# ("0136", "netz_normal/0136"), ("V3", "ersatz1/0003"), ("V1", "ersatz1/0001"), ("E_test", "test/0004"), ("A_test", "test/0000")
+# - deren Zahlen stehen weiter in den Tabellen und im Katalog.
 STECKBRIEFE = [("0061", "doe1/0061"), ("0169", "netz_normal/0169"), ("0093", "doe1/0093"), ("0008", "doe1/0008"),
-               ("0014", "doe1/0014"), ("0017", "doe1/0017"), ("0157", "doe1/0157"), ("0063", "netz_normal/0063"),
-               ("0136", "netz_normal/0136"), ("V3", "ersatz1/0003"), ("V1", "ersatz1/0001"),
-               ("E_test", "test/0004"), ("A_test", "test/0000")]
+               ("0014", "doe1/0014"), ("0017", "doe1/0017"), ("0157", "doe1/0157")]
 
 
 def steckbrief(en, name, quelle, erg, K):
@@ -339,7 +340,7 @@ def montage(en):
         im = im.crop((300, 290, 1280, 890)).resize((w, int(w * 600 / 980)))
         x, y = (i % sp) * w, (i // sp) * h
         M.paste(im, (x, y + 45)); d.text((x + 15, y + 10), n.replace("_test", " (test)"), fill="black", font=font)
-    M.save(BILD / f"modell3d_montage{'_en' if en else ''}.png")
+    M.save(BILD / f"modell3d_montage{'_en' if en else ''}.jpg", quality=88)   # JPG statt PNG: 5 MB -> ~1 MB (PDF < 20 MB)
 
 
 KATALOG = Path(os.environ.get("FUSION_KATALOG", ROOT / "sim" / "kopplung" / "katalog3d"))

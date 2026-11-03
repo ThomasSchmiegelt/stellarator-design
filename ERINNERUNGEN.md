@@ -667,3 +667,10 @@ sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht 
   hermes-abschalten-2330 alles (sim/abschalten_2330.sh, Log sim/abschalten.log). Offen mit Nutzer: Rest-Umstülpung
   Satz 2 (6–12 Elemente, Spulentyp 2) untersuchen oder QI-Tragwerk eigens auslegen; Voxel-FE zu groß für 32 GB.
   Video: wenn „FERTIG Vorspann neu“ im Log → Probebilder prüfen, Film schneiden, dem Nutzer zeigen.
+- 19:10: Satz 2 jetzt rechenbar (F-183): 1098 MPa mit 0169-Wänden. Code: gehaeuse_netz.biegegrenze (stetig),
+  Reparaturschleife in kopplung.struktur_netz. Nichts läuft außer Video; Timer 23:30 aktiv.
+- Alter Film (68 s, abgenommen) gesichert: sim/video_varianten/varianten_68s_alt.mp4 — Nutzer: „den alten erst einmal nicht löschen“.
+- 19:45 Film 84 s geschnitten (docs/filme/varianten.mp4), dem Nutzer gezeigt; Freigabe offen → erst dann README/varianten.md
+  committen und pushen (lokal 8 Commits voraus). Alter Film: sim/video_varianten/varianten_68s_alt.mp4.
+- 20:00 Variantenbericht-PDF unter 20 MB (B-029, F-185): Steckbriefe nur noch die 7 zulässigen, Mosaik als JPG →
+  DE/EN je 16,9 MB. Alte Mosaik-PNGs liegen in sim/_temp_2026-11-03b/ (Sitzungsende fragen). Noch nicht committet.

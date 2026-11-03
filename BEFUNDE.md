@@ -6,6 +6,18 @@
 ---
 
 
+### B-029 | Variantenbericht-PDF unter 20 MB: Steckbriefe nur noch für die sieben zulässigen, Mosaik als JPG (2026-11-03)
+- **Befund:** Beide PDFs hatten 26,7 / 26,6 MB. Fast alles davon sind Bilder: 13 Steckbriefe je ~0,9–1,06 MB
+  (Spannungsbild + Treppenschnitt als PNG), Katalog 188 JPG ~14 MB, Mosaik aller 3D-Modelle 5 MB (PNG 2400×3360).
+- **Maßnahme (Nutzer: „einige Varianten entfernen, so dass er unter 20 MB kommt … und zwar das PDF“):** Steckbriefe von
+  0063, 0136, V3, V1, E_test, A_test entfernt (nur noch 0061, 0169, 0093, 0008, 0014, 0017, 0157) → 20,97 MB, noch zu
+  groß. Zusätzlich Mosaik als JPG (Qualität 88) statt PNG: 5,05 → 1,02 MB, sichtbar gleich (Seite 15 geprüft).
+- **Ergebnis:** DE 16,9 MB, EN 16,9 MB, je 75 Seiten, keine offenen Verweise. Zahlen der entfernten Entwürfe stehen weiter
+  in Tabellen, Mosaik und Katalog; Einleitung von Abschnitt 11 sagt das.
+- **Lehre:** Große Rasterbilder ohne Transparenz im Bericht als JPG ablegen; ein Steckbrief kostet ~1 MB.
+- **Fundstelle:** stellarator/variantenbericht.py (STECKBRIEFE, montage), bericht/variantenbericht/*.tex.
+- **Status:** ✅ erledigt.
+
 ### B-028 | ConStellaration/CoilStellaration (Proxima) an unsere Kette angebunden – QI-Grenzen der Kette (2026-11-03)
 - **Beobachtung:** Unser QA-Plasma (nfp 2, A 4,5) ist in Proximas Benchmark unzulässig (Aufgabe 1: A 4,5 > 4,
   Dreieckigkeit +0,06, ι/nfp 0,21) bzw. nicht bewertbar (Aufgabe 2 verlangt QI). Drei zulässige Ranglisten-Ränder
