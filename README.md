@@ -601,7 +601,7 @@ So liest man das Bild: links die Zeit seit der Geburt (logarithmisch) und der ve
 ab einer Millisekunde stetig auf 16,6 %, blau (Form allein) springt ganz am Anfang auf 0,3 % und bleibt dann flach.
 Die gestrichelte Linie ist die vorher festgelegte Erwartung. Rechts die Kennzahlen.
 
-### Festigkeit: Woher die Kraft kommt und wie ein Tragwerk sie aufnimmt (Zwischenstand)
+### Festigkeit: Woher die Kraft kommt und wie ein Tragwerk sie aufnimmt 
 
 Ausgangslage: Die Spulengehäuse der 1-GW-Anlage kamen auf rund **2000 MPa**, viermal mehr als der Stahl bei 4 K auf
 Dauer erträgt (Grenze hier 500 MPa). Dickere Wände allein halfen nicht. Der Nutzer gab vor, Plasma, Spulen, Wand,
@@ -632,16 +632,52 @@ Der Preis: 37 000 t Stahl. Aus „hält nicht“ wird „zu schwer“.
 So liest man das Bild: oben vier Balkendiagramme für die Varianten A–E (rot über der Grenze, blau darunter), unten die
 Spannung von oben gesehen für A (rot = über 1200 MPa an den inneren Schenkeln) und E (fast alles unter 400 MPa).
 
-**Entwurfsstudie** (200 Entwürfe, 11 Stellgrößen, läuft): Nach 17 Entwürfen halten drei **alle** Grenzen ein
-(Festigkeit, Dehnung des Supraleiters, Package, Neutronenheizung, Feldgenauigkeit): 20–24 Spulen, kürzere Spulen,
-Kraftziel, steife Verbinder oder dicke Innenwand; 305–389 MPa, 18–31 mm, 22,6–28 kt Stahl. Vorbehalte: Lager starr
-(idealer Stützzylinder), Verbinder als volle Blöcke, gröberes Netz bei 24 Spulen – die besten Entwürfe werden mit
-feinem Netz nachgerechnet. Ausführlich mit Herleitung im Bericht, Abschnitt „Festigkeit“.
+**Entwurfsstudie** (199 Entwürfe, 11 Stellgrößen, `stellarator/doe_auswertung.py`): Ziel ist auf Wunsch des Nutzers
+der **robusteste**, nicht der leichteste Entwurf („das Gewicht ist nicht so wichtig, es ist ja ein Gebäude“).
+**7 Entwürfe halten alle acht Grenzen ein**, alle mit 20 oder 24 Spulen. Elf Entwürfe waren mit gröberem Netz gerechnet
+worden, wobei unbemerkt die Verbinder länger wurden; mit Standardnetz nachgerechnet fielen zwei heraus. Bester und als
+einziger robust gegen ein feineres Netz: **Entwurf 0169** (24 Spulen, 13 steife Verbinder je Paar, 28 kt Stahl,
+σ99 = 308 MPa, mit feinerem Netz 319 MPa).
 
-![Entwurfsstudie Zwischenstand](docs/bilder/festigkeit_doe.png)
+![Entwurfsstudie](docs/bilder/doe1_uebersicht.png)
 
-So liest man das Bild: jeder Punkt ein vollständig gerechneter Entwurf; links Spannung über Stahlmasse (Farbe =
-Spulenzahl, schwarz umrandet = alle Grenzen eingehalten, gestrichelt = 500 MPa), rechts über der Zahl der Verbinder.
+So liest man das Bild: jeder Kreis ein gerechneter Entwurf, Farbe = Spulenzahl (blau 16, orange 20, grün 24), gefüllt =
+alle Grenzen eingehalten, gestrichelt = 500 MPa. Keine Stellgröße allein ordnet die Punkte; am deutlichsten steigt die
+Spannung mit dem Abstand Spule–Plasma.
+
+**Was dabei herauskam:**
+- Die Spannung hängt an der **Spulenform** (Abstand Spule–Plasma, Spulenlänge), weniger an Verbinderzahl/-steifigkeit.
+  Ein Ersatzmodell (Gauß-Prozess) sagt Package, Kernheizung, Masse und Feldfehler gut vorher (R² 0,90–0,98), die
+  Spannung nur schlecht (0,46).
+- Die Spitzen sitzen an den **Enden der Verbinder** (77–100 % der höchstbelasteten Elemente < 1 m entfernt). Feineres
+  Netz entlang der Spule hebt σ99 bei vier von fünf Kandidaten um 34–58 %, feinere Wände ändern nichts.
+- **Gezielt schwächen**, erster Versuch: alle Verbinder weicher → σ99 steigt (308 → 358 MPa). Die Verbinder sind der
+  Entlastungsweg; die Idee des Nutzers muss örtlich wirken (weiche Enden, steifer Kern) – nächster Schritt.
+- **Werkstoff**: 1.4429 / X2CrNiMoN17-13-3 (AISI 316LN). Raumtemperatur Rp0,2 = 295 MPa (Tabelle), bei 4 K gemessen
+  1070 MPa. Grenze 500 MPa = 2/3 der garantierten 4-K-Streckgrenze der ITER-Güte C3. „p99“ heißt jetzt σ99
+  (99-%-Spannung); zusätzlich Spannungskategorien (Membran, Membran+Biegung, Spitze).
+
+![Werkstoff](docs/bilder/stahl_kennwerte.png)
+
+So liest man das Bild: blau Streckgrenze, grün Zugfestigkeit, gelb zulässig (2/3 der Streckgrenze). Kalt wird der Stahl
+mehr als dreimal so fest; darum gilt die 4-K-Grenze, denn Magnetkraft gibt es nur im kalten Betrieb.
+
+**3D-Modell komplett in PicoGK** (`stellarator/picogk_modell.py`, `picogk/StellaratorModell`): Python übergibt nur
+Querschnitte, Plasmarand und Lagerorte; PicoGK baut Wickelpaket, Gehäuse und Verguss (Boolesche Differenz),
+Package-Schichten (Aufdicken des Plasmas), Lager (Stäbe + Stützzylinder) und prüft Überschneidungen. Volumen auf
+Wickelpaket/Gehäuse auf 0,5–1 % wie im Rechenmodell, keine Überschneidung von Package und Spulen. Das 3D-Modell
+deckte auf, dass sich bei 0169 benachbarte Verbinder teilweise durchdringen (13 % Volumen doppelt gezählt, Einfluss
+auf σ99 wenige Prozent). Liste 1 (beste + knapp verfehlte) im Bericht, Liste 2 (alle
+geometrisch darstellbaren) als Katalog im Variantenbericht.
+
+![PicoGK-Modell 0169](docs/bilder/modell3d_0169_schnitt.png)
+
+So liest man das Bild: jede Schicht unter einem anderen Winkel aufgeschnitten – Plasma (rosa), Erstwand und Blanket
+(gelb), Abschirmung (grün), Vakuumgefäß (grau), 24 Spulengehäuse (blau) mit Wickelpaket (orange), Verbinder
+(dunkelblau), schematische Lager (dunkelgrau).
+
+Berichte: Projektbericht Abschnitt „Festigkeit“ (beste und knapp an der Grenze) und **Variantenbericht**
+(`bericht/variantenbericht/`, DE/EN) mit allen Varianten, Steckbriefen und Katalog.
 
 ### Doppeltes Filament, Platz zu den Spulen, Flüssigblei (grobe Abschätzungen)
 

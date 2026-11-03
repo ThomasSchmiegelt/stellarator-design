@@ -1,0 +1,365 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}\usepackage[T1]{fontenc}\usepackage[english]{babel}
+\usepackage{graphicx,float,booktabs,amsmath,amssymb,siunitx,xcolor,tabularx,longtable}
+\usepackage[margin=2.0cm]{geometry}\usepackage[hidelinks]{hyperref}
+\usepackage{newunicodechar}\newunicodechar{‰}{\textperthousand}\newunicodechar{σ}{$\sigma$}\newunicodechar{·}{$\cdot$}
+\newunicodechar{³}{\textthreesuperior}\newunicodechar{²}{\texttwosuperior}\newunicodechar{–}{--}\newunicodechar{−}{$-$}
+\usepackage{textcomp}
+\sisetup{output-decimal-marker={.},group-separator={\,},group-minimum-digits=4}
+\hypersetup{pdfauthor={Thomas Schmiegelt},pdftitle={Variants of the coil support structure of a stellarator}}
+\newcommand{\bild}[3]{\begin{figure}[H]\centering\includegraphics[width=#2\linewidth]{bilder/#1}\caption{#3}\end{figure}}
+\newcommand{\lesehilfe}[1]{\begin{quote}\small\textit{How to read the figure:} #1\end{quote}}
+\newcommand{\kasten}[2]{\par\smallskip\noindent\fcolorbox{gray}{gray!8}{\parbox{0.96\linewidth}{\textbf{#1} #2}}\par\smallskip}
+\title{\textbf{Variants of the coil support structure of a stellarator}\\[2pt]\large Catalogue and comparison of all
+computed designs -- strength, package, superconductor, field accuracy and 3D models in PicoGK}
+\author{Thomas Schmiegelt \textbar{} hobby project \texttt{stellarator-design}}
+\date{3~November 2026}
+\begin{document}\maketitle
+
+\kasten{Hobby project, born of curiosity.}{No connection to any research institute or company, not peer reviewed. All
+numbers are estimates from simplified models (linear elastic, rigid bearings, magnetic force only) and may contain
+errors. Calculations, program code and draft text were produced with the support of AI agents; the human set goal and
+direction and decided at the forks. All figures are own calculations and renderings.}
+
+\noindent\textbf{What this is about.} This report presents \emph{all} variants of the coil support structure computed
+for the compact 1-GW stellarator (radius $R_0=\SI{10.4}{m}$, field $B_0=\SI{6.5}{T}$, REBCO coils) and compares them:
+five support tests with identical coils, 199 designs of a design study, the recomputations with finer mesh, a first
+series ``weakening selectively'' and the proposals of a surrogate model. For the best designs and for all
+geometrically representable ones there are 3D models built entirely in PicoGK. It complements the chapter ``Strength''
+of the project report, which shows only the best designs and those close to the limit.
+
+\tableofcontents
+\clearpage
+
+%======================================================================
+\section{Summary}
+\begin{enumerate}\itemsep2pt
+\item \textbf{The support structure decides.} With identical coils, a better structure alone (bearings inside and
+outside, many stiff connectors, thick walls) lowers the steel stress from \SI{2129}{MPa} to \SI{481}{MPa}
+(section~\ref{sec:tragwerk}).
+\item \textbf{7 of 199 designs meet all limits} -- after a clean-up: eleven designs had been computed with a coarser
+mesh for memory reasons, and their connectors unnoticed became one third longer. With the standard mesh two of the
+originally nine admissible designs drop out (section~\ref{sec:doe}).
+\item \textbf{16 coils are not enough}; all admissible designs have 20 or 24 coils. More coils buy field accuracy,
+which can be traded for smoother, shorter coils.
+\item \textbf{The stress depends mainly on the coil shape}, not on connector count or stiffness: the most important
+variable is the coil--plasma distance (further away means more strongly deformed coils), then the coil length
+(section~\ref{sec:ersatz}). A surrogate model predicts package, nuclear heating, mass and field error well, the stress
+only poorly.
+\item \textbf{The stress peaks sit at the ends of the connectors.} A finer mesh along the coil raises the 99-\% value
+by 34--58~\% for four of five candidates; a finer resolution of the wall thickness changes almost nothing. Design 0169
+is robust: \SI{308}{MPa} on the standard mesh, \SI{319}{MPa} on the fine one (section~\ref{sec:netz}).
+\item \textbf{Material:} 1.4429 / X2CrNiMoN17-13-3 (AISI 316LN). At room temperature the handbook gives a yield strength
+of only \SI{295}{MPa}, at \SI{4}{K} \SI{1070}{MPa} was measured. The limit used, \SI{500}{MPa}, is two thirds of the
+guaranteed 4-K yield strength of ITER grade C3 (section~\ref{sec:stahl}).
+\item \textbf{Softer connectors make it worse}: making all connectors of 0169 softer raises the case stress (up to
+$+16$~\%); the user's idea must be applied locally (section~\ref{sec:schwaechen}).
+\item \textbf{The surrogate finds admissible designs}: three of its four proposals meet all limits; the best is more
+robust than 0169 on the standard mesh but loses on the fine mesh; 0169 remains the most robust
+(section~\ref{sec:ersatz1}).
+\item \textbf{3D models in PicoGK} agree for winding pack and case with the computational model to 0.5--1~\% and
+confirm independently: no case overlaps another case or the package. For 0169 they revealed that neighbouring
+connectors partly interpenetrate (section~\ref{sec:3d}).
+\end{enumerate}
+
+%======================================================================
+\section{How the variants were created}\label{sec:kette}
+Every design passes through the same chain (program \texttt{stellarator/kopplung.py}):
+\begin{enumerate}\itemsep1pt
+\item \textbf{Coils} (simsopt): for a given number of coils, minimum distance to the plasma, allowed length and force
+target, coil paths are sought that create the magnetic field of the prescribed plasma shape. The figure of merit is
+the field error $B\cdot n$: the fraction of the field that passes through the plasma boundary instead of running along
+it.
+\item \textbf{Structure} (Elmer): around each coil a steel case with winding pack (superconductor) and potting, with
+connectors in between; bearings inside (towards the plant centre) and outside. The load is the Lorentz force of the
+current in its own and the other coils' field.
+\item \textbf{Package}: how much space remains between plasma boundary and case for first wall, blanket, shield and
+vacuum vessel? This gives nuclear heating and neutron fluence in the winding pack.
+\item \textbf{Superconductor}: field at the conductor, utilisation and temperature margin of the REBCO tape.
+\item \textbf{Assessment} against eight limits (table~\ref{tab:grenzen}) and check whether cases penetrate each other.
+\end{enumerate}
+
+\begin{table}[H]\centering\small\input{gen/grenzen_en.tex}
+\caption{Limits against which every design is checked.}\label{tab:grenzen}\end{table}
+
+\paragraph{Terms.}
+\begin{description}\itemsep2pt
+\item[99-\% stress $\sigma_{99}$] (called ``p99'' in earlier versions) the von Mises equivalent stress not exceeded in
+99~\% of the steel volume. The remaining per cent are mostly local peaks at edges. The value is intuitive but not a
+code quantity; therefore the stress categories are added here.
+\item[Stress categories] Pressure-vessel codes (ASME) and the ITER magnet criteria classify stresses by their effect.
+Lines are laid across the wall and the stress along them is decomposed: the mean is the \emph{membrane stress} $P_m$
+(the wall is pulled or pushed evenly), the linear part the \emph{bending stress} $P_b$, the rest the \emph{peak}.
+Allowed are $P_m\le S_m$ and $P_m+P_b\le1.5\,S_m$; peaks are limited by fatigue and fracture mechanics. Local membrane
+stresses at discontinuities (joints, bearings) may go up to $1.5\,S_m$.
+\item[Reserve] distance to the limit in per cent of the limit. 30~\% reserve at \SI{500}{MPa} means \SI{350}{MPa}.
+\item[Robustness] the smallest reserve of a design over all limits (user's goal: most robust, not lightest design --
+``the weight is not so important, it is a building, after all'').
+\item[Surrogate model] a fast approximating function (here a Gaussian process) that learns from the computed designs
+how a quantity depends on the design variables, and states how uncertain it is.
+\item[Voxel] a small cube; PicoGK describes bodies as a set of such cubes and can thereby unite, subtract and offset
+bodies very robustly.
+\end{description}
+
+%======================================================================
+\section{Support tests A to E}\label{sec:tragwerk}
+Before the design study, only the support structure was changed with identical 16 coils. The force analysis had shown
+that the coils are bent as a whole by the centring force (net force towards the plant centre) when supported outside.
+
+\begin{table}[H]\centering\small\input{gen/tragwerk_en.tex}\caption{Support tests with the 16 coils of the starting
+design. WP = winding pack.}\end{table}
+\bild{festigkeit_tragwerk_en.png}{0.95}{Support tests A to E.}
+\lesehilfe{Top: the key figures of the five tests as bars; red is above the limit. Bottom left test~A from above (red:
+above \SI{1200}{MPa}, mainly at the inner legs), bottom right test~E: almost everything blue. Each step acts on a
+different cause: the inner bearing takes the centring force on a short path, connectors shorten the free bending
+length, thick walls raise the section modulus.}
+
+%======================================================================
+\section{Design study doe1}\label{sec:doe}
+In 200 designs (Latin hypercube) eleven design variables were changed simultaneously: number of coils (16, 20, 24),
+coil--plasma distance, length per coil, force weight, four wall thicknesses, size of the bearing areas, number (6--14
+per pair) and stiffness (20--200~GPa) of the connectors. One design failed in meshing, 199 were computed completely,
+each in 1--4~minutes.
+
+\paragraph{Clean-up.} Eleven designs did not fit into memory with the standard mesh and were computed with 25~\% fewer
+stations per coil. The mesh study revealed that this makes the connectors longer: a connector always spans four
+stations, and coarser stations are longer. These eleven designs were therefore different designs with larger
+connectors -- and too favourable. All eleven were recomputed with the standard mesh and more memory (marked $^\ast$ in
+the tables). 0063 (\SI{369}{\to}\SI{595}{MPa}) and 0136 (\SI{479}{\to}\SI{577}{MPa}) dropped out of the admissible
+list; 0169 stayed admissible at \SI{308}{MPa}.
+
+\bild{doe1_uebersicht_en.png}{1.0}{All designs: 99-\% stress in the case steel against six design variables.}
+\lesehilfe{Each circle is a computed design, the colour shows the number of coils (blue 16, orange 20, green 24),
+filled circles meet all eight limits. The dashed line is the limit of \SI{500}{MPa}, the axis is logarithmic. No panel
+shows a clear straight line: the stress does not depend on any single variable. The clearest trend is for the
+coil--plasma distance (bottom centre): further away, higher stress.}
+
+\paragraph{What fails most often.} The steel stress is the hard bottleneck: only about 11~\% of the designs stay below
+\SI{500}{MPa}. The winding-pack strain is met by 24~\%, the field error by 64~\%, package and nuclear heating by more
+than 90~\%, utilisation and temperature margin of the superconductor by all. With 16 coils only 11 of 65 designs reach
+the field error and 3 the stress limit, none both.
+
+\begin{table}[H]\centering\scriptsize\input{gen/rang_en.tex}\caption{Ranking: admissible designs (cleaned) by
+smallest reserve and the twelve that fail most narrowly. $^\ast$ = recomputed with the standard mesh.}\label{tab:rang}\end{table}
+
+\bild{doe1_reserven_en.png}{0.95}{Reserves of the admissible designs per limit.}
+\lesehilfe{Each row is an admissible design, each column a limit. The number is the distance to the limit in per cent;
+the darker, the more reserve. Bold is the bottleneck, i.e.\ the smallest reserve, by which the rows are sorted. Stress,
+package and field error alternate as the bottleneck; superconductor and nuclear heating have plenty of reserve
+everywhere.}
+
+%======================================================================
+\section{What determines the stress: surrogate models}\label{sec:ersatz}
+For six quantities a Gaussian process \cite{rasmussen2006} was trained and checked by five-fold cross-validation: each
+design is predicted by a model that has not seen it.
+
+\begin{table}[H]\centering\small\input{gen/ersatz_en.tex}\caption{Quality of the surrogate models and most important
+design variables. Share = main effect of the variable on the variation of the prediction.}\end{table}
+\bild{doe1_ersatz_en.png}{1.0}{Surrogate models: prediction against computation (top) and influence of the design
+variables (bottom).}
+\lesehilfe{Top: each point is a design; horizontally the computed value, vertically the prediction of a model that did
+not know this design. If the points lie on the diagonal, the model is good ($R^2$ close to 1). Package, nuclear heating,
+mass and field error lie close to the diagonal, stress and strain scatter widely. Bottom: how strongly each design
+variable moves each quantity. For the stress (blue) the coil--plasma distance stands out.}
+
+\paragraph{Interpretation.} It was expected (event log F-123, F-136) that connector number and stiffness determine the
+stress and that a surrogate predicts it well. Both are refuted. The stress depends on the shape of the coils: coils
+further from the plasma must be more strongly twisted to create the same field shape, and need more current. On top
+there is noise from the placement of the connectors: exactly where a connector sits decides the local peak. The rank
+correlation (Spearman) confirms this without any model: distance $+0.50$, length $+0.35$, connector count $-0.18$,
+connector stiffness $-0.10$.
+
+%======================================================================
+\section{Mesh study: how certain are the numbers?}\label{sec:netz}
+The five best designs were recomputed with identical coils and parameters but a finer mesh: once with 1.5 times as many
+stations along the coil (same connector length), once with three instead of two cells across the wall thickness. A
+variant with three wall cells and a fine winding pack needed more than \SI{22}{GB} of memory and was aborted; instead
+the winding pack is coarser.
+
+\begin{table}[H]\centering\small\input{gen/netz_en.tex}\caption{Mesh study: 99-\% stress and largest element value in
+the steel (MPa).}\end{table}
+\bild{doe1_netz_en.png}{0.95}{Mesh study of the five best designs.}
+\lesehilfe{Left the 99-\% stress, right the largest element value, each for the mesh levels from left to right. A flat
+line means: the result does not depend on the mesh. On the left four lines rise clearly at the step to 1.5 times as
+many stations, only 0169 stays almost flat. On the right the maxima grow with every refinement -- the signature of a
+notch or sharp edge where the stress in the model is unbounded.}
+
+\paragraph{Where the peaks sit.} Of the 200 most highly stressed steel elements, depending on the design 77--100~\% lie
+less than \SI{1}{m} from a connector joint, only 13--47~\% near a bearing. In the model the connectors are sharp-edged
+steel blocks attached to the side wall of the cases. At their ends along the coil the stiffness jumps -- as at the end of
+a lap joint, where a bond always opens first. Exactly these spots are resolved by the finer mesh along the coil, which
+is why the stress grows there. For a design this means: the joint needs a shape (fillet, tapered thickness, longer
+contact area), and the user's idea of weakening areas selectively applies precisely here
+(section~\ref{sec:schwaechen}).
+
+%======================================================================
+\section{Material and stress categories}\label{sec:stahl}
+\subsection{Which steel?}
+The cases are made of \textbf{1.4429 / X2CrNiMoN17-13-3}, internationally \textbf{AISI 316LN}: an austenitic stainless
+steel with about 17~\% chromium, 13~\% nickel, 2.5~\% molybdenum, very little carbon (L = low carbon, good
+weldability) and nitrogen (N), which raises the strength and keeps the microstructure stable at low temperature. It is
+the standard material for magnet cases: ITER builds its field-coil cases from it.
+
+\bild{stahl_kennwerte_en.png}{1.0}{Strength of 1.4429 / 316LN at room temperature and at \SI{4}{K}, and the allowable
+stress derived from it.}
+\lesehilfe{Three bars per group: blue the yield strength (beyond it a permanent deformation remains), green the tensile
+strength (here the specimen breaks), yellow the allowable stress derived from it (two thirds of the yield strength).
+On the left the handbook value for room temperature, as known from mechanical engineering (\SI{295}{MPa}). Next to it
+measurements on 316LN: on cooling to \SI{77}{K} (liquid nitrogen) and \SI{4}{K} (liquid helium) the steel becomes more
+than three times as strong. On the right the guaranteed minimum values of the ITER grades. The dashed line is the limit
+used here.}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{@{}lrrrl@{}}\toprule
+ & $R_{p0.2}$ & $R_m$ & $\tfrac23R_{p0.2}$ & Source \\
+ & MPa & MPa & MPa & \\\midrule
+1.4429 solution annealed, room temperature (DIN EN 10088) & 295 & 580 & 197 & Roloff/Matek \cite{schweizerfn} \\
+316LN-IG, \SI{293}{K}, measured & 325 & 641 & 217 & \cite{fedorikova2023} \\
+316LN-IG, \SI{77}{K}, measured & 790 & \num{1282} & 527 & \cite{fedorikova2023} \\
+316LN-IG, \SI{4.2}{K}, measured & \num{1070} & \num{1543} & 713 & \cite{fedorikova2023} \\
+316LN thick plate, high nitrogen, \SI{4.2}{K} & $\ge$\num{1000} & -- & $\ge$667 & \cite{sakurai2024} \\
+ITER grade C3, \SI{4}{K}, minimum & 750 & -- & \textbf{500} & \cite{mitchell} (unverified) \\
+ITER grade C1, \SI{4}{K}, minimum & \num{1000} & -- & 667 & \cite{mitchell} (unverified) \\
+ARC assumption, \SI{4}{K} & \num{1050} & -- & 700 & \cite{sorbom2015} \\\bottomrule
+\end{tabular}\caption{Properties of 1.4429 / 316LN and the allowable stress derived from them.}\end{table}
+
+\paragraph{Derivation of the 500~MPa.} The ITER criteria for magnet structures set the allowable membrane stress to
+$S_m=\tfrac23R_{p0.2}$ at operating temperature. With the guaranteed minimum of the weakest ITER grade C3
+($R_{p0.2}\ge\SI{750}{MPa}$ at \SI{4}{K}) this gives \SI{500}{MPa}. For comparison: the ASME rule
+$S_m=\min(\tfrac23R_{p0.2},\tfrac13R_m)$ with the measured 4-K values gives $\min(713, 514)=\SI{514}{MPa}$ -- almost the
+same number. The room-temperature handbook values must not be used for this: at \SI{20}{\celsius} only about
+\SI{200}{MPa} would be allowed. What matters is that the case is cold in operation; during cool-down and warm-up there
+is no current and hence no magnetic force.
+
+\paragraph{What the limit does not cover.} At \SI{4}{K} steel fails by crack growth rather than by yielding. Fracture
+toughness falls with rising strength \cite{sakurai2024}, welds are weaker. ITER therefore additionally checks fatigue and
+fracture mechanics; both are still missing here.
+
+\subsection{Stress categories instead of the 99-\% value}
+For each wall section across the wall (per station, wall and transverse position) the stress tensor was averaged
+($P_m$) and the linear part determined ($P_b$). Limits with grade C3: $P_m\le\SI{500}{MPa}$, $P_m+P_b\le\SI{750}{MPa}$.
+
+\begin{table}[H]\centering\scriptsize\input{gen/kategorien_en.tex}\caption{Stress categories (MPa). ``Peak'' = largest
+element value; connector $P_m$ = averaged over the connector cross-section.}\end{table}
+\bild{doe1_kategorien_en.png}{1.0}{Stress categories: maxima and values in 99~\% of the wall sections.}
+\lesehilfe{Two bars per design: membrane $P_m$ (blue) and membrane+bending (orange). Dashed $S_m=\SI{500}{MPa}$ (limit
+for $P_m$), dotted $1.5\,S_m$ (limit for $P_m+P_b$). (a) Maximum over the whole steel, diamond = largest single
+element. For almost all designs the highest membrane stress sits at the same place as the peak, at the end of a
+connector, where the whole wall thickness is highly loaded: a \emph{local} membrane stress at a discontinuity. No
+design meets both limits there (0169 was still below on the coarse mesh). (b) Value met by 99~\% of the wall
+sections: 0061, 0169, 0093, 0008, V3 and V1 stay below both limits; 0014, 0017 and 0157 exceed $S_m$ even in the
+bulk.}
+
+\paragraph{Result.} For all designs the highest membrane stress lies at the location of the peak, i.e.\ at the connector
+joint. Away from these spots (99~\% of the wall sections) $P_m$ stays below \SI{400}{MPa} for the best designs. The
+assessment ``admissible'' by the 99-\% value is therefore justifiable for the walls; for the connector joints it is not
+reliable as long as they are modelled sharp-edged.
+
+%======================================================================
+\section{Weakening selectively: softer connectors}\label{sec:schwaechen}
+\input{schwaechen_text_en.tex}
+
+%======================================================================
+\section{Proposals of the surrogate model}\label{sec:ersatz1}
+\input{ersatz1_text_en.tex}
+
+%======================================================================
+\section{3D models in PicoGK}\label{sec:3d}
+\paragraph{Why PicoGK.} So far 3D models were made in FreeCAD (surfaces, loft, Boolean operations). For twisted
+stellarator cases, Boolean operations on surfaces often fail because of tiny gaps or self-intersections. PicoGK
+\cite{picogk} computes with voxels and distance fields: union, subtraction and offset always succeed, at the cost of a
+finite resolution.
+
+\paragraph{Construction.} Python passes only geometric data to PicoGK, no finished bodies: per station the corner points
+of the case outer contour, potting outer contour and winding pack (exactly the cross-sections of the computational
+model), the connector surfaces, the plasma boundary and the bearing locations. In PicoGK
+(\texttt{picogk/StellaratorModell}) these become:
+\begin{itemize}\itemsep1pt
+\item the coils as closed tubes from the station rectangles, \emph{case = outer contour $-$ potting outer contour},
+  \emph{potting = potting outer contour $-$ winding pack} (Boolean difference);
+\item the package by offsetting the plasma: first wall and blanket \SIrange{0}{0.55}{m}, shield \SIrange{0.55}{0.88}{m},
+  vacuum vessel \SIrange{0.88}{1.00}{m} (assumption, order of magnitude of ARIES-CS);
+\item the bearings schematically: rods from each bearing patch radially to an inner support cylinder and an outer ring
+  (in the computational model the bearings are rigid; shape and stiffness of the support cylinder are still open);
+\item three test bodies: package envelope $\cap$ coils and structure, case $\cap$ other cases, connectors $\cap$ winding pack.
+\end{itemize}
+Each model is built twice: once finely (\SI{40}{mm} voxels) for volumes and checks, once coarsely (\SI{80}{mm}) for the
+pictures; the meshes are then thinned. One model takes 2--5 minutes.
+
+\begin{table}[H]\centering\scriptsize\input{gen/modell3d_en.tex}\caption{PicoGK models: deviation of the voxel volumes
+from the computational model and overlaps.}\end{table}
+
+\paragraph{Check.} Expected were volume deviations of at most $\pm3$~\% and no overlap (F-136). Both are confirmed:
+winding pack and case lie 0.5--2~\% below the computational model (voxels cut off convex edges), the connectors 0--3~\% for most designs. \textbf{Exception 0169:} there the voxel model lacks 13~\% of
+the connector volume. The cause is not a PicoGK error but a finding: with 13 connectors per coil pair, neighbouring
+connectors are so close that they touch or interpenetrate; the 312 connectors form only 46 connected bodies. PicoGK
+unites the bodies and counts every point in space once, while the computational model counts the elements of each
+connector separately, i.e.\ the shared space twice. Mass and stiffness of the connectors of 0169 are therefore about
+13~\% too high in the computational model. Since case stress rises with softer connectors
+(section~\ref{sec:schwaechen}: \SI{183}{} $\to$ \SI{140}{GPa}, $-24$~\% stiffness, $+3$~\% $\sigma_{99}$), the
+effect is probably a few percent; the connectors of 0169 should nevertheless be arranged without overlap in a
+recomputation.
+The potting (\SI{2}{cm}) is thinner than one voxel and is represented only in part; it is practically invisible in the
+pictures. No overlap of package and coils confirms the clearance computation of the chain independently, no overlap of
+the cases the penetration check.
+
+\begin{figure}[H]\centering\includegraphics[width=\linewidth]{bilder/modell3d_montage_en.png}
+\caption{All 3D models of the report (list 1) in overall view.}\end{figure}
+\lesehilfe{Each panel is a complete PicoGK model, labelled with the design number. Blue are the coil cases, dark blue the
+connectors, translucent grey the vacuum vessel, pink the plasma, dark grey the schematic bearings. Designs with 24 coils
+look like a dense cage, the support tests A and E with 16 coils more open; in E the walls are visibly thicker.}
+
+%======================================================================
+\section{Data sheets of the designs in list~1}\label{sec:steckbriefe}
+List~1 contains the admissible designs, the five that fail most narrowly, the two that dropped out through the clean-up
+and the support tests A and E. Each data sheet shows design variables, results, the mesh study, the stress picture and
+the PicoGK model in a stepped cut.
+\lesehilfe{Stress picture: top view of all cases, colour from blue (\SI{0}{MPa}) via green and yellow to red
+(\SI{800}{MPa} and more). Red spots at the sides of the cases are the connector joints. Stepped cut: each layer is cut
+open at a different angle -- from inside to outside plasma (pink), first wall and blanket (yellow), shield (green),
+vacuum vessel (grey), then the coils with their orange winding pack in cross-section.}
+
+\input{gen/steckbriefe_en.tex}
+
+%======================================================================
+\section{Comparison and conclusions}\label{sec:vergleich}
+\input{vergleich_text_en.tex}
+
+%======================================================================
+\appendix
+\section{All designs of the study doe1}\label{anh:alle}
+Abbreviations: dist.\ minimum coil--plasma distance (unit geometry), length per coil (unit geometry), force = force
+weight, w.i./w.s.\ inner/side wall, t outer wall min., n\textsubscript{c} connectors per pair, E\textsubscript{c}
+connector stiffness, R\textsubscript{b} bearing radius, clear.\ = clearance plasma--case, heat = nuclear heating of the
+winding pack. Last column: \checkmark\ admissible, otherwise bottleneck. $^\ast$ = recomputed with the standard mesh.
+\input{gen/alle_en.tex}
+
+\section{Catalogue of all geometrically representable designs (list~2)}\label{anh:katalog}
+Geometrically representable means: the cases do not penetrate each other (check of the chain), and the PicoGK model
+confirms this. Each card shows the PicoGK model (\SI{80}{mm} voxels), top right the smallest reserve (negative = at least
+one limit violated) and below it the violated limits.
+\clearpage
+\input{gen/katalog_en.tex}
+
+\begin{thebibliography}{99}\small
+\bibitem{schweizerfn} Strength values of steel, after Roloff/Matek, Maschinenelemente; schweizer-fn.de,
+  \url{https://www.schweizer-fn.de/festigkeit/festigkeitswerte/stahl/stahl_start.php} (accessed 3 Nov 2026).
+\bibitem{fedorikova2023} A.~Fedoriková, P.~Petroušek, T.~Kvačkaj, R.~Kočiško, M.~Zemko: Development of Mechanical
+  Properties of Stainless Steel 316LN-IG after Cryo-Plastic Deformation. Materials 16 (2023) 6473.
+  doi:10.3390/ma16196473.
+\bibitem{sakurai2024} T.~Sakurai, O.~Umezawa, Y.~Ono: Strength and Fracture Toughness of Type 304 and 316 Austenitic
+  Stainless Steels at 4.2~K. IOP Conf.\ Ser.: Mater.\ Sci.\ Eng.\ 1302 (2024) 012002.
+  doi:10.1088/1757-899X/1302/1/012002.
+\bibitem{mitchell} N.~Mitchell et al.: ITER TF structure, grades C1--C3 (IAEA FEC contribution IT/1-4); year and wording not verified.
+\bibitem{sorbom2015} B.\,N.~Sorbom et al.: ARC: A compact, high-field, fusion nuclear science facility and demonstration
+  power plant with demountable magnets. Fusion Eng.\ Des.\ 100 (2015) 378--405. doi:10.1016/j.fusengdes.2015.07.008.
+\bibitem{picogk} LEAP~71: PicoGK -- compact geometry kernel, \url{https://github.com/leap71/PicoGK}.
+\bibitem{simsopt} M.~Landreman et al.: SIMSOPT: A flexible framework for stellarator optimization. J.\ Open Source
+  Softw.\ 6 (2021) 3525. doi:10.21105/joss.03525.
+\bibitem{elmer} Elmer FEM, CSC -- IT Center for Science, \url{https://www.elmerfem.org}.
+\bibitem{mckay1979} M.\,D.~McKay, R.\,J.~Beckman, W.\,J.~Conover: A comparison of three methods for selecting values
+  of input variables in the analysis of output from a computer code. Technometrics 21 (1979) 239--245.
+  doi:10.2307/1268522.
+\bibitem{rasmussen2006} C.\,E.~Rasmussen, C.\,K.\,I.~Williams: Gaussian Processes for Machine Learning. MIT Press 2006.
+\end{thebibliography}
+\end{document}

@@ -1,0 +1,29 @@
+\paragraph{Question and expectation.} Can the surrogate find better designs by itself? From the six Gaussian processes
+the smallest reserve was predicted for every conceivable design, and one standard deviation was subtracted (cautious
+estimate). The four designs with the highest value were fully computed. All four have 24 coils, a coil--plasma
+distance of \SI{0.21}{m}, short coils (\SIrange{3.9}{4.1}{m} per coil) and the thickest outer wall; they differ
+mainly in number and stiffness of the connectors. The cautious prediction was 0.04--0.07. Expected (event log
+F-142): 1--3 of the 4 admissible, stress $\pm30$~\% off the prediction, none clearly more robust than 0169.
+
+\begin{table}[H]\centering\scriptsize\input{gen/ersatz1_en.tex}\caption{Surrogate proposals. $E_\text{c}$ connector
+stiffness, c./pair connectors per coil pair, ``fine'' = 1.5 times as many stations. Robustness = smallest reserve over
+all eight limits; ``predicted'' = prediction minus one standard deviation.}
+\end{table}
+
+\paragraph{Result.} Three of the four proposals are admissible, and the computed robustness (0.23--0.35) is far above
+the cautious prediction. V3 (11 stiff connectors per pair, \SI{176}{GPa}) reaches 0.35 and is, on the standard mesh,
+the most robust of all designs computed so far; its bottleneck is the field error, not stress. V2, with only 9
+connectors per pair, fails clearly: $\sigma_{99}$ \SI{851}{MPa}, winding-pack strain 0.54~\%, deformation
+\SI{177}{mm}. The surrogate did not see this outlier coming.
+
+\paragraph{Mesh check.} As for the doe1 candidates, $\sigma_{99}$ rises markedly with 1.5 times as many stations: V3
+\SI{272}{} $\to$ \SI{394}{MPa} ($+45$~\%), V1 \SI{220}{} $\to$ \SI{366}{MPa} ($+66$~\%), V0 \SI{306}{} $\to$
+\SI{385}{MPa} ($+26$~\%). All remain admissible, but V3 drops to a robustness of 0.21 because steel now limits. 0169
+(\SI{319}{MPa} on the fine mesh, robustness 0.29) remains the most robust design.
+
+\paragraph{Interpretation.} The surrogate is useful for pre-selection: it reliably finds admissible regions (it
+predicts package, nuclear heating and field error well). For stress it is not enough; a single proposal can be far
+off, and it does not see the mesh dependence of the peaks at all. Notably, 0169 remains the only design whose stress
+hardly rises on the finer mesh. In 0169 the connectors merge into almost continuous plates (section~\ref{sec:3d}). A
+conjecture, not yet tested: fewer free connector ends mean fewer stiffness jumps and hence peaks that do not grow
+with the mesh.

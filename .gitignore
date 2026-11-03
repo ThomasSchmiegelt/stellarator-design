@@ -19,6 +19,7 @@
 !/bericht/projektbericht/
 !/bericht/v0.3/
 !/bericht/surrogat/
+!/bericht/variantenbericht/
 /sim/*
 !/sim/pipeline/
 
@@ -35,5 +36,11 @@ sim/pipeline/**/*.vtu
 # Berichte: nur Projektbericht (de/en, Quellen geprueft) und v0.3; v0.1/v0.2/Spulen-Recherche mit ungeprueften Zitaten lokal
 bericht/**/*.aux
 bericht/**/*.log
+bericht/**/*.out
+bericht/**/*.toc
+
+# LaTeX-Hilfsdateien
+bericht/**/*.fdb_latexmk
+bericht/**/*.fls
 bericht/**/*.out
 bericht/**/*.toc

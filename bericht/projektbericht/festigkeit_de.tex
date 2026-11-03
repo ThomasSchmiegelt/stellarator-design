@@ -8,7 +8,7 @@ das Package (alles zwischen Plasma und Spule) und ein 3D-Modell als Ziel, und al
 \emph{„Wir müssen uns auf die Festigkeit konzentrieren. 2000~MPa ist ein Killer, auch 500~MPa ist viel. Vielleicht
 brauchen wir mehr Spulen, oder wir müssen verstehen, wie die Kraft entsteht.“} Dieser Abschnitt beschreibt, wie
 daraus Schritt für Schritt ein Entwurf entstand, der die Grenzen einhält, unter welchen Bedingungen er gilt, und
-warum er funktioniert. Er ist ein Zwischenstand: Die Entwurfsstudie (Schritt~5) rechnet noch.
+warum er funktioniert. Die Entwurfsstudie ist abgeschlossen und ausgewertet; ein eigener Variantenbericht stellt alle gerechneten Entwürfe dar und vergleicht sie, dieses Kapitel zeigt die besten und die knapp an der Grenze.
 
 \paragraph{Begriffe in diesem Abschnitt.}
 \begin{description}\itemsep2pt
@@ -19,7 +19,7 @@ warum er funktioniert. Er ist ein Zwischenstand: Die Entwurfsstudie (Schritt~5) 
   aufgeblasenen Schlauch.
 \item[Vergleichsspannung (von Mises)] eine Zahl, die den mehrachsigen Spannungszustand im Material auf einen Wert
   zusammenfasst, der mit der Festigkeit aus dem Zugversuch verglichen werden kann.
-\item[99-\%-Wert (p99)] die Spannung, die in 99~\% des Stahlvolumens nicht überschritten wird. Einzelne Spitzen an
+\item[99-\%-Spannung $\sigma_{99}$] (früher „p99“ genannt) die Spannung, die in 99~\% des Stahlvolumens nicht überschritten wird. Einzelne Spitzen an
   Kanten des groben Rechennetzes werden so nicht überbewertet.
 \item[Seilkraft] Ein gekrümmtes Seil kann eine Last, die quer auf es drückt, allein durch Zug tragen, wenn die Last
   zur Krümmung passt (wie ein Ring unter Innendruck). Ein gerades Stück kann das nicht: Es muss die Last durch
@@ -95,7 +95,7 @@ Die Grenzen und Annahmen:
 \toprule
 Größe & Grenze & Herkunft (Status) \\
 \midrule
-Gehäusestahl 316LN, p99 & \SI{500}{MPa} & 2/3 der Streckgrenze bei 4~K, ITER-Güte C3; beste Güte C1 erlaubt 667~MPa (ITER-Folien, ungeprüft) \\
+Gehäusestahl 1.4429/316LN, $\sigma_{99}$ & \SI{500}{MPa} & 2/3 der Streckgrenze bei 4~K, ITER-Güte C3; beste Güte C1 erlaubt 667~MPa (ITER-Folien, ungeprüft) \\
 Dehnung Wickelpaket & 0,3~\% & REBCO irreversibel ab 0,45--0,72~\% \cite{barth2015}; ARC hielt $<0{,}2$~\% \cite{sorbom2015} \\
 Kernheizung Wickelpaket & \SI{2000}{W/m^3} & ARIES-CS (ungeprüft); streng \SI{50}{W/m^3} für EU-DEMO \cite{cufar2019} \\
 Neutronendosis REBCO & $3\cdot10^{18}$~n/cm$^2$ & untere Schranke nach ARC \cite{sorbom2015} \\
@@ -111,7 +111,7 @@ skaliert als Plasma und Alpharechnung. Die Kette nutzt jetzt überall denselben 
 (bisherige Spulen) bestätigte die Erwartungen bis auf eine: Das Feld am Leiter kam mit \SI{6,4}{T} statt etwa
 \SI{15}{T} heraus. Ursache: Es war auf der Mittellinie gemessen, wo sich das Eigenfeld aufhebt. Am Rand des
 Wickelpakets sind es \SI{18,7}{T}. Der Testpunkt zeigte: Package (\SI{1,77}{m} frei), Temperatur (Auslastung 34~\%)
-und Feldgenauigkeit passen. Es scheitert allein an der Festigkeit (p99 \SI{2129}{MPa}) und an der Dehnung im
+und Feldgenauigkeit passen. Es scheitert allein an der Festigkeit ($\sigma_{99}$ = \SI{2129}{MPa}) und an der Dehnung im
 Wickelpaket (0,76~\%). Die Erwartung~6 (Package knapp) war falsch: ARIES-CS kommt mit \SI{1,3}{m} von Plasma bis
 Spulenmitte aus \cite{elguebaly2005}, wir haben \SI{2,5}{m}.
 
@@ -187,7 +187,7 @@ steigt die Stahlmasse von \num{15600} auf \num{37000}~t. Unten links Variante~A 
 \begin{center}\small
 \begin{tabular}{llcccc}
 \toprule
- & Variante & p99 Stahl & Verformung & Dehnung Wickelpaket & Stahl gesamt \\
+ & Variante & $\sigma_{99}$ Stahl & Verformung & Dehnung Wickelpaket & Stahl gesamt \\
 \midrule
 A & Lager außen (bisher), 6 Verbinder je Paar & \SI{2129}{MPa} & \SI{399}{mm} & 0,76~\% & \SI{15,6}{kt} \\
 B & Lager innen & \SI{1454}{MPa} & \SI{273}{mm} & 0,55~\% & \SI{15,6}{kt} \\
@@ -203,53 +203,133 @@ die Nachbarn weiter; die freie Länge $l$ des Balkens wird kürzer, und $M \prop
 Widerstandsmoment $W$ senkt die Biegespannung weiter. Damit ist zum ersten Mal ein Entwurf unter \SI{500}{MPa}. Der
 Preis ist die Masse. Das Problem hat sich verschoben: von „hält nicht“ zu „ist zu schwer“.
 
-\subsection*{Schritt 5: Entwurfsstudie (Zwischenstand)}
-Um den leichtesten zulässigen Entwurf zu finden, werden 200 Entwürfe gerechnet. Variiert werden elf Größen:
-Spulenzahl (16, 20, 24), Abstand Spule--Plasma, Länge je Spule, Kraftziel, vier Wanddicken, Größe der Lagerflächen,
-Zahl (6--14 je Paar) und Steifigkeit (20--200~GPa) der Verbinder. Fest sind Lager innen und außen. Erwartet wurden
-10--25~\% zulässige Entwürfe, ein leichtester von 20--35~kt und die Dehnung als zweiter Engpass.
+\subsection*{Schritt 5: Entwurfsstudie}
+Um den robustesten zulässigen Entwurf zu finden, wurden 200 Entwürfe gerechnet (Latin Hypercube). Variiert wurden elf
+Größen: Spulenzahl (16, 20, 24), Abstand Spule--Plasma, Länge je Spule, Kraftziel, vier Wanddicken, Größe der
+Lagerflächen, Zahl (6--14 je Paar) und Steifigkeit (20--200~GPa) der Verbinder. Fest sind Lager innen und außen.
+Während der Studie änderte der Nutzer das Ziel: \emph{„Das Gewicht ist nicht so wichtig. Es ist ja ein Gebäude.“}
+Gesucht ist seither nicht der leichteste, sondern der robusteste Entwurf, also der mit der größten kleinsten Reserve
+über alle Grenzen. Ein Entwurf scheiterte am Netz, 199 wurden vollständig gerechnet.
 
-\bild{festigkeit_doe.png}{1.0}{Entwurfsstudie, Zwischenstand: Spannung über Stahlmasse (links) und über der Zahl der
-Verbinder (rechts).}
-\lesehilfe{Jeder Punkt ist ein vollständig gerechneter Entwurf. Links: waagrecht die Stahlmasse, senkrecht die
-Spannung (logarithmisch, die gestrichelte Linie ist die Grenze von \SI{500}{MPa}). Die Farbe zeigt die Spulenzahl.
-Schwarz umrandet sind Entwürfe, die \emph{alle} Grenzen einhalten: Festigkeit, Dehnung, Package, Kernheizung,
-Supraleiter und Feldgenauigkeit. Rechts dieselben Entwürfe über der Zahl der Verbinder je Spulenpaar, die Farbe ist
-die Steifigkeit der Verbinder. Masse allein entscheidet nicht: Es gibt schwere Entwürfe mit \SI{1000}{MPa} und
-leichtere unter der Grenze.}
+\bild{doe1_uebersicht.png}{1.0}{Entwurfsstudie: 99-\%-Spannung im Gehäusestahl über sechs Stellgrößen, alle 199 Entwürfe.}
+\lesehilfe{Jeder Kreis ist ein gerechneter Entwurf; die Farbe zeigt die Spulenzahl (blau 16, orange 20, grün 24),
+gefüllte Kreise halten alle acht Grenzen ein. Senkrecht die Spannung (logarithmisch), gestrichelt die Grenze von
+\SI{500}{MPa}. Keine Stellgröße allein ordnet die Punkte; am deutlichsten steigt die Spannung mit dem Abstand
+Spule--Plasma (unten Mitte).}
 
-Bis zum Redaktionsschluss dieses Abschnitts waren 17 Entwürfe gerechnet, drei davon halten alle Grenzen ein:
-\begin{center}\small
-\begin{tabular}{lccc}
-\toprule
- & Entwurf 8 & Entwurf 14 & Entwurf 17 \\
-\midrule
-Spulen & 24 & 20 & 24 \\
-Länge je Spule & \SI{37}{m} & \SI{44}{m} & \SI{38}{m} \\
-Abstand Spulenmitte--Plasma (Vorgabe) & \SI{2,13}{m} & \SI{2,35}{m} & \SI{2,22}{m} \\
-Kraftgewicht & 0,030 & 0,025 & 0,019 \\
-Verbinder je Paar, Steifigkeit & 11, \SI{142}{GPa} & 11, \SI{196}{GPa} & 7, \SI{29}{GPa} \\
-Wände innen / seitlich & \SI{0,32}{m} / \SI{0,31}{m} & \SI{0,35}{m} / \SI{0,32}{m} & \SI{0,60}{m} / \SI{0,37}{m} \\
-\midrule
-p99 Stahl & \SI{305}{MPa} & \SI{377}{MPa} & \SI{389}{MPa} \\
-Verformung & \SI{19}{mm} & \SI{18}{mm} & \SI{31}{mm} \\
-Dehnung Wickelpaket & 0,17~\% & 0,21~\% & 0,20~\% \\
-Stahl (Gehäuse + Verbinder) & \SI{25,9}{kt} & \SI{28,0}{kt} & \SI{22,6}{kt} \\
-Feldfehler $B\cdot n$ & 0,22~\% & 0,22~\% & 0,17~\% \\
-Freiraum Package & \SI{1,48}{m} & \SI{1,65}{m} & \SI{1,30}{m} \\
-Kernheizung Wickelpaket & \SI{40}{W/m^3} & \SI{8}{W/m^3} & \SI{245}{W/m^3} \\
-Feld am Leiter, Auslastung & \SI{15,7}{T}, 30~\% & \SI{16,9}{T}, 32~\% & \SI{16,0}{T}, 30~\% \\
-\bottomrule
-\end{tabular}
-\end{center}
+\paragraph{Eine Bereinigung war nötig.} Elf Entwürfe passten nicht in den Speicher und wurden mit gröberem Netz
+gerechnet. Erst die Netzstudie zeigte, dass dabei die Verbinder um ein Drittel länger wurden, weil ein Verbinder immer
+vier Stationen überspannt. Diese Entwürfe waren also zu günstig. Mit Standardnetz nachgerechnet fallen zwei der
+ursprünglich neun zulässigen heraus (0063: \SI{369}{\to}\SI{595}{MPa}, 0136: \SI{479}{\to}\SI{577}{MPa}).
+\textbf{Es bleiben 7 zulässige Entwürfe}, alle mit 20 oder 24 Spulen.
 
-\textbf{Wie diese Entwürfe zustande kommen.} Alle drei haben 20 oder 24 Spulen, kürzere Spulen als bisher
-(37--44~m statt 47~m) und ein Kraftziel nahe der Obergrenze. Sie nutzen also den Spielraum, den mehr Spulen bei der
-Feldgenauigkeit schaffen, für kürzere und weniger stark gebogene Spulen. Zwei erreichen die Grenze über viele steife
-Verbinder (geschlossener Verbund), Entwurf~17 stattdessen über eine dicke Innenwand (\SI{0,6}{m}) bei wenigen
-weichen Verbindern. Die Dehnung im Wickelpaket bleibt bei allen deutlich unter 0,3~\%. Die Temperatur des
-Supraleiters ist mit 30~\% Auslastung unkritisch. Entwurf~17 liegt näher am Plasma; seine Kernheizung erfüllt die
-ARIES-CS-Grenze, nicht aber die strenge EU-DEMO-Grenze.
+\paragraph{Liste~1: die besten und die knapp an der Grenze.} Die Tabelle zeigt die zulässigen Entwürfe nach ihrer
+kleinsten Reserve und die zwölf, die am knappsten scheitern. Alle übrigen Entwürfe und ein Katalog aller geometrisch
+darstellbaren stehen im Variantenbericht.
+\begin{table}[H]\centering\scriptsize\input{../variantenbericht/gen/rang_de.tex}
+\caption{Rangliste (bereinigt). $^\ast$ = mit Standardnetz nachgerechnet.}\end{table}
+
+\bild{doe1_reserven.png}{0.95}{Reserven der zulässigen Entwürfe je Grenze.}
+\lesehilfe{Zeilen sind Entwürfe, Spalten Grenzen. Die Zahl ist der Abstand zur Grenze in Prozent, dunkler heißt mehr
+Reserve; fett ist der Engpass. Bei den besten wechseln sich Stahlspannung, Platz für das Package und Feldfehler als
+Engpass ab; Supraleiter und Kernheizung haben überall große Reserven.}
+
+\subsection*{Schritt 6: Was die Spannung bestimmt}
+Für sechs Kenngrößen wurde ein Ersatzmodell (Gauß-Prozess \cite{rasmussen2006}) trainiert und mit fünffacher
+Kreuzvalidierung geprüft. Platz für das Package und Kernheizung werden fast perfekt vorhergesagt ($R^2=0{,}98$),
+Stahlmasse und Feldfehler gut (0,95 und 0,90), die Stahlspannung dagegen schlecht ($R^2=0{,}46$). Ihre wichtigste
+Stellgröße ist der Abstand Spule--Plasma, dann die Spulenlänge. Verbinderzahl und -steifigkeit wirken schwächer als
+erwartet. Deutung: Die Spannung hängt an der Spulenform -- weiter entfernte Spulen müssen stärker verwunden sein und
+mehr Strom tragen -- und an der zufälligen Lage der Verbinder, die die örtlichen Spitzen bestimmt.
+\bild{doe1_ersatz.png}{1.0}{Ersatzmodelle: Vorhersage gegen Rechnung (oben) und Einfluss der Stellgrößen (unten).}
+\lesehilfe{Oben: Jeder Punkt ist ein Entwurf, waagrecht gerechnet, senkrecht vorhergesagt von einem Modell, das ihn
+nicht kannte; auf der Diagonale wäre die Vorhersage perfekt. Unten: wie stark jede Stellgröße jede Kenngröße bewegt.
+Der Feldfehler hängt an der Spulenzahl, Package und Kernheizung am Abstand, die Masse an Verbinderzahl und Wanddicke.}
+
+\paragraph{Probe aufs Exempel.} Das Ersatzmodell schlug vier neue Entwürfe vor, die die kleinste Reserve abzüglich
+einer Standardabweichung maximieren. Gerechnet waren drei davon zulässig, einer scheiterte deutlich ($\sigma_{99}$
+\SI{851}{MPa}). Der beste Vorschlag V3 erreichte im Standardnetz eine Robustheit von 0,35 und damit mehr als 0169,
+verlor aber im feinen Netz ($\sigma_{99}$ \SI{272}{} $\to$ \SI{394}{MPa}) und fiel auf 0,21. Das Ersatzmodell
+taugt also zur Vorauswahl, die Spannung muss aber weiter direkt gerechnet werden; 0169 bleibt der robusteste
+Entwurf.
+
+\subsection*{Schritt 7: Netzstudie -- wie sicher ist „zulässig“?}
+Die fünf besten Entwürfe wurden mit gleichen Spulen und feinerem Netz nachgerechnet: 1,5-mal so viele Stationen
+entlang der Spule (Verbinder gleich lang) oder drei statt zwei Zellen über die Wanddicke.
+\begin{table}[H]\centering\small\input{../variantenbericht/gen/netz_de.tex}\caption{Netzstudie: $\sigma_{99}$ und
+größter Elementwert im Stahl (MPa).}\end{table}
+\bild{doe1_netz.png}{0.95}{Netzstudie der besten Entwürfe.}
+\lesehilfe{Links $\sigma_{99}$, rechts der größte Elementwert, von links nach rechts feiner. Eine flache Linie heißt: Das
+Ergebnis hängt nicht vom Netz ab. Feinere Wände ändern fast nichts, mehr Stationen entlang der Spule heben
+$\sigma_{99}$ bei vier Entwürfen um 34--58~\%. Nur 0169 bleibt fast gleich (\SI{308}{\to}\SI{319}{MPa}). Die
+Höchstwerte wachsen mit jeder Verfeinerung: das Zeichen einer scharfen Kante.}
+Von den 200 höchstbelasteten Stahlelementen liegen 77--100~\% weniger als \SI{1}{m} von einem Verbinderanschluss
+entfernt. Die Verbinder sind scharfkantige Stahlblöcke; an ihren Enden entlang der Spule springt die Steifigkeit, wie
+am Ende einer Überlappung. \textbf{Robust gegen das Netz ist nur Entwurf 0169} (24 Spulen, 13 steife Verbinder je
+Paar, \SI{28}{kt} Stahl); er ist damit der beste Entwurf dieser Studie. Die anderen sind „zulässig“ nur im
+Standardnetz.
+
+\subsection*{Schritt 8: Welcher Stahl, welche Grenze?}\label{sec:stahl}
+Der Nutzer fragte: \emph{„Ich möchte genau wissen, welchen Stahl du verwendest. p99 Stahl kenne ich nicht.“} Der
+Gehäusestahl ist \textbf{1.4429 / X2CrNiMoN17-13-3} (AISI 316LN): austenitisch, etwa 17~\% Chrom, 13~\% Nickel,
+2,5~\% Molybdän, wenig Kohlenstoff, mit Stickstoff verfestigt; ITER baut seine Spulengehäuse daraus. „p99“ war kein
+Werkstoff, sondern die Kennzahl $\sigma_{99}$ (siehe Begriffe).
+
+\bild{stahl_kennwerte.png}{1.0}{1.4429 / 316LN bei Raumtemperatur und bei \SI{4}{K}.}
+\lesehilfe{Je Gruppe blau die Streckgrenze, grün die Zugfestigkeit, gelb zwei Drittel der Streckgrenze. Links der
+Tabellenwert für Raumtemperatur (\SI{295}{MPa} \cite{schweizerfn}), daneben Messungen: Bei \SI{4,2}{K} erreicht
+316LN \SI{1070}{MPa} Streckgrenze und \SI{1543}{MPa} Zugfestigkeit \cite{fedorikova2023}, mit viel Stickstoff über
+\SI{1000}{MPa} auch in dicken Blechen \cite{sakurai2024}. Rechts die garantierten ITER-Mindestwerte.}
+\textbf{Herleitung:} Zulässig ist nach den ITER-Magnetkriterien $S_m=\tfrac23R_{p0,2}$ bei Betriebstemperatur. Mit
+der schwächsten ITER-Güte C3 ($R_{p0,2}\ge\SI{750}{MPa}$ bei \SI{4}{K}) folgen \SI{500}{MPa}; die ASME-Form
+$\min(\tfrac23R_{p0,2},\tfrac13R_m)$ mit den 4-K-Messwerten gibt \SI{514}{MPa}. Bei Raumtemperatur wären nur rund
+\SI{200}{MPa} zulässig; das spielt keine Rolle, weil Magnetkraft nur im kalten Betrieb wirkt.
+
+\paragraph{Spannungskategorien und Höchstwerte.} Zusätzlich zu $\sigma_{99}$ wurden die Kategorien nach ITER/ASME
+bestimmt: Je Wandschnitt quer zur Wand der Mittelwert (Membranspannung $P_m$, zulässig $S_m$) und der lineare Anteil
+(Biegung $P_b$, zulässig $P_m+P_b\le1{,}5\,S_m$).
+\bild{doe1_kategorien.png}{1.0}{Spannungskategorien und Höchstwerte.}
+\lesehilfe{Je Entwurf zwei Balken: Membranspannung $P_m$ (blau) und Membran+Biegung (orange); gestrichelt die
+Grenze \SI{500}{MPa} für $P_m$, gepunktet \SI{750}{MPa} für $P_m+P_b$. Links der Höchstwert im ganzen Stahl, die
+Raute markiert das größte Einzelelement: Höchstwert und Spitze liegen beieinander, am Ende eines Verbinders -- eine
+örtliche Störstelle, die selbst die Grenze $1{,}5\,S_m$ meist nicht hält. Rechts der Wert, den 99~\% aller
+Wandschnitte einhalten: Bei den besten Entwürfen und den Vorschlägen V3 und V1 bleiben beide Balken unter ihren
+Grenzen, die Wände selbst sind also tragfähig.}
+Ergebnis: In 99~\% der Wandschnitte bleibt $P_m$ bei den besten Entwürfen unter \SI{400}{MPa}; die Wände sind
+tragfähig. Die Verbinderanschlüsse sind es im Modell nicht; dort braucht die Konstruktion eine Form (Ausrundung,
+auslaufende Dicke, längere Anschlussfläche).
+
+\subsection*{Schritt 9: Gezielt schwächen -- erster Versuch}
+Die Idee des Nutzers (\emph{„Es kann auch helfen, bestimmte Bereiche zu schwächen, so dass sich die Last gleichmäßiger
+verteilt.“}) wurde zuerst in der einfachsten Form geprüft: alle Verbinder von 0169 weicher.
+\begin{table}[H]\centering\scriptsize\input{../variantenbericht/gen/schwaechen_de.tex}\caption{0169 mit weicheren
+Verbindern; Nummern 1xx Standardnetz, 2xx feines Netz (Original: \SI{183}{GPa}).}\end{table}
+\input{schwaechen_kurz_de.tex}
+
+\subsection*{Schritt 10: Das 3D-Modell, komplett in PicoGK}
+Der Nutzer wünschte: \emph{„Kannst du bitte versuchen, ein 3D-Modell komplett in PicoGK zu bauen?“} PicoGK
+\cite{picogk} beschreibt Körper mit Voxeln und Abstandsfeldern; Vereinigen, Abziehen und Aufdicken gelingen damit
+immer, auch bei den verwundenen Gehäusen, an denen Boolesche Operationen in FreeCAD oft scheitern. Python übergibt
+nur Geometriedaten (Querschnitte je Station, Verbinderflächen, Plasmarand, Lagerorte). In PicoGK entstehen die
+Wickelpakete, Gehäuse (Außenkontur minus Verguss) und Verguss (minus Wickelpaket) als Boolesche Differenzen, das
+Package durch Aufdicken des Plasmas (Erstwand und Blanket bis \SI{0,55}{m}, Abschirmung bis \SI{0,88}{m},
+Vakuumgefäß bis \SI{1,0}{m}), die Lager als Stäbe zu einem inneren Stützzylinder und äußeren Ring. Drei Prüfkörper
+zeigen Überschneidungen.
+\bild{modell3d_0169_schnitt.png}{0.95}{Entwurf 0169 als PicoGK-Modell im Treppenschnitt.}
+\lesehilfe{Jede Schicht ist unter einem anderen Winkel aufgeschnitten. Von innen: Plasma (rosa), Erstwand und Blanket
+(gelb), Abschirmung (grün), Vakuumgefäß (grau). Darum die 24 Spulengehäuse (blau) mit ihrem Wickelpaket (orange, im
+Schnitt sichtbar), dazwischen die Verbinder (dunkelblau). Dunkelgrau die schematischen Lager: Stäbe von den Spulen
+zu einem Stützzylinder in der Mitte und einem Ring außen.}
+Wickelpaket und Gehäuse stimmen auf 0,5--1~\% mit dem Rechenmodell überein, die Verbinder meist auf 0--3~\%
+(Erwartung $\pm3$~\%). Bei 0169 fehlen 13~\% Verbindervolumen: Benachbarte Verbinder durchdringen sich dort
+teilweise, das Rechenmodell zählt den gemeinsamen Raum doppelt. Verbindermasse und -steifigkeit von 0169 sind im
+Rechenmodell also etwas zu hoch; nach der Studie mit weicheren Verbindern ändert das $\sigma_{99}$ um wenige
+Prozent, die Verbinder sollten in einer Nachrechnung aber überschneidungsfrei liegen. Diesen Fehler hat erst das
+3D-Modell sichtbar gemacht. PicoGK findet keine
+Überschneidung von Package und Spulen und keine zwischen den Gehäusen -- eine unabhängige Bestätigung der Freiraum-
+und Durchdringungsprüfung. Nur der \SI{2}{cm} dünne Verguss ist bei \SI{40}{mm} Voxeln nicht darstellbar. Ein Modell
+braucht 2--5 Minuten. Modelle aller Entwürfe der Liste~1 und aller geometrisch darstellbaren stehen im
+Variantenbericht.
 
 \subsection*{Vergleich mit der Erwartung}
 \begin{center}\small
@@ -264,28 +344,30 @@ Erwartung & Ergebnis \\
 5. Mehr Spulen: gleiche Summe, gleiche Spannung & bestätigt; Gewinn ist die Feldgenauigkeit \\
 6. Package knapp & widerlegt: 1,3--\SI{1,8}{m} frei, ARIES-CS braucht etwa \SI{1}{m} \\
 Lager innen: $-30$ bis $-50$~\% & bestätigt: $-32$~\% \\
+DOE: 10--25~\% unter \SI{500}{MPa} & bestätigt: 11~\% \\
+DOE: Dehnung zweiter Engpass ($<10$~\% halten ein) & widerlegt: 24~\% halten ein \\
+DOE: Verbinder und Seitenwand bestimmen die Spannung & widerlegt: Abstand Spule--Plasma und Spulenlänge \\
+Ersatzmodell Spannung $R^2\ge0{,}8$ & widerlegt: 0,46 (Package, Kernheizung 0,98) \\
+Feineres Netz: $+5$ bis $+25$~\% & widerlegt: $+34$ bis $+58$~\% entlang der Spule; nur 0169 $+4$~\% \\
+Weichere Verbinder: $\sigma_{99}$ $-5$ bis $-15$~\% & widerlegt: steigt (siehe Schritt~9) \\
+PicoGK: Volumen $\pm3$~\%, keine Überschneidung & bestätigt \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\subsection*{Grenzen dieses Zwischenstands}
+\subsection*{Grenzen}
 \begin{itemize}\itemsep1pt
-\item \textbf{Lager starr.} Die Lagerflächen sind fest eingespannt, als wäre der Stützzylinder unendlich steif. Die
-  zulässigen Entwürfe haben große Lagerflächen (Radius 2--3,5~m). Das ist optimistisch; der Stützzylinder selbst muss
-  noch modelliert werden.
-\item \textbf{Verbinder als volle Stahlblöcke.} Ihre Masse ist so groß wie die der Gehäuse. Ein Fachwerk oder eine
-  Schale könnte leichter sein.
-\item \textbf{Netz bei 24 Spulen gröber.} Damit der Speicher reicht, haben Entwürfe mit 20 und 24 Spulen weniger
-  Stationen je Spule (77 bzw. 64 statt 96). Ein gröberes Netz kann Spitzen glätten. Die besten Entwürfe werden mit
-  feinem Netz nachgerechnet, bevor sie als „hält“ gelten.
-\item \textbf{Nur Primärlast.} Linear-elastisch, nur die Magnetkraft. Abkühlung, Eigengewicht, Ermüdung und
-  Bruchmechanik (bei 4~K oft maßgebend) fehlen noch.
-\item \textbf{Package und Temperatur grob.} Abschwächung der Neutronen und Bandanteil im Wickelpaket sind Annahmen;
-  die Kernheizung reagiert empfindlich darauf.
-\item \textbf{Plasma nur über den Feldfehler.} Die Alpha-Verluste werden erst für die besten Entwürfe voll gerechnet.
+\item \textbf{Lager starr.} Die Lagerflächen sind fest eingespannt, als wäre der Stützzylinder unendlich steif. Das
+  ist optimistisch; der Stützzylinder selbst muss modelliert werden.
+\item \textbf{Verbinderanschlüsse scharfkantig.} Dort entstehen netzabhängige Spitzen; die Bewertung gilt für die
+  Wände, nicht für die Anschlüsse.
+\item \textbf{Nur Primärlast.} Linear-elastisch, nur Magnetkraft. Abkühlung, Eigengewicht, Ermüdung und Bruchmechanik
+  (bei \SI{4}{K} oft maßgebend) fehlen.
+\item \textbf{Package und Temperatur grob.} Abschwächung der Neutronen und Bandanteil sind Annahmen.
+\item \textbf{Plasma nur über den Feldfehler.} Alpha-Verluste werden für 0169 noch voll gerechnet.
 \end{itemize}
 
 \subsection*{Nächste Schritte}
-Entwurfsstudie zu Ende rechnen; Ersatzmodell trainieren und den leichtesten zulässigen Entwurf suchen; die besten
-mit feinem Netz, elastischem Stützzylinder und Alpha-Bahnen nachrechnen; daraus das 3D-Modell in FreeCAD: Plasma,
-Package-Schichten, Spulen mit Gehäuse und Tragwerk.
+Verbinderanschlüsse formen und örtlich (nicht global) nachgiebig machen: weiche Enden, steifer Kern, Iteration nach
+dem Spannungsverhältnis; elastischer Stützzylinder statt starrer Lager; Alpha-Bahnen im Spulenfeld von 0169;
+Ermüdung und Bruchmechanik bei \SI{4}{K}.

@@ -7,8 +7,9 @@ determines the plasma, and the coil also has to hold, and that also affects the 
 added the package (everything between plasma and coil) and a 3D model as the goal, and when the numbers came:
 \emph{“We have to concentrate on strength. 2000~MPa is a killer, even 500~MPa is a lot. Maybe we need more coils, or we
 have to understand how the force arises.” (translated)} This section describes how, step by step, a design emerged
-that keeps within the limits, under which conditions it holds, and why it works. It is an interim status: the design
-study (step~5) is still running.
+that keeps within the limits, under which conditions it holds, and why it works. The design study is complete and
+evaluated; a separate variant report presents and compares all designs computed, this chapter shows the best ones and
+those close to the limit.
 
 \paragraph{Terms used in this section.}
 \begin{description}\itemsep2pt
@@ -18,7 +19,7 @@ study (step~5) is still running.
 \item[self-field] the field that a coil produces at its own conductor. It pushes the coil apart like an inflated tube.
 \item[equivalent stress (von Mises)] a number that condenses the multiaxial stress state in the material into a value
   that can be compared with the strength from the tensile test.
-\item[99-\%-value (p99)] the stress that is not exceeded in 99~\% of the steel volume. Single peaks at edges of the
+\item[99-\% stress $\sigma_{99}$] (formerly called ``p99'') the stress that is not exceeded in 99~\% of the steel volume. Single peaks at edges of the
   coarse calculation mesh are thus not overrated.
 \item[rope tension] A curved rope can carry a load pressing transversely on it by tension alone, if the load matches
   the curvature (like a ring under internal pressure). A straight piece cannot do this: it has to carry the load by
@@ -94,7 +95,7 @@ The limits and assumptions:
 \toprule
 Quantity & Limit & Origin (status) \\
 \midrule
-Casing steel 316LN, p99 & \SI{500}{MPa} & 2/3 of the yield strength at 4~K, ITER grade C3; best grade C1 allows 667~MPa (ITER slides, unverified) \\
+Casing steel 1.4429/316LN, $\sigma_{99}$ & \SI{500}{MPa} & 2/3 of the yield strength at 4~K, ITER grade C3; best grade C1 allows 667~MPa (ITER slides, unverified) \\
 Strain winding pack & 0.3~\% & REBCO irreversible from 0.45--0.72~\% \cite{barth2015}; ARC kept $<0.2$~\% \cite{sorbom2015} \\
 Nuclear heating winding pack & \SI{2000}{W/m^3} & ARIES-CS (unverified); strict \SI{50}{W/m^3} for EU-DEMO \cite{cufar2019} \\
 Neutron dose REBCO & $3\cdot10^{18}$~n/cm$^2$ & lower bound after ARC \cite{sorbom2015} \\
@@ -110,7 +111,7 @@ the plasma and alpha calculation. The chain now uses the same scale everywhere. 
 confirmed the expectations with one exception: the field at the conductor came out at \SI{6.4}{T} instead of about
 \SI{15}{T}. Cause: it had been measured on the centreline, where the self-field cancels. At the edge of the winding pack
 it is \SI{18.7}{T}. The test point showed: package (\SI{1.77}{m} free), temperature (utilisation 34~\%) and field
-accuracy fit. It fails only on strength (p99 \SI{2129}{MPa}) and on strain in the winding pack (0.76~\%). Expectation~6
+accuracy fit. It fails only on strength ($\sigma_{99}$ = \SI{2129}{MPa}) and on strain in the winding pack (0.76~\%). Expectation~6
 (package tight) was wrong: ARIES-CS manages with \SI{1.3}{m} from plasma to coil centre \cite{elguebaly2005}, we have
 \SI{2.5}{m}.
 
@@ -186,7 +187,7 @@ mainly at the inner legs around the hole in the middle. Bottom right: variant~E;
 \begin{center}\small
 \begin{tabular}{llcccc}
 \toprule
- & Variant & p99 steel & Deformation & Strain winding pack & Total steel \\
+ & Variant & $\sigma_{99}$ steel & Deformation & Strain winding pack & Total steel \\
 \midrule
 A & bearing outside (previous), 6 connectors per pair & \SI{2129}{MPa} & \SI{399}{mm} & 0.76~\% & \SI{15.6}{kt} \\
 B & bearing inside & \SI{1454}{MPa} & \SI{273}{mm} & 0.55~\% & \SI{15.6}{kt} \\
@@ -202,87 +203,166 @@ on to the neighbours; the free length $l$ of the beam becomes shorter, and $M \p
 $W$ lowers the bending stress further. With this, for the first time a design lies below \SI{500}{MPa}. The price is
 mass. The problem has shifted: from “does not hold” to “too heavy”.
 
-\subsection*{Step 5: Design study (interim status)}
-To find the lightest admissible design, 200 designs are to be calculated. Eleven quantities are varied: number of coils
-(16, 20, 24), distance coil--plasma, length per coil, force target, four wall thicknesses, size of the bearing faces,
-number (6--14 per pair) and stiffness (20--200~GPa) of the connectors. Bearings inside and outside are fixed. Expected
-were 10--25~\% admissible designs, a lightest one at 20--35~kt, and strain as the second bottleneck.
+\subsection*{Step 5: Design study}
+To find the most robust admissible design, 200 designs were computed (Latin hypercube). Eleven quantities were varied:
+number of coils (16, 20, 24), coil--plasma distance, length per coil, force weight, four wall thicknesses, size of the
+bearing areas, number (6--14 per pair) and stiffness (20--200~GPa) of the connectors. Bearings inside and outside are
+fixed. During the study the user changed the goal: \emph{“The weight is not so important. It is a building, after
+all.” (translated)} Since then the aim is not the lightest but the most robust design, i.e.\ the one with the largest
+smallest reserve over all limits. One design failed in meshing, 199 were computed completely.
 
-\bild{festigkeit_doe_en.png}{1.0}{Design study, interim status: stress against steel mass (left) and against the number
-of connectors (right).}
-\lesehilfe{Each point is a fully calculated design. Left: horizontally the steel mass, vertically the stress
-(logarithmic; the dashed line is the limit of \SI{500}{MPa}). The colour shows the number of coils. Outlined in black are
-designs that keep \emph{all} limits: strength, strain, package, nuclear heating, superconductor and field accuracy. On
-the right the same designs against the number of connectors per coil pair; the colour is the stiffness of the
-connectors. Mass alone does not decide: there are heavy designs with \SI{1000}{MPa} and lighter ones below the limit.}
+\bild{doe1_uebersicht_en.png}{1.0}{Design study: 99-\% stress in the case steel against six design variables, all 199 designs.}
+\lesehilfe{Each circle is a computed design; the colour shows the number of coils (blue 16, orange 20, green 24),
+filled circles meet all eight limits. Vertically the stress (logarithmic), dashed the limit of \SI{500}{MPa}. No single
+variable orders the points; the clearest trend is the rise of stress with the coil--plasma distance (bottom centre).}
 
-By the time this section was closed for editing, 17 designs had been calculated, three of which keep all limits:
-\begin{center}\small
-\begin{tabular}{lccc}
-\toprule
- & Design 8 & Design 14 & Design 17 \\
-\midrule
-Coils & 24 & 20 & 24 \\
-Length per coil & \SI{37}{m} & \SI{44}{m} & \SI{38}{m} \\
-Distance coil centre--plasma (specified) & \SI{2.13}{m} & \SI{2.35}{m} & \SI{2.22}{m} \\
-Force weight & 0.030 & 0.025 & 0.019 \\
-Connectors per pair, stiffness & 11, \SI{142}{GPa} & 11, \SI{196}{GPa} & 7, \SI{29}{GPa} \\
-Walls inside / sideways & \SI{0.32}{m} / \SI{0.31}{m} & \SI{0.35}{m} / \SI{0.32}{m} & \SI{0.60}{m} / \SI{0.37}{m} \\
-\midrule
-p99 steel & \SI{305}{MPa} & \SI{377}{MPa} & \SI{389}{MPa} \\
-Deformation & \SI{19}{mm} & \SI{18}{mm} & \SI{31}{mm} \\
-Strain winding pack & 0.17~\% & 0.21~\% & 0.20~\% \\
-Steel (casing + connectors) & \SI{25.9}{kt} & \SI{28.0}{kt} & \SI{22.6}{kt} \\
-Field error $B\cdot n$ & 0.22~\% & 0.22~\% & 0.17~\% \\
-Free space package & \SI{1.48}{m} & \SI{1.65}{m} & \SI{1.30}{m} \\
-Nuclear heating winding pack & \SI{40}{W/m^3} & \SI{8}{W/m^3} & \SI{245}{W/m^3} \\
-Field at conductor, utilisation & \SI{15.7}{T}, 30~\% & \SI{16.9}{T}, 32~\% & \SI{16.0}{T}, 30~\% \\
-\bottomrule
-\end{tabular}
-\end{center}
+\paragraph{A clean-up was necessary.} Eleven designs did not fit into memory and were computed with a coarser mesh.
+Only the mesh study revealed that their connectors became one third longer, because a connector always spans four
+stations. These designs were therefore too favourable. Recomputed with the standard mesh, two of the originally nine
+admissible designs drop out (0063: \SI{369}{\to}\SI{595}{MPa}, 0136: \SI{479}{\to}\SI{577}{MPa}).
+\textbf{Seven admissible designs remain}, all with 20 or 24 coils.
 
-\textbf{How these designs come about.} All three have 20 or 24 coils, shorter coils than before (37--44~m instead of
-47~m) and a force target near the upper limit. They therefore use the margin that more coils provide for field accuracy
-for shorter and less strongly bent coils. Two reach the limit through many stiff connectors (closed composite), design~17
-instead through a thick inner wall (\SI{0.6}{m}) with few soft connectors. The strain in the winding pack stays clearly
-below 0.3~\% in all cases. The temperature of the superconductor is uncritical at 30~\% utilisation. Design~17 lies closer
-to the plasma; its nuclear heating meets the ARIES-CS limit, but not the strict EU-DEMO limit.
+\paragraph{List~1: the best and those close to the limit.} The table shows the admissible designs ranked by their
+smallest reserve and the twelve that fail most narrowly. All other designs and a catalogue of all geometrically
+representable ones are in the variant report.
+\begin{table}[H]\centering\scriptsize\input{../variantenbericht/gen/rang_en.tex}
+\caption{Ranking (cleaned). $^\ast$ = recomputed with the standard mesh.}\end{table}
 
-\subsection*{Comparison with expectation}
+\bild{doe1_reserven_en.png}{0.95}{Reserves of the admissible designs per limit.}
+\lesehilfe{Rows are designs, columns limits. The number is the distance to the limit in per cent, darker means more
+reserve; bold is the bottleneck. For the best designs, steel stress, package space and field error alternate as the
+bottleneck; superconductor and nuclear heating have large reserves everywhere.}
+
+\subsection*{Step 6: What determines the stress}
+For six quantities a surrogate model (Gaussian process \cite{rasmussen2006}) was trained and checked by five-fold
+cross-validation. Package space and nuclear heating are predicted almost perfectly ($R^2=0.98$), steel mass and field
+error well (0.95 and 0.90), the steel stress poorly ($R^2=0.46$). Its most important variable is the coil--plasma
+distance, then the coil length. Number and stiffness of the connectors matter less than expected. Interpretation: the
+stress depends on the coil shape -- coils further away must be more strongly twisted and carry more current -- and on
+the random position of the connectors, which sets the local peaks.
+\bild{doe1_ersatz_en.png}{1.0}{Surrogate models: prediction against computation (top) and influence of the variables (bottom).}
+\lesehilfe{Top: each point is a design, horizontally computed, vertically predicted by a model that had not seen it;
+on the diagonal the prediction would be perfect. Bottom: how strongly each variable moves each quantity. The field
+error depends on the number of coils, package and heating on the distance, the mass on connector count and wall
+thickness.}
+
+\paragraph{Putting it to the test.} The surrogate proposed four new designs that maximise the smallest reserve minus
+one standard deviation. When computed, three were admissible and one failed clearly ($\sigma_{99}$ \SI{851}{MPa}).
+The best proposal V3 reached a robustness of 0.35 on the standard mesh, more than 0169, but lost on the fine mesh
+($\sigma_{99}$ \SI{272}{} $\to$ \SI{394}{MPa}) and dropped to 0.21. The surrogate is therefore useful for
+pre-selection, but stress still has to be computed directly; 0169 remains the most robust design.
+
+\subsection*{Step 7: Mesh study -- how certain is ``admissible''?}
+The five best designs were recomputed with the same coils and a finer mesh: 1.5 times as many stations along the
+coil (same connector length) or three instead of two cells across the wall.
+\begin{table}[H]\centering\small\input{../variantenbericht/gen/netz_en.tex}\caption{Mesh study: $\sigma_{99}$ and
+largest element value in the steel (MPa).}\end{table}
+\bild{doe1_netz_en.png}{0.95}{Mesh study of the best designs.}
+\lesehilfe{Left $\sigma_{99}$, right the largest element value, finer from left to right. A flat line means the result
+does not depend on the mesh. Finer walls change almost nothing; more stations along the coil raise $\sigma_{99}$ by
+34--58~\% for four designs. Only 0169 stays nearly the same (\SI{308}{\to}\SI{319}{MPa}). The maxima grow with every
+refinement: the sign of a sharp edge.}
+Of the 200 most highly stressed steel elements, 77--100~\% lie less than \SI{1}{m} from a connector joint. The
+connectors are sharp-edged steel blocks; at their ends along the coil the stiffness jumps, as at the end of a lap
+joint. \textbf{Only design 0169 is robust against the mesh} (24 coils, 13 stiff connectors per pair, \SI{28}{kt}
+steel); it is therefore the best design of this study. The others are ``admissible'' only on the standard mesh.
+
+\subsection*{Step 8: Which steel, which limit?}\label{sec:stahl}
+The user asked: \emph{“I want to know exactly which steel you are using. I don't know p99 steel.” (translated)} The case
+steel is \textbf{1.4429 / X2CrNiMoN17-13-3} (AISI 316LN): austenitic, about 17~\% chromium, 13~\% nickel, 2.5~\%
+molybdenum, low carbon, strengthened with nitrogen; ITER builds its coil cases from it. ``p99'' was not a material but
+the quantity $\sigma_{99}$ (see terms).
+
+\bild{stahl_kennwerte_en.png}{1.0}{1.4429 / 316LN at room temperature and at \SI{4}{K}.}
+\lesehilfe{Per group blue is the yield strength, green the tensile strength, yellow two thirds of the yield strength.
+On the left the handbook value for room temperature (\SI{295}{MPa} \cite{schweizerfn}), next to it measurements: at
+\SI{4.2}{K} 316LN reaches \SI{1070}{MPa} yield and \SI{1543}{MPa} tensile strength \cite{fedorikova2023}, with high
+nitrogen above \SI{1000}{MPa} even in thick plates \cite{sakurai2024}. On the right the guaranteed ITER minimum values.}
+\textbf{Derivation:} The ITER magnet criteria allow $S_m=\tfrac23R_{p0.2}$ at operating temperature. With the weakest
+ITER grade C3 ($R_{p0.2}\ge\SI{750}{MPa}$ at \SI{4}{K}) this gives \SI{500}{MPa}; the ASME form
+$\min(\tfrac23R_{p0.2},\tfrac13R_m)$ with the measured 4-K values gives \SI{514}{MPa}. At room temperature only about
+\SI{200}{MPa} would be allowed; this does not matter, because the magnetic force acts only in cold operation.
+
+\paragraph{Stress categories and maxima.} In addition to $\sigma_{99}$, the categories according to ITER/ASME were
+determined: for each section across the wall the mean (membrane stress $P_m$, allowable $S_m$) and the linear part
+(bending $P_b$, allowable $P_m+P_b\le1.5\,S_m$).
+\bild{doe1_kategorien_en.png}{1.0}{Stress categories and maxima.}
+\lesehilfe{Two bars per design: membrane stress $P_m$ (blue) and membrane+bending (orange); dashed the limit
+\SI{500}{MPa} for $P_m$, dotted \SI{750}{MPa} for $P_m+P_b$. Left the maximum over the whole steel; the diamond marks
+the largest single element: maximum and peak lie together, at the end of a connector -- a local discontinuity that
+mostly does not even meet the limit $1.5\,S_m$. Right the value met by 99~\% of all wall sections: for the best
+designs and the proposals V3 and V1 both bars stay below their limits, so the walls themselves can carry the load.}
+Result: in 99~\% of the wall sections $P_m$ stays below \SI{400}{MPa} for the best designs; the walls can carry the
+load. The connector joints cannot in the model; there the design needs a shape (fillet, tapered thickness, longer
+contact area).
+
+\subsection*{Step 9: Weakening selectively -- first attempt}
+The user's idea (\emph{“It can also help to weaken certain areas so that the load is distributed more evenly.”
+(translated)}) was first tested in its simplest form: all connectors of 0169 softer.
+\begin{table}[H]\centering\scriptsize\input{../variantenbericht/gen/schwaechen_en.tex}\caption{0169 with softer
+connectors; numbers 1xx standard mesh, 2xx fine mesh (original: \SI{183}{GPa}).}\end{table}
+\input{schwaechen_kurz_en.tex}
+
+\subsection*{Step 10: The 3D model, entirely in PicoGK}
+The user asked: \emph{“Can you please try to build a 3D model entirely in PicoGK?” (translated)} PicoGK \cite{picogk}
+describes bodies with voxels and distance fields; union, subtraction and offset always succeed, even for the twisted
+cases where Boolean operations in FreeCAD often fail. Python passes only geometric data (cross-sections per station,
+connector surfaces, plasma boundary, bearing locations). In PicoGK the winding packs, cases (outer contour minus
+potting) and potting (minus winding pack) are built as Boolean differences, the package by offsetting the plasma
+(first wall and blanket to \SI{0.55}{m}, shield to \SI{0.88}{m}, vacuum vessel to \SI{1.0}{m}), the bearings as rods
+to an inner support cylinder and an outer ring. Three test bodies show overlaps.
+\bild{modell3d_0169_schnitt_en.png}{0.95}{Design 0169 as PicoGK model in a stepped cut.}
+\lesehilfe{Each layer is cut open at a different angle. From inside: plasma (pink), first wall and blanket (yellow),
+shield (green), vacuum vessel (grey). Around it the 24 coil cases (blue) with their winding pack (orange, visible in the
+cut), connectors in between (dark blue). Dark grey the schematic bearings: rods from the coils to a support cylinder in
+the centre and a ring outside.}
+Winding pack and case agree with the computational model to 0.5--1~\%, the connectors mostly to 0--3~\% (expected
+$\pm3$~\%). For 0169, 13~\% of the connector volume is missing: neighbouring connectors partly interpenetrate there,
+and the computational model counts the shared space twice. Connector mass and stiffness of 0169 are therefore
+somewhat too high in the computational model; according to the study with softer connectors this changes
+$\sigma_{99}$ by a few percent, but the connectors should lie without overlap in a recomputation. Only the 3D model
+revealed this error. PicoGK finds no overlap of
+package and coils and none between the cases -- an independent confirmation of the clearance and penetration checks.
+Only the \SI{2}{cm} thin potting cannot be represented with \SI{40}{mm} voxels. One model takes 2--5 minutes. Models
+of all designs of list~1 and of all geometrically representable designs are in the variant report.
+
+\subsection*{Comparison with the expectation}
 \begin{center}\small
 \begin{tabular}{p{0.45\linewidth}p{0.45\linewidth}}
 \toprule
 Expectation & Result \\
 \midrule
 1. Force target: $-30$~\% at double field error & more expensive: $-9$~\% at $+12$~\%, $-25$~\% at $\times5.7$ \\
-2. Reducing force alone is not enough & confirmed \\
-3. 100--150~MN/m, rope tension varies $>\times3$, bending is the cause & confirmed; back-of-the-envelope estimate matches FEM \\
-4. Net force towards the centre of the machine & confirmed, up to \SI{1.1}{GN} per coil \\
+2. Force reduction alone is not enough & confirmed \\
+3. 100--150~MN/m, rope force varies $>\times3$, bending is the cause & confirmed; hand calculation matches FEM \\
+4. Net force towards the plant centre & confirmed, up to \SI{1.1}{GN} per coil \\
 5. More coils: same sum, same stress & confirmed; the gain is field accuracy \\
 6. Package tight & refuted: 1.3--\SI{1.8}{m} free, ARIES-CS needs about \SI{1}{m} \\
 Bearing inside: $-30$ to $-50$~\% & confirmed: $-32$~\% \\
+DOE: 10--25~\% below \SI{500}{MPa} & confirmed: 11~\% \\
+DOE: strain second bottleneck ($<10$~\% pass) & refuted: 24~\% pass \\
+DOE: connectors and side wall set the stress & refuted: coil--plasma distance and coil length \\
+Surrogate for stress $R^2\ge0.8$ & refuted: 0.46 (package, heating 0.98) \\
+Finer mesh: $+5$ to $+25$~\% & refuted: $+34$ to $+58$~\% along the coil; only 0169 $+4$~\% \\
+Softer connectors: $\sigma_{99}$ $-5$ to $-15$~\% & refuted: rises (see step~9) \\
+PicoGK: volume $\pm3$~\%, no overlap & confirmed \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\subsection*{Limits of this interim status}
+\subsection*{Limitations}
 \begin{itemize}\itemsep1pt
-\item \textbf{Rigid bearings.} The bearing faces are clamped firmly, as if the bucking cylinder were infinitely stiff. The
-  admissible designs have large bearing faces (radius 2--3.5~m). This is optimistic; the bucking cylinder itself still
-  has to be modelled.
-\item \textbf{Connectors as solid steel blocks.} Their mass is as large as that of the casings. A truss or a shell could
-  be lighter.
-\item \textbf{Mesh coarser for 24 coils.} To keep the memory within reach, designs with 20 and 24 coils have fewer
-  stations per coil (77 and 64 instead of 96). A coarser mesh can smooth out peaks. The best designs are recalculated
-  with a fine mesh before they count as “holds”.
-\item \textbf{Primary load only.} Linear-elastic, magnetic force only. Cooldown, dead weight, fatigue and fracture
-  mechanics (often decisive at 4~K) are still missing.
-\item \textbf{Package and temperature rough.} Neutron attenuation and the tape fraction in the winding pack are
-  assumptions; the nuclear heating is sensitive to them.
-\item \textbf{Plasma only via the field error.} The alpha losses are only fully calculated for the best designs.
+\item \textbf{Rigid bearings.} The bearing areas are clamped as if the support cylinder were infinitely stiff. This is
+  optimistic; the support cylinder itself must be modelled.
+\item \textbf{Sharp-edged connector joints.} Mesh-dependent peaks arise there; the assessment applies to the walls, not
+  to the joints.
+\item \textbf{Primary load only.} Linear elastic, magnetic force only. Cool-down, dead weight, fatigue and fracture
+  mechanics (often governing at \SI{4}{K}) are missing.
+\item \textbf{Package and temperature coarse.} Neutron attenuation and tape fraction are assumptions.
+\item \textbf{Plasma only via the field error.} Alpha losses for 0169 are still to be computed in full.
 \end{itemize}
 
 \subsection*{Next steps}
-Finish the design study; train the surrogate model and search for the lightest admissible design; recalculate the best
-ones with a fine mesh, an elastic bucking cylinder and alpha orbits; from this build the 3D model in FreeCAD: plasma,
-package layers, coils with casing and support structure.
+Shape the connector joints and make them compliant locally (not globally): soft ends, stiff core, iteration by stress
+ratio; elastic support cylinder instead of rigid bearings; alpha orbits in the coil field of 0169; fatigue and fracture
+mechanics at \SI{4}{K}.

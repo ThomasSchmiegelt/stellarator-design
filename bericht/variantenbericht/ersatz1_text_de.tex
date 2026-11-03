@@ -1,0 +1,30 @@
+\paragraph{Frage und Erwartung.} Kann das Ersatzmodell selbst bessere Entwürfe finden? Aus den sechs Gauß-Prozessen
+wurde für jeden denkbaren Entwurf die kleinste Reserve vorhergesagt und davon eine Standardabweichung abgezogen
+(vorsichtige Schätzung). Die vier Entwürfe mit dem höchsten Wert wurden voll gerechnet. Alle vier haben 24 Spulen,
+einen Abstand Spule--Plasma von \SI{0,21}{m}, kurze Spulen (\SIrange{3,9}{4,1}{m} je Spule) und die dickste
+Außenwand; sie unterscheiden sich vor allem in Zahl und Steifigkeit der Verbinder. Die vorsichtige Vorhersage lag bei
+0,04--0,07. Erwartet war (Ereignisprotokoll F-142): 1--3 der 4 zulässig, Spannung $\pm30$~\% neben der Vorhersage,
+keiner deutlich robuster als 0169.
+
+\begin{table}[H]\centering\scriptsize\input{gen/ersatz1_de.tex}\caption{Vorschläge des Ersatzmodells.
+$E_\text{V}$ Verbindersteifigkeit, V./Paar Verbinder je Spulenpaar, „fein“ = 1,5-mal mehr Stationen.
+Robustheit = kleinste Reserve über alle acht Grenzen; „vorherges.“ = Vorhersage minus eine Standardabweichung.}
+\end{table}
+
+\paragraph{Ergebnis.} Drei der vier Vorschläge sind zulässig, die gerechnete Robustheit (0,23--0,35) liegt sogar
+weit über der vorsichtigen Vorhersage. V3 (11 steife Verbinder je Paar, \SI{176}{GPa}) erreicht 0,35 und ist im
+Standardnetz der robusteste aller bisher gerechneten Entwürfe; Engpass ist dort der Feldfehler, nicht die Spannung.
+V2 dagegen, mit nur 9 Verbindern je Paar, scheitert deutlich: $\sigma_{99}$ \SI{851}{MPa}, Dehnung des Wickelpakets
+0,54~\%, Verformung \SI{177}{mm}. Das Ersatzmodell hat diesen Ausreißer nicht kommen sehen.
+
+\paragraph{Netzprüfung.} Wie bei den doe1-Kandidaten steigt $\sigma_{99}$ mit 1,5-mal mehr Stationen deutlich: V3
+\SI{272}{} $\to$ \SI{394}{MPa} ($+45$~\%), V1 \SI{220}{} $\to$ \SI{366}{MPa} ($+66$~\%), V0 \SI{306}{} $\to$
+\SI{385}{MPa} ($+26$~\%). Alle bleiben zulässig, doch V3 fällt damit auf eine Robustheit von 0,21, weil jetzt der
+Stahl begrenzt. 0169 (\SI{319}{MPa} im feinen Netz, Robustheit 0,29) bleibt der robusteste Entwurf.
+
+\paragraph{Deutung.} Das Ersatzmodell ist für die Vorauswahl brauchbar: Es findet zulässige Gebiete zuverlässig
+(Package, Kernheizung und Feldfehler sagt es gut vorher). Für die Spannung reicht es nicht; ein einzelner Vorschlag
+kann weit danebenliegen, und die Netzabhängigkeit der Spitzen sieht es gar nicht. Auffällig ist, dass 0169 der
+einzige Entwurf bleibt, dessen Spannung beim feineren Netz kaum steigt. Bei 0169 verschmelzen die Verbinder zu fast
+durchgehenden Platten (Abschnitt~\ref{sec:3d}). Eine Vermutung, noch ungeprüft: Weniger freie Verbinderenden
+bedeuten weniger Steifigkeitssprünge und damit Spitzen, die mit dem Netz nicht wachsen.

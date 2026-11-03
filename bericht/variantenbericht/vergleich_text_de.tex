@@ -1,0 +1,57 @@
+\paragraph{Welcher Entwurf ist der robusteste?} Gesucht war auf Wunsch des Nutzers nicht der leichteste, sondern der
+Entwurf mit der größten Reserve gegen alle acht Grenzen („das Gewicht ist nicht so wichtig, es ist ja ein
+Gebäude“). Nach der Bereinigung erfüllen sieben Entwürfe alle Grenzen. Ihre kleinste Reserve (Robustheit) liegt
+zwischen 0,30 (0061) und 0,02 (0157). Zwei Entwürfe liegen fast gleichauf: 0061 (Engpass Stahl) und 0169 (Engpass
+Package-Dicke). Entscheidend ist die Netzstudie (Abschnitt~\ref{sec:netz}):
+
+\begin{itemize}
+\item \textbf{0169} bleibt bei feinerem Netz praktisch gleich (\SI{308}{} $\to$ \SI{319}{MPa}, $+4$~\%). Seine
+  Reserve hängt nicht an der Rechengenauigkeit. Engpass ist die Package-Dicke, die von der Geometrie, nicht vom
+  Netz abhängt. Er ist deshalb der \textbf{empfohlene Entwurf}: 24 Spulen, 13 steife Verbinder je Spulenpaar,
+  rund \SI{28}{kt} Stahl.
+\item \textbf{0061} hat zwar die größte Reserve im Standardnetz, seine Spannung steigt aber im feinen Netz um 58~\%
+  (\SI{351}{} $\to$ \SI{556}{MPa}) und überschreitet dann die Grenze. Sein Engpass ist gerade die netzabhängige
+  Größe.
+\item \textbf{0093, 0008, 0014} steigen im feinen Netz um 34--46~\% und bleiben teils knapp darunter, teils
+  darüber. Sie sind Kandidaten, aber erst nach einer genaueren Rechnung der Verbinderanschlüsse.
+\item \textbf{0017, 0157} haben wenig Reserve und wurden nicht weiter verfeinert.
+\item \textbf{V3, V1} (Vorschläge des Ersatzmodells) sind im Standardnetz robuster als 0169 (0,35 und 0,31), im
+  feinen Netz steigt ihre Spannung aber um 45 bzw.\ 66~\% (Abschnitt~\ref{sec:ersatz1}). V3 fällt damit auf 0,21.
+\end{itemize}
+
+\paragraph{Knapp verfehlt.} Die fünf Entwürfe mit der höchsten Robustheit unter den unzulässigen (0173, 0103, 0044,
+0004, 0136) scheitern fast alle an der Stahlspannung oder am Feldfehler $B_n$. 0063 und 0136 waren mit dem groben
+Netz zulässig und fielen nach der Nachrechnung heraus -- ein Beispiel dafür, wie leicht ein unbemerkt anderes Netz
+das Ergebnis schönt.
+
+\paragraph{Was die Varianten unterscheidet.} Über alle 198 Entwürfe hinweg gilt:
+\begin{enumerate}
+\item \textbf{Spulenzahl:} Mit 16 Spulen war kein Entwurf zulässig. Die Spulen werden dann so lang und so stark
+  gekrümmt, dass die Gehäuse sich zu sehr biegen; zugleich ist der Feldfehler größer. 20 und 24 Spulen teilen die
+  Kraft auf mehr und kürzere Bauteile.
+\item \textbf{Spulenform vor Tragwerk:} Abstand Spule--Plasma und Spulenlänge bestimmen die Spannung stärker als
+  Zahl oder Steifigkeit der Verbinder. Das Tragwerk kann eine ungünstige Spulenform nur begrenzt ausgleichen.
+\item \textbf{Package und Kernheizung} sind fast reine Geometriefragen und werden vom Ersatzmodell sehr gut
+  vorhergesagt ($R^2 \approx 0{,}98$). Sie lassen sich schon vor einer Festigkeitsrechnung sicher aussortieren.
+\item \textbf{Die Spannung} wird vom Ersatzmodell nur grob getroffen ($R^2 \approx 0{,}46$), weil sie an örtlichen
+  Spitzen am Verbinderanschluss hängt. Hier bleibt die FE-Rechnung unverzichtbar.
+\item \textbf{Weichere Verbinder} (Nutzer-Idee „gezielt schwächen“, erste Form) erhöhen die Spannung. Die Idee muss
+  örtlich umgesetzt werden: weiche Anschlüsse, steifer Kern.
+\end{enumerate}
+
+\paragraph{Wie belastbar ist das?} Die Zahlen stammen aus einem vereinfachten Modell: Gehäuse als
+Rechteckquerschnitt, Verbinder als Balkenpakete, Lager als feste Punkte, nur die Magnetkraft im kalten Betrieb
+(keine Abkühlspannung, kein Gewicht, keine Ermüdung). Das feinere Netz zeigt, dass die Spitzen noch nicht
+konvergiert sind. Die Aussage „0169 ist robust, 16 Spulen gehen nicht“ ist belastbar, weil sie in allen Netzen
+gilt; die genauen Megapascal sind es noch nicht.
+
+\paragraph{Nächste Schritte.}
+\begin{enumerate}
+\item 0169 mit örtlich gestuften Verbindern (weiche Enden) und gerundeten Anschlüssen rechnen; Steifigkeiten
+  iterativ nach dem Spannungsverhältnis anpassen.
+\item Die Vermutung prüfen, dass 0169 netzstabil ist, weil seine Verbinder zu fast durchgehenden Platten
+  verschmelzen: 0169 einmal mit überschneidungsfreien Verbindern, einmal mit bewusst durchgehender Platte rechnen.
+\item Netzkonvergenz am Verbinderanschluss für 0169 und 0093 mit gezielter örtlicher Verfeinerung prüfen.
+\item Abkühlspannung (\SI{293}{K} $\to$ \SI{4}{K}) und Eigengewicht ergänzen.
+\item Das PicoGK-Modell von 0169 als Ausgangsform für Lager, Kühlkanäle und Verguss weiterverwenden.
+\end{enumerate}

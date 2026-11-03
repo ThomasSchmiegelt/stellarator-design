@@ -1,0 +1,26 @@
+\paragraph{Idee und Erwartung.} Der Nutzer schlug vor: \emph{„Es kann auch helfen, bestimmte Bereiche zu schwächen, so
+dass sich die Last gleichmäßiger verteilt.“} Das Prinzip ist aus dem Leichtbau bekannt: Kraft fließt dem steifsten
+Weg nach; wer einen überlasteten Bereich nachgiebiger macht, schickt Last in unterbeanspruchte Bereiche. Da die
+Spitzen an den Verbinderenden sitzen, wurde als einfachste Form geprüft, alle Verbinder von Entwurf 0169 weicher zu
+machen (\SI{140}{}, \SI{100}{}, \SI{50}{GPa} statt \SI{183}{GPa}), jeweils im Standardnetz und mit 1,5-mal mehr
+Stationen. Erwartet war (F-139): Spitze $-30$ bis $-45$~\%, $\sigma_{99}$ $-5$ bis $-15$~\%, Verformung $+20$ bis
+$+60$~\%.
+
+\begin{table}[H]\centering\scriptsize\input{gen/schwaechen_de.tex}\caption{0169 mit weicheren Verbindern. Nummern:
+1xx Standardnetz, 2xx 1,5-mal mehr Stationen; Original \SI{183}{GPa}: \SI{308}{MPa} bzw.\ \SI{319}{MPa}.}\end{table}
+
+\paragraph{Ergebnis.} Die Spannung im Gehäuse steigt mit sinkender Verbindersteifigkeit gleichmäßig an: im
+Standardnetz von \SI{308}{MPa} (\SI{183}{GPa}) über \SI{318}{MPa} und \SI{331}{MPa} auf \SI{358}{MPa}
+(\SI{50}{GPa}, $+16$~\%); im feinen Netz von \SI{319}{MPa} auf \SI{372}{MPa}. Auch der Höchstwert steigt. Die
+Verformung wächst von \SI{19}{mm} auf \SI{27}{mm} ($+41$~\%, im erwarteten Bereich), die Dehnung im Wickelpaket von
+0,15~\% auf 0,17~\%. Entlastet werden nur die Verbinder selbst (99-\%-Wert \SI{192}{\to}\SI{127}{MPa}). Alle
+Varianten bleiben zulässig, aber mit weniger Reserve.
+
+\paragraph{Deutung.} Die Erwartung ist widerlegt, und der Grund ist lehrreich: Die Verbinder sind in diesem Tragwerk
+nicht die Ursache der Last, sondern der Entlastungsweg. Sie verkürzen die freie Biegelänge der Gehäuse. Werden sie
+insgesamt weicher, biegen sich die Gehäuse wieder stärker. Die Spitze am Verbinderende ist dagegen eine Folge der
+\emph{Form} des Anschlusses (scharfe Kante, Steifigkeitssprung). Die Nutzer-Idee bleibt richtig, wenn sie örtlich
+angewendet wird: ein Verbinder mit weichen Enden und steifem Kern -- wie eine auslaufende Klebefuge oder ein
+angeschrägter Steg -- leitet die Kraft allmählich ein, ohne den Entlastungsweg aufzugeben. Dafür muss jeder Verbinder
+in mehrere Körper mit eigener Steifigkeit zerlegt werden; die Steifigkeiten lassen sich dann nach dem
+Spannungsverhältnis iterieren (fully stressed design).

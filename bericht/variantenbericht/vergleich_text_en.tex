@@ -1,0 +1,57 @@
+\paragraph{Which design is the most robust?} At the user's request the goal was not the lightest design but the one
+with the largest reserve against all eight limits (``weight is not that important, it is a building''). After the
+clean-up seven designs meet all limits. Their smallest reserve (robustness) ranges from 0.30 (0061) to 0.02 (0157).
+Two designs are almost level: 0061 (bottleneck steel) and 0169 (bottleneck package thickness). The mesh study
+decides (section~\ref{sec:netz}):
+
+\begin{itemize}
+\item \textbf{0169} stays practically unchanged on a finer mesh (\SI{308}{} $\to$ \SI{319}{MPa}, $+4$~\%). Its
+  reserve does not depend on numerical accuracy; its bottleneck is the package thickness, which depends on
+  geometry, not on the mesh. It is therefore the \textbf{recommended design}: 24 coils, 13 stiff connectors per
+  coil pair, about \SI{28}{kt} of steel.
+\item \textbf{0061} has the largest reserve on the standard mesh but rises by $+58$~\% on the fine mesh
+  (\SI{351}{} $\to$ \SI{556}{MPa}) and then exceeds the limit. Its bottleneck is exactly the mesh-dependent
+  quantity.
+\item \textbf{0093, 0008, 0014} rise by 34--46~\% on the fine mesh and end up partly just below, partly above the
+  limit. They are candidates, but only after a more accurate analysis of the connector joints.
+\item \textbf{0017, 0157} have little reserve and were not refined further.
+\item \textbf{V3, V1} (surrogate proposals) are more robust than 0169 on the standard mesh (0.35 and 0.31), but on
+  the fine mesh their stress rises by 45 and 66~\% (section~\ref{sec:ersatz1}). V3 thus drops to 0.21.
+\end{itemize}
+
+\paragraph{Narrow misses.} The five most robust inadmissible designs (0173, 0103, 0044, 0004, 0136) fail almost
+all on steel stress or on the field error $B_n$. 0063 and 0136 were admissible on the coarse mesh and dropped out
+after recomputation -- an example of how easily an unnoticed change of mesh flatters the result.
+
+\paragraph{What distinguishes the variants.} Across all 198 designs:
+\begin{enumerate}
+\item \textbf{Number of coils:} no design with 16 coils was admissible. The coils become so long and so strongly
+  curved that the cases bend too much, and the field error is larger. 20 and 24 coils split the force over more
+  and shorter members.
+\item \textbf{Coil shape before structure:} coil--plasma distance and coil length determine the stress more than
+  number or stiffness of the connectors. The structure can compensate an unfavourable coil shape only to a limited
+  extent.
+\item \textbf{Package and nuclear heating} are almost purely geometric and are predicted very well by the surrogate
+  ($R^2 \approx 0.98$). They can be screened reliably before any strength analysis.
+\item \textbf{Stress} is predicted only roughly by the surrogate ($R^2 \approx 0.46$) because it depends on local
+  peaks at the connector joints. Here the FE analysis remains indispensable.
+\item \textbf{Softer connectors} (user idea ``weaken selectively'', first form) increase the stress. The idea has to
+  be applied locally: soft ends, stiff core.
+\end{enumerate}
+
+\paragraph{How reliable is this?} The numbers come from a simplified model: cases as rectangular cross-sections,
+connectors as beam bundles, supports as fixed points, only the magnetic force in cold operation (no cool-down
+stress, no dead weight, no fatigue). The finer mesh shows that the peaks are not yet converged. The statement
+``0169 is robust, 16 coils do not work'' is reliable because it holds on all meshes; the exact megapascals are not
+yet.
+
+\paragraph{Next steps.}
+\begin{enumerate}
+\item Compute 0169 with locally graded connectors (soft ends) and rounded joints; adapt stiffnesses iteratively by
+  the stress ratio.
+\item Test the conjecture that 0169 is mesh-stable because its connectors merge into almost continuous plates:
+  compute 0169 once with non-overlapping connectors and once with a deliberately continuous plate.
+\item Check mesh convergence at the connector joints of 0169 and 0093 with targeted local refinement.
+\item Add cool-down stress (\SI{293}{K} $\to$ \SI{4}{K}) and dead weight.
+\item Reuse the PicoGK model of 0169 as the starting shape for supports, cooling channels and potting.
+\end{enumerate}

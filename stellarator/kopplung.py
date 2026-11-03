@@ -144,6 +144,8 @@ def schritt_struktur(p: dict, po: Path, geo: dict, timeout_s: float = 2400) -> t
         timeout_s = min(timeout_s, 900)
     if p.get("loeser") == "mumps_grob":                            # Speicher reicht nicht: Netz 25 % groeber
         stationen = int(2 * round(0.75 * stationen / 2))
+    stationen = int(2 * round(p.get("stationen_faktor", 1.0) * stationen / 2))   # Netzstudie (nachrechnung.py)
+    hm.QUER["n_wand"] = int(p.get("n_wand", 2)); hm.QUER["n_wp"] = int(p.get("n_wp", 4))
     I = B0 / geo["B_achse_einheit_T"] * geo["I_einheit_A"]           # B ~ I/L: Einheit (R0~1) -> Anlage (x L)
     I *= L
     for s in spulen:
@@ -156,7 +158,7 @@ def schritt_struktur(p: dict, po: Path, geo: dict, timeout_s: float = 2400) -> t
     W = waende(spulen, br, ho, w)
     verlauf = entflechten(spulen, W, br, ho, max(br, ho) / 3, w.spiel, w.wand_min)
     netz = hm.baue_netz(spulen, br, ho, W, FEST["verguss_m"], p["r_lager_m"], int(p.get("verbinder_je_paar", FEST["verbinder_je_paar"])),
-                        FEST["verbinder_halb"], plan=None)
+                        int(p.get("verbinder_halb", FEST["verbinder_halb"])), plan=None)
     if netz.info["elemente_negativ"]:
         raise RuntimeError(f"{netz.info['elemente_negativ']} Elemente mit negativer Jacobi-Determinante")
     f, F = hm.lorentzdichte(netz, spulen, br, ho)
@@ -303,9 +305,11 @@ def lauf(studie: str, n: int, stunden: float, speicher: str = "11G") -> None:
         t0 = time.time()
         po = o / "punkte" / f"{nr:04d}"
         try:
-            for loeser in ("mumps", "mumps_grob"):        # direkter Loeser; bei Speichermangel Netz groeber (F-127)
+            # direkter Loeser; bei Speichermangel NICHT mehr groeberes Netz (mumps_grob aenderte die Verbinderlaenge,
+            # F-137), sondern zweiter Versuch mit 22 GB
+            for loeser, mem in (("mumps", speicher), ("mumps", "22G")):
                 shutil.rmtree(po / "elmer", ignore_errors=True)
-                rc = punkt_extern(studie, nr, n, speicher, loeser)
+                rc = punkt_extern(studie, nr, n, mem, loeser)
                 if (po / "ergebnis.json").exists():
                     break
                 log(studie, f"{nr:04d} {loeser}: Abbruch (Rueckgabe {rc}, 137/OOM = Speicher)")
@@ -319,6 +323,10 @@ def lauf(studie: str, n: int, stunden: float, speicher: str = "11G") -> None:
         except Exception as ex:
             (o / "punkte" / f"{nr:04d}" / "fehler.txt").write_text(traceback.format_exc())
             log(studie, f"{nr:04d} FEHLER {time.time()-t0:.0f} s: {ex}")
+
+
+def ROOT_PUNKT(von: str) -> Path:
+    st, nr = von.split("/"); return WURZEL / st / "punkte" / nr
 
 
 def tabelle(studie: str) -> None:
@@ -338,9 +346,17 @@ def main(argv=None):
     ap.add_argument("--n", type=int, default=100); ap.add_argument("--stunden", type=float, default=12)
     ap.add_argument("--p", nargs="*", default=[]); ap.add_argument("--doe", action="store_true")
     ap.add_argument("--speicher", default="11G")
+    ap.add_argument("--von", default="", help="studie/NNNN: Spulen und Parameter uebernehmen (Netzstudie)")
     a = ap.parse_args(argv)
     if a.befehl == "punkt":
         p = {k: (v if k in ("lager_ort", "loeser") else float(v)) for k, v in (x.split("=") for x in a.p)}
+        if a.von:                                     # Parameter + Spulen eines frueheren Punkts uebernehmen
+            q = ROOT_PUNKT(a.von)
+            p = json.loads((q / "param.json").read_text()) | p
+            po = ordner(a.studie) / "punkte" / f"{a.nr:04d}"; po.mkdir(parents=True, exist_ok=True)
+            for f in ("stufe2.json", "spulen.json", "biot_savart.json", "geometrie.json", "plasma_rand.npy"):
+                if not (po / f).exists():
+                    shutil.copy(q / f, po / f)
         if a.doe:                                     # Punkt aus dem DOE der Studie (vom Lauf aufgerufen)
             p = doe(a.studie, a.n)[a.nr] | p
         e = rechne_punkt(a.studie, a.nr, p)

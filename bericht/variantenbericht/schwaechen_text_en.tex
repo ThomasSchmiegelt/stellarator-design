@@ -1,0 +1,23 @@
+\paragraph{Idea and expectation.} The user suggested: \emph{“It can also help to weaken certain areas so that the load
+is distributed more evenly.” (translated)} The principle is known from lightweight design: force follows the stiffest
+path; making an overloaded area more compliant sends load into less stressed areas. Since the peaks sit at the connector
+ends, the simplest form was tested: all connectors of design 0169 softer (\SI{140}{}, \SI{100}{}, \SI{50}{GPa} instead
+of \SI{183}{GPa}), each on the standard mesh and with 1.5 times as many stations. Expected (F-139): peak $-30$ to
+$-45$~\%, $\sigma_{99}$ $-5$ to $-15$~\%, deformation $+20$ to $+60$~\%.
+
+\begin{table}[H]\centering\scriptsize\input{gen/schwaechen_en.tex}\caption{0169 with softer connectors. Numbers: 1xx
+standard mesh, 2xx 1.5 times as many stations; original \SI{183}{GPa}: \SI{308}{MPa} and \SI{319}{MPa}.}\end{table}
+
+\paragraph{Result.} The stress in the case rises steadily as the connector stiffness falls: on the standard mesh from
+\SI{308}{MPa} (\SI{183}{GPa}) via \SI{318}{MPa} and \SI{331}{MPa} to \SI{358}{MPa} (\SI{50}{GPa}, $+16$~\%); on the fine
+mesh from \SI{319}{MPa} to \SI{372}{MPa}. The maximum rises as well. The deformation grows from \SI{19}{mm} to
+\SI{27}{mm} ($+41$~\%, within the expected range), the winding-pack strain from 0.15~\% to 0.17~\%. Only the connectors
+themselves are relieved (99-\% value \SI{192}{\to}\SI{127}{MPa}). All variants remain admissible, but with less reserve.
+
+\paragraph{Interpretation.} The expectation is refuted, and the reason is instructive: in this structure the connectors
+are not the cause of the load but the relief path. They shorten the free bending length of the cases. If they become
+softer overall, the cases bend more again. The peak at the connector end, in contrast, is a consequence of the
+\emph{shape} of the joint (sharp edge, stiffness jump). The user's idea remains right when applied locally: a connector
+with soft ends and a stiff core -- like a tapered adhesive joint or a chamfered web -- introduces the force gradually
+without giving up the relief path. For this each connector must be split into several bodies with their own stiffness;
+the stiffnesses can then be iterated by the stress ratio (fully stressed design).

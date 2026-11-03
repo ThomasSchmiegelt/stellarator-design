@@ -512,3 +512,47 @@ dann innen und außen, dann mehr und steifere Verbinder, dann dickere Wände: 21
 
 **Stand.** Drei Entwürfe halten alle Grenzen ein (20–24 Spulen, 22,6–28 kt Stahl). Sie gelten erst nach Nachrechnung
 mit feinem Netz und nachgiebigem Stützzylinder. Bericht: Abschnitt „Festigkeit“ (DE/EN).
+
+## 20. Auswertung der Entwurfsstudie, 3D-Modelle in PicoGK und zwei Listen (2026-11-03)
+
+**Was der Nutzer wollte.** Am Vorabend hatte der Nutzer drei Dinge für den nächsten Tag notieren lassen: den
+robustesten statt des leichtesten Entwurf (*„Das Gewicht ist nicht so wichtig. Es ist ja ein Gebäude.“*), genau zu
+wissen, *welcher Stahl* verwendet wird (*„p99 Stahl kenne ich nicht“*, dazu ein Link auf eine Festigkeitstabelle),
+und ein 3D-Modell komplett in PicoGK. Am Morgen kam der Auftrag: *„Starte die Auswertung, baue auch die
+unterschiedlichen Modelle, auch die 3D-Modelle … erzeuge einen weiteren sehr ausführlichen Bericht, der sämtliche
+Varianten darstellt und vergleicht.“* Kurz darauf schärfte der Nutzer nach: *„zwei Listen, eine mit den besten für
+den Bericht, vielleicht auch Modelle, die knapp an der Grenze liegen, und einen Bericht mit allen, die geometrisch
+darstellbar sind“*, und gab eine zweite Platte für Unbenutztes frei.
+
+**Wie die Frage des Nutzers die Darstellung veränderte.** „p99“ war eine interne Abkürzung. Die Frage zwang dazu,
+den Werkstoff sauber herzuleiten: 1.4429 (X2CrNiMoN17-13-3, AISI 316LN), Raumtemperatur aus der Tabelle des
+Nutzers (Rp0,2 295 MPa), bei 4 K aus einer geprüften Messung (1070 MPa), Grenze 500 MPa als 2/3 der garantierten
+4-K-Streckgrenze. Der Begriff heißt jetzt σ99 (99-%-Spannung), und zusätzlich werden Spannungskategorien
+(Membran, Membran+Biegung, Spitze) ausgewiesen, wie Regelwerke sie verlangen.
+
+**Was die Prüfung der eigenen Zahlen ergab.** Vor jeder Rechnung stand eine Erwartung im Ereignisprotokoll
+(F-136, F-139, F-142). Drei davon wurden widerlegt, und gerade daraus kam das meiste Verständnis:
+- Die Netzstudie sollte die Spannung um 5–25 % erhöhen; gemessen wurden 34–58 %. Ursache: Die Spitzen sitzen an den
+  Verbinderanschlüssen und werden mit jeder Verfeinerung schärfer. Nur 0169 blieb stabil, er ist deshalb der
+  empfohlene Entwurf.
+- Beim ersten Versuch der Netzstudie wurden die Verbinder unbemerkt kürzer, weil ihre Länge in Stationen gezählt
+  wird. Derselbe Effekt hatte elf Entwürfe der Studie mit gröberem Netz zu günstig gemacht. Sie wurden
+  nachgerechnet, zwei fielen heraus. Der Ausweichweg „gröberes Netz“ wurde aus der Kette entfernt.
+- Die Nutzer-Idee „bestimmte Bereiche schwächen“ wurde zuerst in der einfachsten Form geprüft (alle Verbinder
+  weicher). Die Spannung stieg. Daraus wurde klar, dass die Verbinder der Entlastungsweg sind; die Idee muss örtlich
+  wirken (weiche Enden, steifer Kern).
+
+**3D in PicoGK.** Python übergibt nur Zahlen (Querschnitte, Plasmarand, Lagerorte); PicoGK baut alle Körper und
+prüft Überschneidungen. Zwei Fehler auf dem Weg: Die Nachbearbeitung der 13-Millionen-Dreieck-Netze in Python wurde
+vom Speicherwächter beendet, also rechnet PicoGK die Volumina selbst und exportiert nur ein grobes Bildnetz. Die
+ersten Bilder zeigten flimmernde Schichtgrenzen und verdeckte Spulen; jetzt wird jede Schicht unter einem anderen
+Winkel aufgeschnitten, und der Stützring ist vorne offen.
+
+**Was organisatorisch schiefging.** Zweimal beendete ein Abbruchbefehl die eigene Shell, weil das Suchmuster auch
+den eigenen Befehlstext traf. Ein Rechenlauf wurde versehentlich doppelt in denselben Ordner gestartet und nach
+1,5 Minuten bemerkt. Weil Elmer und PicoGK zusammen den Speicher sprengen konnten, wartet der Katalog jetzt, bis die
+Festigkeitsrechnungen fertig sind.
+
+**Ergebnis.** Liste 1 (7 zulässige, 5 knapp verfehlte, 2 durch die Nachrechnung herausgefallene und zwei
+Tragwerksversuche) steht im Projektbericht und mit Steckbriefen im neuen Variantenbericht; Liste 2 (alle geometrisch
+darstellbaren Entwürfe) als Katalog im Anhang des Variantenberichts.
