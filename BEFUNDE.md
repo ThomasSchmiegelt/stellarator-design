@@ -25,6 +25,11 @@
   die grobe Abtastung hatte die Spannung unterschätzt. Satz 1 fein: 5370 umgestülpte Elemente, weil die Wand innen in der
   Kurve (0,63 m) tiefer ist als der echte Biegeradius (0,40 m). Aussage: unser für 0169 ausgelegtes Tragwerk
   (Einzelgehäuse, Verbinder, zwei Lager je Spule) trägt Proximas QI-Spulen nicht; eigenes QI-Tragwerk nötig.
+- **Innenkontur (Nutzeridee, F-180/181):** `biegung=innenkontur` (gehaeuse_netz.biegegrenze) kappt die Wand innen in der
+  Kurve, Material auf die Gegenseite. 0169 unverändert (305 statt 308 MPa). Satz 1: an 120/3120 Stationen ist schon das
+  Wickelpaket zu breit für den Biegeradius → nicht baubar. Satz 2 (0169-Wände): bis auf 6–12 Elemente an einer Stelle
+  netzbar; Rest-Ursache offen (Rahmenverdrillung? Entflechten?).
+- **Voxel als FE-Netz zu groß:** 0,1-m-Voxel ≈ 1,7 Mio. Elemente (×5 gegenüber feinem Hex-Netz) → MUMPS > 32 GB.
 - **Grenze unabhängig vom Gehäuse:** Das Wickelpaket (0,71 m) muss sich biegen lassen; bei 0,40 m Biegeradius liegt die
   innerste Windung ≈ 5 cm vom Krümmungsmittelpunkt.
 - **Messung:** sim/constellaration/ (bewertung_*.json, qi/*/bewertung.json, skaliert.json), sim/kopplung/qi_*/,

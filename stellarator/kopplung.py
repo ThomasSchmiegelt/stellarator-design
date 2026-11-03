@@ -170,6 +170,10 @@ def struktur_netz(p: dict, po: Path, geo: dict):
     hm.LAGER_ORT = p.get("lager_ort", FEST["lager_ort"])
     hm.VERB_MODUS = p.get("verb_modus", "standard")
     W = waende(spulen, br, ho, w)
+    if p.get("biegung") == "innenkontur":                         # Wand innen in der Kurve kappen (F-180)
+        from .gehaeuse_netz import biegegrenze
+        W, binfo = biegegrenze(spulen, W, br, ho, float(p.get("biege_grenze", 0.8)))
+        (po / "biegegrenze.json").write_text(json.dumps(binfo))
     verlauf = entflechten(spulen, W, br, ho, max(br, ho) / 3, w.spiel, w.wand_min)
     netz = hm.baue_netz(spulen, br, ho, W, FEST["verguss_m"], p["r_lager_m"], int(p.get("verbinder_je_paar", FEST["verbinder_je_paar"])),
                         int(p.get("verbinder_halb", FEST["verbinder_halb"])), plan=None)
@@ -373,7 +377,7 @@ def main(argv=None):
     ap.add_argument("--von", default="", help="studie/NNNN: Spulen und Parameter uebernehmen (Netzstudie)")
     a = ap.parse_args(argv)
     if a.befehl == "punkt":
-        p = {k: (v if k in ("lager_ort", "loeser", "verb_modus", "abtastung") else float(v)) for k, v in (x.split("=") for x in a.p)}
+        p = {k: (v if k in ("lager_ort", "loeser", "verb_modus", "abtastung", "biegung") else float(v)) for k, v in (x.split("=") for x in a.p)}
         if a.von:                                     # Parameter + Spulen eines frueheren Punkts uebernehmen
             q = ROOT_PUNKT(a.von)
             p = json.loads((q / "param.json").read_text()) | p
