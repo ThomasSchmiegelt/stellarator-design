@@ -131,7 +131,8 @@ def geometrie(po: Path) -> None:
 
 
 # ---------------------------------------------------------------- 3. Struktur (wie surrogat.modell/rechne_probe)
-def schritt_struktur(p: dict, po: Path, geo: dict, timeout_s: float = 2400) -> tuple[dict, list, list]:
+def struktur_netz(p: dict, po: Path, geo: dict):
+    """Spulen, Waende und Hex-Netz wie in schritt_struktur, ohne Rechnung (Geometriepruefung, Varianten)."""
     from . import spulen as sp, cad, hexmodell as hm
     from .gehaeuse_netz import waende, entflechten
     from .struktur import WP
@@ -140,8 +141,6 @@ def schritt_struktur(p: dict, po: Path, geo: dict, timeout_s: float = 2400) -> t
     spulen, _ = sp.lade_spulensatz(c)
     # Netzgroesse wie bei 16 Spulen halten (MUMPS-Speicher, F-124): Stationen je Spule ~ 16 / Spulenzahl
     stationen = int(2 * round(FEST["stationen"] * 16 / len(spulen) / 2))
-    if p.get("loeser") == "iterativ":
-        timeout_s = min(timeout_s, 900)
     if p.get("loeser") == "mumps_grob":                            # Speicher reicht nicht: Netz 25 % groeber
         stationen = int(2 * round(0.75 * stationen / 2))
     stationen = int(2 * round(p.get("stationen_faktor", 1.0) * stationen / 2))   # Netzstudie (nachrechnung.py)
@@ -155,12 +154,22 @@ def schritt_struktur(p: dict, po: Path, geo: dict, timeout_s: float = 2400) -> t
     w = Namespace(wand_innen=p["wand_innen_m"], wand_seite=p["wand_seite_m"], t_min=p["t_min_m"],
                   t_max=p["t_min_m"] + p["t_zusatz_m"], spiel=FEST["spiel_m"], wand_min=0.003)
     hm.LAGER_ORT = p.get("lager_ort", FEST["lager_ort"])
+    hm.VERB_MODUS = p.get("verb_modus", "standard")
     W = waende(spulen, br, ho, w)
     verlauf = entflechten(spulen, W, br, ho, max(br, ho) / 3, w.spiel, w.wand_min)
     netz = hm.baue_netz(spulen, br, ho, W, FEST["verguss_m"], p["r_lager_m"], int(p.get("verbinder_je_paar", FEST["verbinder_je_paar"])),
                         int(p.get("verbinder_halb", FEST["verbinder_halb"])), plan=None)
     if netz.info["elemente_negativ"]:
         raise RuntimeError(f"{netz.info['elemente_negativ']} Elemente mit negativer Jacobi-Determinante")
+    return netz, spulen, br, ho, wp, I, stationen, verlauf, W
+
+
+def schritt_struktur(p: dict, po: Path, geo: dict, timeout_s: float = 2400) -> tuple[dict, list, list]:
+    from . import hexmodell as hm
+    from .struktur import WP
+    if p.get("loeser") == "iterativ":
+        timeout_s = min(timeout_s, 900)
+    netz, spulen, br, ho, wp, I, stationen, verlauf, W = struktur_netz(p, po, geo)
     f, F = hm.lorentzdichte(netz, spulen, br, ho)
     fall = po / "elmer"
     shutil.rmtree(fall, ignore_errors=True); fall.mkdir()
@@ -349,7 +358,7 @@ def main(argv=None):
     ap.add_argument("--von", default="", help="studie/NNNN: Spulen und Parameter uebernehmen (Netzstudie)")
     a = ap.parse_args(argv)
     if a.befehl == "punkt":
-        p = {k: (v if k in ("lager_ort", "loeser") else float(v)) for k, v in (x.split("=") for x in a.p)}
+        p = {k: (v if k in ("lager_ort", "loeser", "verb_modus") else float(v)) for k, v in (x.split("=") for x in a.p)}
         if a.von:                                     # Parameter + Spulen eines frueheren Punkts uebernehmen
             q = ROOT_PUNKT(a.von)
             p = json.loads((q / "param.json").read_text()) | p

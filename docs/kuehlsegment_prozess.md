@@ -556,3 +556,46 @@ Festigkeitsrechnungen fertig sind.
 **Ergebnis.** Liste 1 (7 zulässige, 5 knapp verfehlte, 2 durch die Nachrechnung herausgefallene und zwei
 Tragwerksversuche) steht im Projektbericht und mit Steckbriefen im neuen Variantenbericht; Liste 2 (alle geometrisch
 darstellbaren Entwürfe) als Katalog im Anhang des Variantenberichts.
+
+## 21. Parallel arbeiten: Variantenfilm, Verbinder-Prüfung, Review-Paket und ein Buchkapitel (2026-11-03)
+
+**Wer was angestoßen hat.** Der Nutzer wünschte sich einen 3D-Film aller Entwürfe, die „wilden“ kurz am Anfang, die
+übrig gebliebenen am Schluss. Dann: Am Anfang soll man sehen, dass das Modell mit PicoGK entstanden ist, danach soll
+es „schön“ werden. Während der Film rendert, fragte er: „Kannst du parallel noch andere offene Punkte abarbeiten oder
+vorbereiten?“ Er legte eine ältere Checkliste aus der README dazu. Die KI glich den Plan dagegen ab und nahm sich
+Punkt 1 (Verbinder) und Punkt 5 (Review-Paket) vor. Eine Nachfrage des Nutzers („Wie bist du eigentlich auf die
+Stützstrukturen gekommen?“) wurde zu einem eigenen Abschnitt im Review-Paket.
+
+**Der Film (Blender, 68 s).** Er beginnt mit 0169 als Voxelfeld (0,3-m-Würfel, Schicht für Schicht), so wie PicoGK
+Geometrie aufbaut. Dann zeigt er 15 wilde Entwürfe, das Feld aller 188 baubaren Entwürfe, aus dem die unzulässigen
+versinken, und am Ende 0169 im Schnitt. Zwei Fehler fand die KI beim Ansehen der Probebilder:
+- Schwarze Flecken im Voxelfeld. Die erste Vermutung (Löcher) war falsch, Schließen der Löcher half nicht. Die
+  Ursache: Dieselben Voxel gehörten zu zwei Bauteilen, die doppelten Würfel flimmerten schwarz. Jetzt gehört jedes
+  Voxel genau einem Teil.
+- Die glatte Form sah aus der Nähe aus wie zerknitterte Folie. Glätten machte es schlimmer, denn das PicoGK-Bildnetz
+  hat nur 80-mm-Voxel und 150 000 Dreiecke. Lösung: Gehäuse, Verbinder und Wickelpaket kommen direkt als exakte
+  Oberfläche aus dem Festigkeitsmodell. Rund 200 Bilder wurden verworfen.
+Begleittext mit Zeitmarken und Farbcode: `docs/filme/varianten.md`.
+
+**Punkt 1: Platte oder Stege?** Schon vor der Rechnung zeigte der Netzaufbau, dass die 13 Verbinder je Paar bei 0169
+genau eine Verbinderbreite auseinanderliegen. Sie berühren oder überlappen sich, das Modell ist fast eine Platte.
+Vermutung (F-145): Darum ist 0169 netzstabil. Vorher festgelegte Erwartung: Platte stabil, getrennte Stege nicht. Das
+Ergebnis war umgekehrt. σ99 Standard-/Feinnetz: getrennt 387/392 MPa (+1 %), platte 336/493 MPa (+47 %),
+standard 308/319 MPa. Drei von vier Erwartungen lagen falsch. Gerade das hat die Vermutung beendet, bevor sie ins
+Review-Paket ging (F-153). Ein Startskript hatte beim ersten Lauf trotz Absturz „rc=0“ gemeldet; es prüft jetzt, ob
+`ergebnis.json` existiert.
+
+**Review-Paket (Entwurf).** `docs/review_festigkeit_entwurf.md`: Modell, Herleitung des Tragwerks (Kraftanalyse,
+Handrechnung 2100 gegen FEM 2129 MPa, Tragwerk A–E), Grenzen, Ergebnisse mit dem Verbinder-Befund, Schwächen und
+acht Fragen an Festigkeitsfachleute. Ausdrücklich vermerkt: Stützzylinder und Ring im 3D-Modell sind nur gezeichnet.
+
+**Buchkapitel.** Auf Wunsch des Nutzers schrieb die KI im Buchprojekt ein Kapitel über die Entstehung dieses Projekts,
+mit dem Schwerpunkt Zusammenarbeit Mensch, KI und Werkzeuge. Zuerst begann sie, das Material zu lesen, ohne die
+Regeln des Buchprojekts zu kennen. Der Nutzer wies darauf hin („Es gibt Anweisungen in dem Projekt“). Danach galt:
+jede Aussage mit Fundstelle, Persönliches nur vom Autor. Beim eigenen Gegenlesen fand die KI sieben Sachfehler im
+Entwurf. Danach kamen zwei Rückmeldungen des Nutzers: Seine zitierten Eingaben sollen rechtschreiblich korrigiert
+werden, und er beantwortete die offenen persönlichen Fragen selbst. Seine Einschätzung: „immer noch Hobby, ein wenig
+Gamification von Physik“.
+
+**Nebenbei.** Der PicoGK-Katalog ist vollständig (188 Entwürfe). Der früher abgestürzte Entwurf 0073 lief beim
+zweiten Versuch durch; der Absturz war nicht reproduzierbar. Der Variantenbericht ist neu erzeugt.

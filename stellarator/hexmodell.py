@@ -29,6 +29,10 @@ from .lauf import PROJEKT
 
 LAGER_ORT = "aussen"                                # Lagerflecken, siehe baue_netz
 QUER = {"n_wand": 2, "n_verguss": 1, "n_wp": 4}      # Zellen je Schicht quer (je Richtung)
+# Verbinderanordnung (Plan Punkt 1, F-149): "standard" wie doe1 (Abstand nur auf Spule k, Nachbarn koennen sich
+# beruehren/ueberlappen), "getrennt" (Mindestabstand 2*halb+2 Stationen auf beiden Spulen -> einzelne Stege),
+# "platte" (lueckenlos aneinander ueber den ganzen seitlichen Bereich, gemeinsame Knoten -> durchgehende Platte)
+VERB_MODUS = "standard"
 MAT_NAMEN = {1: "wickelpaket", 2: "verguss", 3: "stahl", 4: "verbinder"}
 UDF_QUELLE = Path(__file__).resolve().parent / "elmer_udf" / "lorentz.f90"
 UDF_ORDNER = PROJEKT / "sim" / "surrogat" / "udf"
@@ -137,12 +141,23 @@ def baue_netz(spulen, br: float, ho: float, W: list[dict], verguss: float, r_lag
         seitlich = ((np.abs(np.sum(dv * bk, 1)) > 0.8) & (np.abs(np.sum(dv * bm[jn], 1)) > 0.8)
                     & (np.abs(np.sum(tk * tm[jn], 1)) > 0.8))
         orte = []
-        for _ in range(verbinder_je_paar):
-            frei = seitlich.copy()
-            for i0 in orte:
-                frei &= np.abs(((np.arange(N) - i0 + N // 2) % N) - N // 2) >= N // (verbinder_je_paar + 1)
-            if frei.any():
-                orte.append(int(np.where(frei, dk, np.inf).argmin()))
+        abst = lambda a, b, n_: np.abs(((a - b + n_ // 2) % n_) - n_ // 2)
+        if VERB_MODUS == "platte":                       # jede (2*halb)-te seitliche Station
+            for i in np.where(seitlich)[0]:
+                if i % (2 * verb_halb) == 0 and all(abst(jn[i], jn[i0], len(Pm)) >= 2 * verb_halb for i0 in orte):
+                    orte.append(int(i))
+        else:
+            d_min = N // (verbinder_je_paar + 1)
+            if VERB_MODUS == "getrennt":
+                d_min = max(d_min, 2 * verb_halb + 2)
+            for _ in range(verbinder_je_paar):
+                frei = seitlich.copy()
+                for i0 in orte:
+                    frei &= abst(np.arange(N), i0, N) >= d_min
+                    if VERB_MODUS == "getrennt":         # auch auf der Gegenspule Abstand halten
+                        frei &= abst(jn, jn[i0], len(Pm)) >= d_min
+                if frei.any():
+                    orte.append(int(np.where(frei, dk, np.inf).argmin()))
         for i0 in orte:
             j0 = int(jn[i0])
             d = (Pm[j0] - Pk[i0]) / np.linalg.norm(Pm[j0] - Pk[i0])
@@ -184,6 +199,11 @@ def baue_netz(spulen, br: float, ho: float, W: list[dict], verguss: float, r_lag
         verb.append(np.array(el)); verb_info.append({"k": k, "m": m, "i0": int(i0), "j0": int(j0), "fk": fk,
                                                      "fm": fm, "rs": int(rs), "rev": bool(rev)})
     Xall = np.vstack(X + X_neu)
+    if VERB_MODUS == "platte" and X_neu:                 # deckungsgleiche Zwischenknoten benachbarter Verbinder vereinen
+        _, erst, zu = np.unique(np.round(Xall, 6), axis=0, return_index=True, return_inverse=True)
+        ziel = erst[zu.ravel()]
+        ziel[:versatz] = np.arange(versatz)               # Spulenknoten bleiben (eigene Knoten je Spule)
+        verb = [ziel[e] for e in verb]
     hx = [np.vstack(hexa)]; mt = [np.concatenate(mat)]; spl = [np.concatenate(spule)]
     ok_verb = []
     for e, inf in zip(verb, verb_info):

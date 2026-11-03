@@ -152,7 +152,7 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
 0. ~~Schnelle Bewertungsfunktion~~ ERLEDIGT (B-016, `stellarator/bewerte.py`, ~10 s).
    Naechster Schritt: Studien-Runner (scipy/optuna) ueber `bewerte()`; Ziele/Grenzen mit User klaeren.
 0b. Elmer mit allen 70 Spulen: STL-Weg (`cad.elmer_netz`), h_spule 0,05 (~3,5 Mio. Tets, ~12 GB).
-0c. **Offen (User, 2026-10-24): allgemeiner Weg STL → STEP** ausdenken (nicht nur fuer
+0c. **ZURÜCKGESTELLT (User, 2026-11-03): allgemeiner Weg STL → STEP** ausdenken (nicht nur fuer
     Spulen). STEP ist fuer Rechnungen nicht noetig, nur fuer CAD-Weitergabe.
 1. Parameterstudien ueber Falldatei (PCA/PCB-Stroeme → iota-Variation, Inselposition).
 2. Voxelsolver auf Zylindergitter einer Feldperiode (Symmetrie → Flussflaechen, B-013a).
@@ -513,3 +513,102 @@ User-Wahl: **kompakter Stellarator** (nicht W7-X nachbilden). Installation erlau
   Zelle (a 0,75 a_std, d_h 1,33 mm) gewinnt ueberall, Pumpen < 1 MW; 95 % von 73,3 MW bei 1,3-1,5 m3.
   Oh-Faktor 1,28 = Abstand Renon -> n144. Berichte DE/EN sec:tauschersurrogat / sec:exchangersurrogate (59/55 S.).
   Offen: feinere Zellen als Surrogat-Rand, Wand 0,5 mm gegen 3 MPa, Stufung evtl. Kondensator-Dampfseite. NICHT gepusht.
+- 2026-11-01: Surrogat-Doku erweitert (warum, wie GP, mehrstufig) in Berichten + README, gepusht b75ead6/83125cd,
+  GitHub-Beschreibung + Themen fluidx3d/cfd/heat-exchanger (20 Themen = Grenze).
+  PLASMA: stellarator/plasma_waerme.py (HTS-Auslegung Stufe 0): Q 17,59 MeV, Coulombwall 444 keV, Gamow 39 keV,
+  Lawson-Min 2,8e21 bei 13,6 keV, P_fus aus Profilen 3051 MW (Stufe 0: 3053), Haelfte in 14 % Volumen, 0,47 kg T/Tag,
+  Alpha Larmor 4,2 cm, tau_s 0,2 s, 80 % an Elektronen; P_alpha 611 = 482 Transport + 129 Brems.
+  BEFUND: f_div = 0,5 zu guenstig -> ohne Randstrahlung 482 MW auf Divertor, >= 48 m2 statt 31. Kapitel sec:plasma
+  DE/EN (63/59 S.). Plasma-Teil NICHT gepusht. Naechstes: 1-D-Transport, Linien-/Zyklotronstrahlung, Divertor.
+- 2026-11-01 16:30: ALPHA-BAHNEN (Variante A der Nutzerfrage „dynamische Simulation mit Magnetfeld“; FluidX3D fuers
+  Plasma ungeeignet, B = Flüssigmetall-MHD spaeter). stellarator/alpha_bahnen.py (.venv-opt, simsopt gc_vac):
+  Einheitsgeometrie mit v_u = v B_u/(B0 L), rho_L/a 0,018, t_phys = t_u B_u/B0. Hauptlauf losgeloest:
+  sim/alpha/hts_1gw/lauf.log (1000 Alphas, 0,2 s, 6 Prozesse, ~4-5 h), Bahnen fuers Video bahnen.log.
+  Fallen: SurfaceClassifier h=0.005 haengt (0.01 nehmen); multiprocessing nur mit spawn + OMP_NUM_THREADS=1.
+  Offen: alpha_auswertung.py (Verlustanteil ueber t, Energieverlust mit Abbremsung, Trefferkarte Wand), Video, Doku.
+- 2026-11-01 17:30: ALPHA-LAUF neu (erster Versuch: systemd-oomd beendete 16:27 ein ganzes Terminalfenster, 14
+  Prozesse!). Ursachen: SurfaceClassifier h=0.01 ~9 GB/Prozess -> h=0.02; simsopt behaelt trotz forget_exact_path den
+  ganzen Weg -> Zeitabschnitte 2 ms. Jetzt in systemd-run --user --scope MemoryMax=20G (Einheit alpha-hts), 5 Prozesse,
+  ~13 GB, ~2 h. Erste 60: ~15 % verloren.
+  VARIANTE B vorbereitet: ~/fluidx3d_mhd (sauberer Klon 50150a7), Schalter MHD, Lorentzkraft halbimplizit,
+  Hartmann-Pruefung stellarator/mhd_hartmann.py: Ha 0: 0,03 %, Ha 5: 0,1 %, Ha 30/a 32: 4,3 %, Ordnung 2;
+  Regel: >= 2 Zellen in der Hartmann-Schicht a/Ha. Diffs fluidx3d/mhd_*. Naechstes B2: Potential phi (Poisson) fuer
+  Kanaele mit Seitenwaenden (Shercliff/Hunt), dann PbLi im Spulenfeld (Ha real ~1e4 -> skaliert + Gesetze).
+
+2026-11-01 LESEHILFEN: Alle 41 Berichtsbilder (DE+EN) haben jetzt einen Absatz \lesehilfe{...}
+  („So liest man das Bild:“ / „How to read the figure:“), Makro in projektbericht.tex / project_report_en.tex.
+  Regel: jedes neue Bild bekommt eine Lesehilfe fuer Nicht-Physiker. siunitx alt: kein \SI{a x b}{..},
+  stattdessen $a\times\SI{b}{..}$. PDFs: DE 67, EN 61 Seiten.
+
+2026-11-01 ~18:45 MHD STUFE 2 fertig: Schalter MHD_POT (Potential, Jacobi, FX_MHD_JACOBI=20, FX_MHD_WAND 0/1), Diffs
+  fluidx3d/mhd_*.diff (+ mhd_lbm.hpp.diff), setup_mhd_kanal.cpp (ersetzt setup_mhd_hartmann.cpp), Pruefung
+  stellarator/mhd_kanal.py gegen eigenen 2D-b-Loeser: 12 Faelle bis Ha 30 < 1 %. Potentialkraft MUSS vor dem
+  halbimpliziten Teil stehen. KORREKTUR Stufe 1: alte Werte (4,3 % Ha30) Auswertefehler ohne UPDATE_FIELDS, neu 0,5 %.
+  k_p isolierend -> 1/Ha bestaetigt (daten/mhd_kp.json). Kapitel mhd_de/en.tex mit Begriffskasten.
+  Vorwaermer-Prinzip (Skizze vorwaermer_prinzip.py) in Bericht DE/EN. Offen: Mehrgitter fuer reale Ha (~600+),
+  endlich leitende Wand c, B(x) aus Spulen. Commit lokal, Push wartet auf OK.
+
+2026-11-01 ~18:55 ALPHA AUSGEWERTET: stellarator/alpha_auswertung.py (auswerten | verlustbahnen [.venv-opt] | video).
+  1000 Alphas, 16,6 +-1,2 % verloren (95 % gefangen, Median 25 ms), Energie 11,6 % = 71 MW (Stix-Gewichtung),
+  Wandtreffer gebuendelt oben, max ~2,4 MW/m2 auf 16x8 Feldern. daten/alpha_verluste.json, Bilder alpha_verluste(_en),
+  alpha_bahnen_standbild(_en), Video docs/filme/alpha_bahnen.mp4. Kapitel alpha_de/en.tex. README-Abschnitt.
+  Naechstes: Form allein (booz_xform fehlt in .venv-opt) gegen Spulen; Spulen mit Alpha-Ziel; Stoesse.
+  README ohne Rechnerangaben (FREECAD_APPIMAGE). Gepusht bis 730f5bf; Alpha-Teil lokal.
+
+## 2026-11-01 abends: Alpha-Ursache getrennt (vorher/nachher)
+- Lauf „Form allein“ (stellarator/alpha_form.py, Boozer über booz_xform): 0,3 % Verlust gegen 16,6 % im Spulenfeld →
+  ~98 % der Verluste von den Spulen. Erwartung vorher (< 1 %) im Ereignisprotokoll F-105 festgelegt, bestätigt (F-106).
+- Bild docs/bilder/alpha_vergleich(_en).png, daten/alpha_vergleich.json; Bericht alpha_de/en.tex „Vorher und nachher“.
+- Pausieren: ~/bin/rechnung pause | weiter | (ohne Argument: Zustand). alpha_form.py kann mit --weiter fortsetzen.
+- Nächster Schritt: Spulen mit Alpha-Ziel nachoptimieren, dann gleichen Vergleich wiederholen („nachher“).
+- Wunsch des Nutzers: Video des Plasmastroms – für 2026-11-02 vereinbart; zuerst klären, was es zeigen soll (Feldlinien, Teilchenbewegung oder elektrischer Strom).
+- fef7895 (vorher/nachher) hochgeladen.
+
+## 2026-11-02 Festigkeit gekoppelt (Stand 13:45)
+- DOE `sim/kopplung/doe1` läuft (200 Punkte, ~2,5 min/Punkt, Neustart überspringt fertige; Fehler in punkte/NNNN/fehler.txt).
+- Nach 17 Punkten 3 zulässig (8, 14, 17). Kapitel festigkeit_de/en.tex als Zwischenstand, nach DOE aktualisieren
+  (`.venv/bin/python -m stellarator.festigkeit_bilder` erneuert Bilder).
+- Nächste: Ersatzmodell, leichtester zulässiger Entwurf, Nachrechnung feines Netz + elastischer Stützzylinder, Alpha, 3D-Modell FreeCAD.
+- Nicht committet: kopplung.py, kraft_analyse.py, festigkeit_bilder.py, hexmodell.py (LAGER_ORT), stufe2_spulen.py, Recherche, Kapitel, Videodateien.
+
+## 2026-11-02 abends: Auswertung doe1 auf morgen verschoben (Nutzerwunsch)
+- doe1 endet von selbst nach Punkt 199 (kein Neustart nötig). Zulässig bisher: 8, 14, 17, 61, 63, 93, 136, 157, 169.
+- Ziel geändert: robustester statt leichtester Entwurf (Gewicht egal, "Gebäude"); Rangliste nach kleinster Reserve.
+- Morgen: Auswertung + Ersatzmodell, Nachrechnung feines Netz (61, 169, 93, 8), Idee Nutzer: Bereiche gezielt schwächen
+  für gleichmäßigere Lastverteilung (F-131), dann 3D-Modell. Kapitel/README/Bilder auf Endstand bringen.
+- Nutzerwunsch für morgen: 3D-Modell des besten Entwurfs KOMPLETT in PicoGK bauen (Plasma, Package-Schichten,
+  Spulen mit Wickelpaket/Gehäuse, Verbinder, Lager/Stützzylinder) – Voxel, Boolesche Vereinigung, STL; zusätzlich zu/statt FreeCAD vergleichen.
+- Nutzerwunsch für morgen: genau erklären, WELCHER Stahl (316LN = X2CrNiMoN17-13-3, 1.4429) mit Kennwerten bei 20 °C und 4 K,
+  Herleitung der 500-MPa-Grenze; Tabelle des Nutzers: https://www.schweizer-fn.de/festigkeit/festigkeitswerte/stahl/stahl_start.php
+  (Raumtemperaturwerte dort mit 4-K-Werten vergleichen). "p99 Stahl" erklären und zusätzlich Maximalwert/Spannungskategorien zeigen;
+  im Bericht p99 durch verständlichen Begriff ersetzen.
+- Prüfen: kopplung.py, kraft_analyse.py, festigkeit_bilder.py, festigkeit_de.tex wurden außerhalb dieser Sitzung geändert (git diff ansehen).
+
+## 2026-11-03 Auswertung doe1, Ersatzmodell-Vorschläge, PicoGK-3D, Variantenbericht (Claude)
+- Ergebnis: 7 zulässig (bereinigt): 0061 0169 0093 0008 0014 0017 0157. **Empfohlen 0169** (24 Spulen, 13 Verbinder/Paar,
+  28 kt; σ99 308 → 319 MPa im feinen Netz, Robustheit 0,29). Ersatzmodell-Vorschläge ersatz1: V0/V1/V3 zulässig, V2 nicht;
+  V3 im Standardnetz 0,35, im feinen Netz 272 → 394 MPa (0,21) → 0169 bleibt.
+- Werkstoff 1.4429/316LN geklärt (stahl_bild.py), p99 → σ99, Spannungskategorien (doe_auswertung kategorien).
+- PicoGK-Befund: Verbinder von 0169 durchdringen sich teilweise (FE zählt 13 % doppelt). Vermutung: deshalb netzstabil.
+- Skripte: stellarator/doe_auswertung.py (tabelle|ersatz|vorschlag|kategorien|bilder), picogk_modell.py (liste1|katalog|bilder),
+  variantenbericht.py (gen/*.tex) → bericht/variantenbericht/ (DE variantenbericht.tex, EN variant_report_en.tex).
+- Liste 1 (18 PicoGK-Modelle) fertig. Kühlsegment- und Torus-Schnitt-Rechnungen nach /home/cae/cae_projekte/fusion_sim
+  verschoben (Symlinks in sim/). LÄUFT LOSGELÖST: Katalog (Liste 2, ~187 Modelle à 2 min ≈ 6 h,
+  Ablage /home/cae/cae_projekte/fusion_katalog3d, Log sim/kopplung/katalog3d_lauf.log, Ende = FERTIG_KATALOG).
+  Danach (Hermes oder Claude): `.venv/bin/python -m stellarator.variantenbericht` und in bericht/variantenbericht
+  `latexmk -pdf variantenbericht.tex variant_report_en.tex` (Katalogkarten erscheinen dann vollständig). Speicher beobachten.
+- Nächste Schritte: 0169 mit überschneidungsfreien Verbindern vs. durchgehender Platte (Vermutung prüfen); weiche
+  Verbinderenden (Nutzer-Idee örtlich); Abkühlspannung + Eigengewicht.
+- Nicht committet (Freigabe des Nutzers abwarten): alles von heute.
+
+- 2026-11-03: Plan für offene Punkte in docs/plan_offene_punkte.md (STL → STEP auf Wunsch herausgenommen). Nutzer wünscht Variantenvideo (Blender, wilde zuerst, am Schluss die zulässigen).
+
+## Übergabe 2026-11-03 (Claude Code, Kontext läuft aus)
+- Variantenfilm: Mittelteil A_C (Bilder 240–1499) rendert losgelöst (`sim/video_varianten/lauf.sh A_C`, Log lauf.log,
+  Bilder auf zweiter Platte). Danach: `.venv/bin/python -m stellarator.varianten_video_schnitt` → docs/filme/varianten.mp4,
+  Bilder ansehen (Feld 18–42 s, Reihe 42–50 s), mit Erwartung F-147 vergleichen, README-Eintrag + Checkliste abhaken, committen.
+  Begleittext docs/filme/varianten.md steht. Einzelbilder erst nach Freigabe löschen.
+- Punkt 1 erledigt (F-153): getrennt 387/392, platte 336/493, standard 308/319 MPa. Nächster Schritt: Review-Paket
+  docs/review_festigkeit_entwurf.md als fertige Fassung DE/EN mit Bildern (PDF).
+- Temp-Ordner sim/_temp_2026-11-03/ (verworfene Bilder, alte PicoGK-voll-Netze): Nutzer fragen, ob löschen.
+- Buch: Kapitel 14a fertig bis auf FRAGEN 37 und Lage des Kapitels.
