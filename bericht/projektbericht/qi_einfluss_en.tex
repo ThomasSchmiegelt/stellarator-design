@@ -64,3 +64,21 @@ edge 0.31 to 0.43 (0.20 to 0.85); edge rotational transform 0.07 to 0.24; at mos
 \emph{Expectation beforehand:} $R^2>0.5$ (met), most important quantity rotational transform or gradient length
 (missed). \emph{Limit:} the mirror ratios are themselves measures of the field shape and closely related to QI, so
 they are no freely selectable design levers; it remains a correlation. Source: \texttt{stellarator/qi\_bereiche.py}.
+
+\subsection*{Parameter corridor for an optimal plasma}
+``Good'' here means QI $\le 0.001$ (2420 of 158,685 plasmas, 1.5\,\%). A \emph{box} from the 5th to 95th percentiles of the good plasmas:
+aspect ratio 7.6 to 9.7; elongation 5.35 to 7.45; axis mirror ratio 0.27 to 0.40, edge 0.30 to 0.43; edge rotational transform per period
+0.07 to 0.25; vacuum well $-0.145$ to $-0.01$. In the box 23\,\% of the plasmas are good (base rate 1.5\,\%) and it contains 46\,\% of all good ones.
+A shallow decision tree shows the interaction: the best region (elongation $>6.06$, edge mirror ratio $\le0.43$, axis $>0.325$,
+aspect ratio $\le9.09$) has 40\,\% purity at 31\,\% coverage. \emph{Expectation beforehand:} box 3 to 15\,\%, tree 20 to 50\,\% (met or exceeded).
+Our sets DjLe3eL6, DYU and DPrcxq66 lie inside the box, DP9 lies outside in several quantities.
+\emph{Limits:} the quantities are measures of the field shape, not design parameters; even inside the corridor three of five plasmas are not good. Source: \texttt{stellarator/qi\_korridor.py}.
+
+\subsection*{From the quantities to the shape: shape coefficients}
+Inputs are the number of field periods and the table of shape coefficients (\texttt{r\_cos}, \texttt{z\_sin}, $5\times9$ numbers each); they describe the boundary surface of the plasma
+as a superposition of waves. A gradient-boosting model predicts $\log_{10}$(QI) from these 91 inputs with $R^2=0.91$ on held-out data
+(expectation 0.6 to 0.85, exceeded). The low-order coefficients ($m=0$ and $1$) and the number of field periods matter most.
+A \emph{box} from ranges of the five most important coefficients has only 2.3\,\% purity (expectation 5 to 15\,\%, missed), the best region of a decision tree 5\,\%.
+\emph{Interpretation:} good shapes result from the interplay of the coefficients and cannot be given as ranges of single coefficients; the model can do it, a box cannot.
+The next step is therefore to search new shapes in the model and to verify them with the real solver (VMEC++).
+\emph{Limits:} valid only within the data range, index convention not checked, QI measures only the field shape. Source: \texttt{stellarator/qi\_koeffizienten.py}.

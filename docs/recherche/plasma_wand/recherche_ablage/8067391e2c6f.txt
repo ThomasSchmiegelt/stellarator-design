@@ -1,0 +1,595 @@
+URL: https://arxiv.org/pdf/2201.06341v2
+arXiv:2201.06341v2 [physics.plasm-ph] 22 Apr 2022
+
+
+
+
+                                                                      Figure 1. Shown are the islands at toroidal position φ = 0 (left) and φ = π/5 = 36 ° (right) as dots as well as the target structures
+                                                                      used in the simulations.
+
+
+
+
+                                                    Parametrisation of target heat flux distribution and study of transport
+                                                    parameters for boundary modelling in W7-X
+
+                                                                      David Bolda , Felix Reimolda , Holger Niemanna , Yu Gaoa , Marcin Jakubowskia , Carsten Killera ,
+                                                                      Victoria R. Wintersa and the W7-X teama,b
+                                                                      a Max Planck Institute for Plasma Physics, Wendelsteinstr. 1, 17491 Greifswald, Germany
+                                                                      b See Klinger et al 2019 [1] for the W7-X Team
+
+                                                                      E-mail: dave@ipp.mpg.de
+
+                                                                      25 April 2022
+
+
+                                                                      Abstract. Modelling the scrape-off layer of a stellarator is challenging due to the complex magnetic 3D geometry. The here
+                                                                      presented study analyses simulations of the scrape-off layer (SOL) of the stellarator Wendelstein 7-X (W7-X) using the EMC3-
+                                                                      EIRENE code for the magnetic standard configuration. Comparing with experimental observations, the transport model is validated.
+                                                                      Based on the experimentally observed strike line width, the anomalous transport coefficients, used as input to the code are determined
+                                                                      to around 0.2 m2 /s. This is however in disagreement with upstream measurements, where such small cross-field transport leads to
+                                                                      temperatures higher than measured experimentally.
+
+
+
+
+                                                    1. Introduction
+
+                                                    In order to operate fusion power plants based on the magnetic confinement concept the power flux on the plasma-facing
+                                                    surfaces needs to be controlled to prevent the overloading of the structures. Predictive modelling, necessary for design of next-
+                                                    step fusion devices, requires successful validation via comparison to existing experimental devices to ensure all important
+                                                    underlying physics is included in the code. One of these devices is Wendelstein 7-X (W7-X), an advanced stellarator with
+                                                    reduced neoclassical transport [2, 3, 4, 1, 5], which had its first divertor operational campaign in 2017 - 2018.
+                                                         In contrast to tokamaks, the scrape-off layer (SOL) of W7-X is inherently three dimensional. W7-X features a 5-fold
+                                                    toroidal symmetry. Each of the 5 modules is in itself stellarator symmetric and can be split into two half modules. The SOL
+                                                    of W7-X features an island divertor, where in the standard configuration the 5 resonant islands are intersected by 10 divertor
+                                                    modules [6, 7, 8]. A plot of the islands and the intersection with the divertor is shown in fig. 1. The upper halfs of the
+                                                    modules have even numbers, namely 18, 28, 38, 48, 58, and the lower half-modules have uneven numbers, 19 to 59. The
+                                                    half-modules x8 and x9 are in the x-th module. The divertors carry the numbers of the respective half-modules they are
+                                                    located within.
+Parametrisation of target heat flux distribution and study of transport parameters for boundary modelling in W7-X                                   2
+
+
+
+
+                                               ver
+                                                   tica
+                                                        l   targ
+                                                                et
+
+                                                                horizontal targ
+                                                                               et
+
+
+
+
+                  Figure 2. Synthetic view of the IR camera on the target.
+
+
+
+
+                                                vertical target
+
+
+
+                                                             horizontal target
+
+
+
+
+                  Figure 3. Mapped view of the target. The coordinates map_x and map_y are not directly related to physical quantities. map_x
+                  is roughly aligned with the magnetic field, while map_y is roughly orthogonal to the magnetic field. The pumping gap is around
+                  map_y ≈ 125. The finger structures extend roughly 15 pixel in map_x direction. In the top right is an inset of fig. 2. The so called
+                  low iota target is on the horizontal target, for φ < 0. Note that all targets are mapped to this φ coordinate. Upper divertors are
+                  mapped to negative toroidal angle, due to stellarator symmetry. Divertors are also shifted by n·2π
+                                                                                                                   5
+                                                                                                                       due to the 5 fold symmetry of
+                  W7-X.
+
+
+      The lack of toroidal symmetry makes connection and comparison of experimental measurements at different toroidal
+locations extremely complex. As such, there is great demand for 3D modelling, where synthetic diagnostics can be
+implemented to help understand whether differing diagnostic measurements are truly in disagreement or if differences are
+due purely to spatial variations in the plasma [9]. However, before such an analysis can be performed, it is critical to first
+validate the simulations, which itself requires diagnostic input covering as much of the SOL plasma domain as possible.
+      The anomalous cross-field transport in the SOL of fusion plasmas is often considered to be dominated by turbulence.
+In W7-X experiments, SOL turbulence and turbulent transport has been observed [10, 11, 12, 13]. As fully turbulent
+simulations of the full SOL are computationally extremely challenging, simpler models are generally used, such as fluid
+transport codes [14]. There the turbulence is effectively represented by anomalous diffusion coefficients.
+      This work validates the diffusion-based anomalous transport of EMC3-EIRENE in the absence of drifts in the
+model [15, 16] by using spatially constant transport coefficients. The simulation data is compared with experimental data
+from W7-X from the infra-red heat flux diagnostic and the reciprocating electric probes. This work extends previous work
+and especially addresses remaining discrepancies between simulations and experiments [16, 15, 17, 18, 19, 20, 21, 14]. The
+here presented analysis is restricted to the magnetic standard configuration.
+      The current paper is organized as follows: Section 2 the newly developed methods for comparing the heat-fluxes
+from experiments and simulations is presented. In section 3 the experimental data is presented, where the toroidal power
+distribution and the strike line width is seen. In the following section, the simulations are presented. Section 5 summarises
+and discusses the results, here it is seen that a spatially constant diffusion coefficient cannot simultaneously match downstream
+and upstream conditions in the selected magnetic configuration. The main conclusions are presented in the final section.
+Parametrisation of target heat flux distribution and study of transport parameters for boundary modelling in W7-X             3
+
+
+
+
+                  Figure 4. Position of the MPM diagnostic. Reproduced with kind permission from [25].
+
+
+2. Method
+
+2.1. W7-X diagnostics
+In this work, two diagnostics are used for comparison to simulation data: one is measuring downstream at the divertor
+targets and the other upstream. Both downstream and upstream parameter comparisons are important to determine if the
+EMC3-EIRENE simulations successfully reproduce features across the entire SOL. The downstream measurement used is
+the infra-red (IR) camera system [22], which fully covered the area of the 10 divertors in the previous experimental campaign,
+with data available for 9 of the 10.
+      The temperature is derived from the IR radiation. The heat-flux is calculated by the evolution of the temperature profiles
+using the two-dimensional thermal model THEODOR [23]. This heat-flux is used to assess the validity of the employed SOL
+transport model in EMC3-EIRENE as the heat-flux has a high spatial resolution. The spatial resolution is around 3 mm the
+noise level is around 0.25 MW/m2 .
+      The second diagnostic used for comparison is the multi-purpose manipulator (MPM). The MPM can be equipped
+with different probe heads to provide profiles of various plasma parameters such as Te , ne , poloidal mach number and
+more [24, 25].
+      In the here presented analysis, the MPM was equipped with Langmuir probes, that have been used to measure the
+electron density and temperature in the SOL of W7-X. This provides plasma parameters upstream and thus complements the
+downstream comparison provided by the heat-flux measurements at the divertor. Unlike the infra-red diagnostic the MPM is
+only present in one location, thus does not give a direct measurement of up-down asymmetries [8] or field errors [26]. The
+path of the MPM is shown in fig. 4.
+
+2.2. Heat-Flux distribution analysis
+The strike-line width and amplitude is used in order to make the heat-flux profiles more comparable between modelling
+and experiments. The IR data is mapped onto the image format as shown in fig. 3. The divertor is split into smaller
+structures, called fingers, that extend mostly in poloidal direction. 1D slices of the data are analysed, taking slices roughly
+perpendicular to the magnetic field lines, in the map_y direction from fig. 3. This gives around 15 1D slices for each finger.
+These 1D slices are then fitted to a function consisting of a constant background plus 2 Gaussian. The positions of the
+peaks are constrained to be within the data slice. The lower bounds for the peak is 3 times the grid spacing, to avoid fitting
+a single outlier, rather than the general shape of the data. For fitting the Trust Region Reflective algorithm (trf) from
+scipy.optimize.least_squares is used [27, 28].
+      In order to decrease the computational cost as well as to decrease the impact of noise, 10 time frames are averaged for
+fitting. This gives a time resolution of 100 ms. The study is restricted to steady-state profiles as the EMC3-EIRENE code
+only provides steady-state solutions. Although the evolution of the toroidal plasma current throughout the discharge may
+change the location and width of the strike line, the movement is on the order of mm/s and does not significantly impact the
+Parametrisation of target heat flux distribution and study of transport parameters for boundary modelling in W7-X                                     4
+
+
+
+
+                   Figure 5. Plot of the IR data for the horizontal target at map_x=325. It can be seen that the data consists of a narrow, high in
+                   amplitude peak, as well as a broader feature with a significantly smaller amplitude. The fitted constant background is in this case
+                   negligible.
+
+
+
+
+                   Figure 6. Plot of the IR data for the vertical target at map_x=325. The fit detects the strike line as “Narrow peak”. The “Wide peak”
+                   combined with the “Background” fit the background as well the reflections at 0.1 m.
+
+
+result over a 100 ms time window [29].
+     For each averaged time slice, each pixel row of each finger is separately analysed. One should note, that for one map_x
+value there can be several data slices, as the horizontal target and the vertical target are different fingers but share the same
+map_x value. Similarly, in the middle of the horizontal target, between 450 / map_x / 800 the data is split into two fingers,
+one close to the gap, and one further away. If the peak heat-flux is below the noise-level of 0.25 MW/m2 , no fit is attempted.
+     Examples of the fitted data are shown in fig 5 and fig. 6 for the horizontal target and vertical target. Especially on the
+vertical target for map_x lessapprox450 the fit is generally good. On the middle of the horizontal target, especially for the
+fingers distant from the pumping gap, the heat-flux is very low, and heat-fluxes above the 0.25 MW/m2 limit are typically a
+single spike due to noise, giving a strike-line width of the lower bound / 1 cm. A problematic fit is shown in fig. 13 that
+will be discussed later.
+     On the vertical target, shown in fig. 6 the second structure at position 0.1 m is due to reflections, but as the the analysis
+is mostly concerned about the more narrow, higher peak, the reflection does not affect this analysis.
+     The fitted quantities were averaged by weighting with the power Pi of the data slice. Only slice i where fitting is
+attempted are included. The power-averaged quantity α is thus
+
+                                                                                                                               (1)
+                                                          X           X
+                                                     α=       αi Pi /    Pi
+                                                                    i            i
+
+     Fig. 7 shows on the left the connection length of some regions of the target regions. Regions of very long connection
+length > 1000 m indicate the location of the main strike line formed by the intersection of the island on the divertor target
+plates. It can be seen the main strike line is on the low iota target. Additionally, also on the vertical target long connection
+lengths are observed.
+Parametrisation of target heat flux distribution and study of transport parameters for boundary modelling in W7-X                                        5
+
+
+
+
+                   Figure 7. Shown on the left is a plot of the connection length mapped on to the target. Plotted in grey is the target regions where no
+                   traced field line ended. On the right is a plot of the heat-flux on the divertor at t = t1 + 3.3 s for shot #20180920.009. The main
+                   strike line is on the left of the horizontal target, roughly in agreement with the long connection lengths. Additional heat loads on the
+                   high iota target as well as the vertical target are visible.
+
+
+2.3. EMC3-EIRENE
+EMC3-EIRENE is a Monte Carlo fluid transport and kinetic neutral code, that is capable of handling complex geometries,
+such as those commonly encountered in the SOL of stellarators. It has already been used in the past to model the edge
+of W7-X [16, 14, 15, 17, 18, 19, 20, 21]. While EMC3-EIRENE does captures some of the observations in experiments,
+especially global trends [14, 16], there is still disagreement in local parameters[30].
+     EMC3-EIRENE does include parallel transport in the form of advection as well as viscosity and parallel heat diffusivity.
+Perpendicular transport included in EMC3-EIRENE features anomalous diffusion based on some given particle and heat
+diffusion coefficients. EMC3-EIRENE does not require nested flux-surfaces and is only aware of the local magnetic geometry.
+For this reason the perpendicular diffusion is uniform in radial and bi-normal direction, i.e. D ∝ I −~b~b with ~b the unit vector
+in the direction of the magnetic field and I the identity matrix. Drifts, like the E × B drift, are not included in EMC3-
+EIRENE. While EMC3-EIRENE is able to handle spatially varying perpendicular transport coefficients [15, 31], this feature
+is not used in the here presented study.
+     An analysis analogous to the one described in sec. 2.2 can be applied to simulated heat-flux data generated by EMC3-
+EIRENE. Thus, a direct comparison of experiment and modelling is performed. This allows to quantify the discrepancies
+and validate the modelling and the assumptions, for example the transport model, with experimental data.
+     In all cases the heat diffusion coefficient χ is set to χ = 3 · D, i.e. scaled with the diffusion coefficient. Note that the
+resulting heat transport is q⊥ ∝ nχ, i.e. has a density dependence even for constant χ.
+
+2.4. xemc3
+The majority of the analysis has been carried out using the xarray framework [32, 33]. For that the xemc3 [34] library has
+been implemented that reads the output of the EMC3-EIRENE routine into the xarray format. An extensive documentation,
+including documentation and online tutorials, is available online ‡.
+
+3. Experimental data
+
+For this analysis the W7-X experiments #20180920.009, #20180920.013 and #20180920.017 have been analysed. They are
+part of a density scan with an input power of 4.7 MW ECRH. They have been selected due to the low radiation fraction
+frad of around 0.15 . . . 0.35. Low frad avoids large effects of power dissipation in the volume. Thus transport is prominent
+and easier to study. The heat-flux on the divertor measured by IR was 3 . . . 4 MW, shown in fig. 8, with the time-averaged
+power per target between 330 kW and 496 kW. The peaks in the time evolution, shown in fig. 8, are due to CH4 puffs and
+fuelling. The magnetic configuration used was the standard configuration. The toroidal plasma current increased over time
+and reached ≈ 5 kA after around 6 seconds towards the end of the discharge, with the exception of #20180920.017, where
+the maximal bootstrap current was around 2.5 kA. The SOL of W7-X is sensitive to plasma currents and the toroidal plasma
+current impacts the heat deposition [35, 36, 21]. For the here analysed discharges, the strike-line width is not significantly
+impacted by the toroidal current, but the strike-line position is a function of plasma current [29], as shown in fig. 8.
+      The line integrated density was 4 · 1019 m−2 to 8 · 1019 m−2 . These low to medium density cases were selected as
+they feature a low radiative fraction. This allows to focus on the heat transport effect on the target heat load distribution,
+reducing the additional impact of radiation, simplifying the required physics to model the dynamics and reducing the system
+complexity as Prad is a strong function of the electron temperature Te . As the heat-flux is proportional to the density
+‡ https://xemc3.readthedocs.io/
+Parametrisation of target heat flux distribution and study of transport parameters for boundary modelling in W7-X                                    6
+
+
+
+
+                  Figure 8. Overview of the timeR evolution of the radiated power Prad , the ECRH heating power, the power on the target measured by
+                  IR, the line integrated density ne , the toroidal plasma current Itor and the strike line position from #20180920.009 on finger 24.
+                  For the target modules where no IR data was available, the average from the other targets was used to extrapolate to the total target
+                  power.
+
+
+q⊥ ∝ nχ, a density scan was chosen for this study. The simulations do not feature the same densities, as in the simulations
+the separatrix density was set, while in the experiment the separatrix density is not well known. On the other hand the line
+integrated density is not known in the simulations, as the core region is not modelled.
+     Fig. 7 (right) shows an example of the spatial distribution of the target heat-flux in the projection described in fig. 3.
+Only the strike line on the low iota target is expected from simple field line tracing. The load on the vertical target can be
+explained by field line tracing in the reverse direction, while other loads are only possible due to cross-field transport.
+
+3.1. Toroidal distribution
+Fig. 9 shows a plot of the toroidal distribution of the heat-flux, by showing the mean power on the respective fingers, as
+introduced in fig. 2 and fig. 3.
+      No strong variation for the different half modules is observed, only half-module 28 shows an increased heat-flux at
+φ ≈ −5° on the horizontal target, as well as on the vertical target. For the lower divertors, most variation is observed at
+φ ≈ −15° where module 59 shows an increased heat load and module 49 shows a decreased heat load. These variations
+might be explained by field errors [26]. The calibration of the absolute values of the IR diagnostic was incomplete in OP
+1.2b. This limits the reliability of comparisons between the different IR cameras and thus between the different half modules.
+The simulations assume stellarator symmetry and therefore only one half-module is modelled. They are inherently up-down
+symmetric and no variation between different modules is included. For these reasons the following analysis will focus on
+averages of the different modules.
+      Fig. 10 shows the experimental power per finger that was measured in the steady state part of a density scan for the upper
+divertors (top) and the lower divertors (middle). In general, a decreasing trend of power on the target with increasing density
+is observed, which is expected in the experiments as with increasing density the radiation increases, and thus the target heat
+load is reduced. An exception to the decreasing trend is the load at φ ≈ 12°. The increased heat flux at this shadowed area
+is in agreement with an increased cross field transport with increasing density. Consequently the load on the middle of the
+horizontal target is increased, at least on the upper divertors. At low densities the main heat load on the horizontal target
+is mainly at φ ≈ −15° and less pronounced at φ ≈ −5°. With increasing density the ratio of power at φ ≈ −15° over
+the power at φ ≈ −5° is reduced, suggesting an increased transport channel or a decrease in the losses from the transport
+channel to φ ≈ −15°. Especially on the upper divertors, this results in an increased heat-flux at φ ≈ −5°. At the same time
+Parametrisation of target heat flux distribution and study of transport parameters for boundary modelling in W7-X                                        7
+
+
+
+
+                 Figure 9. Plot of the time averaged power per finger for the steady-state phase of #20180920.009. The error bars denote the standard
+                 deviation of the time evolution. The fingers are introduced in fig. 2 and fig. 3. Note that the alternating structure in the middle of the
+                 horizontal target is caused by the numbering, even numbers are close to the pumping gap, while the odd numbers are further away.
+                 The different half modules are shown separately. No data from half-module 58 is available.
+
+
+
+
+                 Figure 10. Plot of the time and module averaged power per finger for the steady-state phase of #20180920.009, #20180920.013
+                 and #20180920.017 on top for the upper divertors and in the middle for the lower divertors. On the bottom are results from EMC3-
+                 EIRENE simulations with D = 0.2 m2 /s discussed in sec. 4. The error bars denote the standard deviation of the time evolution and
+                 inter module variation. As the simulations don’t have a time component, only the experimental data has error bars. The Prad for the
+                 simulations was 1 MW and for the experiments 0.68 MW to 1.7 MW, see fig. 8. The power on the divertor was 329 kW, 306 kW and
+                 254 kW for the ne,sep = 1 · 1019 m−3 , ne,sep = 3 · 1019 m−3 and ne,sep = 10 · 1019 m−3 case respective. Note that simulations
+                 and experiments do not match in density, as for the experiments the separatrix density is not well known, and for the simulations, due
+                 to the lack of core profiles, the line integrated density is not known.
+Parametrisation of target heat flux distribution and study of transport parameters for boundary modelling in W7-X                                         8
+
+
+
+
+                   Figure 11. Distribution of the power in the main strike line compared to total power. On the left is the histogram for each single
+                   fitted slice, while on the right is the average for each divertor at each time. The shown data is for experiments #20180920.009 and
+                   #20180920.013.
+
+
+
+
+                   Figure 12. Plot of the time and module strike-line width per finger for the steady-state phase of #20180920.009 (left) and
+                   #20180920.013 (right). The points denote the power-averaged strike-line width for all fits, and the error-bars denote the power-
+                   averaged standard deviation. Shown is the narrow strike-line, that has been identified by fitting. Only finger with at least 2 kW
+                   average power are shown. The grey lines show estimates for #20180920.009 for upper and lower divertors, that will later be used
+                   for comparison to simulations. The large variation in the lower target on the vertical target is due to significant variation in the time
+                   traces for some of the fingers.
+
+
+the heat-flux at φ ≈ −15° decreases. Note that, as can be seen on fig. 7, the target φ ≈ −15° (map_x< 100) is shadowed
+while at φ ≈ −5° (map_x≈ 400) is directly connected. As such this is in contrast to the expected behaviour.
+     Simulations with D = 0.2 m2 /s, shown in the bottom plot in fig. 10, do not see the same trends with density. Here the
+peak of the mean power appears at φ ≈ −5° at low density, while φ ≈ −15° generally sees lower power. As the separatrix
+density is increased, the mean power at the φ ≈ −5° decreases, while the power at φ ≈ −15° increases slightly.
+
+3.2. Strike-line
+For the data shown in fig. 10 the strike-line has been analysed using the method discussed in sec. 2.2. Each module and
+time-slice has been analysed separately, to not broaden the strike line by averaging strike-lines at different positions due to
+the strike-line movement during the plasma discharge and e.g. camera misalignment and field errors [26] for different half
+modules.
+      The narrow feature identified is expected to be due to parallel plasma flow to the target. It is not yet clear what is causing
+the broad feature.
+      By integrating over the Gauss of the narrow feature, the power of the main strike line can be calculated. Fig. 11 shows
+the power observed in the narrow feature compared to the total observed power. Roughly 50 % of the power on the divertor
+is in the main strike line. For the left figure, “per single slice” - values below 0 and above 1 are observed. This is due to
+bad fits, which can be caused by single points of high heat flux, that are fitted by a broader Gaussian. However, they are not
+frequent, and as such it is expected that they do not have a significant impact. The distribution for the averaged power on the
+right is not showing this behaviour, verifying that this indeed only outliers that show this behaviour.
+Parametrisation of target heat flux distribution and study of transport parameters for boundary modelling in W7-X                                  9
+
+
+
+
+                   Figure 13. Plot of the IR data for the low iota target and map_x=325. Similar to fig. 5 but for like #20180920.017 instead of
+                   #20180920.009. Smaller structures in the fit prevent the expected convergence of the fit, and the fitted narrow peak is actually a
+                   smaller perturbation of the true main peak.
+
+
+      Fig. 12 shows the power-average (see (1)) of the width of the fitted narrow peak (see fig. 5) for the low and medium
+density cases #20180920.009 and #20180920.013. It can be seen that the strike-line width is in the range of 2 cm to 4 cm.
+      Both density cases show a similar behaviour in their strike-line width pattern on the upper and lower divertor target
+plates. Starting from φ ≈ −20°, both the upper and lower divertor targets see comparable strike line widths and heat flux
+magnitudes. For the remainder of φ / 0°, on the lower divertor a narrow strike line is measured for the region of the
+high heat-flux, that stays constant, where the power flux is reduced, while on the upper target the strike-line is broader at
+φ ≈ −15°, end gets more narrow towards the φ ≈ −5°.
+      The strike-line width on the vertical target is comparable on the upper and lower divertors, at least for the points with
+significant power flux. The vertical targets of the upper and lower divertors mainly differ in their magnitude of the heat flux,
+as shown in fig. 10. The strike-line width at φ ≈ 15° is slightly wider on the lower divertor, however they are still the same
+within the standard deviation.
+      For the highest density case #20180920.017 (not shown), the average strike line widths across the divertor target could
+not be computed. Small-scale structures in the strike-line pattern keep the fits from converging reliably, with an example
+shown in fig. 13. The cause of these structures is not yet known. The small scale structures seem to be fixed in space, while
+the main strike line moves in time. As such it seems unlikely that the heat-flux of the plasma onto the target does contain
+such small-scale structures. It is currently hypothesized that these structures are caused by artefacts in the IR diagnostic.
+For example surface layers could modulate the radiation. Future work includes understanding the origin of these structures
+as well as extending the current fitting mechanism to be more tolerant of these modulations, such that reliable results of the
+strike line features can still be obtained even with their presence.
+      Fig. 14 shows the poloidal position of the strike-line for a part of the horizontal target. The lower divertors tend to have
+the strike line located somewhat closer to the pumping gap as compared with the upper divertors.
+
+3.3. MPM data
+For the above studied discharges no MPM data is available. Thus MPM data from #20181010.008, #20181010.016,
+#20181010.021 and #20181010.022 is used instead. The discharges used similar input power, same magnetic configuration
+and also feature low radiation fraction.
+
+4. Simulations
+
+The scrape-off layer of W7-X has been modelled using EMC3-EIRENE. For this the upstream density was scanned. The
+simulation relies on the stellarator symmetry of W7-X, and therefore only one half-module is modelled. Ideal coils are used
+and thus no error field effects are included. Drifts are not included as they are not yet implemented in the code.
+     The input heating power within the simulation domain of one half-module was set to be 470 kW, leading to a total of
+4.7 MW for the whole device. The power was distributed evenly between ions and electrons, and enters the domain at the
+core boundary. The observed power on the divertor is up to 352 kW - giving a total power of ≈ 3.5 MW on all divertors. The
+upstream density was set to be fixed ne,sep = 1 . . . 10·1019 m−3 . The cases ne,sep = 1·1019 m−3 and ne,sep = 3·1019 m−3 are
+roughly in the range of the experiments, while ne,sep = 10 · 1019 m−3 is a purely hypothetical case, as for such high densities
+the radiation fraction would be much higher. No pumping and fuelling is included in the simulations, and therefore particle
+balance is achieved via scaling the recycling flux to the amount needed for the fixed upstream density value. The radiation
+was fixed to 1 MW, achieved via carbon impurity radiation, giving a radiation fraction ≈ 21 %. While in the experiment
+Parametrisation of target heat flux distribution and study of transport parameters for boundary modelling in W7-X                                         10
+
+
+
+
+                   Figure 14. Poloidal position of the strike-line for some slices on the horizontal target, time averaged between 1 and 2 seconds. The
+                   different divertors are colour-coded based on the vertical position of the divertor, i.e. upper versus lower divertor. Note that the strike
+                   line position is not plotted as a function of time, but rather as a function of toroidal angle. Thus the jump around φ ≈ −10° is due
+                   to the definition of the local coordinate system. Also shown is the position of the long connection length from fig. 7 (left). Note that
+                   a deviation of the observed strike line from the position of the long connection length is expected due to the finite toroidal current.
+
+
+the radiation fraction varies from 0.15 to 0.35, this was done to study the density and diffusion coefficient rather than the
+influence of the radiation fraction, which was recently studied by Feng et al. [16]. In particular the low frad was selected to
+avoid a dominant effect of the radiation.
+      The same magnetic field configuration was used in simulation as in experiment: the standard magnetic field
+configuration. A scan in density and diffusion coefficient was performed. EMC3-EIRENE stores where and how many
+particles leave the plasma domain. These particles can then be mapped onto the target surfaces in a post-processing step. In
+a next step the data has been mapped to the representation introduced in fig. 3. From this step on the same analysis, described
+in sec. 2.2, has been used for the simulated data as for the experimental data.
+      Fig. 15 shows plots of the electron density and temperature distribution of a simulation, where the diffusion coefficient
+was set to D = 0.2 m2 /s and the upstream density was set to ne,sep = 1 · 1019 m−3 . The density shows a peak just in front of
+the target, at toroidal angle φ = 0 at the upper and lower target plates. At the triangular shape (φ = π/5 = 36 °) no target
+plates are present and thus also the density is not strongly peaked in the SOL. The temperature drops of towards the target.
+While in this case the electron temperature at the separatrix is around 160 eV, the separatrix electron temperature is in all
+cases below 200 eV. Experimentally, separatrix electron temperatures were generally between 30 and 100 eV.
+      Similar to the experimental result, shown in fig. 7 (right), the main heat-flux is on the low iota target, with a strike line
+width and location similar to the experimental one. The main difference is that the main power is at φ ≈ −5°, while in the
+experimental figure the main heat-flux is at φ ≈ −15°.
+
+4.1. Toroidal distribution
+The toroidal distribution of the heat-flux, and how the change of the diffusion parameter impacts it is shown in fig. 16.
+
+4.2. Strike-line
+Besides the question where the power is deposited, the width of the strike line is of interest, as that influences over what
+area the heat is distributed, and thus also the peak heat-flux that the divertor has to withstand. Besides this more practical
+question, the strike line width gives also insight into the transport. Fig. 17 shows the fitted strike line width for a separatrix
+density ne,sep = 1 · 1019 m−3 with a diffusion coefficient scan in the range D = 0.1. . . 0.5 m2 /s. As mentioned, χ is scaled as
+3D. The strike line width for the other two density cases of interest ne,sep = 3 · 1019 m−3 and ne,sep = 10 · 1019 m−3 are
+shown in fig. 18. The experimentally observed density are likely between ne,sep = 1 · 1019 m−3 and ne,sep = 3 · 1019 m−3 ,
+as will be later discussed based on MPM data in sec. 4.3.
+     For the smallest D = 0.1 m2 /s the strike line width is 1 . . . 2 cm on the low iota target, and thus smaller than the
+experimentally observed ones, shown before in fig. 12. For D = 0.2 m2 /s the strike line width is 2 . . . 3 cm matching most
+closely to the experiment, while for D = 0.5 m2 /s the strike line width is in the range of 2 . . . 5 cm and thus a bit larger than
+experimentally observed.
+Parametrisation of target heat flux distribution and study of transport parameters for boundary modelling in W7-X                             11
+
+
+
+
+                  Figure 15. Density (top) and electron temperature (bottom) profiles for the ne,sep = 1 · 1019 m−3 case with D = 0.2 m2 /s at the
+                  bean shape, at φ = 0 (left) and the triangular shape, at φ = π/5 = 36 ° (right).
+
+
+      The peak at φ ≈ 10° agrees with experiment for the two larger diffusion coefficients. D = 0.2 m2 /s matches most
+closely for the lower divertors. A good match for the upper divertors is D = 0.5 m2 /s as well as the D = 0.2 m2 /s for the
+ne,sep = 3 · 1019 m−3 case.
+
+4.3. Upstream data
+To further compare the output of the models to experimental data, upstream data is beneficial as it is separated from the
+location that was optimised for. As introduced, the MPM can measure the density and temperature in the SOL, outside of
+the separatrix. Due to the separation from the targets, this can further ensure a matching transport model is chosen.
+     Figure 19 shows the density and temperature of a line of sight measured by the MPM diagnostic. Although no
+experimental MPM data is is available for program #20180920.009, #20180920.013 and #20180920.017, similar programs
+with MPM data exist and are used as an upstream comparison to simulation. These programs have similar heating power,
+the same magnetic configuration and line integrated densities are in the range 4 . . . 6 · 1019 m−2 . The simulation results, are
+plotted as lines in fig. 19. The simulations matching best the strike line width are plotted as lines, smaller D distributions
+are dotted and larger ones are dashed.
+     All simulations show essentially monotonic behaviour in the temperature and the density. This is in contrast to the
+experimental data. The experimental density shows for some cases a peak around the O-point, while for other cases it is
+monotonic. The temperature profile shows a clearly monotonic trend in the shadowed region, in contrast to the data in the
+Parametrisation of target heat flux distribution and study of transport parameters for boundary modelling in W7-X                                    12
+
+
+
+
+                 Figure 16. Plot of the power per finger for simulations with different separatrix density and different diffusion coefficient. This plot
+                 extends the density scan in fig. 10 with a scan of the diffusion coefficient D, with the heat diffusivity χ = 3D and q⊥ ∝ nχ.
+
+
+
+
+                 Figure 17. Mean of the strike-line width for the different fingers, as introduced in fig. 3. Note that the error bars are expected to be
+                 smaller than in the experimental data, shown in fig. 12, as the experimental data includes variations in time and across the different
+                 modules. Like fig. 12 only fingers receiving at least 1 kW of power are included. Simulation results for diffusion values D = 0.1
+                 . . . 0.5 m2 /s and ne,sep = 1 · 1019 m−3 . The grey lines show the estimates for the low density case from fig. 12.
+Parametrisation of target heat flux distribution and study of transport parameters for boundary modelling in W7-X                                   13
+
+
+
+
+                 Figure 18. Mean of the strike-line width as a function of the fingers. Like fig. 17 but for ne,sep = 3 · 1019 m−3 and
+                 ne,sep = 10 · 1019 m−3 .
+
+
+
+
+                 Figure 19. Plot of electron density and temperature as a function of the radial position. Shown is a 1D cut along the path of the
+                 MPM diagnostic [25, 24]. The experimental data from the MPM diagnostic is shown as symbols. The lines are the simulations with
+                 ne,sep = 1 · 1019 m−3 (left) and ne,sep = 3 · 1019 m−3 (right). Data from the D = 0.1 m2 /s is plotted as green dotted, D = 0.2 m2 /s
+                 as green line (best match based on strike line width) and D = 0.5 m2 /s as green dashed. The point magnetically closest to the O-point,
+                 as well as the position of the last closed flux surface (LCFS) and the onset of the shadowed area featuring short connection lengths,
+                 are also plotted.
+Parametrisation of target heat flux distribution and study of transport parameters for boundary modelling in W7-X             14
+
+longer connection length, where a hollow temperature profile is observed, featuring a reduction towards the O-point. The
+hollow temperature is observed in none of the simulations. In the shadowed region a roughly exponential behaviour for ne
+and Te is observed.
+      The separatrix density is an input parameter for the simulations. As such we can freely choose a density, to best match
+the experimental results. For all diffusion cases, the best match is between ne,sep = 1 · 1019 m−3 and ne,sep = 3 · 1019 m−3 .
+Quantifying which case matches best, or which density would match best, is not well defined as the profiles do not match.
+ne,sep = 3 · 1019 m−3 matches very well in the shadowed area, while, depending on the experimental measurement, the
+ne,sep = 1 · 1019 m−3 case matches around the O-point.
+      For the temperature, all simulations feature a to high temperature towards the island centre. The MPM was not able to
+measure closer to the separatrix, but the separatrix temperature is generally estimated to be below 100 eV. In general with
+increasing D the separatrix temperature decreases, and the temperature fall-off-length increases.
+
+5. Discussion
+
+The experimental heat-flux data from W7-X has been analysed determining the toroidal distribution as well as using fits of
+the strike line. The fits allowed to determine the position and the width of the strike line, with the exception of the higher
+density case #20180920.017 where the fit did not converge reliably, as smaller structures where present.
+      Determining the shape of the strike line allows to determine how much of the power is deposited on the main strike line
+versus how much in total is deposited on the divertor. A significant amount of power is observed by the IR cameras to be
+deposited outside of the main strike-line (∼ 1 MW). This power is seen as a broad feature and its cause is not yet known.
+Surface layers, which have been observed to build up on certain areas of the divertor over the campaign [37], may increase
+the IR emissivity of the targets, thus possibly creating an artefact of higher heat flux. Another possible explanation is power
+load by plasma radiation close to the divertor. Initial calculation seem to agree with the radiation hypothesis, however an
+in-depth study is outside of the scope of this paper. Future work is planned to investigate this feature.
+      The strike line width from the experiments has been determined to be around 2 to 4 cm in the magnetic standard
+configuration. This is true for all areas on the target where a significant heat-flux is observed, including the low iota target.
+The 2 to 4 cm is observed independent of the connection length. This observation is reproduced in the simulations, where
+for a given density and diffusion the strike line width is roughly constant for all significantly loaded areas.
+      For the experimental data no clear trend of the strike line width with density is observed. For the simulations a clear
+trend of increasing strike line width with increasing density is observed. In the simulations the density variation was however
+much larger.
+      While it is possible to match the strike line width to the experimental ones, none of the simulations matched the toroidal
+distribution, especially at the low iota target.
+
+6. Conclusion and Summary
+
+For comparing experimental and simulation data of the target heat-fluxes, a fitting routine has been implemented, which
+works reliably for well-behaved IR heat-flux data. Future work will make the fitting more robust to counteract any possible
+artefacts in the heat-flux analysis.
+      In the past some qualitative comparison between experiments and simulations have been attempted for the SOL of W7-
+X. The here performed quantitative comparison shows that, in order to reproduce the experimentally observed strike line
+width of the range 2 to 4 cm, diffusion coefficients in the range of 0.2 m2 /s are needed in the magnetic standard configuration
+for low to medium density cases.
+      There are significant differences between simulations and experiments, that could not be reproduced by the simulation.
+Some differences are expected to be due to a lack of drifts in EMC3-EIRENE: e.g. the up-down asymmetry on the divertor
+target plates. Additionally, small toroidal asymmetries are observed in experiment, which are expected due to the non-perfect
+error field correction. Due to the inherent symmetry of the simulation, they are, like drifts, not expected to be reproduced.
+However, other discrepancies remain which are not expected, such as the difference in the toroidal distribution of the heat
+flux on the low iota target. Additionally hollow temperature profiles in the islands are measured by the MPM diagnostic,
+which has not been reproduced by the simulations.
+      Non-isotropic transport coefficients could be used in EMC3-Eirene to match both upstream values as well as target
+heat-flux data.
+
+7. Acknowledgement
+
+This work has been carried out using the xarray framework [32, 33]. Some task have been paralellised using GNU
+parallel [38].
+     The simulation presented here are available [39]
+ [1] KLINGER, T. et al., Nuclear Fusion 59 (2019) 112004.
+ [2] KLINGER, T. et al., Plasma Physics and Controlled Fusion 59 (2017) 014018.
+ [3] WOLF, R. et al., Nuclear Fusion 57 (2017) 102020.
+ [4] SUNN PEDERSEN, T. et al., Physics of Plasmas 24 (2017) 055503.
+Parametrisation of target heat flux distribution and study of transport parameters for boundary modelling in W7-X                       15
+
+ [5] BEIDLER, C. D. et al., Nature (2021).
+ [6] PEDERSEN, T. S. et al., 61 (2018) 014035.
+ [7] PEDERSEN, T. S. et al., 59 (2019) 096014.
+ [8] HAMMOND, K. C. et al., 61 (2019) 125001.
+ [9] FRERICHS, H. et al., Review of Scientific Instruments 87 (2016) 11D441.
+[10] KILLER, C. et al., 62 (2020) 085003.
+[11] KILLER, C. et al., 61 (2021) 096038.
+[12] ZOLETNIK, S. et al., Plasma Physics and Controlled Fusion 62 (2019) 014017.
+[13] LIU, S. et al., Nuclear Fusion 59 (2019) 066001.
+[14] WINTERS, V. R. et al., Plasma Physics and Controlled Fusion 63 (2021) 045016.
+[15] FENG, Y. et al., Contributions to Plasma Physics 54 (2014) 426.
+[16] FENG, Y. et al., Nuclear Fusion 61 (2021) 086012.
+[17] SCHMITZ, O. et al., Nuclear Fusion (2020).
+[18] WURDEN, G. et al., Nuclear Fusion 57 (2017) 056036.
+[19] SCHMID, K. et al., Nuclear Materials and Energy 25 (2020) 100821.
+[20] EFFENBERG, F. et al., Nuclear Materials and Energy 18 (2019) 262.
+[21] LORE, J. et al., Nuclear Fusion 59 (2019) 066041.
+[22] JAKUBOWSKI, M. et al., Review of Scientific Instruments 89 (2018) 10E116.
+[23] SIEGLIN, B. et al., Review of Scientific Instruments 86 (2015) 113502.
+[24] KILLER, C. et al., 59 (2019) 086013.
+[25] KILLER, C. et al., Journal of Instrumentation 17 (2022) P03018.
+[26] LAZERSON, S. A. et al., 60 (2018) 124002.
+[27] BYRD, R. H. et al., Mathematical programming 40 (1988) 247.
+[28] BRANCH, M. A. et al., SIAM Journal on Scientific Computing 21 (1999) 1.
+[29] GAO, Y. et al., Nuclear Fusion 59 (2019) 106015.
+[30] FENG, Y. et al., Nuclear Fusion 61 (2021) 106018.
+[31] ZHANG, W. et al., Nuclear Fusion 56 (2016) 036007.
+[32] HOYER, S. et al., Journal of Open Research Software 5 (2017).
+[33] HOYER, S. et al., https://doi.org/10.5281/zenodo.4563695, pydata/xarray: v0.17.0, 2021.
+[34] BOLD, D. et al., https://doi.org/10.5281/zenodo.5562266, dschwoerer/xemc3: v0.1.0, 2021.
+[35] GEIGER, J. et al., Contributions to Plasma Physics 50 (2010) 770.
+[36] GEIGER, J. et al., Contributions to Plasma Physics 51 (2011) 99.
+[37] MAYER, M. et al., Physica Scripta T171 (2020) 014035.
+[38] TANGE, O., GNU Parallel 2018, Ole Tange, 2018.
+[39] BOLD, D. et al., https://zenodo.org/record/5762079, EMC3-EIRENE simulations of Wendelstein 7-X - diffusion coeffient and density scan,
+        2021.
+

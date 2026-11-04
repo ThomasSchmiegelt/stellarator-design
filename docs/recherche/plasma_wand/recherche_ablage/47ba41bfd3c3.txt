@@ -1,0 +1,409 @@
+URL: http://arxiv.org/pdf/2507.21003v1
+                                                         Optimizing Particle Transport for Enhanced Confinement in Quasi-Isodynamic
+                                                                                          Stellarators
+                                                                                         A. Bañón Navarro, A. Di Siena, and F. Jenko
+                                                                      Max Planck Institute for Plasma Physics, Boltzmannstr. 2, 85748 Garching, Germany
+
+                                                                                                      A. Merlo and E. Laude
+                                                                                     Proxima Fusion, Flößergasse 2, 81369 Munich, Germany
+                                                                                                     (Dated: July 29, 2025)
+                                                                    Despite significant advances in reducing turbulent heat losses, modern quasi-isodynamic (QI) stel-
+                                                                 larator continue to suffer from poor particle confinement, which fundamentally limits their overall
+arXiv:2507.21003v1 [physics.plasm-ph] 28 Jul 2025
+
+
+
+
+                                                                 performance. Using gyrokinetic simulations within the GENE–Tango framework, we identify sup-
+                                                                 pressed inward thermodiffusion, caused by unfavorable magnetic geometry, as the primary cause. To
+                                                                 overcome this limitation, we design a new configuration with a reduced mirror ratio, which enhances
+                                                                 the contribution of passing electrons to the inward particle flux. This facilitates the formation of
+                                                                 strongly peaked density profiles, suppresses turbulence, and leads to a substantial improvement in
+                                                                 confinement. Our optimized configuration achieves nearly a twofold increase in energy confinement
+                                                                 compared to Stellaris, highlighting the crucial role of optimizing particle transport in next-generation
+                                                                 stellarator designs.
+
+
+                                                       Understanding turbulent transport in stellarator de-            tion. Accurately predicting particle transport is essen-
+                                                    vices has become increasingly important, especially in             tial for evaluating plasma performance, as it is closely
+                                                    light of the substantial progress made over the past               coupled to heat fluxes through the plasma density pro-
+                                                    decades in optimizing neoclassical transport. Wendel-              file—for example, via density gradient stabilization of ion
+                                                    stein 7-X (W7-X) exemplifies this advancement, hav-                temperature gradient (ITG) turbulence. To address this,
+                                                    ing achieved significant reductions in neoclassical trans-         we present the first high-fidelity turbulence simulations
+                                                    port through careful magnetic configuration optimiza-              of Stellaris with evolved density profiles, utilizing gyroki-
+                                                    tion, with turbulent transport now limiting overall con-           netic flux-matching simulations performed with the GENE
+                                                    finement [1–3]. This success has led to a paradigm shift in        code [30] coupled to the Tango transport solver [31]. The
+                                                    stellarator design, where turbulent transport, previously          GENE–Tango framework has been extensively validated
+                                                    neglected in optimization metrics, is now being actively           in tokamak geometries across a variety of scenarios at AS-
+                                                    included. Consequently, various optimization strategies            DEX Upgrade [32, 33] and JET [34], consistently demon-
+                                                    have emerged, including minimizing flux compression in             strating excellent agreement with experimental measure-
+                                                    regions of unfavorable magnetic curvature [4,5], increas-          ments. More recently, it has also been validated against
+                                                    ing the critical gradient for turbulence stabilization [6,         four experimental scenarios on W7-X [35], establishing it
+                                                    7], reducing magnetic curvature itself [8–10], optimiz-            as one of the most reliable tools currently available for
+                                                    ing max-J configurations that confine trapped particles            predictive performance studies in stellarator configura-
+                                                    to regions of favorable curvature [11–14], and other ap-           tions.
+                                                    proaches aimed at mitigating turbulent transport [15–                 To benchmark Stellaris, we compare its performance
+                                                    17]. These turbulence optimization methods also re-                to a reference W7-X plasma from the GENE–Tango val-
+                                                    quire retaining essential features necessary for stellara-         idation study [35] of gas puffing fueling ECRH discharge
+                                                    tor reactors, such as strong neoclassical and energetic            (1MW) with a particle source of 4.5 × 1020 , s−1 plus neu-
+                                                    particle confinement and reduced bootstrap current [18–            tral beam injection (3MW). The boundary conditions for
+                                                    22], MHD stability [23, 24], favorable max-J proper-               ion and electron temperatures and density are fixed at
+                                                    ties [25–27], and manageable coil complexity [20, 28].             the normalized
+                                                                                                                               p         toroidal flux radius ρtor = 0.8, where
+                                                    An example of this approach is the development of the              ρtor = Φ/Φedge is defined as the square root of the ratio
+                                                    quasi-isodynamic SQuID stellarator configurations [5,              of enclosed toroidal magnetic flux Φ to the total edge flux
+                                                    22]. Their optimized magnetic geometry ensures excel-              Φedge . From this location, plasma profiles are evolved in-
+                                                    lent fast ion and neoclassical confinement, along with             ward to the magnetic axis until a steady state is reached,
+                                                    MHD stability, while simultaneously reducing turbulent             wherein turbulent transport matches the integrated ex-
+                                                    transport.                                                         ternal sources across all modeled channels and radii. For
+                                                       These stellarator configurations—including the latest           a fair comparison, we retain the plasma size and mag-
+                                                    design for Stellaris, a fusion power plant concept by Prox-        netic field strength from W7-X in both geometries, with
+                                                    ima Fusion, the Max Planck Institute for Plasma Physics,           a minor radius of a = 0.5 m and an on-axis magnetic
+                                                    and other academic partners —exhibit reduced turbulent             field strength of B0 = 2.6 T. The resulting steady-state
+                                                    transport, particularly in terms of heat fluxes [29]. How-         temperature and density profiles are shown in the top
+                                                    ever, a detailed understanding of particle transport in            row of Fig. 1.
+                                                    these highly optimized geometries remains an open ques-               Surprisingly, we observe that despite Stellaris being
+                                                                                                                                         2
+
+                                                                        urations that simultaneously achieve exceptional parti-
+                                                                        cle and heat confinement. This is accomplished by com-
+                                                                        bining established turbulence optimization methods with
+                                                                        new insights into the physics of particle transport. In
+                                                                        particular, we enhance the contribution of inward parti-
+                                                                        cle flux, enabling the formation of more peaked density
+                                                                        profiles.
+                                                                           The underlying optimization strategy can be under-
+                                                                        stood by analyzing the key dependencies of particle flux,
+                                                                        assuming turbulence locality. This assumption is well
+                                                                        supported by current experiments and is expected to hold
+                                                                        even more strongly in reactor-relevant regimes. Under
+FIG. 1. Left: Ion and electron temperature profiles (Ti ,
+                                                                        this approximation, the electron particle flux Γe can be
+Te ); Right: Corresponding density profiles — all plotted as
+functions of normalized radius ρtor . GENE flux-tube simu-
+                                                                        decomposed into diffusive, thermodiffusive and convec-
+lations are performed along the magnetic field line defined             tive components as follows:
+by α = qθ⋆ − ϕ = 0, with ρtor ranging from 0.1 to 0.8 in                                         a           a
+steps of 0.1 for W7-X. For Stellaris, an additional point at                         Γe = D e        + DT,e      + aVp,e ,             (1)
+ρtor = 0.75 is added to improve convergence near the bound-                                     Ln,e        LT,e
+ary. Here, q is the safety factor, θ⋆ is the PEST poloidal
+angle, and ϕ is the toroidal angle. Simulations use a resolu-           with, De , DT,e and Vp,e respectively the diffusion, ther-
+tion of (128, 64, 192, 32, 12) in (kx , ky , z, v∥ , µ), where kx and   modiffusion and convective transport coefficients, as de-
+ky are the radial and binormal wavenumbers, z is the coordi-            fined in Ref. [40], and a/Lne and a/LTe are the normal-
+nate along the field line, v∥ is the parallel velocity, and µ is        ized electron density and temperature gradients, respec-
+the magnetic moment. The radial box size is lx ≈ 128 ρi , and           tively, defined as a/LX ≡ −a d ln X/dr, with X repre-
+the minimum binormal wavenumber is ky,min ρi = 0.05. We                 senting either ne or Te . For completeness, and given the
+use generalized twist-and-shift boundary conditions [36] in the         central role of the thermodiffusion coefficient, we provide
+parallel direction with npol ≈ 1–1.5, depending on radius       √and    its definition below:
+configuration. The parallel velocity box size is lv∥ = 3 2vi ,                                                              h 2     i
+and for the magnetic moment, lµ = 9 Ti /B0 .                                             2
+                                                                                           *Z
+                                                                                                              (γ   + ν̂   )  v
+                                                                                                                                − 3
+                                                                                     ky cs                       k      k    Te   2
+                                                                            DT,e =              d3 v FM                2              2
+                                                                                      Ωci                  (ωk + ω̂d ) + (γk + ν̂k )
+specifically optimized to reduce turbulent transport, it
+                                                                                                             E
+                                                                                       × J02 (k⊥ ρs ) |ϕ̂k |2 .                         (2)
+achieves significantly lower plasma pressure compared to
+W7-X. This reduction is primarily attributed to a sub-
+stantial degradation in particle confinement. As a result,              Here, γk and ωk are the normalized growth rate and
+while W7-X maintains a strong density gradient across                   real frequency of the unstable linear mode, respectively.
+the radial domain, Stellaris exhibits a marked collapse                 The normalized electrostatic potential is ϕ̂k = eϕk /Te ,
+in plasma density. This density collapse has a secondary                and the normalized magnetic drift frequency p        is ω̂d =
+impact on the temperature profiles. With the density                    (v∥2 + v⊥
+                                                                                2        2
+                                                                                  /2)/vthe  ω̂Dk , where vthe =       2Te /me is the
+gradient largely vanishing, Stellaris loses the stabilizing             electron thermal speed. The magnetic drift frequency
+effect that finite density gradients exert on ITG turbu-                is defined as ωDk = ky Ky cs /a, where ky is the binor-
+lence. Consequently, the temperature profiles in Stellaris              mal wavenumber,
+                                                                              p               Ky is the binormal curvature, and
+become broader and less peaked than those in W7-X.                      cs = Te /mi is the ion sound speed, with Te the elec-
+   These findings suggest that the current optimization                 tron temperature and mi the ion mass. The normal-
+                                                                                                                  3
+pathway—focused primarily on reducing turbulent heat                    ized collision frequency is ν̂k = νei vthe   /(v 3 ωDk ), with
+transport—overlooks a critical ingredient: the control of               νei the electron-ion collision frequency. The total par-
+particle confinement and, in particular, the density pro-               ticle speed is defined as v 2 = v∥2 + µB0 . FM denotes
+file. As highlighted in recent W7-X experimental cam-                   the Maxwellian distribution function, J0 is the zeroth-
+paigns [37–39], maintaining a high core density is essen-               order Bessel function of the first kind, and k⊥ ρs is the
+tial for achieving improved overall performance. This                   normalized perpendicular wavenumber, with ρs = cs /Ωci
+consideration becomes even more important for future                    the ion sound gyroradius and Ωci = eB0 /mi the ion gy-
+stellarator reactors, where alpha particle heating scales               rofrequency. This expression neglects parallel motion and
+with the core density. Devices capable of sustaining                    assumes a simple Krook collision operator, whereas the
+higher densities at similar temperatures may enter a pos-               GENE simulations retain the full dynamics and employ
+itive feedback loop, where increased alpha heating fur-                 a Landau–Boltzmann collision operator.
+ther boosts central plasma pressure, ultimately enabling                   The diffusion term is always positive, representing out-
+higher fusion performance.                                              ward transport. The thermodiffusive term is propor-
+   Can We Control Density Build-Up? In this Letter,                     tional to (v 2 /Te −3/2), leading to a larger outward flux of
+we present the first design strategy for stellarator config-            particles with large velocities and a compensating inward
+                                                                                                                                3
+
+flux of slower particles. The resulting net thermodiffu-
+sive flux is determined by the balance of these contribu-
+tions. Finally, the convective term is a purely geometric
+effect, arising from magnetic field curvature and inhomo-
+geneities, and is often referred to as the curvature pinch.
+It can be directed either inward or outward depending
+on the mode and geometry.
+   Our strategy aims to enhance inward thermodiffu-
+sive transport by increasing the contribution of slow
+electrons—those with normalized velocities v 2 /Te <
+3/2—which preferentially drive inward flux. This is
+achieved by combining two elements: increasing collision-
+ality to suppress the trapped-particle population via de-
+trapping, and tailoring the magnetic geometry to reduce
+the mirror ratio, thereby increasing the passing-particle
+fraction. Together, these effects amplify the role of pass-
+ing electrons in driving inward transport. This mecha-
+nism is clearly reflected in our numerical results.
+   Figure 2, top left, shows how increasing collisionality
+influences particle transport in both W7-X and the Stel-
+laris configuration. A clear trend emerges: the total par-      FIG. 2. Top left: The total electron particle flux is expressed
+ticle flux decreases with collisionality. However, while        in gyro-Bohm units, [gB] = ne cs ρ2s /a2 , as a function of colli-
+W7-X exhibits a robust inward pinch, Stellaris saturates        sionality (νe,i ) for values representative of the profiles shown
+near zero flux and does not enter the pinch regime. To          in Fig. 1, comparing W7-X (blue) and Stellaris (red). Top
+understand this contrast, we decompose the total flux           right: Decomposition of the particle flux into passing and
+into contributions from passing and trapped particles.          trapped electron contributions for the same configurations
+                                                                and collisionalities. Bottom: Inward particle flux versus mir-
+As shown in Figure 2, top right,, the inward flux in W7-
+                                                                ror ratio across a series of configurations with varying on-axis
+X is predominantly carried by passing electrons, whose          mirror ratios (expressed in %). The Optimized configura-
+contribution is significantly larger than in Stellaris. This    tion is designed to follow the radial mirror ratio profile of
+difference is directly linked to the magnetic geometry:         W7-X. A strong correlation is observed: reducing the mir-
+W7-X’s lower mirror ratio (approximately 3.5% on-axis)          ror ratio increases the passing-particle contribution and en-
+yields a greater passing-particle fraction, while Stellaris’s   hances the inward pinch. GENE flux-tube simulations were
+higher mirror ratio (approximately 25% on-axis) results         performed at ρtor = 0.8 using the same resolution as in the
+in a larger trapped population that contributes less ef-        GENE-Tango simulations, but with profile parameters such
+fectively to inward transport. Thus, reducing the mirror        as a/LT,e = a/LT,i = 2.2 and a/Ln = 0.5, and Te /Ti = 1.
+ratio and increasing collisionality act in synergy to en-
+hance inward thermodiffusion via passing electrons.
+   This trend is further illustrated in Figure 2, bottom,          This corresponds to the case shown in Figure 2c (Op-
+which shows the particle flux for a set of magnetic config-     timized ), which exhibits the strongest negative particle
+urations generated by systematically modifying the mag-         flux. The new design aims to improve particle confine-
+netic geometry to reduce the mirror ratio—from approx-          ment and, consequently, suppress heat transport by pro-
+imately 25% to 10%—while keeping other parameters               ducing strongly peaked density profiles. These profiles
+fixed. For each configuration, the figure also displays         stabilize ITG turbulence through density gradient stabi-
+the fraction of the total particle flux carried by passing      lization, leading to significantly enhanced overall perfor-
+electrons. The results clearly demonstrate that lowering        mance. The Optimized configuration is shown in Fig-
+the mirror ratio significantly strengthens the inward par-      ure 3. The optimization targets a configuration with
+ticle pinch, with a growing share of the flux attributed        aspect ratio A∗ = 11.5, on-axis magnetic mirror ratio
+to passing electrons. This behavior is robust: it holds         ∆∗ = 5%, a vacuum magnetic well Wvacuum ∗
+                                                                                                               = 1%. The
+across different radial positions and persists over the full    rotational transform is constrained within ι ∈ [0.8, 1.0],
+range of collisionalities considered.                           and the flux surface compression in regions of unfavor-
+   New density-optimized configuration. Building on             able curvature is kept below a reference value. Moreover,
+these insights, we propose a new density-optimized mag-         we minimize the deviation from a QI field at mid-radius
+netic configuration designed to enhance inward thermod-         and at the plasma boundary following [5]. We solve the
+iffusion. This configuration has a significant lower over-      constrained optimization problem using an Augmented
+all mirror ratio compared to Stellaris. Consequently, it        Lagrangian method, employing CMA-ES as the inner or-
+increases the population of slow passing electrons and          acle [41,42].
+maximizes the inward particle flux—particularly at the             We assess neoclassical transport in the 1/ν regime us-
+higher collisionalities relevant for future fusion devices.     ing the NEO code [43] to compute the effective ripple, ϵeff ,
+                                                                                                                            4
+
+                                                                  ror ratio compared to existing turbulence optimized de-
+                                                                  signs, thereby increasing the fraction of passing electrons
+                                                                  responsible for the inward particle pinch. This enables
+                                                                  the formation of strongly peaked density profiles.
+                                                                     The resulting density gradient stabilizes ITG turbu-
+                                                                  lence, leading to substantial improvements in both par-
+                                                                  ticle and heat confinement. Our density-optimized con-
+                                                                  figuration achieves nearly a twofold increase in energy
+                                                                  confinement relative to Stellaris, under identical plasma
+                                                                  parameters and heating conditions. These results high-
+                                                                  light the critical role of particle transport optimization
+                                                                  as a necessary complement to traditional approaches fo-
+                                                                  cused solely on turbulent heat flux reduction.
+FIG. 3. The magnetic field strength at the plasma boundary           Future stellarator designs should incorporate particle
+of the Optimized configuration. White lines represent mag-        transport optimization as a central objective—alongside
+netic field lines.                                                turbulence reduction—to achieve the high core densities
+                                                                  and robust confinement required for reactor-relevant per-
+                                                                  formance. The optimization strategy proposed in this
+                                                                  Letter offers a promising route toward this goal, enabling
+which ranges from 0.1% at the magnetic axis to 1.2%
+                                                                  simultaneous control of heat and particle transport to
+at the plasma boundary. The configuration is stable
+                                                                  surpass current performance limits. Our results strongly
+according to the Mercier criterion and it possess nega-
+                                                                  motivate continued theoretical and experimental inves-
+tive infinite-n ballooning growth rates up to a volume-
+                                                                  tigations into particle flux control and the development
+averaged beta of ⟨β⟩V ≃ 2.0%. Alpha-particle confine-
+                                                                  of magnetic geometries that exploit key physical mech-
+ment is evaluated using the SIMPLE code [44]. We simu-
+                                                                  anisms for improved confinement and enhanced fusion
+late the trajectories of 5000 fusion-born α-particles with
+                                                                  performance.
+3.5 MeV kinetic energy, uniformly distributed in pitch
+                                                                     Beyond the strategy presented in this Letter, addi-
+angle and isotropically launched at mid-radius. Each
+                                                                  tional pathways might be explored to further improve
+trajectory is followed for 0.1 s. As is standard prac-
+                                                                  particle transport. For instance, the convective particle
+tice for this assessment, the configuration is scaled to
+                                                                  flux—strongly influenced by magnetic geometry—can be
+the ARIES-CS design point [45]. Confinement improves
+                                                                  engineered to enhance the inward pinch [46]. Another
+with increasing plasma beta: the loss fraction decreases
+                                                                  promising direction involves optimizing the denominator
+from 20% at ⟨β⟩V = 2% to 15% at ⟨β⟩V = 4%.
+                                                                  of the thermodiffusive term, which depends on the mode
+   The performance of our density-optimized configura-            frequency, the drift frequency, and, when including paral-
+tion, is evaluated using GENE–Tango with the same                 lel dynamics, also on parallel streaming, which is propor-
+setup employed for Stellaris. This ensures a fair com-            tional to the parallel wavenumber k∥ [47]. In particular,
+parison by matching the minor radius and magnetic field           increasing k∥ to resonate with the frequency of the slow-
+on axis. The results are presented in Figure 4, demon-            passing electron population may further enhance inward
+strating a substantial improvement across all modeled             transport. This can be achieved by increasing the local
+plasma profiles. In particular, the optimized configura-          magnetic shear or by increasing the connection length
+tion achieves nearly a twofold increase in calculated en-         through varying the number of field periods [48, 49]. To-
+ergy confinement time compared to Stellaris.                      gether, these strategies define a broader class of stellara-
+   Summary and discussion. In this Letter, we have iden-          tor optimization approaches, grounded in the physics of
+tified particle confinement as a key performance bot-             particle transport.
+tleneck in modern turbulence-optimized stellarators—a                Acknowledgements. The authors would like to thank
+factor largely overlooked in previous optimization ef-            A. Zocco, F. Wilms, G. Merlo, D. Fernando, and R. Ra-
+forts. Using advanced gyrokinetic simulations within the          masamy for useful discussions. Numerical simulations
+GENE–Tango framework, we demonstrate that this lim-               were performed on the Marconi Fusion supercomputer
+itation can be overcome by maximizing the inward par-             at CINECA (Italy), the Viper cluster at the Max Planck
+ticle flux driven by thermodiffusion. We design a new             Computing and Data Facility (MPCDF, Germany), and
+magnetic configuration with a significantly reduced mir-          the LUMI supercomputer at CSC (Finland)
+
+
+
+
+ [1] R. Wolf, A. Ali, A. Alonso, J. Baldzuhn, C. Bei-                  Major results from the first plasma campaign of the
+     dler, M. Beurskens, C. Biedermann, H.-S. Bosch,                   wendelstein 7-x stellarator, Nuclear Fusion 57, 102020
+     S. Bozhenkov, R. Brakel, A. Dinklage, Y. Feng,                    (2017).
+     G. Fuchert, J. Geiger, O. Grulke, P. Helander, and et al.,    [2] T. Klinger, T. Andreeva, S. Bozhenkov, C. Brandt,
+                                                                                                                               5
+
+
+
+
+FIG. 4. Comparison of plasma profiles for the density-optimized configuration (purple) and Stellaris (red). Shown are the ion
+temperature Ti , electron temperature Te , and density n profiles. The fourth figure presents the calculated energy confinement
+times in milliseconds [ms], demonstrating the performance improvement of the optimized configuration.
+
+
+     R. Burhenn, B. Buttenschön, G. Fuchert, B. Geiger,         [11] J. Velasco, I. Calvo, E. Sánchez, and F. Parra, Robust
+     O. Grulke, H. Laqua, and et al., Overview of first wen-          stellarator optimization via flat mirror magnetic fields,
+     delstein 7-x high-performance operation, Nuclear Fusion          Nuclear Fusion 63, 126038 (2023).
+     59, 112004 (2019).                                          [12] E. Sánchez, J. Velasco, I. Calvo, and S. Mulas, A quasi-
+ [3] C. D. Beidler, H. M. Smith, A. Alonso, T. Andreeva,              isodynamic configuration with good confinement of fast
+     J. Baldzuhn, M. N. A. Beurskens, M. Borchardt, S. A.             ions at low plasma β, Nuclear Fusion 63, 066037 (2023).
+     Bozhenkov, K. J. Brunner, H. Damm, M. Drevlak, O. P.        [13] J. Garcı́a-Regaña, I. Calvo, E. Sánchez, H. Thienpondt,
+     Ford, G. Fuchert, J. Geiger, P. Helander, U. Hergen-             J. Velasco, and J. Capitán, Reduced electrostatic tur-
+     hahn, M. Hirsch, U. Höfel, Y. O. Kazakov, R. Kleiber,           bulence in the quasi-isodynamic stellarator configuration
+     M. Krychowiak, S. Kwak, A. Langenberg, H. P. Laqua,              ciemat-qi4, Nuclear Fusion 65, 016036 (2024).
+     U. Neuner, N. A. Pablant, E. Pasch, A. Pavone,              [14] J. L. Velasco, I. Calvo, F. J. Escoto, E. Sánchez,
+     T. S. Pedersen, K. Rahbarnia, J. Schilling, E. R.                H. Thienpondt, and F. I. Parra, Piecewise omnigenous
+     Scott, T. Stange, J. Svensson, H. Thomsen, Y. Turkin,            stellarators, Phys. Rev. Lett. 133, 185101 (2024).
+     F. Warmer, R. C. Wolf, D. Zhang, and . . . , Demonstra-     [15] P. Kim, S. Buller, R. Conlin, W. Dorland, D. Dudt,
+     tion of reduced neoclassical energy transport in Wendel-         R. Gaur, R. Jorge, E. Kolemen, M. Landreman, N. Man-
+     stein 7-X, Nature 596, 221 (2021).                               dell, and et al., Optimization of nonlinear turbulence in
+ [4] S. Stroteich, P. Xanthopoulos, G. Plunk, and R. Schnei-          stellarators, Journal of Plasma Physics 90, 905900210
+     der, Seeking turbulence optimized configurations for the         (2024).
+     wendelstein 7-x stellarator: ion temperature gradient       [16] R. Jorge, W. Dorland, P. Kim, M. Landreman, N. R.
+     and electron temperature gradient turbulence, Journal            Mandell, G. Merlo, and T. Qian, Direct microstability
+     of Plasma Physics 88, 175880501 (2022).                          optimization of stellarator devices, Phys. Rev. E 110,
+ [5] A. G. Goodman, P. Xanthopoulos, G. G. Plunk,                     035201 (2024).
+     H. Smith, C. Nührenberg, C. D. Beidler, S. A. Hen-         [17] W. Guttenfelder, N. Mandell, G. Le Bars, L. Singh,
+     neberg, G. Roberg-Clark, M. Drevlak, and P. Helander,            A. Bader, K. Camacho Mata, J. Canik, L. Carbajal,
+     Quasi-isodynamic stellarators with low turbulence as fu-         A. Cerfon, N. Davila, and et al., Predictions of core
+     sion reactor candidates, PRX Energy 3, 023010 (2024).            plasma performance for the infinity two fusion pilot plant,
+ [6] G. T. Roberg-Clark, G. G. Plunk, P. Xanthopoulos,                Journal of Plasma Physics 91, E83 (2025).
+     C. Nührenberg, S. A. Henneberg, and H. M. Smith, Crit-     [18] P. Helander and J. Nührenberg, Bootstrap current and
+     ical gradient turbulence optimization toward a compact           neoclassical transport in quasi-isodynamic stellarators,
+     stellarator reactor concept, Phys. Rev. Res. 5, L032030          Plasma Physics and Controlled Fusion 51, 055004 (2009).
+     (2023).                                                     [19] M. Landreman and E. Paul, Magnetic fields with precise
+ [7] G. Roberg-Clark, P. Xanthopoulos, and G. Plunk, Re-              quasisymmetry for plasma confinement, Phys. Rev. Lett.
+     duction of electrostatic turbulence in a quasi-helically         128, 035001 (2022).
+     symmetric stellarator via critical gradient optimization,   [20] F. Wechsung, M. Landreman, A. Giuliani, A. Cerfon, and
+     Journal of Plasma Physics 90, 175900301 (2024).                  G. Stadler, Precise stellarator quasi-symmetry can be
+ [8] H. E. Mynick, N. Pomphrey, and P. Xanthopoulos, Op-              achieved with electromagnetic coils, Proceedings of the
+     timizing stellarators for turbulent transport, Phys. Rev.        National Academy of Sciences 119, e2202084119 (2022).
+     Lett. 105, 095004 (2010).                                   [21] E. Sánchez, J. Velasco, I. Calvo, and S. Mulas, A quasi-
+ [9] H. E. Mynick, N. Pomphrey, and P. Xanthopoulos, Re-              isodynamic configuration with good confinement of fast
+     ducing turbulent transport in toroidal configurations via        ions at low plasma β, Nuclear Fusion 63, 066037 (2023).
+     shapinga), Physics of Plasmas 18, 056101 (2011).            [22] A. Goodman, K. Camacho Mata, S. Henneberg, R. Jorge,
+[10] H. Mynick, P. Xanthopoulos, B. Faber, M. Lucia,                  M. Landreman, G. Plunk, H. Smith, R. Mackenbach,
+     M. Rorvig, and J. N. Talmadge, Turbulent optimization            C. Beidler, and P. Helander, Constructing precisely
+     of toroidal configurations, Plasma Physics and Controlled        quasi-isodynamic magnetic fields, Journal of Plasma
+     Fusion 56, 094001 (2014).                                        Physics 89, 905890504 (2023).
+                                                                                                                                 6
+
+[23] P. Helander, Theory of plasma confinement in non-                   tango simulations, Nuclear Fusion 65, 016050 (2024).
+     axisymmetric magnetic fields, Reports on Progress in           [35] D. L. C. Agapito Fernando, A. Bañón Navarro, D. Car-
+     Physics 77, 087001 (2014).                                          ralero, A. Alonso, A. Di Siena, J. L. Velasco, F. Wilms,
+[24] E. Rodrı́guez and R. Mackenbach, Trapped-particle pre-              G. Merlo, F. Jenko, S. A. Bozhenkov, E. Pasch,
+     cession and modes in quasisymmetric stellarators and                G. Fuchert, K. J. Brunner, J. Knauer, A. Langen-
+     tokamaks: a near-axis perspective, Journal of Plasma                berg, N. A. Pablant, T. Gonda, O. P. Ford, L. Vanó,
+     Physics 89, 905890521 (2023).                                       T. Windisch, T. Estrada, E. Maragkoudakis, and the
+[25] J. H. E. Proll, P. Helander, J. W. Connor, and G. G.                Wendelstein 7-X Team, Validation of a comprehensive
+     Plunk, Resilience of quasi-isodynamic stellarators against          first-principles-based framework for predicting the per-
+     trapped-particle instabilities, Phys. Rev. Lett. 108,               formance of future stellarators, Physics of Plasmas 32,
+     245002 (2012).                                                      073904 (2025).
+[26] J. Proll, G. Plunk, B. Faber, T. Görler, P. Helander,         [36] M. F. Martin, M. Landreman, P. Xanthopoulos, N. R.
+     I. McKinney, M. Pueschel, H. Smith, and P. Xanthopou-               Mandell, and W. Dorland, The parallel boundary condi-
+     los, Turbulence mitigation in maximum-j stellarators                tion for turbulence simulations in low magnetic shear de-
+     with electron-density gradient, Journal of Plasma Physics           vices, Plasma Physics and Controlled Fusion 60, 095008
+     88, 905880112 (2022).                                               (2018).
+[27] E. Rodrı́guez, P. Helander, and A. Goodman, The                [37] P. Xanthopoulos, S. A. Bozhenkov, M. N. Beurskens,
+     maximum-j property in quasi-isodynamic stellarators,                H. M. Smith, G. G. Plunk, P. Helander, C. D. Bei-
+     Journal of Plasma Physics 90, 905900212 (2024).                     dler, J. A. Alcusón, A. Alonso, A. Dinklage, O. Ford,
+[28] J. Kappel, M. Landreman, and D. Malhotra, The mag-                  G. Fuchert, J. Geiger, J. H. E. Proll, M. J. Pueschel,
+     netic gradient scale length explains why certain plasmas            Y. Turkin, F. Warmer, and t. W.-X. Team, Turbulence
+     require close external magnetic coils, Plasma Physics and           mechanisms of enhanced performance stellarator plas-
+     Controlled Fusion 66, 025018 (2024).                                mas, Phys. Rev. Lett. 125, 075001 (2020).
+[29] J. Lion, J.-C. Anglès, L. Bonauer, A. Bañón Navarro,        [38] H. Laqua, J. Baldzuhn, H. Braune, S. Bozhenkov,
+     S. Cadena Ceron, R. Davies, M. Drevlak, N. Foppi-                   K. Brunner, M. Hirsch, U. Hoefel, J. Knauer, A. Lan-
+     ani, J. Geiger, A. Goodman, W. Guo, E. Guiraud,                     genberg, S. Marsen, D. Moseev, E. Pasch, K. Rahbarnia,
+     F. Hernández, S. Henneberg, R. Herrero, C. Hintze,                 T. Stange, R. Wolf, N. Pablant, O. Grulke, and the W7-
+     H. Höchter, J. Jelonnek, F. Jenko, R. Jorge, M. Kaiser,            X Team, High-performance ecrh at w7-x: experience and
+     M. Kubie, E. Lascas Neto, H. Laqua, M. Leoni,                       perspectives, Nuclear Fusion 61, 106005 (2021).
+     J. Lobsien, V. Maurin, A. Merlo, D. Middleton-Gear,            [39] O. Ford, M. Beurskens, S. Bozhenkov, S. Lazerson,
+     M. Pascu, G. Plunk, N. Riva, M. Savtchouk, F. Sciortino,            L. Vanó, A. Alonso, J. Baldzuhn, C. Beidler, C. Bieder-
+     J. Schilling, J. Shimwell, A. Di Siena, R. Slade, T. Stange,        mann, R. Burhenn, G. Fuchert, D. Hartmann, M. Hirsch,
+     T. Todd, L. Wegener, F. Wilms, P. Xanthopoulos, and                 A. Langenberg, H. Laqua, P. McNeely, N. Pablant,
+     M. Zheng, Stellaris: A high-field quasi-isodynamic stel-            E. Pasch, F. Reimold, T. Romba, N. Rust, R. Schroeder,
+     larator for a prototypical fusion power plant, Fusion En-           E. Scott, T. Stange, H. Smith, D. Gradic, R. Wolf,
+     gineering and Design 214, 114868 (2025).                            D. Zhang, and the W7-X Team, Turbulence-reduced
+[30] F. Jenko, W. Dorland, M. Kotschenreuther, and B. N.                 high-performance scenarios in wendelstein 7-x, Nuclear
+     Rogers, Electron temperature gradient driven turbu-                 Fusion 64, 086067 (2024).
+     lence, Physics of Plasmas 7, 1904 (2000).                      [40] C. Angioni, J. Candy, E. Fable, M. Maslov, A. G. Peeters,
+[31] J. B. Parker, L. L. LoDestro, D. Told, G. Merlo, L. F.              R. E. Waltz, and H. Weisen, Particle pinch and collision-
+     Ricketson, A. Campos, F. Jenko, and J. A. Hittinger,                ality in gyrokinetic simulations of tokamak plasma tur-
+     Bringing global gyrokinetic turbulence simulations to the           bulence, Physics of Plasmas 16, 060702 (2009).
+     transport timescale using a multiscale approach, Nuclear       [41] N. Hansen and A. Ostermeier, Completely derandomized
+     Fusion 58, 054004 (2018).                                           self-adaptation in evolution strategies, Evolutionary com-
+[32] A. Di Siena, A. Bañón Navarro, T. Luda, G. Merlo,                 putation 9, 159 (2001).
+     M. Bergmann, L. Leppin, T. Görler, J. Parker, L. LoDe-        [42] S. A. Cadena, A. Merlo, E. Laude, A. Bauer, A. Agrawal,
+     stro, T. Dannert, K. Germaschewski, B. Allen, J. Hit-               M. Pascu, M. Savtchouk, E. Guiraud, L. Bonauer,
+     tinger, B. Dorland, G. Hammett, F. Jenko, the AS-                   S. Hudson, et al., Constellaration: A dataset of qi-like
+     DEX Upgrade Team, and the EUROfusion MST1 Team,                     stellarator plasma boundaries and optimization bench-
+     Global gyrokinetic simulations of asdex upgrade up to               marks, arXiv preprint arXiv:2506.19583 (2025).
+     the transport timescale with gene–tango, Nuclear Fusion        [43] V. Nemov, S. Kasilov, W. Kernbichler, and M. Heyn,
+     62, 106025 (2022).                                                  Evaluation of 1/ν neoclassical transport in stellarators,
+[33] A. Di Siena, R. Bilato, A. Bañón Navarro, M. Bergmann,            Physics of plasmas 6, 4622 (1999).
+     L. Leppin, T. Görler, E. Poli, M. Weiland, G. Tardini,        [44] C. G. Albert, S. V. Kasilov, and W. Kernbichler, Accel-
+     F. Jenko, the ASDEX Upgrade Team, and the EUROfu-                   erated methods for direct computation of fusion alpha
+     sion MST1 Team, Impact of supra-thermal particles on                particle losses within, stellarator optimization, Journal
+     plasma performance at asdex upgrade with gene-tango                 of Plasma Physics 86, 815860201 (2020).
+     simulations, Nuclear Fusion 64, 066020 (2024).                 [45] F. Najmabadi, A. Raffray, S. Abdel-Khalik, L. Bromberg,
+[34] A. Di Siena, J. Garcia, R. Bilato, K. Kirov, J. Varela,             L. Crosatti, L. El-Guebaly, P. Garabedian, A. Grossman,
+     A. Bañón Navarro, H.-T. Kim, C. Challis, J. Ho-                   D. Henderson, A. Ibrahim, et al., The aries-cs compact
+     birk, A. Kappatou, E. Lerche, D. Spong, C. Angioni,                 stellarator fusion power plant, Fusion Science and Tech-
+     T. Görler, E. Poli, M. Bergmann, F. Jenko, and J. con-             nology 54, 655 (2008).
+     tributors, Assessing the impact of alpha particles on ther-    [46] A. Mishchenko, P. Helander, and Y. Turkin, Curva-
+     mal confinement in jet d-t plasmas through global gene-             ture particle pinch in tokamak and stellarator geometry,
+                                                                                                                               7
+
+     Physics of Plasmas 14, 102308 (2007).                                 21, 032112 (2014).
+[47] C. Angioni, E. Fable, M. Greenwald, M. Maslov, A. G.             [49] G. G. Plunk, P. Xanthopoulos, G. M. Weir, S. A.
+     Peeters, H. Takenaga, and H. Weisen, Particle trans-                  Bozhenkov, A. Dinklage, G. Fuchert, J. Geiger,
+     port in tokamak plasmas, theory and experiment, Plasma                M. Hirsch, U. Hoefel, M. Jakubowski, A. Langenberg,
+     Physics and Controlled Fusion 51, 124017 (2009).                      N. Pablant, E. Pasch, T. Stange, D. Zhang, and t. W7-
+[48] G. G. Plunk, P. Helander, P. Xanthopoulos, and J. W.                  X Team, Stellarators resist turbulent transport on the
+     Connor, Collisionless microinstabilities in stellarators. iii.        electron larmor scale, Phys. Rev. Lett. 122, 035002
+     the ion-temperature-gradient mode, Physics of Plasmas                 (2019).
+

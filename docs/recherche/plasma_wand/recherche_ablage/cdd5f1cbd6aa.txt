@@ -1,0 +1,131 @@
+URL: http://arxiv.org/abs/2406.16471v1
+Skip to main content
+[https://arxiv.org/IgnoreMe]
+[https://arxiv.org/]
+Search
+[https://arxiv.org/search]
+Submit [https://arxiv.org/submit]
+Donate [https://info.arxiv.org/about/donate.html]
+Log in [https://arxiv.org/login]
+Search arXiv
+Press Enter to search · Advanced search [https://arxiv.org/search/advanced]
+-->
+Physics > Plasma Physics
+arXiv:2406.16471v1 (physics)
+[Submitted on 24 Jun 2024]
+Title: Inferring the scrape-off layer heat flux width in a divertor with a low degree of axisymmetry
+Authors: C. Marsden [https://arxiv.org/search/physics?searchtype=author&query=Marsden,+C] (1), X. Zhang [https://arxiv.org/search/physics?searchtype=author&query=Zhang,+X] (1), M. Moscheni [https://arxiv.org/search/physics?searchtype=author&query=Moscheni,+M] (1), T. K. Gray [https://arxiv.org/search/physics?searchtype=author&query=Gray,+T+K] (2), E. Vekshina [https://arxiv.org/search/physics?searchtype=author&query=Vekshina,+E] (1), A. Rengle [https://arxiv.org/search/physics?searchtype=author&query=Rengle,+A] (1), A. Scarabosio [https://arxiv.org/search/physics?searchtype=author&query=Scarabosio,+A] (3), M. Sertoli [https://arxiv.org/search/physics?searchtype=author&query=Sertoli,+M] (1), M. Romanelli [https://arxiv.org/search/physics?searchtype=author&query=Romanelli,+M] (1), the ST40 team [https://arxiv.org/search/physics?searchtype=author&query=ST40+team] (1) ((1) Tokamak Energy Ltd., Abingdon, United Kingdom, (2), Fusion Energy Division, Oak Ridge National Laboratory, United States of America, (3) LINKS Foundation, Torino, Italy)
+View a PDF of the paper titled Inferring the scrape-off layer heat flux width in a divertor with a low degree of axisymmetry, by C. Marsden (1) and 17 other authors
+View PDF
+HTML (experimental) [https://arxiv.org/html/2406.16471v1]
+Abstract: Plasma facing components (PFCs) in the next generation of tokamak devices will operate in challenging environments, with heat loads predicted to exceed 10 MWm$^{-2}$. The magnitude of these heat loads is set by the width of the channel, the "scrape-off layer" (SOL), into which heat is exhausted, and can be characterised by an e-folding length scale for the decay of heat flux across the channel. It is expected this channel will narrow as tokamaks move towards reactor relevant conditions. Understanding the processes involved in setting the SOL heat flux width is imperative to be able to predict the heat loads PFCs must handle in future devices. Measurements of the SOL width are performed on the high-field spherical tokamak, ST40, using a newly commissioned infrared thermography system. With its high on-axis toroidal magnetic field ($\geq$1.5 T) ST40 is uniquely positioned to investigate the influence of toroidal field on the heat flux width in spherical tokamaks, whilst also extending measurements of the SOL width in spherical tokamaks to increased poloidal field ($\geq$0.3 T). Due to the divertor on ST40 having a low degree of axisymmetry, it is necessary for a set of radial measurements of the heat flux to be taken across the divertor, made possible using an automated toolchain that fully incorporates its 3D geometry. These radial profiles are combined with the magnetic topology of the plasma to infer the width of the SOL, with both single and double exponential profiles of heat flux observed. A reduction in the heat flux is observed toroidally across part of the divertor, with preliminary investigations indicating that partial shadowing occurs, resulting from the separation between magnetic field lines and trailing edges upstream of the observed region becoming comparable to the ion gyro-radius.
+Comments: |
+7 pages, 5 figures, Submitted to the Journal of Nuclear Materials and Energy Special Issue : Proceedings of 26th International Conference on Plasma Surface Interactions in Controlled Fusion Devices |
+Subjects: |
+Plasma Physics (physics.plasm-ph) |
+Cite as: |
+arXiv:2406.16471 [https://arxiv.org/abs/2406.16471] [physics.plasm-ph] |
+|
+(or
+arXiv:2406.16471v1 [https://arxiv.org/abs/2406.16471v1] [physics.plasm-ph] for this version)
+|
+|
+https://doi.org/10.48550/arXiv.2406.16471 [https://doi.org/10.48550/arXiv.2406.16471]
+Focus to learn more
+arXiv-issued DOI via DataCite
+|
+Submission history
+From: Chris Marsden [ view email ]
+[v1]
+Mon, 24 Jun 2024 09:19:29 UTC (2,792 KB)
+Full-text links:
+Access Paper:
+View a PDF of the paper titled Inferring the scrape-off layer heat flux width in a divertor with a low degree of axisymmetry, by C. Marsden (1) and 17 other authors
+View PDF
+HTML (experimental) [https://arxiv.org/html/2406.16471v1]
+TeX Source
+view license [http://arxiv.org/licenses/nonexclusive-distrib/1.0/]
+Current browse context:
+physics.plasm-ph
+< prev
+|
+next >
+new
+|
+recent
+| 2024-06
+Change to browse by:
+physics
+References & Citations
+SciX [https://scixplorer.org/abs/arXiv:2406.16471]
+Google Scholar [https://scholar.google.com/scholar_lookup?arxiv_id=2406.16471]
+Semantic Scholar [https://api.semanticscholar.org/arXiv:2406.16471]
+export BibTeX citation
+Loading...
+BibTeX formatted citation
+×
+loading...
+Data provided by:
+Bookmark
+[http://www.bibsonomy.org/BibtexHandler?requTask=upload&url=https://arxiv.org/abs/2406.16471&description=Inferring the scrape-off layer heat flux width in a divertor with a low degree of axisymmetry]
+[https://reddit.com/submit?url=https://arxiv.org/abs/2406.16471&title=Inferring the scrape-off layer heat flux width in a divertor with a low degree of axisymmetry]
+Bibliographic Tools
+Bibliographic and Citation Tools
+Bibliographic Explorer Toggle
+Bibliographic Explorer (What is the Explorer? [https://info.arxiv.org/labs/showcase.html#arxiv-bibliographic-explorer])
+Connected Papers Toggle
+Connected Papers (What is Connected Papers? [https://www.connectedpapers.com/about])
+Litmaps Toggle
+Litmaps (What is Litmaps? [https://www.litmaps.co/])
+scite.ai Toggle
+scite Smart Citations (What are Smart Citations? [https://www.scite.ai/])
+Code, Data, Media
+Code, Data and Media Associated with this Article
+alphaXiv Toggle
+alphaXiv (What is alphaXiv? [https://alphaxiv.org/])
+Links to Code Toggle
+CatalyzeX Code Finder for Papers (What is CatalyzeX? [https://www.catalyzex.com])
+DagsHub Toggle
+DagsHub (What is DagsHub? [https://dagshub.com/])
+GotitPub Toggle
+Gotit.pub (What is GotitPub? [http://gotit.pub/faq])
+Huggingface Toggle
+Hugging Face (What is Huggingface? [https://huggingface.co/huggingface])
+ScienceCast Toggle
+ScienceCast (What is ScienceCast? [https://sciencecast.org/welcome])
+Demos
+Demos
+Replicate Toggle
+Replicate (What is Replicate? [https://replicate.com/docs/arxiv/about])
+Spaces Toggle
+Hugging Face Spaces (What is Spaces? [https://huggingface.co/docs/hub/spaces])
+Spaces Toggle
+TXYZ.AI (What is TXYZ.AI? [https://txyz.ai])
+Related Papers
+Recommenders and Search Tools
+Link to Influence Flower
+Influence Flower (What are Influence Flowers? [https://influencemap.cmlab.dev/])
+Core recommender toggle
+CORE Recommender (What is CORE? [https://core.ac.uk/services/recommender])
+Author
+Venue
+Institution
+Topic
+About arXivLabs
+arXivLabs: experimental projects with community collaborators
+arXivLabs is a framework that allows collaborators to develop and share new arXiv features directly on our website.
+Both individuals and organizations that work with arXivLabs have embraced and accepted our values of openness, community, excellence, and user data privacy. arXiv is committed to these values and only works with partners that adhere to them.
+Have an idea for a project that will add value for arXiv's community? Learn more about arXivLabs [https://info.arxiv.org/labs/index.html].
+Which authors of this paper are endorsers? |
+Disable MathJax (What is MathJax? [https://info.arxiv.org/help/mathjax.html])
+We gratefully acknowledge support from our major funders [https://info.arxiv.org/about/major_funders.html],
+member institutions [https://info.arxiv.org/about/ourmembers.html] , ,
+and all contributors.
+About [https://info.arxiv.org/about] ·
+Help [https://info.arxiv.org/help] ·
+Contact [https://info.arxiv.org/help/contact.html] ·
+Subscribe [https://info.arxiv.org/help/subscribe.html] ·
+Copyright [https://info.arxiv.org/help/license/index.html] ·
+Privacy [https://info.arxiv.org/help/policies/privacy_policy.html] ·
+Accessibility [https://info.arxiv.org/help/web_accessibility.html] ·
+Operational Status (opens in new tab) [https://status.arxiv.org/]

@@ -1,0 +1,672 @@
+URL: http://arxiv.org/pdf/2511.15641v1
+                                                    Characterisation of X- and O-points in Wendelstein
+                                                    7-X with respect to coil currents
+arXiv:2511.15641v1 [physics.plasm-ph] 19 Nov 2025
+
+
+
+
+                                                            Robert Davies1 , Christopher B. Smiet2 , Charlotte Batzdorf3 , J.
+                                                            Geiger1 , J. Loizu2 , S. A. Henneberg4
+                                                            1
+                                                              Max Planck Institute for Plasma Physics, Wendelsteinstraße 1, 17491 Greifswald,
+                                                            Germany
+                                                            2
+                                                              Ecole Polytechnique Fédérale de Lausanne (EPFL), Swiss Plasma Center (SPC),
+                                                            CH-1015 Lausanne, Switzerland
+                                                            3
+                                                              RWTH Aachen University, Aachen, Germany
+                                                            4
+                                                              Massachusetts Institute of Technology, Cambridge, Massachusetts 02139, USA
+
+                                                            Abstract. This work analyses vacuum magnetic field topology in Wendelstein 7-
+                                                            X (W7-X) with respect to changes in the current in the superconducting coils. We
+                                                            develop a fast automated scheme to locate fixed points (such as X- and O-points)
+                                                            and calculate the trace of the Jacobian of the field line map for them (Tr(M)), which
+                                                            represents several important properties of the fixed point. We perform two sets of
+                                                            coil current scans: (1) scans where each coil current is varied individually, using the
+                                                            “standard”, “high iota” and “low iota” configurations as starting points; (2) a scan of
+                                                            over 2 × 105 magnetic configurations in which the coil currents are randomly sampled.
+                                                            In both cases we constrain the coil currents to the normal range of W7-X. We verify
+                                                            the principal roles of the non-planar, planar and control coils: the non-planar coils
+                                                            establish island chains with a certain phase; the planar coils modify the location of the
+                                                            island chain by both controlling the ι profile and shifting the configuration “inward”
+                                                            and “outward”; the control coil affects the island size and phase. We also find that
+                                                            |(Tr(M) − 2)| (a quantity closely related to the magnitude of the Greene’s residue)
+                                                            tends to increase with the minor radius of the fixed points, and that Tr(M) for X- and
+                                                            O-points can be very differently affected by the control coil current. Finally, we show
+                                                            that |(Tr(M) − 2)| serves as a proxy for island size for internal island chains, which
+                                                            may help identification of suitable experimental candidates.
+W7-X Edge Topology                                                                   2
+
+
+
+
+Figure 1: Top-down view of W7-X for the “standard configuration”. The plasma
+boundary is shown as a yellow surface and coils as black lines, with the coils of one
+field period shown bold and coloured (each unique coil geometry having its own colour).
+The magnetic axis is shown as a red line and the X- and O-points of the edge island
+chain are shown as dark and light green lines.
+
+
+
+
+Figure 2: A Poincaré section for the “standard” configuration at several toroidal
+locations, also showing the magnetic axis and edge ι = 1 X- and O-points. The X-
+point and O-point in the midplane (Z = 0) at ϕ = 36◦ are shown by larger markers
+(blue and orange) to illustrate their motion.
+
+
+1. Introduction
+
+Commercially viable stellarator reactors must have an exhaust solution, that is, the
+steady flow of heat and particles expelled from the confined region must be adequately
+managed e.g. Helium ash must be removed and plasma-facing components (PFCs)
+should not be thermally overloaded. The magnetic field in the stellarator edge plays an
+W7-X Edge Topology                                                                       3
+
+
+
+
+Figure 3: A Poincaré section for the “high iota” (upper row) and “low iota” (lower row)
+configurations at ϕ = 36◦ (left) and ϕ = 0◦ (right).
+
+
+essential role in determining exhaust performance. Wendelstein 7-X (W7-X) is designed
+for an island divertor [1], currently the most well-understood stellarator divertor concept
+and often used in stellarator reactor designs [2, 3, 4]. The island divertor relies on a
+magnetic island chain with a low-order rational rotational transform ι to divert the
+plasma. How the electromagnetic coils of W7-X influence its island chain(s) is the focus
+of this work.
+     W7-X has four varieties of electromagnetic coil [5, 6], the first three of which are
+shown in figure 1: (1) 5 unique “non-planar” coil geometries, numbered 1-5 (referred to
+here as “NPC 1”, etc.); (2) 2 unique “planar” coils, labelled “A” and “B” (“PC A”, “PC
+B”); (3) 1 unique “control” (“CC”, also called “sweep”) coil, which is close to the plasma
+(within the vacuum vessel) and carries a relatively small current; (4) “trim” coils, which
+are furthest from the plasma and intended to only correct error fields. We do not study
+trim coils in this work. These coils can be independently powered, enabling a large
+range of unique magnetic configurations and hence a variety of magnetic topologies in
+the edge. Three paradigmatic configurations are the “standard”, “high iota” and “low
+iota” configurations. The standard configuration has an ι = m/n = 5/5 island chain in
+the edge (where m and n are the toroidal and poloidal periodicities of the island chain)
+which intersects the divertor plates, as shown in figure 2. The high iota configuration
+W7-X Edge Topology                                                                        4
+
+has an edge ι = m/n = 5/4 island chain and low iota has an edge ι = m/n = 5/6 island
+chain, shown in figure 3. A standard approach to model these island chains as a resonant
+magnetic perturbation of a hypothetical set of unperturbed nested flux surfaces[7, 6].
+Simple island models exist [8] describing the relationship between island parameters
+(e.g. island width) and properties of the unperturbed surfaces (such as the magnetic
+shear) and the resonant perturbations.
+      The role of coils on W7-X magnetic configurations and edge structures has been
+widely reported (e.g. [5]) and can be summarised as follows: (1) non-planar coils are
+responsible for the plasma shaping and generating the rotational transform ι, and also
+control the mirror ratio; (2) the planar coils can add/remove toroidal magnetic field and
+vertical magnetic field, with the former shifting the ι profile up/down and the latter
+shifting the flux surfaces inwards/outwards (i.e. to larger/smaller major radius); (3) the
+control coil can control the island and phase of edge magnetic islands. This work seeks
+to quantify these effects over the operational space of W7-X, and to describe coil-island
+relationships beyond these principal roles.
+      Our focus is on fixed points of the field line map, most often X-points and O-points.
+Island chains consist of X-points and O-points and are therefore well-characterised by
+this technique. The main difference of our approach and the “resonant perturbation
+model” is that we do not require the calculation of unperturbed nested surfaces (which
+in general is not trivial and solutions are non-unique). Here we only consider vacuum
+fields (the contribution of the plasma current is neglected), although plasma-generated
+fields have been shown to affect edge structures [9, 10, 11, 12].
+      This work is organised as followed. We first (section 2) introduce theory relating to
+fixed points, in particular, we introduce the Jacobian M of the field line map at a fixed
+point. In section 3 we describe our fast automated scheme. We then perform two sets
+of coil current scans. The first, described in section 4, is a 1D scan in each of the coils,
+taking the standard, high and low iota configurations as starting points. The second is
+a large scan of different combinations of coil currents. Section 5 presents an overview
+of the the large scan and we explore three phenomena: the role of the planar coils in
+determining location and periodicity of fixed points (section 5.1), the role of the control
+coil in modifying fixed point properties (section 5.2) and the factors governing the size
+of internal island chains (section 5.3). Conclusions and outlook is presented in section
+6.
+
+2. Relevant topological theory
+
+Analysis of the field in a stellarator usually starts with constructing a Poncaré section
+[13]. This is usually done by choosing a plane of constant toroidal angle ϕ (using a
+cylindrical (R, ϕ, Z) coordinate system), and following magnetic field lines starting from
+a point (R, Z) on the plane as they go around the device, noting each time the location
+(R′ , Z ′ ) where that field line returns to the same plane. This also defines the Poincaré
+return map f n : (R, Z) → (R′ , Z ′ ) which is the map defined by going n times toroidally
+W7-X Edge Topology                                                                             5
+
+around the device. A Poincaré section is constructed by calculating the trajectories of
+dozens of field lines, for hundreds or thousands of toroidal transits around the device,
+and often illustrates well the structure of the magnetic field.
+      There are two properties that stellarators (including W7-X) use to reduce the
+number of unique coil geometries they require, and thus simplify their construction.
+The first is field periodicity: stellarators are constructed such that the field repeats
+itself nfp times in ϕ with a period 2π/nfp (= 72◦ for W7-X since nfp = 5). Fewer
+unique coil geometries are required, they can just be copied and placed in their
+respective field periods. The second reduction is stellarator symmetry [14]. This
+implies that the magnetic field adheres to the relation (BR , Bϕ , BZ )(R, ϕ, Z) =
+(−BR , Bϕ , BZ )(R, −ϕ, −Z). This puts a strong relation between the coils at ϕ > 0
+and ϕ < 0, which comes down to copying the coil at angle +ϕ to −ϕ, rotating it upside-
+down, and changing the direction of the current. This further halves the number of
+unique coils. Because of field periodicity, the coils at ϕ < 0 re-appear in the second half
+of the field period, and stellarator symmetry implies the existence of a second symmetry
+plane halfway through the field period ϕ = π/nfp (= 36◦ for W7-X).
+      These symmetries also allow for faster computation of Poincaré sections. Field
+periodicity implies that every plane separated by 2π/nf p is identical, and that we can
+iterate over f 1/nfp . In addition, stellarator symmetry implies that the trajectory of a
+field line (R(ϕ), Z(ϕ)) started at (R0 , 0, Z0 ) and followed in the positive ϕ direction is
+related to the trajectory of a field line (R′ (ϕ), Z ′ (ϕ)) started at (R0 , 0, −Z0 ) as follows:
+(R′ (−ϕ), Z ′ (−ϕ)) = (R(ϕ), −Z(ϕ)). A consequence is that sections in the first half
+field period are related to the sections in the second half field period by a flip in the
+Z = 0 plane, and are symmetric about Z = 0 at the symmetry planes. Thus, all the
+unique information of a configuration can be presented by Poincaré sections between
+the first two symmetry planes (one half field period e.g. between ϕ = 0 and ϕ = 36◦ for
+W7-X). Here we assume that the magnetic field adheres strictly to field periodicity and
+stellarator symmetry, although small symmetry-breaking error fields can arise in the
+experiment and experimental configurations can deliberately break these symmetries
+[15].
+      A Poincaré section contains special points, which are fixed under the the Poincaré
+map f , such that f n(fixed point) /nfp (R, Z) = (R, Z). Such a field line returns to the same
+location after n(fixed point) field periods (n(fixed point) /nfp toroidal turns), and is thus a
+closed field line. The magnetic axis is an example. It returns to the same (R, Z)
+every period, and closes on itself after a full toroidal turn. Island chains contain fixed
+points, which return after multiple field periods. The 5/5 island chain of the standard
+configuration of W7-X contains (i.e. n(fixed point) = 5 fixed points), and the 5/4 and a
+5/6 chains contain n(fixed point) = 4 and n(fixed point) = 6 fixed points respectively.
+      The structure of the map around a fixed point at x0 can be understood from
+linearizing the field line map around it:
+
+                               f n (x0 + δx) = f n (x0 ) + M · δx                            (1)
+W7-X Edge Topology                                                                             6
+
+where M (the Jacobian) is the linearized matrix of partial derivatives defined as:
+Mij = ∂j fi , and δx = xi − x0 is a small step. This can also be written as:
+
+                         Rf = R0 + M11 (Ri − R0 ) + M12 (Zi − Z0 )                           (2)
+                         Zf = Z0 + M21 (Ri − R0 ) + M22 (Zi − Z0 ),                          (3)
+
+where xf = (Rf , Zf ) is the location of a field line started at xi = (Ri , Zi ) and traced
+n(fixed point) field periods and x0 = (R0 , Z0 ). M encapsulates several properties of the
+fixed point. Firstly, Tr(M) = M11 + M22 determines the “flavour” of the fixed point (e.g.
+X-point, O-point), according to the following rules:
+ (i) If Tr(M) > 2 the fixed point is an X-point.
+(ii) If 2 > Tr(M) > −2 the fixed point is an O-point.
+(iii) Tr(M) = 2 fixed points include (but are not limited to) points on intact rational
+      surfaces.
+(iv) If Tr(M) < −2 the fixed point is a “reflection hyperbolic fixed point”.
+The last “flavour”, probably least familiar to the reader, can occur in W7-X; however,
+they appear near the coils, and are typically inaccessible to the plasma (the plasma
+intersects the PFCs before interacting with the reflection hyperbolic (RH) point.) We
+therefore do not dwell on this phenomenon but refer the reader to [16, 17, 18, 19, 20].
+     For O-points, Tr(M) is also related to the rotational transform around the fixed point
+with respect to the map according to 2 cos(2πι) = Tr(M). For X-points, nearby field
+lines asymptotically approach or are exponentially repelled as the field lines are followed
+in the positive toroidal direction. The directions of attraction/repulsion are given by the
+“stable”/“unstable” eigenvectors vstable , vunstable of M and the eigenvalues λstable , λunstable
+describe the exponent of attraction/repulsion (related also to the Lyapunov exponent)
+[21]. If one instead follows field lines in the negative toroidal direction, the directions
+of attraction/repulsion are swapped (unstable/stable eigenvectors are the directions of
+attraction/repulsion respectively.) The eigenvectors of the fixed point are dependent
+on the position along the trajectory of the fixed point (i.e. they vary with ϕ) but the
+eigenvalues do not.
+     The last concept we introduce is the stable/unstable manifolds of the X-point:
+the set of (infinitely many) magnetic field lines which asymptotically approach the
+X-point when followed in the positive/negative toroidal direction. Near to the X-
+point, these lie along the stable/unstable eigenvectors. The manifolds tend to act as
+transport pathways for the plasma; for island divertors with negligible chaos (such as
+the standard configuration), the manifolds form the island “separatrix”, which diverts
+heat and particles away from the confined region. Of course, since the plasma can
+be transported in either direction along field lines, heat and particles are agnostic to
+whether a manifold is stable or unstable; “stable” and “unstable” should be understood
+as labels relating to a toroidal direction in which magnetic field lines approach a given
+X-point rather than as physically distinct concepts.
+W7-X Edge Topology                                                                                     7
+
+3. Description of the scheme
+
+We begin by finding the magnetic axis. We use a root finder to locate (dR, dZ) =
+(Rf − R0 , Zf − Z0 ) = (0, 0) points for the one field period map. For the initial guess we
+sample points along Z = 0 at ϕ = 36◦ , trace for one field period and select the (R, Z)
+point with smallest (dR2 + dZ 2 ). We calculate M by tracing a set of nearby points and
+fitting {Ri , Zi } and {Rf , Zf } to equations (2) and (3) (see Appendix A for more detail).
+      We then seek fixed points with periodicities n(fixed point) = 4, 5, 6 i.e. (dR, dZ) =
+(0, 0) under the n(fixed point) field period map. We make multiple attempts using
+Nscan = 10 points spaced along Z = 0 in ϕ = 36◦ as starting points. Having found
+up to Nscan fixed points, we remove duplicates, resulting in between 0 and Nscan unique
+fixed points in addition to the axis.
+      If we have only found 1 unique fixed point in addition to the magnetic axis, it is
+likely that an island chain exists but the fixed point on the ϕ = 36◦ outboard midplane
+at is the same as that on the inboard midplane (for example the high and low iota
+configurations, see figure 3). In this case we repeat the fixed point-finding scheme at
+ϕ = 0◦ . Our approach is not guaranteed to find all fixed points, but it can be shown
+that for island chains, there must exist fixed points at Z = 0 on both sides of the axis
+in both symmetry planes, and so at least some island fixed points are recovered. M is
+calculated for each fixed point as for the magnetic axis.
+
+3.1. Implementation details using EMC3-Lite
+The field line tracing is performed by EMC3-Lite [8], which is interfaced via a Python
+“wrapper”. EMC3-Lite is a code designed for calculating PFC heat loads, but
+also includes a field line tracer which uses the Adams-Bashforth-Moulton fifth-order
+predictor-corrector scheme with fourth-order Runge-Kutta as the initial step. The
+magnetic field is calculated on a regular (R, ϕ, Z) grid using EMC3-Lite‘s Biot-Savart
+solver‡.
+     Two implementation details significantly speed up the calculations. Firstly, the
+magnetic field generated by each independent coil is calculated only once. The magnetic
+field for a given set of currents is then calculated as a linear sum of coil contributions.
+Secondly, the field line tracer is interfaced with the Python wrapper using f2py, allowing
+the magnetic field grids to be stored in memory, rather than reading the magnetic field
+from a file each time the field line tracer is called.
+
+4. Results of 1D scans
+
+We first perform a series of 1D scans using standard, high iota and low iota as starting
+points, by varying the current in each coil separately. The coil current IX reported here
+‡ The magnetic field (R, ϕ, Z) grid is not to be confused with EMC3-Lite‘s field-aligned grid [22], which
+is used e.g. in the heat deposition calculation.
+W7-X Edge Topology                                                                        8
+
+
+
+
+Figure 4: Coil currents scans with the standard configuration as the starting point.
+a) Magnetic axis location at ϕ = 36◦ (RMA ) as planar coils (PC) are varied. b) RMA
+variation with non-planar coils (NPCs). c) On-axis rotational transform ιMA against
+PC currents. The range of ιMA when NPC currents are scanned is shown as shaded
+yellow region. d) Location of ϕ = 36◦ outboard midplane fixed point R(fixed point) against
+PC currents, with NPC range shown as shaded yellow region and control coil (CC)
+range shown as shaded grey region. e) Jacobian trace Tr(M) for the ϕ = 36◦ outboard
+midplane fixed point (solid lines) and the ϕ = 36◦ inboard midplane fixed point (dashed
+line) against PC currents with NPC range shown in shaded yellow. f) Tr(M) against
+CC current for both fixed points.
+
+
+is the filament (i.e. total) current in coil X, equal to the winding current multiplied
+by the number of windings for the coil (which is 108, 36 and 8 for the non-planar,
+planar and control respectively). The scan with respect to standard is shown in figure
+4. The R location of magnetic axis at ϕ = 36◦ (labelled RMA ) can be moved by around
+10cm per planar coil and correlates with (IPCA − IPCB ), and can also be moved by the
+non-planar coils by up to 4cm (subplots a) and b)). ιMA correlates with (IPCA + IPCB ),
+with the non-planar coil currents having a smaller impact (subplot c)). The control coil
+has virtually no effect on either RMA (changing RMA by a maximum of 0.4cm) or ιMA
+(causing a maximum change of 0.003).
+     The variation in R(fixed point) , the location of the fixed point on outboard midplane
+at ϕ = 36◦ , is greatest for the planar coils (up to 60cm), followed by the non-planar coils
+W7-X Edge Topology                                                                      9
+
+
+
+
+Figure 5: a) Poincaré sections, showing edge island chain as control coil current ICC is
+scanned. b) Island area and Jacobian trace Tr(M) as a function of ICC .
+
+
+
+
+Figure 6: Coil currents scans with respect to the “high iota” (plots a-c) and “low iota”
+(d-f) configurations. a) and d): ιMA against PC current. b) and e): R(fixed point) against
+PC current with NPC and CC range shown as shaded areas. c) and f): Tr(M) for
+ϕ = 36◦ outboard midplane fixed point (solid line) and ϕ = 0◦ outboard midplane fixed
+point against CC current.
+W7-X Edge Topology                                                                          10
+
+(up to 4cm), and very little for the control coil (up to 1cm) (subplot d)). However, the
+control coil has the strongest influence on Tr(M) for the X-point (a variation of more
+than 3 over the experimentally relevant range), sufficient to achieve a X-point→ O-point
+transition (indicated by Tr(M) crossing below 2 in subplot f)). Somewhat surprisingly,
+the O-point is far less affected by the ICC .
+      Figure 5 a) shows the island chain as ICC is scanned. The island separatrix (i.e.
+X-point manifolds) are calculated by sampling and tracing points along the eigenvectors
+of M (see Appendix A for more information). Consistent with plot 4 f), the 5/5
+chain transitions to a 10/10 chain, with an X→O transition. Figure 5 b) shows the
+variation in island area (here referring to the area of the island with an X-point at the
+outboard midplane at ϕ = 36◦ , calculation described in Appendix B) as the transition
+is approached. As Tr(M) → 2 for the X-point, the island area decreases but does not
+approach 0.
+      We repeat the coil current scans, starting from the high iota and low iota
+configurations, with selected results shown in figure 6. As in the “standard” scan,
+the planar coils mostly determine the axis properties (RMA and ιMA ) (ιMA variation
+shown in subplots a) and d)) and the location of the fixed points R(fixed point) (subplot
+b)).
+      However, several differences between the standard, high iota and low iota scans can
+be seen. For high iota, Tr(M) (shown in subplot c)) is more affected by all coil types
+(non-planar, planar and control) than for standard; all coil types can create an X→O
+transition for the fixed point on the ϕ = 36◦ outboard midplane (i.e. a 4/4 → 8/8
+island chain transition). For low iota, the fixed points are less affected by all coil types
+than standard (subplot f)). Another difference is that Tr(M) for the ϕ = 36◦ outboard
+midplane fixed point increases with ICC for high iota, the opposite trend to standard
+and low iota. Like standard, in low and high iota scans one fixed point in the island
+chain is more strongly affected by ICC than the other. For high iota, it is the ϕ = 36◦
+outboard midplane fixed point, but for low iota it is the ϕ = 0◦ outboard midplane fixed
+point. A final difference is that for high iota, ICC can cause much larger variations in
+R(fixed point) than for standard or low iota (up to 8cm).
+      An obvious reason for differences between these scans is the distance of the edge
+fixed points to the coils. The change to the magnetic field resulting from changes in
+coil currents is larger when the coil-fixed point distance is smaller, which qualitatively
+explains why Tr(M) variation is greatest for high iota (because R(fixed point) is largest, i.e.
+the fixed points are closer to the coils) and smallest for low iota. Another difference is
+the ι of the fixed points, which determines the poloidal/toroidal space which the fixed
+point trajectories sample. This might explain the differences in Tr(M)(ICC ) trends,
+although we do have a quantitative or predictive model for these variations.
+W7-X Edge Topology                                                                       11
+
+
+
+
+Figure 7: a) On-axis rotational transform against normalised planar coil currents
+(I˜PCA + I˜PCB ). Currents normalised to mean non-planar coil current. b) Location
+of magnetic axis at ϕ = 36◦ against (I˜PCA − I˜PCB ).
+
+
+
+
+Figure 8: a) Illustration of all n(fixed point) = 5 found in our large coil current scan. b)
+Tr(M) of all fixed points found in the large scan, plotted in ascending order.
+
+
+5. Summary of the large scan
+
+We analyse over 2.8 × 105 different coil current combinations, with currents for each coil
+selected uniformly randomly within the prescribed range (see Appendix C for details).
+We perform the scan using a single CPU with an average computational cost of 0.26
+CPU-seconds per configuration.
+     The magnetic axis location at ϕ = 36◦ as a function of (I˜PCA − I˜PCB ) (the parameter
+controlling inward/outward shift) is shown in figure 7. The tilde (˜) denotes normalised
+current, defined as I˜X = IX ·5/(INPC1 +INPC2 +INPC3 +INPC4 +INPC5 ) for coil X, i.e. the
+coil current divided by the average NPC current. RMA spans the range R = (505, 535)
+W7-X Edge Topology                                                                         12
+
+
+
+
+Figure 9: Fixed point occurrence as a function of planar coil currents, categorised by
+location of ϕ = 36◦ at outboard midplane fixed point. a) “internal” fixed points. b)
+“divertor-relevant” fixed points. c) “Near-coil” fixed points.
+
+
+and has a strong (approximately linear) correlation with (I˜PCA − I˜PCB ). ιMA (figure 7
+b)) strongly correlates with (I˜PCA + I˜PCB ) and spans the range 0.71 - 1.07.
+     The n(fixed point) = 5 fixed points are represented in figure 8. 10 distinct “bands” can
+be seen, with O-, X- and RH-points present in each band. Fixed points living outside
+these bands (for example the 20/20 island chain) are possible, but would not be found
+by our algorithm. n(fixed point) = 5 fixed points are present at all minor radii (which is
+not the case for the n(fixed point) = 4 and n(fixed point) = 6).
+     Tr(M) for all edge fixed points found by our scheme is shown in figure 8 b). Tr(M)
+varies the most for the n(fixed point) = 4 and least for n(fixed point) = 6; the middle 80% of
+points (i.e. between 0.1 and 0.9 in plot 8 b)) spans the range 0.58 − 3.20, 1.50 − 2.78,
+1.94 − 2.05 for the n(fixed point) = 4, 5 and 6 respectively.
+
+5.1. Role of planar coils
+We loosely define three categories of fixed points, according to their spatial position: (1)
+“internal” fixed points, defined as those for which R < 590cm for the ϕ = 36◦ outboard
+midplane fixed point. These are likely to form internal island chains i.e. the island
+chains do not intersect PFCs; (2) “divertor-relevant” fixed points, 590 < R < 620cm for
+the ϕ = 36◦ outboard midplane fixed point, which are likely to form PFC-intersecting
+island chains; (3) “near-coil” fixed points, R > 620cm, which are less likely to have
+experimental relevance since the structures they form are likely to be shielded from the
+plasma by PFCs. We emphasise that this is a loose categorisation.
+      The distribution of fixed points with respect to (I˜PCA + I˜PCA ) and (I˜PCA − I˜PCA )
+in these three categories are shown in figure 9. The overall shape of the phase space
+of (I˜PCA + I˜PCA ) and (I˜PCA − I˜PCA ) is a diamond. Within the diamond, fixed points
+of each periodicity have a well-defined position in phase space, mostly determined by
+W7-X Edge Topology                                                                       13
+
+
+
+
+Figure 10: Statistics of Tr(M) for fixed points against control coil current and R. Upper
+row: n(fixed point) = 5 ϕ = 36◦ outboard midplane fixed points, showing a) ⟨Tr(M)⟩, b)
+standard deviation and c) cell population (right) for binned data. Lower row: ⟨Tr(M)⟩
+for d) ϕ = 36◦ inboard midplane n(fixed point) = 5 fixed points, e) ϕ = 36◦ outboard
+midplane n(fixed point) = 4 and f) ϕ = 36◦ outboard midplane n(fixed point) = 6 (right).
+
+
+(I˜PCA + I˜PCA ). For “divertor-relevant” fixed points, all three periodicities are present,
+with n(fixed point) = 5 points possible over the full range of (I˜PCA − I˜PCA ). Only
+n(fixed point) = 5 and 6 “internal” fixed points are possible with our selection of current
+limits and only n(fixed point) = 4 and 5 “near coil” fixed points are possible.
+
+5.2. Role of control coil
+Section 4 shows that I˜CC has a greater effect on Tr(M) for fixed points located at
+larger minor radius, but also that I˜CC can unequally affect different fixed points in a
+single island chain. This is supported by our large scan. Figure 10 a)-d) characterises
+Tr(M)(R, I˜CC ) for n(fixed point) = 5. The data is binned and we describe a given
+(R, I˜CC ) cell by a mean Tr(M) (denoted ⟨Tr(M)⟩), a standard deviation σTr(M) and a
+cell population N . Figure 10 a) shows ⟨Tr(M)⟩ for ϕ = 36◦ outboard midplane fixed
+points. Within the “divertor relevant” range (between the dashed and solid horizontal
+W7-X Edge Topology                                                                        14
+
+lines), ⟨Tr(M)⟩ increases with I˜CC and the magnitude of (⟨Tr(M)⟩ − 2) increases with
+R(fixed point) . σTr(M) increases with R(fixed point) (subplot b)), often exceeding 2 in the
+“near coil” region. Subplot c) shows that n(fixed point) = 5 mostly occupy the “divertor-
+relevant” range.
+      Figure 10 d) shows ⟨Tr(M)⟩ for the n(fixed point) = 5 on the ϕ = 36◦ inboard midplane.
+As in section 4, there is little dependence of Tr(M) on I˜CC . |(⟨Tr(M)⟩ − 2)| increases
+with distance from the magnetic axis. A sharp bifurcation occurs around R = 455cm,
+with |(⟨Tr(M)⟩ − 2)| becoming large and negative. This bifurcation is curious, but is
+likely to be in the “near-coil” region and is not explored here.
+      Figure 10 e) and f) show ⟨Tr(M)⟩ for ϕ = 36◦ outboard midplane fixed points with
+n(fixed point) = 4 and 6. For n(fixed point) = 4, a strong correlation exists between ⟨Tr(M)⟩
+and I˜CC , with the opposite trend to n(fixed point) = 5. There is little dependence for
+n(fixed point) = 6, and |(⟨Tr(M)⟩ − 2)| tends to be small, but increases with distance from
+magnetic axis. This also supports the findings of section 4.
+      Finally, we note that n(fixed point) = 5 and 6 have a clear preferred phase, with the
+majority (85%) of n(fixed point) = 6 ϕ = 36◦ outboard midplane fixed points being O-
+points, the majority (78%) of such n(fixed point) = 5 being X-points. In contrast, around
+half (53%) of n(fixed point) = 4 ϕ = 36◦ outboard midplane fixed points are X-points (no
+clearly preferred phase).
+
+5.3. Island size for “internal” islands
+Section 5.2 shows that Tr(M) for fixed points tends to approach 2 as the minor radius of
+the fixed point decreases, and section 4 shows that Tr(M) → 2 correlates with decreasing
+island size. This is indirectly what is targeted when the Cary and Hanson method [23]
+for stochasticity reduction in stellarators is used. Here a quantity called Greene’s
+residue [24, 25], calculated through R = 12 − 41 Tr(M) is minimized to reduce and eliminate
+internal islands. This quantity of course goes to zero when Tr(M) approaches 2. This is
+used to eliminate internal islands, which have historically been considered undesirable for
+fusion reactors (since they flatten the pressure profile across the island). However, recent
+experimental results [5] have found that island chains within the confined region but near
+the edge appear to suppress MHD activity and enable an increase in volume-normalised
+diamagnetic energy. The means to tailor internal island chains could therefore be useful
+for preparing future experiments.
+     To address this, we compare island size and Tr(M) for the n(fixed point) = 5 “internal”
+fixed points, shown in figure 11. For reasons described in Appendix B, the area
+calculation may fail, and our approach is limited to configurations with X-points on
+the ϕ = 36◦ outboard midplane and O-points on the ϕ = 36◦ inboard midplane. With
+these caveats, we calculate an island area for 32, 949 configurations (the total number of
+configurations with n(fixed point) = 5 internal fixed points is 25, 276). We find that island
+area correlates positively with |Tr(M) − 2| for both the X- and O-points of the island
+chain, albeit with a large spread. Optimisations based on Greene‘s Residue can therefore
+W7-X Edge Topology                                                                        15
+
+
+
+
+Figure 11: a) and b) Comparison between fixed point Tr(M) and island area for
+“internal” 5/5 island chains. c) Correlation between island area and minor radius of
+island chain.
+
+
+remove islands by minimizing this residue, but if a specific island size is desired, other
+metrics should be used (such as [26].) We also find that island area increases with the
+minor radius (R(fixed point) −RMA ) (figure 11 c)). This might be expected, since the island
+area for a given island width should increases approximately linearly with minor radius.
+
+6. Conclusions
+
+This work presents a fast automated method to characterise fixed points in vacuum
+stellarator-symmetric magnetic fields, and applies this W7-X. We restrict our study to
+edge fixed points with periodicity of n(fixed point) = 4, 5 and 6 field periods, but there is
+no reason the algorithm cannot be applied beyond this.
+     We perform scans where each coil current is individually varied, relative to the
+“standard”, “high iota”, and “low iota” configurations, and also a large scan in which
+all coil currents are varied simultaneously. These confirm the following behaviours: (1)
+the non-planar coils, responsible for generating rotational transform and plasma shaping,
+have relatively little effect on magnetic axis location and rotational transform or on edge
+fixed points; (2) the planar coils control inward and outward shift of the plasma and
+can boost the ι profile up and down, and thus principally control the periodicity and
+W7-X Edge Topology                                                                                    16
+
+location of edge fixed points; (3) the control coil has a relatively large effect on fixed
+points in the edge, with the sensitivity of fixed points to coil current increasing with the
+minor radius of the fixed points. These are well-expected [5], but for the first time are
+quantified over a large scan.
+     We also find that the control coil has a surprisingly unequal effect on the X- and
+O-points within an island chain, which (for example) causes the 5/5 island chain in the
+standard configuration to transition to a 10/10 island chain: the X-point is changed
+to an O-point but the O-point experiences little change. Understanding the reasons
+for this would be a useful piece of future work, and possible methods to address these
+have been recently published [27, 28]. Preliminary investigations [29] indicate that the
+changes to Tr(M) arise from highly toroidally and poloidally localised changes to the
+magnetic field induced by the control coil. The implications of this for transport in the
+edge (compared with simple island models in which the island rotational transform is
+uniform with toroidal angle) is unknown. Our final result is finding a strong correlation
+between |Tr(M) − 2| and island area for “internal” island chains (i.e. not intersecting
+plasma-facing components), which may help to select experimental candidates with
+internal island chains of a desired width.
+
+7. Acknowledgements
+
+This work has been carried out within the framework of the EUROfusion Consortium,
+partially funded by the European Union via the Euratom Research and Training
+Programme (Grant Agreement No 101052200 — EUROfusion). The Swiss contribution
+to this work has been funded by the Swiss State Secretariat for Education, Research and
+Innovation (SERI). Views and opinions expressed are however those of the author(s) only
+and do not necessarily reflect those of the European Union, the European Commission
+or SERI. Neither the European Union nor the European Commission nor SERI can
+be held responsible for them. This work was supported by a grant from the Simons
+Foundation (1013657, JL).
+
+References
+
+ [1] Renner H, Sharma D, Kisslinger J, Boscary J, Grote H, Schneider R. Physical aspects and design
+       of the Wendelstein 7-X divertor. Fusion science and technology. 2004;46(2):318-26.
+ [2] Lion J, Anglès JC, Bonauer L, Navarro AB, Ceron SC, Davies R, et al. Stellaris: A high-field quasi-
+       isodynamic stellarator for a prototypical fusion power plant. Fusion Engineering and Design.
+       2025;214:114868.
+ [3] Bader A, Ayilaran A, Canik J, De A, Guttenfelder W, Hegna C, et al. Power and particle exhaust
+       for the Infinity Two fusion pilot plant. Journal of Plasma Physics. 2025;91(2):E67.
+ [4] Alan Goodman ea. A quasi-isodynamic stellarator configuration towards a fusion power plant;
+       Submitted JPP.
+ [5] Andreeva T, Geiger J, Dinklage A, Wurden G, Thomsen H, Rahbarnia K, et al. Magnetic
+       configuration scans during divertor operation of Wendelstein 7-X.               Nuclear Fusion.
+       2022;62(2):026032.
+W7-X Edge Topology                                                                                    17
+
+ [6] Bozhenkov SA, Lazerson S, Otte M, Gates DA, Pedersen TS, Wolf R. Methods for measuring 1/1
+       error field in Wendelstein 7-X stellarator. Nuclear Fusion. 2016;56(7):076002.
+ [7] Bozhenkov SA, Geiger J, Grahl M, Kisslinger J, Werner A, Wolf RC. Service oriented architecture
+       for scientific analysis at W7-X. An example of a field line tracer. Fusion Engineering and Design.
+       2013;88(11):2997-3006.
+ [8] Feng Y, et al. Review of magnetic islands from the divertor perspective and a simplified
+       heat transport model for the island divertor. Plasma Physics and Controlled Fusion.
+       2022;64(12):125012.
+ [9] Gao Y, Geiger J, Jakubowski MW, Drewelow P, Endler M, Rahbarnia K, et al. Effects of
+       toroidal plasma current on divertor power depositions on Wendelstein 7-X. Nuclear Fusion.
+       2019;59(10):106015.
+[10] Killer C, Gao Y, Perseo V, Rudischhauser L, Hammond K, Buttenschön B, et al. Effect of toroidal
+       plasma currents on the Wendelstein 7-X Scrape-Off Layer. Plasma Physics and Controlled
+       Fusion. 2019;61(12):125014.
+[11] Zhou S, Liang Y, Knieps A, Suzuki Y, Geiger J, Dinklage A, et al. Equilibrium effects on the
+       structure of island divertor and its impact on the divertor heat flux distribution in Wendelstein
+       7-X. Nuclear Fusion. 2022;62(10):106002.
+[12] Knieps A, Suzuki Y, Geiger J, Dinklage A, Zhou S, Rahbarnia K, et al. Plasma beta effects on
+       the edge magnetic field structure and divertor heat loads in Wendelstein 7-X high-performance
+       scenarios. Nuclear Fusion. 2021;62(2):026011.
+[13] Poincaré H. Les méthodes nouvelles de la mécanique céleste. vol. 2. Gauthier-Villars et fils,
+       imprimeurs-libraires; 1893.
+[14] Dewar R, Hudson S. Stellarator symmetry. Physica D: Nonlinear Phenomena. 1998;112(1-2):275-
+       80.
+[15] Bozhenkov S, Otte M, Biedermann C, Jakubowski M, Lazerson S, Pedersen TS, et al.
+       Measurements and correction of the 1/1 error field in Wendelstein 7-X. Nuclear Fusion.
+       2018;59(2):026004.
+[16] Lichtenberg A, Lieberman M, Lichtenberg A, Lieberman M. Chaotic Motion in Dissipative
+       Systems. Regular and Chaotic Dynamics. 1992:570-643.
+[17] Meiss J. Symplectic maps, variational principles, and transport. Reviews of Modern Physics.
+       1992;64(3):795.
+[18] Smiet C, Kramer G, Hudson S. Bifurcations of the magnetic axis and the alternating-hyperbolic
+       sawtooth. Nuclear Fusion. 2020;60(8):084005.
+[19] Smiet CB. Surfaces with Klein bottle topology occur in fusion reactor fields. arXiv preprint
+       arXiv:250611883. 2025.
+[20] Davies R, Smiet CB, Punjabi A, Boozer AH, Henneberg SA. The topology of non-resonant
+       stellarator divertors. Nuclear Fusion. 2025;65(7):076018.
+[21] Wolf A, et al. Quantifying chaos with Lyapunov exponents. Chaos. 1986;16:285-317.
+[22] Feng Y, Sardei F, Kisslinger J. A simple highly accurate field-line mapping technique for three-
+       dimensional Monte Carlo modeling of plasma edge transport. Physics of plasmas. 2005;12(5).
+[23] Cary JR, Hanson JD. Stochasticity reduction. The Physics of fluids. 1986;29(8):2464-73.
+[24] Greene JM. Two-Dimensional Measure-Preserving Mappings. Journal of Mathematical Physics.
+       1968;9(5):760-8.
+[25] MacKay RS. Greene’s residue criterion. Nonlinearity. 1992;5(1):161.
+[26] Geraldini A, Landreman M, Paul E. An adjoint method for determining the sensitivity of island
+       size to magnetic field variations. Journal of Plasma Physics. 2021;87(3):905870302.
+[27] Hudson S, Guinchard S, Sengupta W. Sensitivity of the magnetic axis to variations in the magnetic
+       field. Physics of Plasmas. 2025;32(1).
+[28] Wei W, Knieps A, Hua J, Liang Y. On the shifts of orbits under perturbation and the change of
+       full-period Jacobian of periodic orbits. The European Physical Journal Special Topics. 2025:1-
+       18.
+W7-X Edge Topology                                                                                 18
+
+
+
+
+Figure A1: Illustration of calculating the Jacobian M of the Poincaré map for fixed
+points, using an initial grid of points (blue circles) and their image under the field line
+map (orange circles). Left: O-point, for which Tr(M) < 2. Right: X-point, for which
+Tr(M) > 2. The eigenvectors of M for the X-point are shown as black and green arrows.
+
+
+[29] Robert Davies ea. Understanding phase and resilience of X- and O-points in selected stellarators;
+       in preparation.
+
+
+Appendix A. Illustration of calculation of Jacobian
+
+The calculation of the Jacobian M is shown in figure A1. We construct a 3 × 3 grid
+of points around the given fixed point and trace for n(fixed point) field periods, and fit
+the points to equations (2) and (3). The eigenvectors of M for the X-point are easily
+calculated, and sampling points on the eigenvectors recovers the manifolds of the X-point
+(the island separatrix for a regular non-chaotic island chain).
+
+Appendix B. Island area calculation
+
+The island area calculations presented here are only performed for configurations with
+n(fixed point) = 5 fixed points, and only for configurations with an X-point on the ϕ = 36◦
+outboard midplane and an O-point on the ϕ = 36◦ inboard midplane, which includes (for
+example) the standard configuration (see figure 2). We approximate the area by finding
+the eigenvectors of M for the X-point and tracing the stable and unstable manifolds. If
+these manifolds become sufficiently close to the forward image of the X-point (within a
+distance dtol = 0.02dX , where dX is the distance from the X-point to its forward image),
+we use the manifolds to construct a closed polygon, for which the area is calculated
+using Gauss’s shoelace algorithm. As a check against numerical error, we repeat the
+calculation for the backward image of the X-point and compare the calculated areas.
+If the areas differ too greatly (by more than Atol = 10cm2 ), or if the manifolds do not
+sufficiently approach the image of the X-point (which might happen for example if the
+W7-X Edge Topology                                                                       19
+
+
+
+
+Figure B1: Illustration of the island area calculation scheme, applied to the standard
+configuration.
+
+
+island chain has m/n = 15/15), the scheme is considered to have failed. An example of
+the calculation is shown for the standard configuration in figure B1.
+     It is worth noting that the area of the island varies with toroidal position of the
+island. Calculating instead the toroidal magnetic flux in the island (for example) would
+create a toroidally invariant “island size”, although the toroidal flux should then be
+normalised to a reference magnetic field strength because field strength (and hence
+toroidal flux) can be arbitrarily scaled without affecting the island geometry.
+
+Appendix C. Selection of coil current constraints
+
+Experimentally, the coil currents in W7-X are constrained by a number of factors.
+These include: the electrical limit on the coil winding current, the constraints on the
+mechanical forces permitted by the machine, and the requirement that the magnetic field
+strength allows the plasma to couple to the ECRH beams. Because rigorously applying
+all of these constraints is relatively difficult, we use simple constraints the limits, with
+non-planar coil filament currents restricted to the range (1.168 - 1.57MA), planar coil
+filament currents to the range (−0.361 - +0.361MA) and control coil filament current to
+(−20 - +20kA). These are within the normal range of coil currents operated by W7-X
+[5].
+

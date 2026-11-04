@@ -1,0 +1,12 @@
+Fertig. Ergebnis in `zeilen/06.md`, **5 Belege bestätigt, 0 Fehler**.
+
+**Recherche (3 Abrufe, alle in `./recherche_ablage/`):**
+
+| Größe | Wert (definiert) | Quelle |
+|---|---|---|
+| LCFS | Separatrix = Flussfläche durch den X-Punkt; außen liegt unkonfiniertes Plasma → äußere Grenze des Kerns | Wikipedia *Plasma shaping* |
+| Scrape-off-Layer | Region offener Feldlinien zwischen LCFS und Materialwand, trägt Exhaust-Plasma an die Wandoberflächen | OSTI 3014467 (STORM) |
+| Separatrix→First Wall | Spalt außerhalb der LCFS bis innenste Wandkomponenten; Wand wird von der LCFS aus nach außen geformt (ohne Spulenschnitt) | OSTI 3412479 (HSX/QHS-Vessel) |
+| Unterschied Plasma→Spule | Spulen liegen am Rand des Vakuumgefäßes; Plasma–Spulen-Abstand = Wandabstand + Vessel + Spalt → immer größer | OSTI 3412479 |
+
+**Kernaussage:** Der Plasma-Wand-Abstand zählt von der letzten geschlossenen Flussfläche (Separatrix) bis zur First Wall/Divertor-Tiles — das Plasma „berührt“ die Wand also nicht direkt (offene Feldlinien des SOL treffen erst auf der Wand). Der Plasma-Spulen-Abstand umschließt dagegen zusätzlich das Vakuumgefäß mit seiner Wanddicke und den Spalt davor, ist also systembedingt größer; nur der Wandabstand bestimmt den Wärmeeintrag, der Spulenabstand den Platz für Spule/Blanket. Numerische Abstände pro Anlage: nicht gefunden (rein definitorisches Thema).

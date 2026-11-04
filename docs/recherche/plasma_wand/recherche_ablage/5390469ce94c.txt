@@ -1,0 +1,973 @@
+URL: https://www.osti.gov/servlets/purl/3366832
+PAPER • OPEN ACCESS                                                                               You may also like
+                                                                                                      - Overview of the results from divertor
+Overview of Wendelstein 7-X high-performance                                                            experiments with attached and detached
+                                                                                                        plasmas at Wendelstein 7-X and their
+operation                                                                                               implications for steady-state operation
+                                                                                                        M. Jakubowski, M. Endler, Y. Feng et al.
+
+                                                                                                      - Impurities in long-pulse operation of W7-X
+To cite this article: O. Grulke et al 2026 Nucl. Fusion 66 116003                                       Monika Kubkowska, Marcin Jakubowski,
+                                                                                                        Tomasz Fornal et al.
+
+                                                                                                      - First divertor physics studies in
+                                                                                                        Wendelstein 7-X
+                                                                                                        T. Sunn Pedersen, R. König, M.
+View the article online for updates and enhancements.                                                   Jakubowski et al.
+
+
+
+
+                               This content was downloaded from IP address 136.226.6.55 on 01/06/2026 at 16:52
+                    International Atomic Energy Agency                                                                                             Nuclear Fusion
+
+Nucl. Fusion 66 (2026) 116003 (17pp)                                                                                      https://doi.org/10.1088/1741-4326/ae5f32
+
+
+
+
+Overview of Wendelstein 7-X
+high-performance operation
+O. Grulke1,22,∗, G. Acton1, J. Adamek41, D. Aggelis42, R.-M. Alamo-Calderon70,
+C. Albert14, P. Aleynikov1, K. Aleynikova1, A. Alonso43, G.C. Amanekwe9, G. Anda37,
+T. Andreeva1, E. Andrew1, A. Arkuszewski4, S. Arnold1, M. Arranz43, M. Arvanitou19,
+E. Ascasibar43, M. Astrain Etxezarreta2, O. Asztalos37,63, K. Avramidis67, E. Aymerich27,
+A. Baciero43, J.-P. Bähner1, S.-G. Baek12, M. Balden2, J. Baldzuhn1, S. Ballinger65,
+M. Banduch1, S. Bannmann1, A. Bañon Navarro2, L. Baylor17, A. Benndorf1,
+C.D. Beidler1, D. Beiersdorf1, M. de Beij69, M. van Berkel69, N. Bertelli20, C. Biedermann1,
+B. Bieg62, T.M. Biewer17, G. Birkenmeier2, L. Björk1, B. Blackwell23, H. Blank2, T. Bluhm1,
+D. Böckenhoff1, D. Boeyaert35, D. Bold1, A. Bonciarelli1, G. Bongiovi7, M. Borchardt1,
+D. Borodin38, T. Bosman44, Y. Boumendjel35, H. Bouvain1, S. Bozhenkov1, T. Bräuer1,
+C. Brandt1, S. Brezinsek38, K.J. Brunner1, A. Buhler2, S. Buller30, L. Burton21,
+C. Büschel1, R. Bussiahn1, B. Buttenschön1, A. Buzás37, V. Bykov1, J. Cai38, I. Calvo43,
+A. Cappa43, A. Carls1, F. Carovani1, M. Carr45, D. Carralero43, T. Carroll20,
+B.B. de Carvalho6, J.R. Casas26, D. Castano-Bardawil9, J. Cavalier41, R. Cavazzana57,
+N. Chaudhary1, I. Chelis67, D. Cipciar1, G. Conway2, F. Cordella48, Y. Corre46, P. Costello1,
+K. Crombé9,51, G. Cseh37, B. Csillag2, H.I. Cu Castillo2, G. Czymek38, H. Damm1,
+R.J. Davies1, S. Degenkolbe1, W. Dekeyser47, L. Delgado-Aparicio20, A. Demby35,
+C. Desgranges46, C.-P. Dhard1, A. Dinklage1,29, T. Dittmar38, L. Dittrich1, S. Dräger1,
+M. Dreval5, M. Drevlak1, J. Droste29, R.K. Duligal44, P. Dumortier9, D. Dunai37, E. Edlund49,
+A. Edmondson35, P. van Eeten1, G. Ehrke1, M. Endler1, D.A. Ennis39, F.J. Escoto43,
+T. Estrada43, B. Faber35, F. Federici45, J. Fellinger1, Y. Feng1, D.L. Fernando2, S. Fischer1,
+O.P. Ford1, T. Fornal4, J. Frank1,21, H. Frerichs35, G. Fuchert1, K. Fujii17, M. Fukuyama8,
+J. Galdón Quiroga25, J. Gallego Llorente43, Y. Gao1, K. Garcia29, O.E. Garcia50,
+M. Garcia-Munoz25, J.M. García Regaña43, B. Geiger35, J. Geiger1, P. Geißler29, M. Gerard35,
+L. Giudicotti18, T. Gonda39, J.C. Gonzalez2, A. González Ganzábal43, A. Goodman1,
+A. Goriaev9,51, D. Gradic1, M. Grahl1, M. Grasser1, D. Grekov5, E. Grelier46, G. Grenfel2,
+M. Griener2, M. Groth13, M. Gruca4, F. Gudicotti40, J.F. Guerrero Arnaiz1, V. Haak1,
+M. de Haas20, A. Haeussler7, A. Hakola36, L. van Ham1, K.C. Hammond20, B. Hamstra44,
+X. Han35, S.K. Hansen12, A. Harris52, J.H. Harris17, D. Harting38, D. Hartmann1,
+D. Hathiramani1, E.V. Hausten1, S. Heinrich1, P. Helander1,29, G. Held35, P. Henderson20,
+F. Henke1, S.A. Henneberg12, L. Henschke1, F. Herold1, H. Hillebrecht35, E. Hinson17,
+M. Hirsch1, A. Hoffmeister29, A. Holtz1, S.J. Hörmann2,19, D. Höschen38, M. Houry46,
+J. Hromadka54, J. Hua38, X. Huang15, K. Hunger2, D. Hwangbo34, K. Ida15, Y. Igitkhanov7,
+S. Iglesias Fernandez43, V. Igochine2, Z. Ioannidis68, F.A. d’Isa57, S. Jablonski4,
+
+
+
+
+∗
+    Author to whom any correspondence should be addressed.
+
+
+
+                   Original content from this work may be used under the
+                   terms of the Creative Commons Attribution 4.0 licence. Any
+further distribution of this work must maintain attribution to the author(s) and
+the title of the work, journal citation and DOI.
+
+1741-4326/26/116003+17$33.00 Printed in the UK                                     1   © 2026 The Author(s). Published by IOP Publishing Ltd on behalf of the IAEA
+Nucl. Fusion 66 (2026) 116003                                                                 O. Grulke et al
+
+B. Jabłoński10, M. Jakubowski1, F. Jenko2, A. Johansson1, C. Johnson20,
+T.C.W. van Kaathoven44, J. Kaczmarczyk4, S. Kajita33, J.-P. Kallmeyer1, H. Kasahara15,
+W. Kasparek71, C. Kawan38, Ye.O. Kazakov9, S.A. Keller1, N. Kenmochi15, W. Kernbichler14,
+A.K. Kharwandikar1, M. Khokhlov1, C. Killer1, A. Kirschner38, R. Kleiber1, C.C. Klepper17,
+T. Klinger1,29, J. Knauer1, M. Knaup38, A. Knieps38, M. Kobayashi15, G. Kocsis37, M. Koelbl2,
+Y. Kolesnichenko3, A. Könies1, J. Kontula13, P. Kornejew1, Y. Kovtun5, M. Kozulia5,
+A. Krämer-Flecken38, M. Krause1, T. Kremeyer1, L. Krier1, D.M. Kriete39, T. Krings38,
+M. Krychowiak1, I. Ksiazek31, M. Kubkowska4, D. Kulla1, Y. Kulyk5, A. Kumar23, F. Kunkel1,
+T. Kurki-Suonio13, I. Kuzmych55, S. Kwak1, L. Laguardia27, A. Langenberg1, H. Laqua1,
+H.P. Laqua1,29, K. Leche71, B. Lee53, W. Lee1, H. Leyh1, Y. Liang38, L. Liao38, M. Licchelli1,
+Z. Lin28, M. Lisaj32, A. Litnovsky16,38, F. Litovoli7, J. Loizu56, B. Lomanowski17,
+R. Lopez Cansino25, B. Lopez Miranda43, D. Lopez-Rodriguez9, J. Lore17, A. Lorenz1,
+J. Louwe1, E. de la Luna43, R. Lunsford20, Y. Luo38, V. Lutsenko3, N. Maaziz1,
+M. Machielsen56, R. Mackenbach56, M. Madeira1, D. Makowski10, P. Manz29,
+E. Maragkoudakis1, O. Marchuk38, A. Marinoni12, M. Markl14, S. Marsen1,
+J. Martinez Fernandez43, Y. Martseniuk5, N. Marushchenko1, S. Masuzaki15, S. Matsheza21,
+D. Maurer39, M. Mayer2, D. Mazur31, K. McCarthy43, O. McCormack57, P. McNeely1,
+D. Medina Roque43, J. Meineke1, S. Meitner17, A. Menzel-Barbara1, B. van Milligen43,
+S. Misdanitis42, A. Mishchenko1, R. Mitteau46, E. Moeyaert47, A.I. Mohammed20,
+V.E. Moiseenko5,64, A. Möller1, S. Möller38, B. Molnar37, V. Moncada46, D. Morfin-Guerrero21,
+M.C.L. Morren44, D. Moseev1, G. Motojima15, S. Mulas43, P. Mulholland44, V. Murugesan1,
+M. Nagel1, D. Nagy37, V. Nair1, Y. Narbutt1, D. Naujoks1, H.G. Neilson20, F. Nespoli20,
+G. Neu2, R. Neu2, O. Neubauer38, U. Neuner1, S.K. Ngo46, D. Nicolai38, S.K. Nielsen22,
+N. Nikulsin1, T. Nishizawa8, L. Nitzsche1, C. Nührenberg1, R. Ochoukov2, G. Offermanns38,
+K. Ogawa15, J. Ongena9, J.W. Oosterbeek1, M. Otte1, E. Overduin1, N. Pablant20,
+L. Pacios43, N. Panadero43, A. Pandey1, K. Parks17, G. Partesotti1, E.A. Pasch1,
+S. de Pascuale17, R. Pavlichenko5, A. Pavone2, E. Pawelec31, A. de la Pena Gomez43,
+A. Pereira43, V. Perseo1, B. Peterson15, F. Pisano27, S. Pitcher40, B. Plaum71, G. Plunk1,
+L. Podavini1, N.S. Polei1, P. Poloskei1, S. Ponomarenko1, P. Pons-Villalonga29, A. Popov58,
+M. Porkolab12, J.H.E. Proll1,44, M.J. Pueschel69, A. Raak21, R. Ragona22, K. Rahbarnia1,
+M. Rasiński38, J. Rasmussen22, O. Raths1, E. Rattawongnara1, D. Refy37, F. Reimold1,
+T. Richert1, M. Richou46, J. Ricken1, J.S. Riemann1, K. Riße1, J. de la Riva Villen43,
+G. Roberg-Clark1, E. Rodriguez1, C. Rogge1, V. Rohde2, J. Romazanov38, T. Romba1,
+D. Rondeshagen1, P. Rong1, M. Rud22, T. Rummel1, A. Runov1, N. Rust1, L. Ryc4,
+D. Ryndyk38, H. Sakai8, M. Salewski22, E. Sanchez43, L. Sanchis Sanchez13, S. Satake15,
+G. Satheeswaran38, J. Schacht1, E. Scharff1, F. Scharmer1, G. Schlisio1, K. Schmid2,
+B.S. Schmidt22, G.L. Schmidt20, O. Schmitz35, M. Schneider1, T. Schröder1, R. Schroeder1,
+M. Schülke1, B. Schweer9, S. Sereda1, B. Shanahan12, J. Shin35, S. Shiraiwa20, G. Sias27,
+P. Sichta20, F.B.T. Siddiki35, S. Simko35, L. Singh35, S. Sipilae13, C. Slaby1, M. Ślȩczka32,
+B. Smith20, D.R. Smith35, H.M. Smith1, J. Smoniewski12, M. Spolaore57,66, A. Spring1,
+T. Stange1, A. von Stechow1, P. Steinbrunner2, I. Stepanov9, L. Stephey35, U. Stroth2,19,
+C. Suzuki15, Y. Suzuki59, C. Swee35, L. Syrocki4, T. Szepesi37, M. Szymanski4,
+H. Takahashi24, N. Tamura1, K. Tanaka15, C. Tantos7, S. Thiede1, H. Thienpondt43,
+H. Thomsen1, T. Thun1, S. Togo34, T. Tork1, M. Torkler29, H. Trimiño Mora1, A. Tsikouras1,
+D. Valougeorgis42, S. Varoutis1, M. Vavrik37, S. Vaz Mendes1, M. Vecsei1, J.L. Velasco43,
+L. Versemann1, M. Verstraeten9, M. Vervier9, N. Vianello60, E. Viezzer25,
+E.-M. Villalobos-Granados1, J. Wagner1, E. Wang38, M. Wappl1, F. Warmer1, Th. Wegner1,
+W. Wei38, G. Weir1, N. Wendler4, A. White12, M. Willensdorfer2, T. Windisch1, A. Winter1,
+V. Winters29, M. Wischmeier2, R. de Wolf47, R.C. Wolf1,21, J. Wright12, G. Wurden11,
+P. Xanthopoulos1, S. Xu38, H. Yamada33, X. Yan38, J. Yang38, Y. Yang38, K. Ye38,
+
+
+
+
+                                                   2
+Nucl. Fusion 66 (2026) 116003                                                                                 O. Grulke et al
+
+M. Yokoyama15, M. Yoshinuma15, B. Zamorski32, M. Zanini1, M. Zarnstorff20, D. Zhang1,
+C. Zhu61, M. Zilker2, J. Zimmermann1, A. Zocco1, H. Zohm2 and S. Zoletnik37
+1
+  Max Planck Institute for Plasma Physics, Wendelsteinstr. 1, 17491 Greifswald, Germany
+2
+  Max Planck Institute for Plasma Physics, Boltzmannstr. 2, 85748 Garching, Germany
+3
+  Institute for Nuclear Research, prospekt Nauky 47, Kyiv 03680, Ukraine
+4
+  Institute of Plasma Physics and Laser Microfusion, 23 Hery Str., 01-497 Warsaw, Poland
+5
+  Institute of Plasma Physics, National Science Center ‘Kharkiv Institute of Physics and Technology’,
+1 Akademicheskaya St., Kharkiv 61108, Ukraine
+6
+  Instituto de Plasmas e Fusão Nuclear, Av. Rovisco Pais 1, 1049-001 Lisboa, Portugal
+7
+  Karlsruhe Institute of Technology, Kaiserstr. 12, 76131 Karlsruhe, Germany
+8
+  Kyushu University, 744 Motooka Nishi-ku, Fukuoka 819-0395, Japan
+9
+  Laboratory for Plasma Physics, LPP-ERM/KMS, Av. de la Renaissance 30, 1000 Brussels, Belgium
+10
+    Department of Microelectronics and Computer Science, Łódź University of Technology, Wolczanska
+221/223, 93-005 Łódź, Poland
+11
+    Los Alamos National Laboratory, Los Alamos, NM 87545, United States of America
+12
+    Plasma Science and Fusion Center, Massachusetts Institute of Technology, Cambridge, MA 02139,
+United States of America
+13
+    Aalto University, Konemiehentie 1, 02150 Espoo, Finland
+14
+    Graz University of Technology, Rechbauerstraße 12, 8010 Graz, Austria
+15
+    National Institute for Fusion Science, National Institutes of Natural Sciences, 322-6 Oroshi-cho, Toki,
+Gifu 509-5292, Japan
+16
+    National Research Nuclear University MEPhI, Kashirskoe shosse, 31, 115409 Moscow, Russian Federation
+17
+    Oak Ridge National Laboratory, 1 Bethel Valley Rd, Oak Ridge, TN 37831, United States of America
+18
+    Department of Physics and Astronomy, Padova University, Via Marzolo 8, 35131 Padova, Italy
+19
+    Physics Department, Technical University of Munich, TUM School of Natural Sciences,
+James-Franck-Str. 1, 85748 Garching, Germany
+20
+    Princeton Plasma Physics Laboratory, 100 Stellarator Rd, Princeton, NJ 08543, United States of
+America
+21
+    Technical University of Berlin, Straße des 17. Juni 135, 10623 Berlin, Germany
+22
+    Department of Physics, Technical University of Denmark, Anker Engelunds Vej 1, 2800 Kgs Lyngby,
+Denmark
+23
+    The Australian National University, Acton ACT 2601, Canberra, Australia
+24
+    Tohoku University, 2-1-1 Katahira, Aoba Ward, Sendai, Miyagi 980-8577, Japan
+25
+    Department of Atomic, Molecular and Nuclear Physics, University of Sevilla, San Fernando, 4, 41004
+Sevilla, Andalucía, Spain
+26
+    Universitat Politécnica de Catalunya. BarcelonaTech, C. Jordi Girona, 31, 08034 Barcelona, Spain
+27
+    University of Cagliari, Via Universitá, 40, 09124 Cagliari, Italy
+28
+    Department of Physics and Astronomy, University of California, 4129 Frederick Reines Hall, Irvine,
+CA 92697, United States of America
+29
+    University of Greifswald, Domstr. 11, 17489 Greifswald, Germany
+30
+    University of Maryland, 8125 Paint Branch Drive, College Park, MA 20742, United States of America
+31
+    University of Opole, plac Kopernika 11a, 45-040 Opole, Poland
+32
+    University of Szczecin, Aleja Papieźa Jana Pawła II 22A, 70-453 Szczecin, Poland
+33
+    University of Tokyo, 5-1-5 Kashiwanoha, Kashiwa, Chhiab 277-0882 Japan
+34
+    University of Tsukuba, 1-1-1 Tennodai, Tsukuba, Ibaraki 305-8577, Japan
+35
+    University of Wisconsin-Madison, Engineering Drive, Madison, WI 53706, United States of America
+36
+    36 VTT Technical Research Centre of Finland Ltd., P. O. Box 1000, 02044 VTT, Finland
+37
+    HUN-REN Centre for Energy Research, Institute for Atomic Energy Research, Konkoly-Thege Miklós
+út 29-33, 1121 Budapest, Hungary
+38
+    Institute of Fusion Energy and Nuclear Waste Management—Plasmas Physics,
+Wilhelm-Johnen-Straße, 52425 Jülich, Germany
+39
+    Auburn University, Auburn, AL 36849, United States of America
+40
+    ITER Organization, 8 rue Jules Horowitz, 13115 Saint-Paul-lez-Durance, France
+41
+    Institute of Plasma Physics of the Czech Academy of Science, U Slovanky 2525/1a, 182 00 Prague 8
+Libeň, Czech Republic
+42
+    University of Thessaly, Argonafton & Filellinon, Volos 38221, Greece
+43
+    Laboratorio Nacional de Fusión, CIEMAT, Avenida Complutense 40, 28040 Madrid, Spain
+44
+    Eindhoven University of Technology, 5600 MB Eindhoven, Netherlands
+45
+    Culham Centre for Fusion Energy, Abingdon OX14 3EB, United Kingdom of Great Britain and
+Northern Ireland
+
+
+
+                                                                   3
+Nucl. Fusion 66 (2026) 116003                                                                                            O. Grulke et al
+46
+   CEA Cadarache, 13115 Saint-Paul-lez-Durance, France
+47
+   Katholieke Universiteit Leuven, Oude Markt 13, 3000 Leuven, Belgium
+48
+   ENEA—Centro Ricerche Frascati, Via Enrico Fermi 45, 00044 Frascati, Italy
+49
+   SUNY Cortland, 21 Graham Ave, Cortland, NY 13045, United States of America
+50
+   Department of Physics and Technology, UiT The Arctic University of Norway, Klokkargardsbakken
+35, 9019 Tromsø, Norway
+51
+   Department of Applied Physics, Ghent University, Sint-Pietersnieuwstraat 41 B4, 9000 Ghent, Belgium
+52
+   Illinois State University, 100 North University Street, Normal, IL 61761, United States of America
+53
+   Columbia University, 116th and Broadway, New York, NY 10027, United States of America
+54
+   Charles University, Ovocnýtrh 5, Prague 1, Czech Republic
+55
+   Karazin Kharkiv National University, Svobody Square 4, Kharkiv 61022, Ukraine
+56
+   École Polytechnique Fédérale de Lausanne, Swiss Plasma Center, Station 13, 1015 Lausanne, Switzerland
+57
+   Consorzio RFX, Corso Stati Uniti 4, 35127 Padova, Italy
+58
+   Ioffe Physical-Technical Institute of the Russian Academy of Sciences, 26 Politekhnicheskaya,
+St Petersburg 194021, Russian Federation
+59
+   Hiroshima University, 1-5-1 Kagamiyama, Higashi-Hiroshima 739-8529, Japan
+60
+   Consiglio Nazionale delle Ricerche, Piazzale Aldo Moro 7, 00185 Roma, Italy
+61
+   University of Science and Technology of China, No.96, JinZhai Road Baohe District, Hefei, Anhui 230026, China
+62
+   Politechnika Morska w Szczecinie, Zakład Fizyki ul. Wały Chrobrego 1-2, 70-500 Szczecin, Poland
+63
+   Department of Nuclear Energy, Faculty of Natural Sciences, Budapest University of Technology and
+Economics, Műegyetem rakpart 3, 1111 Budapest, Hungary
+64
+   Uppsala University, Box 65, 75103 Uppsala, Sweden
+65
+   Commonwealth Fusion Systems, 117 Hospital Rd, Devens, MA 01434, United States of America
+66
+   Institute for Plasma Science and Technology, Corso Stati Uniti 4, 35127 Padova, Italy
+67
+   Department of Physics, National and Kapodistrian University of Athens, Zografou University Campus, 15784 Athens, Greece
+68
+   Department of Aerospace Science and Technology, National and Kapodistrian University of Athens,
+34400 Psachna, Greece
+69
+   Dutch Institute for Fundamental Energy Research, P.O. Box 6336, 5600 HH Eindhoven, Netherlands
+70
+   Pontificia Universidad Católica del Perú, 1801 Universitaria Avenue, San Miguel Lima 32, Peru
+71
+   Institute of Interfacial Process Engineering and Plasma Technology, Pfaffenwaldring 31, 70569
+Stuttgart, Germany
+
+E-mail: olaf.grulke@ipp.mpg.de
+
+Received 6 January 2026, revised 16 March 2026
+Accepted for publication 14 April 2026
+Published 14 May 2026
+
+Abstract
+The Wendelstein 7-X (W7-X) stellarator has completed two consecutive experimental
+campaigns OP 2.2 (Sep.-Dec. 2024) and OP 2.3 (Feb.-May 2025) under a new operational
+strategy enabling more than one year of uninterrupted device availability. This approach,
+supported by exceptionally high subsystem reliability, allowed sustained high-efficiency plasma
+operations with up to 80–100 discharges per day across a broad range of magnetic
+configurations. Several key technical upgrades-most notably the first operation of a 1.5 MW
+class steady-state gyrotron, a new steady-state pellet injector, and advanced real-time feedback
+control systems significantly enhanced heating, fueling, and plasma control capabilities.
+Together, these improvements enabled major advances in long-pulse performance, high-β
+operation, and confinement optimization. Long-pulse discharges achieved 1.8 GJ of injected
+energy under fully detached divertor conditions, while reduced-field scenarios facilitated record
+volume-averaged β values approaching 3%. High-performance plasmas with centrally peaked
+density profiles, created via neutral beam injection (NBI) or sustained pellet fueling,
+demonstrated strongly reduced turbulent transport and stellarator-record fusion triple products.
+Complementary studies of power exhaust and divertor heat loads revealed the role of
+scrape-off-layer drift physics in shaping strike-line patterns under attached conditions. Together,
+the results from OP 2.2 and OP 2.3 significantly expand the operational space of W7-X and
+strengthen its role as a leading platform for steady-state stellarator research and reactor-relevant
+plasma scenarios.
+
+
+
+
+                                                                  4
+Nucl. Fusion 66 (2026) 116003                                                                                               O. Grulke et al
+
+
+Keywords: magnetic confinement, stellarator, Wendelstein 7-X
+(Some figures may appear in colour only in the online journal)
+
+
+
+1. Introduction                                                          2. Enhancements and operation overview
+
+The Wendelstein 7-X (W7-X) stellarator has recently com-                 In preparation for future high-performance, steady-state oper-
+pleted two experimental campaigns, OP 2.2 and OP 2.3, car-               ation, W7-X has initiated a comprehensive upgrade strategy
+ried out over the last two years. These campaigns marked                 aimed at enhancing both plasma heating capabilities and
+the first implementation of a revised operational strategy,              particle fueling systems. These developments are critical to
+designed to maximize experimental efficiency by reducing                 supporting plasma discharges lasting up to 30 minutes at elev-
+commissioning overhead. Instead of conducting a full time-               ated performance levels. The extension of plasma heating
+consuming recommissioning before each phase, a single com-               power follows a dual approach, targeting upgrades to both
+missioning period preceded two full three-month experimental             the neutral beam injection (NBI) and ECRH systems over the
+campaigns. Between phases, a short maintenance phase is                  coming years. At the current stage, ECRH upgrades focus
+introduced, however neither the cryogenic system was warmed              on the deployment of high-power gyrotrons up to a power
+up nor the plasma vessel vented, thereby enabling a direct               of 2 MW, capable of delivering increased reliable steady-state
+transition between operational periods. This approach required           power levels of at least 1 MW. A first prototype of a 1.5 MW-
+comprehensive scientific planning and placed high demands                class gyrotron has been successfully operated during the last
+on the technical reliability of the device and exceptional per-          two experimental campaigns. Compared to the original design
+formance from key subsystems, which need to be in full                   of the 1 MW W7-X gyrotrons, the upgraded tube incorpor-
+operation for longer than one year. The W7-X components                  ates a resonator with a larger diameter and operates in the
+demonstrated reliability well beyond expectations, with fail-            TE28,10 mode. Together with the improved cooling systems,
+ure rates below 1%. This stability was crucial for supporting            this enables enhanced power loading on internal gyrotron com-
+long campaign durations and consistent experimental condi-               ponents. As shown in figure 1, which presents a photograph
+tions. Plasma operation was carried out in both campaigns                of the gyrotron alongside power measurements on a matched
+without major issues. Typically, 80–100 scientific discharges            test load, the output power is limited to 1.3 MW by the onset
+were performed per day across a broad range of magnetic field            of parasitic oscillations near 122.5 GHz and 135 GHz. These
+configurations, representing an improvement also in terms of             oscillations degrade the electron beam quality, reducing beam-
+execution efficiency. Several major technical upgrades were              wave interaction efficiency and generating additional intrinsic
+implemented prior to OP 2.2 to further strengthen opera-                 stray radiation within the gyrotron. As a countermeasure, the
+tional capabilities. These included the prototype operation of           next gyrotron will have an improved beam tunnel. During
+a high-power gyrotron (1.3 MW steady-state at a frequency                plasma operation, the gyrotron was routinely operated at an
+of f = 140 GHz) [1], the installation of a steady-state pellet           output power of 1.1 MW without any issues.
+injector [2], improvements to multiple diagnostic systems, and               In parallel with heating system enhancements, a new screw-
+enhancements of plasma feedback control systems. The lat-                type pellet injector has been developed to meet the demand-
+ter incorporated plasma radiation feedback, electron cyclotron           ing particle fueling requirements of long-pulse operation [2].
+resonance heating (ECRH) power stabilization, and plasma                 This injector is capable of delivering hydrogen or deuterium
+density control via ECRH. The scientific program of OP 2.2               pellets with variable diameters ranging from 2 mm to 3 mm.
+and OP 2.3 was directed toward high-performance plasma                   The injection velocity can be precisely controlled within the
+operation. Key objectives included the extension of discharge            range of 400–600 m s−1 , and the system supports repetition
+duration, improvement of plasma confinement, and explora-                rates of up to 5 Hz. The design emphasizes compatibility with
+tion of high-beta regimes. Complementary studies addressed               W7-X’s long-pulse mission by enabling continuous operation
+power exhaust, with detailed investigations of the scrape-off            over extended discharge durations of up to 30 minutes. This is
+layer (SOL) and divertor heat loads, in particular the influence         achieved through a robust drive mechanism and active cool-
+of drift effects on divertor strike-line patterns. Together, these       ing of critical components, ensuring thermal and mechanical
+campaigns advanced both the technical and scientific basis of            stability during prolonged use. Due to the injector’s flexib-
+W7-X, consolidating its role as the leading device for steady-           ility in pellet size and injection parameters, it is planned to
+state stellarator research. The paper is organized as follows:           integrate the pellet fueling into the real-time peak density
+In section 2 the key enhancements are introduced. Section 3              control system in the near future. While feedback systems
+outlines the progress of long-pulse operation, before the key            are not fundamentally required for plasma control in stellar-
+findings of operation at high plasma-β in section 4, improved            ators due to their intrinsic steady-state magnetic configura-
+confinements in section 5, and divertor heat load studies in             tions, W7-X has significantly enhanced its feedback control
+section 6 are summarized.                                                capabilities to enable precise and reproducible scientific and
+
+
+
+                                                                     5
+Nucl. Fusion 66 (2026) 116003                                                                                                 O. Grulke et al
+
+
+
+
+Figure 1. Photograph of the new 1.5 MW gyrotron in its final location (left) and measurement of the gyrotron output power onto a test load
+vs its acceleration voltage.
+
+
+
+
+Figure 2. Examples of newly established feedback control systems: (a) Seeded radiation feedback control, (b) ECRH power stabilization
+feedback control.
+
+
+long-pulse operation. A new feedback control system has been               Operational experience from earlier W7-X campaigns
+implemented to regulate total plasma radiation by actively              revealed that long-pulse discharges at elevated ECRH power
+controlling impurity seeding rates. The system utilizes meas-           levels are occasionally interrupted by spontaneous failure of
+urements from the bolometry diagnostic to assess total radi-            individual gyrotrons. These unanticipated power losses lead to
+ated power and adjusts the seeding gas injection accordingly            undesired variations of the operation parameters. To address
+to maintain a desired radiation level. Figure 2(a) illustrates          this, a new ECRH power stabilization system was imple-
+a representative discharge in which the target radiation level          mented. When a gyrotron trips, the system compensates in
+is increased in a stepwise fashion from 3.5 MW to 6.2 MW.               real time by increasing the output power of the remaining
+Neon was used as the seeding gas, and the feedback system               operational gyrotrons, thereby stabilizing the total injected
+modulated the seeding valve voltage to achieve each desired             ECRH power. Figure 2(b) shows an example of this stabil-
+radiation level. The agreement between the target and meas-             ization strategy for a subset of gyrotrons. In the illustrated
+ured radiation is excellent, demonstrating the system’s effect-         case, gyrotron E1 experiences a temporary dropout during the
+iveness. This capability has been employed both scientifically          time interval t = 17–36 s. In response, the power outputs of the
+for studies of impurity-seeded detachment and operationally,            remaining gyrotrons are increased accordingly, successfully
+to reduce localized power loads on divertor target plates during        maintaining a constant total heating power throughout
+long-pulse discharges.                                                  the dropout period. This approach ensures uninterrupted
+
+
+                                                                    6
+Nucl. Fusion 66 (2026) 116003                                                                                                 O. Grulke et al
+
+
+
+
+Figure 3. Overview of long-pulse operation reaching a total energy turnaround of 1.8 GJ. Shown are time traces of the total ECR heating
+power together with the feedback-controlled radiation power and mean plasma density (top), a selection of individual gyrotron power levels
+(middle), and the achieved diamagnetic energy and total toroidal current (bottom).
+
+
+plasma heating and enhances the robustness of long-pulse                length of the sight line through the plasma ndl /L. The con-
+operation.                                                              stant ECRH power was the result of successful power stabiliz-
+                                                                        ation feedback. Although sporadic gyrotron dropouts occurred
+                                                                        during the pulse, these were compensated by corresponding
+3. Long pulse operation                                                 increases in power from other gyrotrons, see figure 3 (middle).
+                                                                        The diamagnetic energy Wdia remained steady, while the tor-
+W7-X is designed for long-pulse operation with plasma dis-              oidal plasma current was consistently maintained below 3 kA,
+charges of up to 30 min duration and a total heating energy             figure 3 (bottom). Beginning at t = 270 s, strong fluctuations in
+of 18 GJ. This is facilitated by the superconducting magnetic           the power of individual gyrotrons were observed. These fluc-
+field coils and water-cooled plasma-facing components (PFC).            tuations became increasingly frequent and ultimately led to the
+However, the development of localized hot spots and poten-              termination of the discharge at 363 s. At this point, a total heat-
+tial leading edges can cause excessive heat fluxes, particu-            ing energy of 1.8 GJ had been achieved. Despite the prema-
+larly at the divertor, which may exceed its design specifica-           ture termination of the discharge, the developed scenario was
+tions. For this reason, a step-wise operational approach has            successful in maintaining low PFC heat fluxes and convective
+been pursued: during campaign OP 2.1, a heating energy of               divertor loads below 3.5 MWm−2 . The observed fluctuations
+1.3 GJ was successfully reached [3]. This specification value           in gyrotron power were traced back to cooling issues in the
+was increased to 2 GJ during the last campaigns OP 2.2 and              ECRH beamline, which caused elevated component and air
+OP 2.3, with the intention of gradually approaching the design          temperatures. This led to an increasing rate of arcing events in
+limits in the upcoming operation campaigns. A steady-state              the ECRH beamline and ultimately to the discharge termina-
+scenario was developed with the potential for further increases         tion. For the upcoming campaign, improvements to the cooling
+in heating energy and consists of several elements: To mit-             system are planned to prevent a recurrence of this limitation.
+igate convective heat loads on the PFCs, the divertor was
+operated in a detached state, achieved via feedback-controlled
+impurity seeding. The ECRH was applied in X2 polarization,              4. Operation at high plasma-β
+which provides excellent single-pass absorption and prevents
+ECRH power deposition on the beam dump. To stabilize the                W7-X is designed for improved magnetohydrodynamic
+strike line position on the divertor, counter-electron cyclotron        (MHD) stability at high plasma-β, with target values up to
+current drive (ECCD) [4] was employed, thereby compensat-               4%, consistent with reactor requirements of the HELIAS
+ing the bootstrap current and maintaining a small net toroidal          line [5, 6]. In this context, the confinement of energetic ions,
+current. Figure 3(top) shows time traces of the ECR heating             which mimic α-particle behavior in a stellarator reactor, is
+power, plasma radiation power, and plasma density. A dis-               a crucial performance metric. Numerical simulations predict
+charge length of 363 s was achieved with nearly constant heat-          that fast ion losses decrease strongly with rising plasma-
+ing and radiation power levels. The plasma density, regulated           β [7]. Demonstrating high-β operation is therefore an import-
+via feedback control, remained constant throughout the dis-             ant step toward reactor-relevant validation. From fundamental
+charge. Throughout the paper, unless otherwise denoted, we              confinement scaling arguments, achieving such conditions
+use the mean plasma density, defined as the line-integrated             would require very high heating powers, which are not avail-
+plasma density as measured by interferometry divided by the             able at W7-X. However, according to the ISS04 stellarator
+
+                                                                    7
+Nucl. Fusion 66 (2026) 116003                                                                                               O. Grulke et al
+
+
+
+
+Figure 4. Demonstration of plasma operation at reduced field with ECR heating in X3 polarization. Shown are the time traces of the ECR
+and NBI heating powers together with the mean plasma density. The different phases of the discharge—startup, NBI heating, and X3
+takeover—are indicated.
+
+
+
+
+Figure 5. (left) Comparison of the dependence of ECRH absorption on incidence angle between O2 polarization at a magnetic field of
+B = 2.5 T and X3 polarization at B = 1.75 T. (right) Schematic of the ECRH heating beam paths. The beams are entering along the red
+arrows.
+
+
+confinement scaling, the dependence of the confinement on              the discharge. This scheme was successfully demonstrated at
+magnetic field strength is weaker than on plasma β. This               W7-X, enabling stable plasma operation up to 6.5 s. Because
+insight allows high-β operation to be made accessible by redu-         of the incomplete single-pass absorption of X3 polarization,
+cing the magnetic field strength, thereby relaxing the heat-           a triple beam path scheme with the established O2-reflector
+ing power requirements. The primary heating system at W7-X             tiles was used for the first experiments in OP2.2/2.3, illus-
+is the ECRH system at 140 GHz, which can be also applied               trated in figure 5. In contrast to O2 heating, which exhib-
+in X3 polarization at a magnetic field of B = 1.7 T. However,          its strong absorption at incidence angles of 10◦ − 20◦ to the
+direct plasma startup using X3 polarization is not feasible:           magnetic field, X3 heating is most efficient at perpendicular
+the single-pass absorption is negligible for electron temper-          incidence, but at medium densities also safely operable with
+atures Te < 1 keV, since the absorption power scales approx-           oblique incidence. This configuration effectively increases the
+imately as Pabs ∼ nT2e [8]. To overcome this, a discharge star-        absorption path length, enabling nearly complete absorption
+tup scheme was developed employing ECRH at 101 GHz in                  of the injected ECRH power and thus efficient plasma heating
+X2 polarization, technically limited to a short pulse, as shown        under reduced magnetic field conditions. A dedicated multi-
+in figure 4. The initial ECRH pulse generates a plasma with            pass scenario with customized reflector tiles is in preparation
+density n ≈ 1 · 1019 m−3 , which is sufficient for reasonable          for OP2.4. It must be noted that the frequency limitations of the
+NBI absorption. Subsequently, typically two NBI sources with           short-pulse gyrotron to f ⩾ 101 GHz does not match the cold
+a combined heating power of PNBI = 3.6 MW are applied,                 X3 resonance, which is at a magnetic field of B ≈ 1.7 T. Thus,
+leading to increased plasma density and, crucially, higher             a levitated plasma β is required to reduce the central magnetic
+electron temperatures. Once adequate conditions are estab-             field and allow X3 absorption on the magnetic axis.
+lished, the remaining ECRH power in X3 polarization can take               This optimized discharge scheme yields the presently
+over the heating from NBI, thereby sustaining and extending            highest peak and volume-averaged plasma-β ⟨β⟩ achieved in
+
+
+
+
+                                                                   8
+Nucl. Fusion 66 (2026) 116003                                                                                                 O. Grulke et al
+
+
+
+
+Figure 6. (top) Database study of the volume-averaged plasma-β ⟨β⟩ vs central plasma density peaking. The plasma heating power is
+indicated color-coded and data from two magnetic field strength B = 1.7 T and B = 2.5 T are displayed. (bottom) Resulting profiles of
+plasma-β from profile diagnostics for discharge time instants marked in the top figure.
+
+
+W7-X. A database study incorporating a number of discharges             studies of MHD stability limits and validate fast ion confine-
+at both field strengths are compiled in figure 6. An import-            ment predictions.
+ant parameter for the achieved plasma-β is the central plasma
+density peaking. It is generally observed that similar val-
+ues of central peaking are generated at both magnetic field             5. High-performance operation and advanced
+strengths. For similar peaking and the same range of plasma             heating scenarios
+heating powers, the reduced field cases display indeed larger
+⟨β⟩ values, as expected from the weak magnetic field scaling            Previous operation campaigns of W7-X have provided clear
+of the confinement. The radial profiles of the local plasma-            evidence that plasma confinement can be improved in dis-
+β for four exemplary discharge situations are also shown in             charge scenarios that employ a central peaking of the radial
+figure 6, indicated by colored circles in the database study.           plasma density profile [9, 10]. This effect directly contributed
+For the case of high magnetic field, the discharge with the             to the achievement of record values of the fusion triple product
+so far observed best energy confinement exceeding the ISS04             in stellarator devices [11]. In these discharges, central dens-
+scaling, see section 5 with a volume-averaged ⟨β⟩ = 1.5%,               ity fueling was realized by pellet injection, which provided a
+has the highest central values with β = 7.5%. This value is,            localized source of particles deep in the plasma core. More
+however, increased for the reduced magnetic field cases. In             recently, first indications were obtained that central density
+the shown examples, the radial β profiles are shown for three           peaking can also be established using NBI [12]. In this case,
+different values of central density peaking. Compared to the            the resulting centrally peaked density profile is not solely
+high field case, the central value is approx. 50% higher with           a consequence of direct NBI particle fueling. Rather, after
+β 0 = 11%, though radial profiles are generally broader and res-        the initial fueling phase, radial particle transport is found to
+ult in ⟨β⟩ = 2.8%, almost a factor of two larger than the high          be significantly reduced, thereby supporting and maintaining
+field case. This represents the highest ⟨β⟩ value obtained in           the central peaking of the density profile [13]. This marks
+W7-X to date and highlights the importance of operating at              an important step in broadening the operational flexibility of
+reduced magnetic field to access high plasma-β regimes for              W7-X toward confinement-optimized scenarios. In the most
+
+
+                                                                    9
+Nucl. Fusion 66 (2026) 116003                                                                                                      O. Grulke et al
+
+
+
+
+Figure 7. Discharge scenario of record fusion triple products for stellarators. The top graphs shows time traces of the ECRH and NBI
+heating powers together with the total radiated power Prad , mean n̄ and central plasma density traces, and the diamagnetic energy Wdia and
+central electron Te and ion temperatures Ti . For two time instants, indicated by vertical lines in the graphs, the radial density profiles are
+shown at the bottom together with fits in the range 0.1 m⩽ reff ⩽ 0.5 m . As a measure of the density profile evolution, the time trace of the
+ratio of core to edge (r/a = 0.8) density is shown, denoted as peaking.
+
+
+recent campaigns, further detailed studies were conducted                   stationary level, which in the present case persists for approx-
+to tailor discharge conditions specifically toward maximizing               imately two seconds. In this regime, the radial density pro-
+plasma confinement and performance. Two conceptually dis-                   file remains strongly peaked in the plasma center with sig-
+tinct approaches were pursued: (i) discharges in which NBI                  nificant gradients already at reff > 0.1 m. The density peak-
+heating facilitates the formation and stabilization of centrally            ing factor, defined as p = ncore /nr/a=0.8 , exhibits a gradual
+peaked density profiles, and (ii) discharges relying on cent-               increase during the NBI heating phase before saturating at
+ral density fueling via pellet injection. These complementary               values of p ≈ 2.5. The stationary phase of elevated temper-
+schemes provide a valuable experimental basis for understand-               atures and stored energy is sustained as long as NBI heat-
+ing the interplay between fueling methods, radial transport                 ing is applied, which is currently limited by the maximum
+processes, and overall stellarator confinement optimization.                available NBI pulse length. The peak ion temperature reaches
+The typical discharge scenario for NBI-heating-induced cent-                Ti ≈ 3 keV, in good agreement with what is expected from neo-
+ral density peaking is illustrated in figure 7. It begins with an           classical ion heat transport [9]. This indicates that transport in
+ECRH plasma initiated in X2 polarization at moderate heating                this regime is strongly dominated by neoclassical processes
+powers and densities. The corresponding plasma density pro-                 with only little contribution by turbulent heat diffusion [14,
+file, shown in figure 7 at t = 2 s, is centrally flat and exhibits          15], in contrast to flat-density profiles where turbulent trans-
+radial density gradients only in the outer region at reff > 0.4 m.          port remains the dominant mechanism. In the high temperat-
+A key step for establishing central density peaking is the trans-           ure phase, the energy confinement exceeds the ISS04 scaling
+ition of plasma heating entirely to NBI, without any addi-                  by typically 30%–40% [16]. It should be noted that there is
+tional ECRH. In this phase, the absence of central electron                 a power limit of ECRH in these kinds of scenarios, beyond
+heating leads to equilibrated electron and ion temperatures,                which the central plasma density peaking is strongly reduced
+albeit at relatively low ion temperature levels. During the ini-            due to ECRH density pump out.
+tial NBI fueling phase, the plasma density increases over sev-                  The duration of the improved confinement phase has so far
+eral seconds before a distinct peaking of the density profile               been limited primarily by the operational time of the NBI sys-
+emerges in the plasma core. Once the profile is peaked, ECRH                tem. A promising strategy to extend this phase is to initiate
+is re-applied to provide additional plasma heating. With the                radial density peaking through a sequence of pellet injections,
+added power, the electron and ion temperatures, as well as the              which can then be maintained by subsequent NBI heating,
+diamagnetic energy, rise rapidly and subsequently saturate at a             thereby yielding a noticeable prolongation of the improved
+
+                                                                       10
+Nucl. Fusion 66 (2026) 116003                                                                                                   O. Grulke et al
+
+
+
+
+Figure 8. Example of a long-pulse high performance discharge initiated and maintained by pellet injection only. Shown are the time traces
+of the ECR heating power and mean plasma density (top), in which the red dots denote the time instants of pellet injection, and the
+diamagnetic energy and electron and ion tempratures (bottom).
+
+
+confinement. To achieve sustainment over much longer times-                either improved plasma performance with combined ECRH
+cales, however, the peaking must be supported by pellet injec-             and NBI, or through a sequence of pellet injections, consist-
+tion alone. Such a scheme has already been demonstrated in                 ently indicate a reduction of radial heat transport. This find-
+earlier experiments [10, 17, 18], but only in a transient man-             ing is further supported by a database study for W7-X, in
+ner and for relatively short periods, as the previously avail-             which the turbulent heat flux Qanom is evaluated as a func-
+able pellet injector was restricted to injection times of only             tion of 2n∇ Ti at a given radius of r/a = 0.4, see figure 9(left)
+a few seconds. With the recent availability of a new steady-               (adapted from Ford et al [12]. The normalized density gradi-
+state pellet injector, it is now possible to pursue this approach          ent length a/Ln , with a denoting the minor plasma radius, is
+under substantially improved conditions, offering the pro-                 represented color-coded. Two clearly distinct regimes emerge:
+spect of sustaining the improved confinement phase for much                for small normalized density gradients, the heat flux is large
+longer durations and with greater experimental flexibility.                and originates from a significantly higher turbulent heat dif-
+The longest pellet-injection discharge to date is presented in             fusivity, χanom ≈ 1.2 ± 0.5, m2 s−1 . Conversely, the turbulent
+figure 8. Following plasma start-up, pellet injection begins at            heat flux is considerably reduced when the normalized dens-
+t = 2 s with an initial repetition frequency of 3.5 Hz, which is           ity gradient length is increased, yielding typical values of the
+later reduced to 2 Hz during the discharge. The injection times            turbulent heat diffusivity smaller by about a factor of five,
+of the individual pellets are indicated by red dots in figure 8.           in the range χanom ≈ 0.25 ± 0.08, m2 s−1 . It has been shown
+Owing to the high plasma densities, ECR heating is applied in              that this behavior is a feature of essentially all discharge scen-
+O2 polarization, with a constant power of 6 MW until t = 35 s,             arios with centrally peaked density profiles [14]. This group-
+when the power is stepped down. Each pellet induces a mod-                 ing of heat flux persists even when a transition between both
+ulation of the plasma density; however, the average mean                   regimes occurs during a single discharge, for instance due to a
+density remains relatively constant at n̄ ≈ 1.2 · 1020 m−3 . A             loss of density profile peaking caused by ECRH-induced dens-
+slight upward trend in plasma density is nevertheless observed,            ity pump-out. This result is consistent with the fundamental
+which is partly mitigated by reducing the pellet injection fre-            understanding of turbulent transport in W7-X. Both numer-
+quency after 5 s. The pellet injections in this experiment are             ical simulations and experimental observations provide com-
+executed in a feed-forward manner. The results strongly sug-               pelling evidence that turbulent transport in W7-X is predomin-
+gest that, for longer discharge scenarios, effective control of            antly driven by ion temperature gradient (ITG) turbulence [21–
+the density will require a feedback system with variable pellet            24] in ECRH-heated, gas-fueled discharge scenarios. In con-
+injection frequencies to stabilize the temporal density evolu-             trast, density-gradient-driven trapped electron mode (DTEM)
+tion, which will be realized in the near future. This is especially        transport is known to be strongly suppressed in the W7-X mag-
+visible in the later phases of the discharges with reduced ECR             netic configuration which approaches maximum-J [25, 26],
+heating power, in which the pellet fueling leads to a steady               owing to the reduced regions of resonance between the dia-
+increase of the plasma density. The achieved ion temperature               magnetic drift and the precessional drift of trapped electrons.
+values, although smaller than in the combined NBI and ECRH                 As a consequence, ITG turbulence in W7-X can be stabil-
+scenario shown in figure 7, partly due to the smaller plasma               ized by density gradients without the concurrent destabiliz-
+heating power, are still significantly enhanced on average by              ation of DTEMs, leading to improved energy confinement,
+25% compared to discharges with gas fueling at similar ECR                 elevated ion temperatures, and enhanced diamagnetic ener-
+heating power levels [9, 19]. The results of both scenarios,               gies. This interpretation is further supported by the observed
+
+
+                                                                      11
+Nucl. Fusion 66 (2026) 116003                                                                                                   O. Grulke et al
+
+
+
+
+Figure 9. (left) Database analysis of the anomalous heat flux versus ion temperature gradient. The color-code denotes the density gradient
+length normalized to the minor plasma radius a/Ln . The dashed lines with shaded intervals denote the effective ion heat diffusivity. (right)
+Compilation of discharges with improved confinement phases. Shown are the relative density fluctuation degree versus the density peaking.
+
+
+
+
+      Figure 10. Compilation of the fusion triple products [20] including the newest data from JET and the last two W7-X campaigns.
+
+
+dependence of the density-normalized turbulent density fluc-              OP 2.3 (2025) (see figure 8). Importantly, the resulting triple
+tuation magnitude as measured by phase contrast imaging                   product values are comparable to those of larger tokamaks,
+[27] on the degree of density profile peaking, figure 9 (right).          with the added potential of extending them to much longer
+For a set of improved-confinement discharges including the                durations in future campaigns.
+combined ECRH and NBI scenario as well as discharges
+with pellet-fueling-sustained density peaking a clear anti-
+                                                                          5.1. Comparison with linear numerical simulations
+correlation is found between the fluctuation level and the
+steepness of the density profile, expressed here as the ratio of          Linear stability simulations have been performed for the best
+central to edge (r/a = 0.8) density. Density-normalized tur-              performing discharge, figure 7. Two different time ranges in
+bulence levels steeply drop when the density profile is peaked,           the discharge are discussed. In the t = 1 − 3 s range, the plasma
+indicating the stabilization of ITG turbulence. The improved-             is heated via ECRH with a power of P = 3 MW. In the later
+confinement discharges achieved in W7-X have led to unpre-                phase, at t = 6 − 8 s, the plasma is heated with equal power
+cedented fusion triple products nTi τE for stellarators. These            P = 3.5 MW by the NBI and ECRH. An intermediate phase
+results have been incorporated into the most recent CICLOP                between t = 3 s and t = 6 s with only NBI and reduced anom-
+database and are presented in figure 10 [28]. Building on the             alous transport (see for example [13, 29]) is not considered
+first stellarator record for the triple product, obtained in W7-X         here. Using the gyrokinetic code GENE [30], linear flux-tube
+during operational campaign OP 1.2b (2018) with pellet injec-             simulations were conducted in the so-called bean flux tube in
+tion, the value was substantially increased in OP 2.2 (2024) in           W7-X—considered to be the most unstable location—at ρ =
+the combined ECRH and NBI scenario (see figure 7), reaching               reff / a = 0.54 (corresponding to reff = 0.3 m) where a denotes
+a maximum of nTi τE = 1.126 · 1020 , keV, s, m−3 . While these            the minor radius of the plasma. At this value of ρ the largest
+record values remain below those achieved in much larger                  density gradients are observed in the later phase combining
+tokamaks, W7-X performance decreases by only about 50%                    NBI and ECRH. The relevant parameters at this position are
+under the continuous pellet-fueling scheme demonstrated in                summarized in table 1 for two different sets of gradient lengths
+
+                                                                     12
+Nucl. Fusion 66 (2026) 116003                                                                                                      O. Grulke et al
+
+Table 1. Summary of the used local plasma parameters at ρ = 0.54 in discharge 20 241 204.72, figure 7. The gradient length scales are
+defined as 1 / Lx = ∂ρ log(x) where x can be any of n, Te or Ti and β is defined by the electron pressure. The collision frequency is internally
+defined in GENE as ν = 2.30 · 10−5 log (Λ) a[m] ne [10−19 m−3 ] / T2e [KeV2 ] where log(Λ) is the Coulomb logarithm. In the ECRH + NBI
+phase the two cases describe two different possible sets of gradients derived from the experimental profiles. These can be used to estimate
+errors stemming from the data on the type of the dominant instability.
+                                          a / Ln      a / LT e    a / LT i       Te / Ti         β                 ν
+
+                       ECRH Phase      0.39            2.73        1.74           1.13      3.28 × 10−3       9.53 × 10−4
+                       ECRH + NBI Phase
+                          —Case 1      2.09            3.00        2.80           0.99      7.55 × 10−3       8.26 × 10−4
+                          —Case 2      3.74            2.77        2.50           1.00      9.35 × 10−3       8.18 × 10−4
+
+
+
+
+Figure 11. Growth rates γtref and frequencies ωtref over ky ρreff for the parameters found from the profiles (dashed blue, dashed or solid
+orange, respectively) and for a mixed case with the ECRH + NBI phase temperature profiles but ECRH phase density profile (red). The
+dominant mode type is shown by the shape of the different data points. The dashed and solid orange lines denote two simulations which are
+based on different gradients both matching the same measurement data within errors. While the growth rates differ between the two cases,
+the same trend of stabilization of the ITG modes in the ECRH + NBI phase can be observed.
+
+
+in the high performance phase. Electromagnetic effects and                   rather robust, as the reduction in growth rate is found inde-
+the parallel magnetic field fluctuations were included, the                  pendent of the exact values of the changed gradients in the
+Landau–Boltzmann operator is used to model collisions. The                   ECRH + NBI phase.
+results for a linear scan over the wavenumber from ky ρreff =                   These linear simulation results suggest the reduction in
+0.1 to ky ρreff = 1.5 (where ρreff is the ion-sound Larmor radius)           fluctuation amplitude and turbulent fluxes in the NBI and
+are shown in figure 11. The input values found from the                      ECRH phase due to partial stabilization of the MTMs and ITG
+ECR-heated phase (see the blue curve in figure 11) result in                 modes from the significantly increased density gradient (com-
+micro tearing modes (MTMs) being the most unstable lin-                      pared to the moderate increase of the temperature gradients).
+ear instability for low values of ky ρeff ⩽ 0.5. For larger val-             Fully non-linear simulations are underway.
+ues of ky ρeff > 0.5 the dominant instability is found to be an
+ITG mode.
+    In the later NBI and ECRH phase (see the orange curves                   6. Divertor loads and SOL drifts
+in figure 11) the MTM is the dominant instability across the
+entire scan range of ky ρeff due to the stabilization of the ITG             W7-X is equipped with a novel, fully water-cooled island
+mode by the higher density gradient, which counteracts any                   divertor that has been specifically engineered to enable steady-
+potential destabilization through an increased ion-temperature               state, long-pulse operation [3]. The recent heating upgrade
+gradient. Additionally, while the MTMs would be destabilized                 for ECRH and NBI allowed the sustainment of higher diver-
+by the increased electron temperature gradient (see red line in              tor densities in attached conditions (frad = Prad /Pin < 0.4), for
+figure 11, and also see [29]), here the stabilizing effect of the            which multiple diagnostic independently measured density
+increase in density gradient dominates. While β and ν can also               profiles with steeper gradients and higher fluctuation levels
+act destabilizingly on the MTMs, here they do not change sig-                [31]. Heat loads were deposited on PFCs located in the tar-
+nificantly between the two phases. Generally, the parameters                 get shadow region (TSR), which have a strongly reduced tech-
+in the NBI and ECRH phase lead to decreased growth rates                     nical specification of allowed heat fluxes. As the data dis-
+across the range of ky ρeff , besides for ky ρeff = 0.1. It can also         plays, heat fluxes exceed the limits of safe divertor operation
+be seen that the result of the ITG modes being stabilized is                 in attached conditions [32], indicated in figure (see figure 12)
+
+                                                                        13
+Nucl. Fusion 66 (2026) 116003                                                                                                     O. Grulke et al
+
+
+
+
+Figure 12. IR camera measurements of the maximum divertor surface temperature of the middle divertor (left) and the high-iota tail (right)
+of upper divertor in module 2, with respect to the density at the last closed flux surface as measured by Thomson scattering. The power
+entering the scrape-off layer is color-coded. The data is averaged over 200 ms and restricted to experiments in the standard magnetic
+configuration, with a radiated power fraction frad <0.4 and without significant density peaking, and impurity seeding.
+
+
+
+
+Figure 13. Ratio of electron density ne in the upper to the lower
+divertor as measured by divertor Langmuir probes near (a) the strike
+line and (b) in the TSR. The vertical axis is logarithmic, so
+equal-magnitude asymmetries in opposite directions are equidistant
+from the black dashed line.                                                 Figure 14. The top shows the multiple flow bundles measured by
+                                                                            GPI along with the island geometry and the connection length. The
+                                                                            flow velocity represented by the arrows is color-coded. The bottom
+by the dashed line. The measurements suggest that the plasma                shows the variation of the velocities in regions R1-R3 versus the
+density is the governing quantity controlling the heat fluxes               line-integrated density.
+into the TSR. An increase of the radiation fraction via impur-
+ity seeding lowers the target heat fluxes considerably.
+    The positioning of the strike lines on the divertor targets             Figure 13 shows the target density ratio measured by a
+is governed primarily by the edge rotational transform of                   Langmuir probe close to the strike line (figure 13(a)) and
+selected magnetic configuration, see e.g. [33, 34]. In addition,            in the TSR (figure 13(b)) as a function of the line integ-
+HINT calculation [35] predicted the formation of a second-                  rated density for forward and reversed magnetic field cases.
+ary strikeline at high plasma-β. This secondary strike line was             Near the strike line, higher power and lower density show
+experimentally observed with significant heat flux values of                stronger asymmetries. The asymmetries reverse with the field
+Qtar ≈ 3 − 4 MW m−2 for βpeak ≈ 5%. The heat flux predic-                   reversal and are consistent with the expected E × B flow
+tions from modeling tools, such as EMC3-Eirene and EMC3-                    directions. Gas puff imaging (GPI) measured localized H-
+Lite, are challenging since they depend on the a priori choice              alpha emission on the outboard side SOL with fast cameras
+of the diffusivity, which can be tailored to match the observa-             [42]. Stationary bi-normal flows with velocities on the order of
+tions at the target [34, 36]. However, it is generally not possible         km s−1 are ubiquitously found across the W7-X magnetic con-
+to describe up- and downstream profiles consistently [37] even              figuration space. In qualitative agreement with sheared E × B
+with non-isotropic transport models [38].                                   flows, derived from potential measurements via Langmuir
+    One major effect not captured by the modeling are drifts                probes in the island [43], GPI observed counter-streaming bi-
+within the edge magnetic islands [39]. Observations in W7-                  normal flow bundles as seen in figure 14. Consistent with
+X show that drifts create asymmetries between the top and                   the density dependence of the up-down asymmetries, the
+bottom divertor [40, 41], which varies with plasma density.                 flow velocity magnitudes decrease for higher plasma densities
+
+
+                                                                       14
+Nucl. Fusion 66 (2026) 116003                                                                                                   O. Grulke et al
+
+
+
+
+Figure 15. Shown are measurements of the divertor densities by Langmuir probes (left) and divertor spectroscopy via Stark broadening
+(right) against the last closed flux surface density from Thomson scattering. The power entering the scrape-off layer is color-coded. Data is
+averaged for 40 ms and 200 ms for the Langmuir probe and divertor spectroscopy, respectively. The database is restricted to experiments
+with radiated power fraction frad < 0.4, without impurity seeding and no island chain modifications. In both plots, the black curve shows the
+power law fit to the respective data.
+
+
+as shown in figure 14(b). Experiments with reversed mag-                   spectroscopic assessment of Stark broadening [49]. Despite
+netic field direction result in a reversal of the bi-normal flow           the discrepancy of the absolute magnitude of n(e,d) , both dia-
+directions, again indicating their drift-driven flow charac-               gnostics show an approximately quadratic scaling with nLCFS .
+ter. Operation at reduced magnetic fields in this last exper-              Similar to modeling this is significantly slower than for the
+imental campaign provided the possibility to quantitatively                high recycling scaling in tokamaks (n(e,d) ∝ n3LCFS ). However,
+assess the scaling of drift effects with field strength. In the            it must be noted that more detailed investigations are required
+standard magnetic configuration the poloidal drift velocities              to elucidate a possible impact of diagnostic effects and a
+were measured in the power carrying layer just outside the                 regime change in the divertor density scaling, i.e. multiple dis-
+last closed flux surface (r − rLCFS < 1 cm) for two different              parate scaling regimes across the accessible separatrix density
+field strengths. The observed flow ratio vpol,1.8T /vpol,2.5T = 1.7        range. Last, but not least, we tested reactor-relevant materi-
+was approx. 20% larger than the expected scaling with mag-                 als for the PFCs in W7-X by equipping selected areas of the
+netic field ratio 2.5 T/1.8 T = 1.4. These flows slightly shift            inner heat shield and the baffle with tungsten-coated graphite
+the strike line position on the divertor target and the observed           tiles and with pure metal tiles [50]. First spectroscopic evid-
+shifts are qualitatively consistent with the B-scaling of the flow         ence of WI and WII line emission in the divertor plasma were
+velocity.                                                                  measured. Significant impact of tungsten in the core was only
+    In addition, to drift-driven target asymmetries newly                  observed during impurity accumulation in high performance
+installed, toroidally distributed bolometer systems measured               experiment with peaked density profiles.
+significant asymmetries in the toroidal direction. Data showed
+toroidal gradient length scale as low as ten or a few tens
+of cm in attached conditions, while typical gradient length                7. Summary
+reaching a few meters or more [44] in detached condition.
+The radiation asymmetry decreases with increasing density                  The W7-X stellarator has recently completed two major exper-
+and radiated power fraction. Bolometer, Langmuir probe and                 imental campaigns, OP 2.2 and OP 2.3, marking an important
+spectroscopy measurements also allow to assess the radiation               step toward demonstrating the viability of long-pulse, steady-
+and divertor density scaling, which are relevant for both the              state fusion operation. Instead of full recommissioning before
+power and particle exhaust capabilities. It was found that radi-           each campaign, a new operational strategy was adopted that
+ation shows only a weak, almost linear, scaling with upstream              minimized downtime and allowed two extended phases of
+density (nLCFS ). The observed scaling extrapolates to a radi-             plasma research with only short maintenance in between. This
+ation limit of about 10 MW in unseeded, X2-heated plasmas,                 required high reliability from all technical subsystems, which
+which are limited to line-averaged plasma densities of n ⩽                 was successfully achieved with failure rates below 1%. Several
+9 × 1019 m−2 [45]. The other key quantity that determines the              key upgrades supported this progress, including the opera-
+efficiency of a particular divertor configuration is the electron          tion of a prototype high-power gyrotron delivering 1.3 MW
+density n(e,d) at the target and its scaling with the upstream             of steady-state heating, a newly developed screw-type pellet
+density. The divertor density affects the ability of exhaust-              injector for long-duration fueling, and advanced feedback con-
+ing both particles (through its connection to the neutral dens-            trol systems for radiation, power stabilization, and density reg-
+ity n0 ∝ n(e,d) ) and power (through its connection to the radi-           ulation. Together, these enhancements enabled a record dis-
+ated power ϵrad ∝ n2(e,d) ). Numerical predictions show that for           charge of 363 s with 1.8 GJ of injected heating energy, while
+W7-X high-recycling is suppressed [46, 47]. The experimental               maintaining safe divertor heat loads. In addition, innovative
+scaling in the standard magnetic configuration is shown in                 heating schemes allowed W7-X to explore high plasma-beta
+figure 15 as was measured with Langmuir probes [48] and                    regimes, reaching unprecedented values of volume-averaged
+
+
+
+                                                                      15
+Nucl. Fusion 66 (2026) 116003                                                                                                    O. Grulke et al
+
+beta and demonstrating the impact of modified equilibria.                   [5] Beidler C. et al 2001 The helias reactor HSR4/18 Nucl. Fusion
+Improved confinement scenarios were also realized through                          41 1759–66
+central density peaking, achieved either by NBI or pellet fuel-             [6] Wolf R.C., Beidler C.D., Dinklage A., Helander P., Laqua
+                                                                                   H.P., Schauer F., Pedersen T.S. and Warmer F.,
+ing, leading to record stellarator fusion triple products compar-                  (Wendelstein 7-X Team) 2016 Wendelstein 7-X
+able to tokamaks, though at smaller scale. Long-pulse pellet                       program-demonstration of a stellarator option for fusion
+fueling in particular opened the path to sustaining improved                       energy IEEE Trans. Plasma. Sci. 44 1466–71
+confinement over much longer durations. Finally, detailed                   [7] Drevlak M., Geiger J., Helander P. and Turkin Y. 2014 Fast
+                                                                                   particle confinement with optimized coil currents in the
+studies of the divertor and SOL highlighted the influence of
+                                                                                   W7-X stellarator Nucl. Fusion 54 073002
+drifts and plasma currents on strike-line patterns and exhaust              [8] Marushchenko N.B., Aleynikov P., Beidler C.D., Dinklage A.,
+handling, showing both agreement and limitations in present                        Geiger J., Helander P., Laqua H.P., Maassberg H. and
+modeling approaches. Collectively, these results confirm W7-                       Turkin Y. (Wendelstein 7-X Team) 2019 Reduced field
+X as the leading facility for steady-state stellarator research,                   scenario with X3 heating in W7-X EPJ Web Conf.
+                                                                                   203 01006
+advancing both the scientific understanding and the technical               [9] Beurskens M.N.A. et al 2021 Ion temperature clamping in
+foundation needed for future fusion reactors.                                      Wendelstein 7-X electron cyclotron heated plasmas Nucl.
+                                                                                   Fusion 61 116072
+                                                                           [10] Bozhenkov S.A. et al 2020 High-performance plasmas after
+Acknowledgment                                                                     pellet injections in Wendelstein 7-X Nucl. Fusion
+                                                                                   60 066011
+                                                                           [11] Langenberg A. et al 2024 Achieving stationary high
+This work has been carried out within the framework of                             performance plasmas at Wendelstein 7-X Phys. Plasmas
+the EUROfusion Consortium, funded by the European Union                            31 0199958
+via the Euratom Research and Training Programme (Grant                     [12] Ford O.P. et al 2024 Turbulence-reduced high-performance
+Agreement No. 101052200–EUROfusion). Views and opin-                               scenarios in Wendelstein 7-X Nucl. Fusion 64 086067
+                                                                           [13] Bannmann S. et al 2024 Particle transport in reduced
+ions expressed are however those of the author(s) only and
+                                                                                   turbulence neutral beam heated discharges at Wendelstein
+do not necessarily reflect those of the European Union or the                      7-X Nucl. Fusion 64 106015
+European Commission. Neither the European Union nor the                    [14] Wappl M., Bozhenkov S.A., Andreeva T., Bannmann S., Smith
+European Commission can be held responsible for them.                              H.M. and Wolf R.C. (the W7-X Team) 2025 Experimental
+                                                                                   power balance study on turbulent heat transport at
+                                                                                   Wendelstein 7-X Plasma Phys. Control Fusion 67 075025
+                                                                           [15] Thienpondt H., García-Regaña J.M., Calvo I., Acton G. and
+ORCID iDs                                                                          Barnes M. 2024 Influence of the density gradient on
+                                                                                   turbulent heat transport at ion-scales: an inter-machine
+O. Grulke  0000-0001-7879-8671                                                    study with the gyrokinetic code stella Nucl. Fusion
+S. Bannmann  0000-0003-0772-9278                                                  65 016062
+S. Bozhenkov  0000-0003-4289-3532                                         [16] Bannmann S. et al 2026 Tokamak level performance in the
+                                                                                   optimized stellarator Wendelstein 7-X with stable peaked
+C. Büschel  0009-0002-3864-8008
+                                                                                   density profiles Phys. Rev. E accepted (https://doi.org/
+O.P. Ford  0000-0002-5646-4758                                                    10.1103/q59k-8m26)
+D. Hartmann  0000-0002-3511-6500                                          [17] Baldzuhn J. et al 2019 Pellet fueling experiments in
+C. Killer  0000-0001-7747-3066                                                    Wendelstein 7-X Plasma Phys. Control. Fusion 61 095012
+A. Langenberg  0000-0002-2107-5488                                        [18] Baldzuhn J. et al 2020 Enhanced energy confinement after
+                                                                                   series of pellets in Wendelstein 7-X Plasma Phys. Control.
+V. Perseo  0000-0001-8473-9002                                                    Fusion 62 055012
+T. Romba  0000-0002-2727-9385                                             [19] Beurskens M.N.A. et al 2022 Confinement in electron heated
+F. Scharmer  0009-0005-2310-5731                                                  plasmas in Wendelstein 7-X and ASDEX Upgrade; the
+T. Stange  0000-0003-4154-1455                                                    necessity to control turbulent transport Nucl. Fusion
+A. von Stechow  0000-0003-0277-4600                                               62 016015
+                                                                           [20] Litaudon X. et al 2024 Long plasma duration operation
+A. Tsikouras  0009-0008-9677-3302                                                 analyses with an international multi-machine (tokamaks
+                                                                                   and stellarators) database Nucl. Fusion 64 015001
+References                                                                 [21] Xanthopoulos P., Merz F., Görler T. and Jenko F. 2007
+                                                                                   Nonlinear gyrokinetic simulations of
+                                                                                   ion-temperature-gradient turbulence for the optimized
+ [1] Ponomarenko S. et al 2024 Experimental results of the novel                   Wendelstein 7-X stellarator Phys. Rev. Lett. 99 035002
+       1.5-mw-class 140-ghz continuous-wave gyrotron for the               [22] Alcusón J.A., Xanthopoulos P., Plunk G.G., Helander P.,
+       Wendelstein 7-X stellarator IEEE Electron Device Lett.                      Wilms F., Turkin Y., von Stechow A. and Grulke O. 2020
+       45 2550–3                                                                   Suppression of electrostatic micro-instabilities in
+ [2] Meitner S.J., Baylor L.R., Gebhart T.E., Harris J.H., McGinnis                maximum-j stellarators Plasma Phys. Control Fusion
+       W.D., Bjorholm T.P. and Logan K.G. 2020 Design of a                         62 035005
+       continuous pellet fueling system for Wendelstein 7-X IEEE           [23] Baehner J.-P. et al 2021 Phase contrast imaging measurements
+       Trans. Plasma. Sci. 48 1585–90                                              and numerical simulations of turbulent density fluctuations
+ [3] Grulke O. et al 2024 Overview of the first Wendelstein 7-X                    in gas-fuelled ecrh discharges in Wendelstein 7-X J. Plasma
+       long pulse campaign with fully water-cooled plasma facing                   Phys. 87 905870314
+       components Nucl. Fusion 64 1                                        [24] Wegner T. et al 2020 Impact of the temperature ratio on
+ [4] Zanini M. et al 2019 Eccd operations in the second                            turbulent impurity transport in Wendelstein 7-X Nucl.
+       experimental campaign at W7-X EPJ Web Conf. 203 02013                       Fusion 60 124004
+
+                                                                      16
+Nucl. Fusion 66 (2026) 116003                                                                                                         O. Grulke et al
+
+[25] Proll J.H.E., Helander P., Connor J.W. and Plunk G.G. 2012              [38] Bold D., Reimold F., Niemann H., Gao Y., Jakubowski M.,
+        Resilience of quasi-isodynamic stellarators against                         Killer C., Winters V.R. and Maaziz N. (the W7-X Team)
+        trapped-particle instabilities Phys. Rev. Lett. 108 245002                  2024 Impact of spatially varying transport coefficients in
+[26] Helander P., Newton S.L., Mollén A. and Smith H.M. 2017                        emc3-eirene simulations of W7-X and assessment of drifts
+        Impurity transport in a mixed-collisionality stellarator                    Nucl. Fusion 64 126055
+        plasma Phys. Rev. Lett. 118 155002                                   [39] Feng Y., Sardei F., Grigull P. and Herre G. 1999 Drift effects in
+[27] Huang Z. et al 2021 The Wendelstein 7-X phase contrast                         W7-AS limiter and island divertor configurations J. Nucl.
+        imaging diagnostic J. Instrum. 16 01014                                     Mater. 266-269 928–33
+[28] Litaudon X. et al (The IEA Coordination on International                [40] Hammond K.C. 2019 Drift effects on W7-X divertor heat and
+        Challenges on Long duration Operation (CICLOP) group)                       particle fluxes Plasma Phys. Control. Fusion 61 125001
+        2025 Investigating long-duration plasma operation with the           [41] Kriete D.M. and Fusion N. 2023 Effects of drifts on scrape-off
+        international multi-machine database 30th IAEA Fusion                       layer transport in W7-X Nucl. Fusion 63 026022
+        Energy Conference (FEC2025) (Chengdu, People’s                       [42] Terry J.L. 2024 Realization of a gas puff imaging system on
+        Republic of China, 13–18 October 2025)                                      the Wendelstein 7-X stellarator Rev. Sci. Instrum. 95 093517
+[29] Cu-Castillo H. et al 2026 Significance of microtearing                  [43] Killer C., Cipciar D., Baek S.G., Ballinger S.B., von Stechow
+        turbulence in turbulence-reduced high-density-gradient                      A., Terry J.L. and Grulke O. (the W7-X Team) 2025
+        plasmas in Wendelstein 7-X Phys. Rev. Lett. (https://doi.org/               Electric fields and stationary drift flows in the island
+        10.1103/nd3p-yb9t)                                                          divertor SOL of Wendelstein 7-X Nucl. Fusion 65 056026
+[30] Jenko F., Dorland W., Kotschenreuther M. and Rogers B.N.                [44] Partesotti G. 2024 Assessing the toroidal radiation distribution
+        2000 Electron temperature gradient driven turbulence Phys.                  at Wendelstein 7-X by combining Gaussian Process
+        Plasmas 7 1904–10                                                           Tomography and field line mapping Nucl. Mater. Energy
+[31] Perseo V. et al 2025 Increased power operation with                            41 101823
+        water-cooled divertors at Wendelstein 7-X 5th IAEA                   [45] Reimold F. 2024 Power & particle exhaust limitations in
+        Technical Meeting on Divertor Concepts, 2025 (Vienna,                       W7-X and its relation to density build-up in the divertor
+        Austria, 28–31 October 2025)                                                Conf. on Plasma Surface Interaction (PSI), 2024
+[32] Naujoks D. et al 2026 Heat load mitigation studies in the                      (Marseille, France, 12–17 May 2024)
+        W7-X stellarator experiment Nucl. Fusion 64 112002                   [46] Feng Y., Kobayashi M., Lunt T. and Reiter D. 2011
+[33] Gao Y. et al 2019 Effects of toroidal plasma current on                        Comparison between stellarator and tokamak divertor
+        divertor power depositions on Wendelstein 7-X Nucl.                         transport Plasma Phys. Control. Fusion 53 024009
+        Fusion 59 106015                                                     [47] Maaziz N., Reimold F., Winters V.R., Bold D., Feng Y. and
+[34] Kharwandikar A. 2025 Power exhaust investigations in the                       Perseo V. 2025 Investigating the role of divertor geometry
+        W7-X island divertor PhD Thesis University Greifswald                       on density build-up in the island divertor Nucl. Mater.
+[35] Knieps A. et al 2022 Plasma beta effects on the edge magnetic                  Energy 42 101886
+        field structure and divertor heat loads in Wendelstein 7-X           [48] Pandey A. and Fusion N. 2024 Pop-up Langmuir probe
+        high-performance scenarios Nucl. Fusion 62 026011                           diagnostic in the water cooled divertor of Wendelstein 7-X
+[36] Feng Y. et al 2021 First attempt to quantify W7-X island                       Rev. Sci. Instrum. 95 043503
+        divertor plasma by local experiment-model comparison                 [49] Henke F. 2025 Development and experimental validation of
+        Nucl. Fusion 61 106018                                                      impurity line ratio spectroscopy for divertor plasmas at
+[37] Bold D., Reimold F., Niemann H., Gao Y., Jakubowski M.,                        W7-X PhD Thesis University Greifswald
+        Killer C. and Winters V.R. (the W7-X Team) 2022                      [50] Naujoks D. 2023 Performance of tungsten plasma facing
+        Parametrisation of target heat flux distribution and study of               components in the stellarator experiment W7-X: recent
+        transport parameters for boundary modelling in W7-X Nucl.                   results from the first OP2 campaign Nucl. Mater. Energy
+        Fusion 62 106011                                                            37 101514
+
+
+
+
+                                                                        17
+

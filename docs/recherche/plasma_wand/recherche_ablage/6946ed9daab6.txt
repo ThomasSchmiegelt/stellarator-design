@@ -1,0 +1,222 @@
+URL: https://en.wikipedia.org/wiki/Proxima_Fusion
+Jump to content
+Main menu
+Main menu
+move to sidebar
+hide
+Navigation
+Main page
+Contents
+Current events
+Random article
+About Wikipedia
+Contact us
+Contribute
+Help
+Learn to edit
+Community portal
+Recent changes
+Upload file
+Special pages
+Search
+Search
+Appearance
+Donate [https://donate.wikimedia.org/?wmf_source=donate&wmf_medium=sidebar&wmf_campaign=en.wikipedia.org&uselang=en]
+Create account
+Log in
+Personal tools
+Donate [https://donate.wikimedia.org/?wmf_source=donate&wmf_medium=sidebar&wmf_campaign=en.wikipedia.org&uselang=en]
+Create account
+Log in
+Contents
+move to sidebar
+hide
+(Top)
+1
+History
+2
+Technology
+3
+See also
+4
+References
+5
+External links
+Toggle the table of contents
+Proxima Fusion
+3 languages
+Deutsch [https://de.wikipedia.org/wiki/Proxima_Fusion]
+Bahasa Indonesia [https://id.wikipedia.org/wiki/Proxima_Fusion]
+Українська [https://uk.wikipedia.org/wiki/Proxima_Fusion]
+Edit links [https://www.wikidata.org/wiki/Special:EntityPage/Q123422387#sitelinks-wikipedia]
+Article
+Talk
+English
+Read
+Edit
+View history
+Save
+Tools
+Tools
+move to sidebar
+hide
+Actions
+Read
+Edit
+View history
+Save
+General
+What links here
+Related changes
+Upload file
+Permanent link
+Page information
+Cite this page
+Get shortened URL
+Switch to legacy parser
+Print/export
+Download as PDF
+Printable version
+In other projects
+Wikidata item [https://www.wikidata.org/wiki/Special:EntityPage/Q123422387]
+Appearance
+move to sidebar
+hide
+From Wikipedia, the free encyclopedia
+Fusion energy company from Munich, Germany
+Lucio Milanese<br/>Jorrit Lion<br/>Jonathan Schilling<br/>Martin Kubie"},"hq_location":{"wt":"[[Munich]], Germany"},"num_employees":{"wt":"90+"},"num_employees_year":{"wt":"2025"},"website":{"wt":"{{URL|www.proximafusion.com}}"}},"i":0}}]}'> Proxima Fusion |
+[https://en.wikipedia.org/wiki/File:Logo_Proxima_Fusion.svg] |
+Industry | Fusion power [https://en.wikipedia.org/wiki/Fusion_power] |
+Founded | April 2023 ; 3 years ago ( 2023-04 ) |
+Founders | Francesco Sciortino
+Lucio Milanese
+Jorrit Lion
+Jonathan Schilling
+Martin Kubie |
+Headquarters | Munich [https://en.wikipedia.org/wiki/Munich], Germany |
+Number of employees
+| 90+ (2025) |
+Website | www .proximafusion .com [http://www.proximafusion.com] |
+Proxima Fusion is a European fusion energy company founded in 2023 in Munich [https://en.wikipedia.org/wiki/Munich], Germany, as the first research spin-off [https://en.wikipedia.org/wiki/Research_spin-off] from the Max Planck Institute for Plasma Physics [https://en.wikipedia.org/wiki/Max_Planck_Institute_for_Plasma_Physics]. [ 1 ] Its stated goal is to design the first generation of fusion power plants using a quasi-isodynamic stellarator [https://en.wikipedia.org/wiki/Quasi-isodynamic_stellarator] (QI stellarator). [ 2 ]
+History
+[ edit ]
+Proxima was founded in April 2023 by Francesco Sciortino, Lucio Milanese, Jorrit Lion, Jonathan Schilling, and Martin Kubie, former scientists and engineers from the Max Planck Institute for Plasma Physics [https://en.wikipedia.org/wiki/Max_Planck_Institute_for_Plasma_Physics], the Massachusetts Institute of Technology [https://en.wikipedia.org/wiki/Massachusetts_Institute_of_Technology], and X Development [https://en.wikipedia.org/wiki/X_Development] (was Google-X). [ 3 ]
+The company initially raised €7.5 million in pre-seed funding from Plural Platform, UVC Partners, Visionaries Club, Wilbe, High-Tech Gründerfonds [https://en.wikipedia.org/wiki/High-Tech_Gründerfonds], and others, followed by a €20 million seed round led by redalpine, with participation from Bayern Kapital, DeepTech & Climate Fonds, and the Max Planck Foundation. [ 4 ] It has since been awarded more public funding from the European Innovation Council [https://en.wikipedia.org/wiki/European_Innovation_Council] (source) and the Federal Ministry of Education and Research (Germany) [https://en.wikipedia.org/wiki/Federal_Ministry_of_Education_and_Research_(Germany)]. [ 5 ]
+On June 28, 2024, Proxima announced that it would partner with the Paul Scherrer Institute [https://en.wikipedia.org/wiki/Paul_Scherrer_Institute] to develop high-temperature superconducting [https://en.wikipedia.org/wiki/High-temperature_superconductivity] magnets for its stellarators. [ 6 ]
+In February 2025, Proxima presented a concept for a commercial fusion power plant named Stellaris. [ 7 ] That concept has been compared in impact to the US ARC fusion reactor [https://en.wikipedia.org/wiki/ARC_fusion_reactor] tokamak [https://en.wikipedia.org/wiki/Tokamak] concept published in 2014. [ 8 ] A smaller prototype stellarator aiming at net fusion energy is planned for 2031. [ 9 ]
+In June 2025, Proxima Fusion announced that they received €130 million in funding in a Series A round [https://en.wikipedia.org/wiki/Series_A_round]. [ 10 ] [ 11 ] In September 2025, they received an added €15M extension. [ 12 ]
+An investment round of July 2026 included Google parent company Alphabet Inc. [https://en.wikipedia.org/wiki/Alphabet_Inc.] [ 13 ]
+Technology
+[ edit ]
+Since 2015 the Max Planck Institute for Plasma Physics has operated the quasi-isodynamic stellarator Wendelstein 7-X [https://en.wikipedia.org/wiki/Wendelstein_7-X]. It follows in a series of Max Planck stellarators built and operated since 1960. The quasi-isodynamic feature was developed theoretically and in practical implementation in the 1980s by Allen Boozer [https://en.wikipedia.org/wiki/Allen_Boozer] and Jürgen Nührenberg [https://en.wikipedia.org/wiki/Jürgen_Nührenberg], for which they were awarded the 2010 Hannes Alfvén Prize [https://en.wikipedia.org/wiki/Hannes_Alfvén_Prize] by the European Physical Society [https://en.wikipedia.org/wiki/European_Physical_Society]. [ 14 ] [ 15 ]
+Max Planck developed a series of reactor design studies based on Wendelstein 7-X since the 1990s. Proxima Fusion's Stellaris design is substantially similar but with a higher magnetic field provided by recent developments in high temperature superconductors, and correspondingly a somewhat smaller size. In both Wendelstein 7-X and Stellaris, toroidal plasma current is optimized to cancel to near-zero, which is believed to contribute to stability and steady state operation. [ 16 ] [ 17 ]
+See also
+[ edit ]
+List of nuclear fusion companies [https://en.wikipedia.org/wiki/List_of_nuclear_fusion_companies]
+References
+[ edit ]
+↑ Fleschner, Frank (30 May 2023). "Max Planck Institute for Plasma Physics signs cooperation agreement with German fusion start-up Proxima Fusion" [https://www.ipp.mpg.de/5349082/04_23]. Max Planck Institute for Plasma Physics [https://en.wikipedia.org/wiki/Max_Planck_Institute_for_Plasma_Physics] (Press release) . Retrieved 20 September 2025 .
+↑ Dalton, David (11 April 2024). "Nuclear Fusion: Germany's Proxima Raises €20 Million for QI Stellarator Reactor" [https://www.nucnet.org/news/germany-s-proxima-raises-eur20-million-for-qi-stellerator-reactor-4-4-2024]. The Independent Global Nuclear News Agency (NucNet a.s.b.l.) . Brussels, Belgium . Retrieved 20 September 2025 .
+↑ Berninger, Markus (30 May 2023). "7 million euros for MPG spin-out Proxima Fusion" [https://www.max-planck-innovation.com/max-planck-innovation/news/press-releases/press-release/7-million-euros-for-mpg-spin-off-proxima-fusion.html]. Max Planck Innovation GmbH (Press release) . Retrieved 20 September 2025 .
+↑ Marzo, Stefano De (30 May 2023). "Munich-based Proxima Fusion raises €7 million to bring in the next generation fusion power plants" [https://www.eu-startups.com/2023/05/munich-based-proxima-fusion-raises-e7-million-to-bring-in-the-next-generation-fusion-power-plants/]. EU-Startups . Retrieved 20 September 2025 .
+↑ Fleschner, Frank (19 June 2024). "BMBF project by Proxima Fusion and IPP starts with joint workshop" [https://www.ipp.mpg.de/5433062/BMBF_Projekt_PF]. Max Planck Institute for Plasma Physics [https://en.wikipedia.org/wiki/Max_Planck_Institute_for_Plasma_Physics] . Retrieved 20 September 2025 .
+↑ "},"date":{"wt":"28 June 2024"},"title":{"wt":"Proxima Fusion and the Paul Scherrer Institute (PSI) Sign Framework Agreement for the Development of High-Temperature Superconducting Magnet Technology"},"url":{"wt":"https://www.proximafusion.com/press-news/proxima-fusion-and-psi-sign-framework-agreement"},"website":{"wt":"Proxima Fusion"},"language":{"wt":"en"},"access-date":{"wt":"20 September 2025"}},"i":0}}]}'/> Staff (28 June 2024). "Proxima Fusion and the Paul Scherrer Institute (PSI) Sign Framework Agreement for the Development of High-Temperature Superconducting Magnet Technology" [https://www.proximafusion.com/press-news/proxima-fusion-and-psi-sign-framework-agreement]. Proxima Fusion (Press release) . Retrieved 20 September 2025 .
+↑ Lion, J.; Anglès, J. -C.; Bonauer, L.; Bañón Navarro, A.; Cadena Ceron, S. A.; Davies, R.; Drevlak, M.; Foppiani, N.; Geiger, J.; Goodman, A.; Guo, W.; Guiraud, E.; Hernández, F.; Henneberg, S.; Herrero, R. (26 February 2025). "Stellaris: A high-field quasi-isodynamic stellarator for a prototypical fusion power plant" [https://www.sciencedirect.com/science/article/pii/S0920379625000705] . Fusion Engineering and Design . 214 114868. Bibcode [https://en.wikipedia.org/wiki/Bibcode_(identifier)]:2025FusED.21414868L [https://ui.adsabs.harvard.edu/abs/2025FusED.21414868L]. doi [https://en.wikipedia.org/wiki/Doi_(identifier)]: 10.1016/j.fusengdes.2025.114868 [https://doi.org/10.1016%2Fj.fusengdes.2025.114868] . ISSN [https://en.wikipedia.org/wiki/ISSN_(identifier)] 0920-3796 [https://search.worldcat.org/issn/0920-3796].
+↑ Khan, Yusuf (26 February 2025). "German Startup Publishes Open-Source Plans for Nuclear-Fusion Power Plant" [https://www.wsj.com/articles/german-startup-publishes-open-source-plans-for-nuclear-fusion-power-plant-7b2b6241?mod=trending_now_news_2]. Wall Street Journal . ISSN [https://en.wikipedia.org/wiki/ISSN_(identifier)] 0099-9660 [https://search.worldcat.org/issn/0099-9660] . Retrieved 26 February 2025 .
+↑ Emilio, Maurizio Di Paolo (26 February 2025). "Proxima Fusion Unveils Stellaris: A Breakthrough in Fusion Power" [https://www.eetimes.com/proxima-fusion-unveils-stellaris-a-breakthrough-in-fusion-power/]. EE Times [https://en.wikipedia.org/wiki/EE_Times] . Retrieved 20 September 2025 .
+↑ Meredith, Sam (11 June 2025). "Europe's fastest-growing nuclear fusion company raises $148 million in record funding round" [https://www.cnbc.com/2025/06/11/nuclear-fusion-proxima-raises-148-million-in-record-funding-round.html]. CNBC . Retrieved 11 June 2025 .
+↑ "},"date":{"wt":"2025-06-12"},"title":{"wt":"Proxima Fusion raises €130m in record-breaking push to commercialise fusion power"},"url":{"wt":"https://www.finnewsnetwork.com.au/archives/finance_news_network1902226.html"},"work":{"wt":"Finance News Network"},"language":{"wt":"en"},"access-date":{"wt":"2025-09-20"}},"i":0}}]}'/> Staff (12 June 2025). "Proxima Fusion raises €130m in record-breaking push to commercialise fusion power" [https://www.finnewsnetwork.com.au/archives/finance_news_network1902226.html]. Finance News Network . Retrieved 20 September 2025 .
+↑ Nemitz, Marc (9 September 2025). "Proxima Fusion secures additional 15 million euros in Series A expansion" [https://www.startbase.com/news/proxima-fusion-sichert-zusaetzliche-15-millionen-euro-in-series-a-erweiterung/]. Startbase . Munich . Retrieved 20 September 2025 .
+↑ https://www.proximafusion.com/press-news/proxima-fusion-raises-eu411-million-to-build-europes-commercial-fusion-champion [https://www.proximafusion.com/press-news/proxima-fusion-raises-eu411-million-to-build-europes-commercial-fusion-champion]
+↑ "Europäische Auszeichnung für IPP-Plasmaphysiker" [https://www.ipp.mpg.de/ippcms/de/presse/pi/08_10_pi]. www.ipp.mpg.de (in German) . Retrieved 13 June 2020 .
+↑ "Alfvén Prize | European Physical Society – Plasma Physics Division" [http://plasma.ciemat.es/eps/awards/alfven-prize/] . Retrieved 13 June 2020 .
+↑ Beidler, C.D.; et al. (11 August 2021). "Demonstration of reduced neoclassical energy transport in Wendelstein 7-X" [https://www.nature.com/articles/s41586-021-03687-w]. Nature [https://en.wikipedia.org/wiki/Nature_(journal)] . 596 ( 221– 226). doi [https://en.wikipedia.org/wiki/Doi_(identifier)]:10.1038/s41586-021-04023-y [https://doi.org/10.1038%2Fs41586-021-04023-y]. PMC [https://en.wikipedia.org/wiki/PMC_(identifier)] 8550957 [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8550957] .
+↑ Grieger, G.; Nührenberg, J.; Renner, H.; Sapper, J.; Wobig, H. (August 1994). "HELIAS stellarator reactor studies and related European technology studies" [https://www.sciencedirect.com/science/article/abs/pii/0920379694900558] . Fusion Engineering and Design . 25 ( 73– 84). doi [https://en.wikipedia.org/wiki/Doi_(identifier)]:10.1016/0920-3796(94)90055-8 [https://doi.org/10.1016%2F0920-3796%2894%2990055-8].
+External links
+[ edit ]
+Official website [http://www.proximafusion.com]
+v [https://en.wikipedia.org/wiki/Template:Nuclear_fusion_companies]
+t [https://en.wikipedia.org/wiki/Template_talk:Nuclear_fusion_companies?action=edit&redlink=1]
+e [https://en.wikipedia.org/wiki/Special:EditPage/Template:Nuclear_fusion_companies]
+Nuclear fusion companies [https://en.wikipedia.org/wiki/List_of_nuclear_fusion_companies]
+|
+Australia [https://en.wikipedia.org/wiki/Australia] |
+HB11 Energy [https://en.wikipedia.org/wiki/HB11_Energy]
+|
+Canada [https://en.wikipedia.org/wiki/Canada] |
+General Fusion [https://en.wikipedia.org/wiki/General_Fusion]
+|
+China [https://en.wikipedia.org/wiki/China] |
+ENN Energy [https://en.wikipedia.org/wiki/ENN_Energy]
+|
+Germany [https://en.wikipedia.org/wiki/Germany] |
+Proxima Fusion [https://en.wikipedia.org/wiki/Proxima_Fusion]
+|
+New Zealand [https://en.wikipedia.org/wiki/New_Zealand] |
+OpenStar [https://en.wikipedia.org/wiki/OpenStar]
+|
+United Kingdom [https://en.wikipedia.org/wiki/United_Kingdom] |
+First Light Fusion [https://en.wikipedia.org/wiki/First_Light_Fusion]
+Tokamak Energy [https://en.wikipedia.org/wiki/Tokamak_Energy]
+|
+United States [https://en.wikipedia.org/wiki/United_States] |
+Commonwealth Fusion Systems [https://en.wikipedia.org/wiki/Commonwealth_Fusion_Systems]
+CTFusion [https://en.wikipedia.org/wiki/Dynomak#Commercialization]
+EMC2 [https://en.wikipedia.org/wiki/Polywell#EMC2,_Inc.]
+General Atomics [https://en.wikipedia.org/wiki/General_Atomics]
+Helion Energy [https://en.wikipedia.org/wiki/Helion_Energy]
+KMS Fusion [https://en.wikipedia.org/wiki/KMS_Fusion]
+Lockheed Martin [https://en.wikipedia.org/wiki/Lockheed_Martin]
+Pacific Fusion [https://en.wikipedia.org/wiki/Pacific_Fusion]
+Realta Fusion [https://en.wikipedia.org/wiki/Magnetic_mirror#1986–present]
+Shine Technologies [https://en.wikipedia.org/wiki/Shine_Technologies]
+TAE Technologies [https://en.wikipedia.org/wiki/TAE_Technologies]
+Thea Energy [https://en.wikipedia.org/wiki/Thea_Energy]
+Zap Energy [https://en.wikipedia.org/wiki/Zap_Energy]
+|
+Lists : Nuclear fusion companies [https://en.wikipedia.org/wiki/List_of_nuclear_fusion_companies] • Fusion power technologies [https://en.wikipedia.org/wiki/List_of_fusion_power_technologies]
+Fusion power [https://en.wikipedia.org/wiki/Fusion_power] reactor • Fusion Industry Association [https://en.wikipedia.org/wiki/Fusion_Industry_Association]
+|
+[https://en.wikipedia.org/wiki/File:Factory_DEU.svg] | This German corporation or company article is a stub [https://en.wikipedia.org/wiki/Wikipedia:Stub]. You can help Wikipedia by adding missing information [https://en.wikipedia.org/w/index.php?title=Proxima_Fusion&action=edit].
+|
+v [https://en.wikipedia.org/wiki/Template:Germany-company-stub]
+t [https://en.wikipedia.org/wiki/Template_talk:Germany-company-stub]
+e [https://en.wikipedia.org/wiki/Special:EditPage/Template:Germany-company-stub]
+Retrieved from "https://en.wikipedia.org/w/index.php?title=Proxima_Fusion&oldid=1382036103 [https://en.wikipedia.org/w/index.php?title=Proxima_Fusion&oldid=1382036103]"
+Categories : Companies based in Munich
+Energy companies of Germany
+Fusion power companies
+Nuclear technology companies of Germany
+Nuclear power companies of Germany
+German companies established in 2023
+Energy companies established in 2023
+Privately held companies of Germany
+German company stubs
+Hidden categories: Articles with short description
+Short description matches Wikidata
+Use dmy dates from September 2025
+CS1 German-language sources (de)
+Official website different in Wikidata and Wikipedia
+All stub articles
+This page was last edited on 26 October 2026, at 04:24 (UTC) .
+Page was rendered with Parsoid [https://www.mediawiki.org/wiki/Special:MyLanguage/Parsoid].
+Text is available under the Creative Commons Attribution-ShareAlike 4.0 License ;
+additional terms may apply. By using this site, you agree to the Terms of Use [https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Terms_of_Use] and Privacy Policy [https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Privacy_policy]. Wikipedia® is a registered trademark of the Wikimedia Foundation, Inc. [https://wikimediafoundation.org/], a non-profit organization.
+Privacy policy [https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Privacy_policy]
+About Wikipedia
+Disclaimers
+Contact Wikipedia
+Legal & safety contacts [https://foundation.wikimedia.org/wiki/Special:MyLanguage/Legal:Wikimedia_Foundation_Legal_and_Safety_Contact_Information]
+Code of Conduct [https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Universal_Code_of_Conduct]
+Developers [https://developer.wikimedia.org]
+Statistics [https://stats.wikimedia.org/#/en.wikipedia.org]
+Cookie statement [https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Cookie_statement]
+Mobile view
+[https://www.wikimedia.org/]
+[https://www.mediawiki.org/]
+Search
+Search
+Toggle the table of contents
+Proxima Fusion
+3 languages
+Add topic

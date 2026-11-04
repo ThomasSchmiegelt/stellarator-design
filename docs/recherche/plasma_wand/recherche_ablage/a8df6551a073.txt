@@ -1,0 +1,156 @@
+URL: https://en.wikipedia.org/wiki/Plasma_shaping
+Jump to content
+Main menu
+Main menu
+move to sidebar
+hide
+Navigation
+Main page
+Contents
+Current events
+Random article
+About Wikipedia
+Contact us
+Contribute
+Help
+Learn to edit
+Community portal
+Recent changes
+Upload file
+Special pages
+Search
+Search
+Appearance
+Donate [https://donate.wikimedia.org/?wmf_source=donate&wmf_medium=sidebar&wmf_campaign=en.wikipedia.org&uselang=en]
+Create account
+Log in
+Personal tools
+Donate [https://donate.wikimedia.org/?wmf_source=donate&wmf_medium=sidebar&wmf_campaign=en.wikipedia.org&uselang=en]
+Create account
+Log in
+Contents
+move to sidebar
+hide
+(Top)
+1
+History
+2
+Cross-section
+3
+External links
+4
+References
+Toggle the table of contents
+Plasma shaping
+1 language
+中文 [https://zh.wikipedia.org/wiki/%E7%AD%89%E7%A6%BB%E5%AD%90%E4%BD%93%E5%BD%A2%E7%8A%B6%E6%8E%A7%E5%88%B6]
+Edit links [https://www.wikidata.org/wiki/Special:EntityPage/Q7201791#sitelinks-wikipedia]
+Article
+Talk
+English
+Read
+Edit
+View history
+Save
+Tools
+Tools
+move to sidebar
+hide
+Actions
+Read
+Edit
+View history
+Save
+General
+What links here
+Related changes
+Upload file
+Permanent link
+Page information
+Cite this page
+Get shortened URL
+Switch to legacy parser
+Print/export
+Download as PDF
+Printable version
+In other projects
+Wikidata item [https://www.wikidata.org/wiki/Special:EntityPage/Q7201791]
+Appearance
+move to sidebar
+hide
+From Wikipedia, the free encyclopedia
+[https://en.wikipedia.org/wiki/File:Question_book-new.svg]
+| This article needs more citations [https://en.wikipedia.org/wiki/Wikipedia:Verifiability] . Please help improve this article [https://en.wikipedia.org/wiki/Special:EditPage/Plasma_shaping] by adding citations to reliable sources [https://en.wikipedia.org/wiki/Help:Referencing_for_beginners]. Unsourced material may be challenged and removed [https://en.wikipedia.org/wiki/Wikipedia:Verifiability#Burden_of_evidence].
+Find sources: "Plasma shaping" [https://www.google.com/search?as_eq=wikipedia&q=%22Plasma+shaping%22] – news [https://www.google.com/search?tbm=nws&q=%22Plasma+shaping%22+-wikipedia&tbs=ar:1] · newspapers [https://www.google.com/search?&q=%22Plasma+shaping%22&tbs=bkt:s&tbm=bks] · books [https://www.google.com/search?tbs=bks:1&q=%22Plasma+shaping%22+-wikipedia] · scholar [https://scholar.google.com/scholar?q=%22Plasma+shaping%22] · JSTOR [https://www.jstor.org/action/doBasicSearch?Query=%22Plasma+shaping%22&acc=on&wc=on] ( August 2017 ) ( Learn how and when to remove this message [https://en.wikipedia.org/wiki/Help:Maintenance_template_removal] )
+|
+Magnetically confined [https://en.wikipedia.org/wiki/Magnetic_confinement_fusion] fusion plasmas [https://en.wikipedia.org/wiki/Plasma_(physics)] such as those generated in tokamaks [https://en.wikipedia.org/wiki/Tokamak] and stellarators [https://en.wikipedia.org/wiki/Stellarator] are characterized by a typical shape. Plasma shaping is the study of the plasma shape in such devices, and is particularly important for next step fusion devices such as ITER [https://en.wikipedia.org/wiki/ITER]. This shape is conditioning partly the performance of the plasma. Tokamaks, in particular, are axisymmetric [https://en.wikipedia.org/wiki/Axisymmetric] devices, and therefore one can completely define the shape of the plasma by its cross-section [https://en.wikipedia.org/wiki/Cross_section_(geometry)].
+History
+[ edit ]
+Early fusion reactor designs tended to have circular cross-sections simply because they were easy to design and understand. Generally, fusion machines using a toroidal layout, like the tokamak [https://en.wikipedia.org/wiki/Tokamak] and most stellarators [https://en.wikipedia.org/wiki/Stellarator], arrange their magnetic fields so the ions and electrons in the plasma [https://en.wikipedia.org/wiki/Plasma_(physics)] travel around the torus at high velocities. However, as the circumference of a path on the outside of the plasma area is longer than one on the inside, this caused several effects that disrupted the stability of the plasma.
+During the 1960s a number of different methods were used to try to address these problems. Generally they used a combination of several magnetic fields to cause the net magnetic field inside the device to be twisted into a helix. Ions and electrons following these lines found themselves moving to the inside and then outside of the plasma, mixing it and suppressing some of the most obvious instabilities.
+In the 1980s, further research along these lines demonstrated that further advances were possible by using external current-carrying coils to make the lines not just helical, but non-symmetric as well. This led to a series of experiments using C and D-shaped plasma volumes. [ citation needed [https://en.wikipedia.org/wiki/Wikipedia:Citation_needed] ] .
+By increasing the current in one (or more) shaping coils to a high enough degree, one (or more) 'X-points' can be created. An X-point is defined as a point in space at which the poloidal field has zero magnitude. The magnetic flux surface [https://en.wikipedia.org/wiki/Flux_surface] that intersects with the X-point is called the separatrix, and, as all flux surfaces external to this surface are unconfined, the separatrix defines the last closed flux surface (LCFS). Formerly, the LCFS was established by inserting a material limiter into the plasma, which fixed the plasma temperature and potential (among other quantities) to be equal to that of the limiter. Plasma that escaped the LCFS would do so with no preferential direction, potentially damaging instruments. By establishing an X-point and separatrix, the plasma edge is uncoupled from the vessel walls, and exhausted heat and plasma particles are preferentially diverted towards a known region of the vessel near the X-point.
+Cross-section
+[ edit ]
+In the simple case of a plasma with up-down symmetry, the plasma cross-section is defined using a combination of four parameters: [ citation needed [https://en.wikipedia.org/wiki/Wikipedia:Citation_needed] ]
+the plasma elongation ,
+κ
+=
+b
+a
+{\displaystyle \kappa ={b \over a}}
+, where
+a
+{\displaystyle a}
+is the plasma minor radius, and
+b
+{\displaystyle b}
+is the height of the plasma measured from the equatorial plane [https://en.wikipedia.org/wiki/Equatorial_plane],
+the plasma triangularity ,
+δ
+{\displaystyle \delta }
+, defined as the horizontal distance between the plasma major radius
+R
+{\displaystyle R}
+and the X point,
+the angle between the horizontal and the plasma last closed flux surface [https://en.wikipedia.org/wiki/Last_closed_flux_surface?action=edit&redlink=1] (LCFS) at the low field side,
+the angle between the horizontal and the plasma last closed flux surface (LCFS) at the high field side.
+In general (no up-down symmetry), there can be an upper-triangularity, and a lower-triangularity. [ 1 ]
+Tokamaks can have negative triangularity. [ 2 ] [ 3 ]
+External links
+[ edit ]
+Triangularity [http://fusionwiki.ciemat.es/wiki/Triangularity] - with diagram and source
+Ellipticity [http://fusionwiki.ciemat.es/wiki/Ellipticity] - with diagram and source
+References
+[ edit ]
+↑ Triangularity [http://fusionwiki.ciemat.es/wiki/Triangularity]
+↑ The negative triangularity tokamak: stability limits and prospects as a fusion energy system [http://iopscience.iop.org/article/10.1088/0029-5515/55/6/063013]
+↑ The negative triangularity tokamak: Stability limits and prospects as a fusion energy system. Medvedev [https://www.researchgate.net/publication/276429151_The_negative_triangularity_tokamak_Stability_limits_and_prospects_as_a_fusion_energy_system] eg see Fig 1
+Retrieved from "https://en.wikipedia.org/w/index.php?title=Plasma_shaping&oldid=1187115884 [https://en.wikipedia.org/w/index.php?title=Plasma_shaping&oldid=1187115884]"
+Category : Fusion power
+Hidden categories: Articles needing additional references from August 2017
+All articles needing additional references
+All articles with unsourced statements
+Articles with unsourced statements from December 2015
+This page was last edited on 27 November 2023, at 15:48 (UTC) .
+Page was rendered with Parsoid [https://www.mediawiki.org/wiki/Special:MyLanguage/Parsoid].
+Text is available under the Creative Commons Attribution-ShareAlike 4.0 License ;
+additional terms may apply. By using this site, you agree to the Terms of Use [https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Terms_of_Use] and Privacy Policy [https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Privacy_policy]. Wikipedia® is a registered trademark of the Wikimedia Foundation, Inc. [https://wikimediafoundation.org/], a non-profit organization.
+Privacy policy [https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Privacy_policy]
+About Wikipedia
+Disclaimers
+Contact Wikipedia
+Legal & safety contacts [https://foundation.wikimedia.org/wiki/Special:MyLanguage/Legal:Wikimedia_Foundation_Legal_and_Safety_Contact_Information]
+Code of Conduct [https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Universal_Code_of_Conduct]
+Developers [https://developer.wikimedia.org]
+Statistics [https://stats.wikimedia.org/#/en.wikipedia.org]
+Cookie statement [https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Cookie_statement]
+Mobile view
+[https://www.wikimedia.org/]
+[https://www.mediawiki.org/]
+Search
+Search
+Toggle the table of contents
+Plasma shaping
+1 language
+Add topic

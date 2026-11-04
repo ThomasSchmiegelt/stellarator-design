@@ -1,0 +1,17 @@
+Fertig. Recherche abgeschlossen für **Stellaris (Proxima Fusion) bzw. Stellarator-Kraftwerksentwurf: Spule-Plasma-Distanz**.
+
+**Ablauf (3 abruf.py-Abrufe, 5 Suche-Schritte):**
+1. `en.wikipedia.org/wiki/Proxima_Fusion` — bestätigt Stellaris-Konzept (Feb 2025), keine geometrischen Distanzwerte; Zeiger auf das FED-Paper (10.1016/j.fusengdes.2025.114868).
+2. DOI des Stellaris-Papers — ScienceDirect blockt den Abruf, 0 Treffer → **Stellaris-Eigenwert: nicht gefunden**.
+3. J. Plasma Phys. 2025 „A quasi-isodynamic stellarator configuration **towards a fusion power plant**" (Goodman et al., Cambridge, Open-Access-PDF) — enthält genau die gesuchte Größe.
+
+**Ergebnis (`zeilen/04.md`, 5 Zeilen):**
+| Größe | Wert |
+|---|---|
+| Stellaris (Proxima) coil-plasma distance | nicht gefunden (Paywall) |
+| Coil–plasma clearance c/a, **min** (5-Spulen-Coilset) | **0.868 a** |
+| Coil–plasma clearance c/a, max (Reichweite) | 0.992 a |
+| Normierung: a = Minorradius; Kraftwerksskala | R = 20.13 m, a = 1.91 m |
+| Vergleich W7-X | c/a ∼ 0.55 |
+
+**Prüfung:** `pruefe.py` → **5 Belege bestätigt, 0 Fehler** (Ausgabe in die Datei übernommen).

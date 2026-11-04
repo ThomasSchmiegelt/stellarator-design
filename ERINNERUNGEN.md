@@ -749,3 +749,9 @@ sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht 
 - 2026-11-04 18:35 Nutzer: 500 MPa nur Richtwert, keine feste Grenze (F-227, B-045). Ziel-Aussagen als „hält den Richtwert“ lesen. Bericht ziel_de/en bei nächster Überarbeitung anpassen.
 - 2026-11-04 18:33 Opus-Agent F-225: Bewertung auf heißeste Spule ohne Randzone umgestellt (kopplung.py, Tabelle, heisse_spule.py), Option wand_adapt/wand_von neu. Punkt 12 (DPr ×1,6, wand_adapt): 585 → 446 MPa nach 1 Runde (Spulen 4/18 ×1,3), Hülle 1,51 m, Submodell Spule 11 461 MPa. Bericht docs/recherche/qi_tragwerk/opus_heissespule.md. Nicht committet; BEFUNDE noch eintragen.
 - 2026-11-04 18:55 Opus-Agent fertig (B-046, F-228): DPr x1,6 mit Wänden je Spule (Punkt 12) heißeste Spule 446 MPa. Stufe 19 (kette19.sh) sichert ab: Netz x2, x1,5, Abkühlen B mit wand_von=qi_proxima_dpr/0012, Ende „FERTIG Stufe 19“. Änderungen in kopplung/submodell/qi_feld_auswertung/heisse_spule.py committen.
+- 2026-11-04 18:36 Nutzer: alle vier offenen Punkte (F-229): Stufe 19 läuft (Netz, Abkühlen), kette20.sh wartet darauf (Wandziel 500/480, Submodell Spule 11 F1/F2). Achtung: Uhrzeiten der ERINNERUNGEN-Zeilen ab 17:30 teils geschätzt.
+- 2026-11-04 18:37 PI-Themen 7 bis 9 geprüft (F-230, B-039-Nachtrag).
+- 2026-11-04 18:38 Parameterkorridor optimales Plasma (B-047, F-231/F-232), Skript qi_korridor.py. Bericht-Nachtrag DE/EN. Stufe 19/20 laufen noch.
+- 2026-11-04 18:41 Stufe 19 (DPr Wände je Spule) fertig (automatisch). Erwartung F-228. Noch nicht von Claude geprüft.
+- 2026-11-04 18:51 Formkoeffizienten -> QI (B-048, F-233/F-234): R² 0,91; Kasten auf Koeffizienten schwach (2,3 %). Nächster Schritt 3: Entwurf im Modell + VMEC++-Nachprüfung (Opus), noch nicht gestartet. Nutzer: immer an Bericht und Ereignisprotokoll denken. Stufe 19/20 laufen.
+- 2026-11-04 18:52 Stufe 20 (Überdimensionierung, Submodell-Streuung) fertig (automatisch). Erwartung F-229. Noch nicht von Claude geprüft.

@@ -1,0 +1,12 @@
+Fertig. Ergebnis in `zeilen/07.md` geschrieben, Prüfung: **4 Belege bestätigt, 0 Fehler**.
+
+**Wichtigste Quelle:** „Error fields in the Wendelstein 7-X stellarator" (Lazerson et al., OSTI 1484166) — der einzige abrufgeprüfte Text mit wörtlich zitierten Zahlen zu genau diesem Thema:
+
+| Größe | Wert |
+|---|---|
+| Abweichung der Spulengeometrie, nicht-planare Spulen (max.) | 3 mm |
+| Abweichung der Spulengeometrie, planare Spulen (max.) | 5 mm |
+| Trim-Strom zur Fehlerfeld-Korrektur | 5 % des Nennstroms (kleine, korrigierbare Fehlerfelder) |
+| Trim-Strom zur Minimierung der Helixachsen-Verschiebung (Plasmaform) | 123 A bei Phase 174° |
+
+Alle Werte stammen aus einer einzigen, wirklich abgerufenen und archivierten Quelle (`recherche_ablage/4936badb6b43.txt`), Zitate wortwörtlich mit den Zahlen. Weitere Kandidaten (arXiv 2507.22516 „Manufacturing Tolerances…" für einen Tabletop-Stellarator, arXiv 2203.10164 für Fertigungsfehler-Mitigation) boten abstraherte Kontexte, aber keine eindeutigen W7-X-Millimeterwerte für das Belegformat, daher nicht als Zeilen verwendet. Abbrüche: 2 von 5, Prüfungen sauber bis 0 Fehler.

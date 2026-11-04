@@ -1,0 +1,11 @@
+Fertig – **1 Beleg bestätigt, 0 Fehler**.
+
+**Ergebnis (`zeilen/09.md`):**
+
+| Größe | Ergebnis |
+|---|---|
+| Dicke Kacheln Graphit/CFC | **nicht gefunden** – Wikipedia (en) bestätigt „graphite tiles“ auf wassergekühlten Kupfer-Rückplatten, aber keine Millimeterzahl; die Papiere mit den Dicken (IOP, ScienceDirect) waren für abruf.py blockiert |
+| Dicke Kacheln Wolfram | **nicht gefunden** – gleiche Quellenlage; der OSTI-Artikel bestätigt nur „tungsten-coated graphite tiles and … pure metal tiles“ |
+| Wärmelast am Divertor | **3–4 MW/m²** (max. gemessen, attached, βpeak ≈ 5 %) – Beleg wörtlich aus dem frei zugänglichen OSTI-Papier „Overview of Wendelstein 7-X high-performance operation“ |
+
+**Verlauf:** 5/5 Abrufe (Wikipedia W7-X, FZ-Jülich-PDF [Textextraktion leer], OSTI 3366832, arXiv-Abstract), dazu 5 Suchläufe. Die Kachel-Dicken sind ehrlich als *nicht gefunden* markiert (Regel 4) – sie stehen nur in blockierten IOP-Artikeln, die ich nicht raten darf. Protokolliert in `zeilen/09.log`.

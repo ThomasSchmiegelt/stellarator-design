@@ -1,0 +1,16 @@
+Fertig — `zeilen/05.md` geschrieben, **pruefe.py: 5 Belege bestätigt, 0 Fehler** (Ausgabe in die Datei eingefügt).
+
+Ergebnis im Überblick:
+
+| Thema | Größe | Wert |
+|---|---|---|
+| ARC (V3A, CFS) | Feste Inboard-Wand (5 mm W-FW + 1 cm + 4,5 cm Kühlraum + 3 cm Vanadium-Gefäßwand) | **0,095 m** |
+| ARC | Dicke des Inboard-Blankets | nicht gefunden (V3A nutzt ein Flüssig-FLiBe-Immersions-Blanket ohne feste Inboard-Dicke) |
+| SPARC | Dicke der Abschirmung Plasma→TF-Spule | nicht gefunden (Abschirmmaterial zwischen VV und TF-Spulen nur qualitativ beschrieben) |
+| EU-DEMO-basierter Pionierreaktor (Chislett-McDonald 2022, HCPB nach EU-DEMO) | Inboard-Blanket | **0,53 m** |
+| dito | Strahlungs-Abschirmung | **0,25 m** |
+| EU-DEMO (offizielles Design) | – | nicht gefunden |
+
+Hinweise:
+- 5/5 Abrufe verwendet (SPARC-Overview, Chislett-McDonald arXiv, FENDL-Paper, ScienceDirect 403, ARC-V3A-Overview). Die 0,53 m/0,25 m stammen aus arXiv:2205.04441 – dort ein auf EU-DEMO-HCPB basierendes Design, nicht die offizielle EU-DEMO-Zeichnung; das habe ich in der Themen-Zelle transparent gekennzeichnet.
+- Die „klassische“ Inboard-Wand-Dicke des ursprünglichen ARC-Referenzdesigns (Greenwald 2016, Festkörper-Blanket) war nicht frei abrufbar (Elsevier 403 – Quelle daher verworfen). Falls gewünscht, würde ich das in einem Folgeterm mit neuem Abruf-Budget über eine offene Version nachtragen.

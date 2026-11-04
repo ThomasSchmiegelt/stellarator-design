@@ -1,0 +1,11 @@
+Fertig. Ergebnis liegt in `zeilen/02.md`, Prüfung: **5 Belege bestätigt, 0 Fehler**.
+
+Zusammenfassung (Quelle: KIT-Dissertation Häußler, „Computational approaches for nuclear design analyses of the stellarator power reactor HELIAS“, KITopen-PDF; Abrufe: MDPI abgelehnt (403), KITopen-Landing, PDF – 2 Abrufe erfolgreich):
+
+| Größe | Wert |
+|---|---|
+| Dicke Blanket + Abschirmung gesamt (zwischen Plasma und Spulen) | **1,3 m** („blanket and a shield between plasma and magnetic coils with total thickness of 1.3 m“) |
+| Dicke Breeder-Blanket (HCPB, radial, uniform) | **50 cm** („breeding blanket layer … uniformly 50 cm“ → Abschirmungsanteil ≈ 0,8 m) |
+| Dicke Abschirmung (allein, als eigene Zahl) | nicht gefunden (nur implizit aus der Differenz 1,3 m − 0,5 m) |
+| Abstand Plasma zur Spule | mindestens **1,3 m** (dazwischen liegen Blanket + Abschirmung; exakter Spuleninnenradius nicht separat angegeben) |
+| Major radius / thermische Fusionsleistung (Kontext) | 22 m / 3000 MW |

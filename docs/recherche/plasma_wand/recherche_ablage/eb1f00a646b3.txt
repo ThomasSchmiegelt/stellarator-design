@@ -1,0 +1,956 @@
+URL: https://www.osti.gov/servlets/purl/3412479
+     Vacuum vessel design with lofted toroidal surfaces for a
+                      QHS configuration
+
+     John Schmitta,b,∗, Dieter Boeyaertc , Aaron Badera,c , Robert Daviesd , Heinke
+                        Frerichsc , Kelly Garciac , Jacob Nesbite
+                 a Type One Energy Inc., Madison, WI, United States of America
+                   b Auburn University, Auburn, AL, United States of America
+           c University of Wisconsin-Madison, Madison, WI, United States of America
+                 d Max-Planck Institute for Plasma Physics, Greifswald, Germany
+                 e Physical Science Lab, Madison, WI, United States of America
+
+
+
+
+    Abstract
+
+    A vacuum vessel in between the hot plasma and the magnetic coils is crucial for
+    a fusion reactor. In this work, a tool is presented to perform the initial design
+    of such a vessel automatically. Starting from the last closed flux surface, an
+    algorithm is developed which lofts this manifold out as much as possible. At
+    the same time, the algorithm makes sure that no intersection with the coils takes
+    place. In the presented work, this algorithm is applied to the HSX stellarator
+    and it has been verified that the resulting vessel wall can be built from an
+    engineering perspective. Using field line tracing, the strikepoints on the vessel
+    wall are examined indicating the initial locations for a divertor.
+    Keywords: lofting, vacuum vessel, HSX
+
+
+1   1. Introduction
+
+2      To operate a fusion device, a vacuum vessel is crucial to place in between
+3   the hot plasma and the magnetic coils. In this work, a tool is presented which
+4   provides the starting point for a vessel design automatically. By using the last
+5   closed flux surface (LCFS) as a reference, the vessel wall is lofted outwards as
+6   much as possible and at the same time it is verified that no intersection with
+
+      ∗ Corresponding author
+
+       Email address: john.schmitt@typeoneenergy.com (John Schmitt )
+
+
+    Preprint submitted to Nuclear Fusion                                       March 29, 2024
+ 7   the coils takes place. This creates open spaces between the LCFS and the coils
+ 8   which allows good access for blankets, heating, fueling, diagnostics, and exhaust.
+ 9   Maximizing the usable volume sometimes competes with the restriction that
+10   the complex shapes need to be manufactured and assembled in a cost-effective
+11   procedure, so some choices can not be automated and require expert (human)
+12   guidance.
+13      Vessel design is determined by the location where the plasma-wall interac-
+14   tions (PWI) take place. In tokamaks and stellarators, the main PWI happens
+15   at the divertor or limiter. For W7-X it has been shown that field line tracing
+16   is a powerful tool to determine these locations [1]. When the location of the
+17   PWI is determined, the vessel should be built in such a way that it surrounds
+18   the location from the PWI and that there is sufficient space to put a divertor
+19   or limiter. In ref. [2], the resiliency of an HSX wall with respect to changes
+20   in the magnetic equilibrium has been studied. In there, simple wall expansions
+21   lofting have been employed to loft the wall uniformly some centimeters outside
+22   the LCFS as HSX currently has a small edge. This is taken as a starting point
+23   for further studies on vessel and divertor design.
+24      The design process of the 3-D divertor requires more detailed modeling,
+25   involvement of multiple engineering teams and multiple iterations for design
+26   refinements. Separating the detailed design of the divertor from the vacuum
+27   vessel sub-assembly can help the individual design teams move forward without
+28   the risk of losing reserved design space.
+29      The method presented here is a possible way to express and manipulate
+30   regions of space exterior to the plasma edge like a vacuum vessel. In many
+31   ways, this method is a generalization of the precursor method for divertor design
+32   described in ref. [1].
+33      For the proposed method, connection length (Lc ) maps play an important
+34   role as longer connection lengths agree with the locations of heat and particle
+35   flux wall deposition [3] where locations with smaller connection lengths do not
+36   undergo PWI and allow space for other components inside the vessel. The
+37   calculation of Lc in the edge also helps identify chaotic edge structures, such
+
+
+                                             2
+38   as heteroclinic tangles and turnstiles, which determine the heat and particle
+39   carrying channels of non-resonant divertors [4, 5]. For HSX the Lc map for
+40   the quasi-helically symmetric (QHS) configuration is shown in figure 1 at two
+41   toroidal angles, together with the corresponding ι profile. This QHS magnetic
+42   field, generated when each ‘main’ field coil carries the same amount of current,
+43   is optimized to minimize neoclassical transport. Therefore, this equilibrium is
+44   taken as a starting point for the "lofting effort" presented in this paper.
+
+
+
+
+     Figure 1: Connection length maps at Φ = 0◦ and Φ = 45◦ for a wall placed 7 cm away from
+     the last closed flux surface of the QHS configuration of HSX.
+
+
+45       This paper is organized as follows: The coordinate system and lofting pro-
+46   cedures are discussed in Section 2. Section 3 presents examples of how these
+47   lofted surfaces can be employed to find an initial guess for a large vacuum vessel
+48   and an initial guess for divertor plasma facing components. A summary and
+49   discussion of the results is in Section 4.
+
+
+50   2. Lofting
+
+51       The procedure of lofting a toroidal surface is outlined here. The inverse
+52   coordinate representation of a toroidal 2-D surface (manifold) in 3-D space and
+53   its outward perpendicular directions are described in Section 2.1. Sections 2.2.1
+54   - 2.2.4 present definitions of control points, intermediate points, a set of spline
+55   knots, evaluations points, and the loft distance, which represent the scaffolding
+56   on which the lofted surfaces are built. The loft is defined first at the control
+
+
+                                                  3
+57   points, and a series of simple transformations are applied to define the position of
+58   the final lofted surface defined at the evaluation points. Intersection- or collision-
+59   detection with coils and other obstructions is discussed in Section 2.3. A simple
+60   algorithm for automating the adjustment (lofting ‘in’ or ‘out’) is introduced in
+61   Section 2.4.
+62      The lofted surfaces can be exported to multiple formats, including the na-
+63   tive .mat format (MATLAB) and the STL-file format (STereoLithography), as
+64   discussed in Section 2.5. The use of a truncated 2-D Fourier transform of the
+65   manifold data is discussed in Appendix A. Section 2.6 describes the general-
+66   ization of the lofting method while starting from a different manifold than the
+67   LCFS.
+68      For convenience, the outward normal direction of the flux surface, projected
+69   into the Φ=constant plane, serves as the definition of the direction ‘away’ from
+70   the surface. In addition to rapid extrapolation of toroidal manifolds and interfer-
+71   ence checks with obstructions, these approximations enable direct compatibility
+72   with the input generators for the state-of-the art 3-D stellarator edge modeling
+73   tools (inc. FLARE [6], EMC3-Lite [7], and EMC3-EIRENE [8]), making this
+74   lofting method well-suited to be part of the the toolkit for studying edge-physics
+75   models of divertor and wall components.
+
+
+76   2.1. A 3-D toroidal surface and outward vectors
+
+        A toroidal surface can be represented with a 2-D series of Fourier harmonics
+     that describe the position of the surface, in R- and Z- space as a function of
+     poloidal- and toroidal-like angles θ and Φ [9]:
+                       X                               X
+           R(θ, Φ) =       Rmn,c (s) cos(mθ − nΦ) +        Rmn,s (s) sin(mθ − nΦ)      (1)
+                       X                               X
+           Z(θ, Φ) =       Zmn,c (s) cos(mθ − nΦ) +        Zmn,s (s) sin(mθ − nΦ)      (2)
+
+     The standard rectangular (Cartesian) coordinates are given by x = R cos(Φ)
+     and y = R sin(Φ). The outward normal direction in Cartesian coordinates,
+     perpendicular to the surface is constructed by taking the cross-product of the
+
+
+
+                                               4
+two in-surface tangent (covariant) coordinates.           An outward normal vector
+
+              eΦ | is expressed in (x, y, z)-coordinates as
+N̂ = |⃗⃗eeθθ ×⃗
+              eΦ
+             ×⃗
+                                                     
+                                        dy dz   dy dz
+                              ⃗ = x̂
+                              N               −                                (3)
+                                        dΦ dθ   dθ dΦ
+                                                     
+                                        dz dx dz dx
+                                  +ŷ         −
+                                        dΦ dθ   dθ dΦ
+                                                     
+                                        dx dy dx dy
+                                  +ẑ         −
+                                        dΦ dθ   dθ dΦ
+The normalization term is given by:
+                                             p
+                                    |N | =    N⃗ ·N
+                                                  ⃗                            (4)
+
+and the normalized outward vector is:
+                                                  ⃗
+                                                  N
+                                       N̂ =                                    (5)
+                                                 |N |
+   Explicitly, the in-surface derivatives are:
+                     dx X
+                        =   −mRmn,c cos(Φ) sin(mθ − nΦ)                        (6)
+                     dθ
+                          X
+                        +   mRmn,s cos(Φ) cos(mθ − nΦ)
+                     dy   X
+                        =   −mRmn,c sin(Φ) sin(mθ − nΦ)                        (7)
+                     dθ
+                          X
+                        +   mRmn,s sin(Φ) cos(mθ − nΦ)
+                     dz X
+                        =   −mZmn,c sin(mθ − nΦ)                               (8)
+                     dθ
+                          X
+                        +   mZmn,s cos(mθ − nΦ)
+
+
+     dx X
+        =   nRmn,c [sin(mθ − nΦ) · cos(Φ) − cos(mθ − nΦ) · sin(Φ)]     (9)
+     dΦ
+            X
+          +   nRmn,s [cos(mθ − nΦ) · cos(Φ) − sin(mθ − nΦ) · sin(Φ)]
+     dy   X
+        =   nRmn,c [sin(mθ − nΦ) · sin(Φ) + cos(mθ − nΦ) · cos(Φ)]    (10)
+     dΦ
+            X
+          +   −nRmn,s [cos(mθ − nΦ) · sin(Φ) − sin(mθ − nΦ) · cos(Φ)]
+     dz   X
+        =   −nZmn,s cos(mθ − nΦ)                                      (11)
+     dΦ
+            X
+          +   nZmn,c sin(mθ − nΦ)
+
+
+                                             5
+        The outward normal vector, written in cylindrical coordinates, is:
+
+                           ⃗ cyl = R̂Ncyl,R + Φ̂Ncyl,yΦ + ẐNcyl,Z
+                           N                                                        (12)
+
+        The outward facing vector, constrained to be within the Φa -plane, consists
+     of only the R̂- and Ẑ- components of N
+                                           ⃗ cyl . It is denoted as N
+                                                                    ⃗ †cyl :
+
+                                 ⃗ † = R̂Ncyl,R + ẐNcyl,Z
+                                 N                                                  (13)
+                                  cyl
+
+
+77
+                                                   ⃗ † of the plasma surface will
+        The position vector and the outward facing N cyl
+
+78   serve as the foundation from which a lofted surface is constructed. The grids
+79   and scalar values that will facilitate this are introduced in the next section.
+
+
+80   2.2. Control Points, Intermediate Points, Evaluation Points and Defining the
+81        Lofted Surface
+
+82      The method uses a set of scalar loft values and several 2-D grids (poloidal
+83   by toroidal) associated with some boundary shape with periodic boundary con-
+84   ditions in the toroidal and poloidal direction. Typically, the LCFS or an outer
+85   surface of the plasma is chosen as the boundary. The first grid is a coarse mesh
+86   of control points with an associated set of loft-values. The second grid is the
+87   set of intermediate points which shares the same poloidal grid step-size as the
+88   control mesh, and (typically, but not necessarily) a higher toroidal-mesh density.
+89   The loft values associated with the intermediate mesh are defined by interpola-
+90   tion between the straddling control points in the toroidal direction. The third
+91   grid, the highest resolution one, is the set of evaluation points. The values of the
+92   loft at evaluation points are based on spline curves defined by the intermediate
+93   mesh along Φ=constant contours.
+
+
+94   2.2.1. Control Points
+95      The control points, SCP , are defined on a 2-D (poloidal x toroidal) grid in
+96   (θi , Φj )-space, separated in the poloidal and toroidal directions by ∆θ and ∆Φ :
+
+
+
+
+                                              6
+                            SCP (i, j) = (R(θi , Φj ), Z(θi , Φj ), Φj )              (14)
+
+                                      θi =(i − 1)∆θ                                   (15)
+
+                                     Φj =(j − 1)∆Φ                                    (16)
+
+97       Expressions for R and Z are given in Eqns. 1 and 2. Here, the last-closed flux
+98    surface is chosen as a reference surface for Rmn and Zmn coefficients. The set of
+99    θi spans [0, 2π]. If stellarator symmetry is assumed, then Φj spans [0, π/NF P ],
+100   where NF P is the number of field periods of the device. If stellarator symmetry
+101   is not assumed, then the Φj -grid is chosen to cover either a full period or the
+102   full device, whichever is appropriate for the case.
+103      A section of the last-closed flux surface of QHS (grey surface) and Control
+104   Points (large blue points) are shown in Figure 2. The outward normal N
+                                                                           ⃗ and in-
+                     †
+105   plane normal N̂cyl vectors at these locations are shown as blue and red arrows,
+106   respectively. The control points combined with the lofting distance serve as the
+107   ‘anchors’ or base points from which the rest of the surface is constructed.
+
+
+108   2.2.2. Intermediate Points
+         The intermediate points, SIP , are defined on a grid with the same- or higher-
+      grid density in the toroidal directions (smaller step sizes in toroidal angles):
+
+                                               ∆θ ′ ≡ ∆ θ                             (17)
+
+                                               ∆Φ′ ≤ ∆Φ                               (18)
+
+
+                          SIP (i′ , j ′ ) = (R(θi′ , Φj ′ ), Z(θi′ , Φj ′ ), Φj ′ )   (19)
+
+                                    θi′ =(i′ − 1)∆θ′                                  (20)
+
+                                   Φj ′ =(j ′ − 1)∆Φ′                                 (21)
+
+      For convenience, the toroidal step-size is chosen so that
+
+                                              SCP ⊂ SIP                               (22)
+
+
+                                                     7
+      Figure 2: Two views of the last closed flux surface (in grey). Control points (SCP ) are shown as
+      large blue points. Intermediate Points (SIP ) are shown as large magenta points (SCP ⊂ SIP
+      in this example). The evaluations points are shown as the small blue and magenta points.
+      (SCP ⊂ SEP and SIP ⊂ SEP in this example). At the location of the control points, the
+      outward normal vector, N̂ and its projection into the Φ = constant plane, N̂cyl are shown as
+      blue and red arrows, respectively.
+
+
+
+109   A subset of intermediate points are shown in Figure 2 as large magenta points.
+110   Due to the constraint given by Eqn. 22, a subset of intermediate points are
+111   co-located with the large blue points in this example.
+
+
+112   2.2.3. Evaluation Points
+          The evaluation points, SEP , are defined on a grid with the same toroidal grid
+      density as the intermediate points. The poloidal gird density, however, could
+      have the same or higher grid density.
+
+                                                   ∆θ′′ ≤ ∆θ                                      (23)
+
+                                                  ∆Φ′′ ≡ ∆Φ′                                      (24)
+
+
+                           SEP (i′′ , j ′′ ) = (R(θi′′ , Φj ′′ ), Z(θi′′ , Φj ′′ ), Φj ′′ )       (25)
+
+                                       θi′′ =(i′′ − 1)∆θ′′                                        (26)
+
+                                      Φj ′′ =(j ′′ − 1)∆Φ′′                                       (27)
+
+
+                                                          8
+113   A subset of evaluations points are shown in Figure 2 as small magenta or small
+114   blue points. The points that are shown as large magenta (SIP ) and large blue
+115   points (SCP ) are also co-located with points in the SEP grids in this example.
+
+
+116   2.2.4. Defining the Lofted Surface
+117       Three sets of loft values, LCP (i, j), LIP (i′ , j ′ ), and LEP (i′′ , j ′′ ) are associated
+118   with the elements of SCP (i, j), SIP (i′ , j ′ ), and SEP (i′′ , j ′′ ) respectively. The
+119   scalar value of each LCP (i, j) is considered ‘known’, e.g. chosen by the user or
+120   generated by some algorithm. The elements of LIP (i′ , j ′ ) and LEP (i′′ , j ′′ ) are
+121   constructed in two steps, or transformations described here.
+122       The first transformation performs a linear interpolation of LCP (θi , Φj ) in
+123   the Φ-direction (at constant θ) to generate LIP (θ, j ′ ) at each j ′ .
+124       The second transformation involves generating spline curves with knots de-
+125   fined by elements of LIP along constant-Φ contours. Each pair of (θi′ , LIP (i′ , j ′ ))
+126   that is defined at a single toroidal angle specifies a ‘knot’ point for a spline-fit
+127   displacement curve, D(θ)j ′ parameterized along the poloidal direction θ. The
+128   spline curve is designed to be continuous and to have continuous 1st-derivatives
+129   w.r.t. the poloidal angle. These knot points correspond to the large magenta
+130   and large blue points in Figure 2 and Figure 3 (bottom row) and to the large
+131   black points in the top row of Figure 3. The values of LEP (i′′ , j ′′ ) are deter-
+132   mined by evaluating the appropriate displacement curve at θi′′ , D(θ = θi′′ )j ′′
+133   (i.e. Figure 3, top row).
+134       Regardless of the underlying (stellarator) symmetry of the magnetic config-
+135   uration, up-down symmetry of the LCP (and hence, LIP and LEP ) is enforced
+136   at the limits of the toroidal domain, Φ = [0, Φmax ]. The intent here is to allow
+137   for some form of automated fitting/smoothing in the poloidal direction with the
+138   grid size in the toroidal direction selected by the user to be consistent with the
+139   spatial constraints of the specific problem on hand.
+140       The set of vectors directed in the outward direction at the location of each
+141   element of SEP (i′′ , j ′′ ), denoted as N̂EP (i′′ , j ′′ ), is given by Equation 12. Recall
+142   that this vector lies within the plane at Φ = Φa (orthogonal to ∇Φ|Φ=Φa ).
+
+
+                                                     9
+      Figure 3: Top Row: Large black points: The loft value LIP as a function of the poloidal angle
+      θ at a constant-Φ grid location. These (θ, LIP )-pairs are used as knots for spline interpola-
+      tions.
+      Top Left: Small black points: Values of LEP using a cubic-spline interpolating function.
+      Top Right: Small black points: Values of LEP with a piecewise-continuous interpolating func-
+      tion.
+      Bottom Row: SCP , SIP , SEP See Figure 2 for more detail. A surface that is lofted with a
+      constant offset of 3 cm is shown in gray.
+      Bottom Left: A section of the lofted surface with the cubic-spline interpolation in blue.
+      Bottom Right: A section of the lofted surface with the piecewise-continuous spline interpola-
+      tion in orange.
+
+
+          A lofted surface, SLof t , is constructed relative to the reference surface with
+      the aid of SEP , by the moving inward (+) or outward (-) in the direction of
+      N̂EP by a distance determined by LEP :
+
+                        SLof t = SEP (i′′ , j ′′ ) + LEP (i′′ , j ′′ ) · N̂EP (i′′ , j ′′ )       (28)
+
+143       The choice of the spline-fit interpolating function affects the lofted surface,
+144   as shown in Figure 3. In the top row of plots, the control points (large black
+145   points) and intermediate points (small black points) are shown along the poloidal
+146   direction, θ. In the case shown on the left, a cubic-spline fit interpolating
+
+
+                                                       10
+147   function (Matlab’s ‘spline’, [10] is used. For the case shown on the right, a cubic
+148   Hermite interpolating polynomial is used (Matlab’s ‘pchip’, [11]. The bottom
+149   row of plots show a subsection of the lofted surface where the loft distances at
+150   the control points for two adjacent toroidal sections, LCP (i, j) and LCP (i, j + 1)
+151   were assigned the values of the curves shown in the top row of plots. The
+152   plot of the left uses the loft distances from the cubic-spline fit, and the plot on
+153   the right use the loft distances based on the Hermite interpolating polynomial.
+154   Control points are shown as large blue points, large magenta points are the
+155   interpolated knot-points for D(θ)j ′ . The small points are elements of SEP . The
+156   location of the control points are the same for each case. Most of the points are
+157   lofted at 3 cm, except for the control points at π/3 and π. These are chosen
+158   to be lofted to 8 cm. The case with the cubic-spline fit has oscillations of
+159   the lofted surface (w.r.t the 3 cm uniformly offset surface in gray) that extend
+160   beyond the neighboring knots and can be seen as extended ripples in the poloidal
+161   direction on the lofted surface (blue surface, lower left). The piecewise Hermite
+162   interpolating polynomial results exhibit neither overshoot nor any oscillations
+163   that extend beyond the nearest knot. This comparison is shown in the lower
+164   right plot where this latter surface is plotted (in orange) with the reference 3
+165   cm surface (in grey). The surfaces appear to merge with no notable differences
+166   outside of the vicinity of the 8 cm offsets. Because of these favorable properties,
+167   the rest of the results shown in the paper use the piecewise Hermite interpolating
+168   polynomial method.
+
+
+169   2.3. Interference points: coils and other obstructions
+
+170      For the goals of this work, the lofted surface will be adjusted to achieve
+171   various goals. Two different surfaces are desired:
+
+172      • Find the largest reasonable definition of a vacuum vessel exterior manifold
+173         that encloses the largest volume possible, avoids collisions with the exter-
+174         nal coils (or some proxy), and has minimal sharp excursions or localized
+175         sharp features.
+
+
+
+                                              11
+176      • Find the minimal enclosing manifold that surrounds the plasma and the
+177         nearby scrape-off-layer/edge region that surrounds the plasma.
+
+178      The repeated calculation of interference checks with ‘static’ objects such as
+179   coil sets, support structures, or other closely related models, will be facilitated
+180   with a set of interference points IIP for each obstacle at each toroidal angle
+181   in the mesh of intermediate points, SIP . An example is shown in Figure 4.
+182   Here, the corners of the copper coil conductors are shown as filamentary black
+183   lines. A subset of SIP is shown as small blue and magenta points on the left
+184   plot. The intersection of the coils filaments with the toroidal planes-of-interest
+185   are shown with blue and magenta ‘+’ symbols on both plots and form the set
+186   of IIP,Coil . The blue points are associated with the SCP and SIP , while the
+187   magenta points are associated only with SIP . A tolerance is included in order
+188   to capture intersections/projections with filaments that are defined to extend
+189   vertically and would otherwise not intersect / lie at the same toroidal angle as
+190   one defined in the set of evaluation points.
+191      An ‘interference check’ between the lofted surface and other external ob-
+192   structions (i.e. coils, scrape-off-layer) is achieved by first constructing a set of
+193   polygons, one for each toroidal angle of SLof t . Then, the winding number is
+194   calculated for each of the points in IIP at each particular toroidal angle. Points
+195   whose winding number is ‘0’ lie outside of the polygon at that toroidal angle
+196   (and outside of the surface). Points with winding number ‘1’ lie within the
+197   polygon and are enclosed by the lofted surface. The method outlined above
+198   can be extended to identify intersections between different toroidal manifolds.
+199   The intersections at individual toroidal planes manifest as points or poloidal
+200   contours at Φ = constant cross-sections. Rapid methods exist for calculating
+201   the winding number. For speed, fast in-plane interference checks are coupled
+202   with fast in-plane offset calculations. While a lofting algorithm that uses N
+                                                                                  ⃗ is
+
+203   more accurate, it is also computationally more expensive.
+204      An additional set of interference points, IIP,F LD serves as a proxy for iden-
+205   tifying the edge structure surrounding the plasma column. These points were
+
+
+                                              12
+      Figure 4: A section of the the last-closed flux surface, a section of of control points and
+      intermediate points, and the interference points of a single field coil of HSX. The blue points
+      are associated with both SCP and SIP while the magenta points are associated with only
+      SIP . The affiliation holds for the points of IIP,Coil which re shown as small ‘+’ symbols. The
+      black filaments are the contours of the corners of the finite build coil structure.
+
+
+
+206   generated with the FLARE code [6] by performing field-line tracing with finite
+207   field-line diffusion as a proxy for particle and heat transport. A total of 600 field
+208   lines were launched from inside the LCFS until their trajectory intersected with
+209   a component of the wall model. Out of the total, 400 of the lines were launched
+210   with the effective diffusivity, D⊥ = vth DF L of an electron with Te ∼ 1 eV,
+211   while 200 of the lines were launched with a diffusivity of a much hotter electron,
+212   Te ∼ 280 eV. These are shown in figure 5. For this step, the bounding wall
+213   for the FLARE simulation was defined to be a surface lofted 7 cm away from
+214   the LCFS of the QHS configuration. The clearance between this surface and
+215   the coils is only a few mm in many places and would not serve well as vacuum
+216   vessel wall, but it serves well for FLARE field-line following calculations in this
+217   step.
+
+
+
+
+                                                    13
+      Figure 5: Interference points, IIP,F LD calculated by FLARE with diffusing field lines launched
+      from within the last closed flux surface and limited by a surface lofted 7 cm away from the
+      LCFS. Only a subset of the total set are shown. Points shown in red correspond to particles
+      with Te ≈ 1 eV and points in blue correspond to particles with Te ≈ 280 eV.
+
+
+
+218   2.4. Auto-lofting: The Algorithm Loop
+
+219       Beginning with some initial guess, LCP,init (i, j), the values of LCP (i, j) can
+220   be adjusted by an optimizer and collisions (or collision avoidance) with interfer-
+221   ence points IIP can be used as a proxy metric to define manifolds that surround
+222   or exclude certain regions of space. A simple algorithm for a step-out/step-in
+223   search algorithm is shown in figure 6. A set of nested-for loops provide the
+224   means to ‘scan’ over the entire array of control points. The algorithm utilizes a
+225   mask array, MAdj (i, j), as an array of of True/False logic flags to indicate if the
+226   corresponding control point should still be included in the attempt to step-out
+227   (or in). If it is enabled, then the LCP (i, j) is adjusted by a small distance, ∆E .
+228   SLof t is re-calculated and interference checks with IIP are performed. Here,
+229   interference with coils is usually a feature to avoid, while enclosing all of the
+230   collisions with diffusing field lines is a favorable characteristic. If an undesired
+231   collision is detected, the point LCP (i, j) is moved back, SLof t is updated, and
+232   the the value of MAdj (i, j) is set to False. The scan is continued/repeated until
+233   there are no eligible points to move. After the scan is complete, an optional
+234   ‘post-autoloft’ adjustment (not shown in the flowchart) can be applied to LCP
+235   to define nested toroidal manifolds of nearly uniform thickness.
+236       The value of ∆e is kept constant during the auto-lofting procedure. After
+237   the loop has finished, ∆e can be reduced and the auto-loft can be repeated to
+
+
+                                                    14
+238   create a surface that is more closely bounded by the choice of IIP .
+
+       Initialize grids, loft values at control
+       points, 𝐿!" 𝑖, 𝑗 , and adjustment                                      Is 𝑀#$% 𝑖, 𝑗            Yes         Adjust the ’loft’ at the control point 𝐿!" 𝑖, 𝑗 :
+       mask, ∀ 𝑖, 𝑗 , 𝑀#$% 𝑖, 𝑗 = 𝑇𝑟𝑢𝑒.
+                                                                              set to True?                        𝐿!" 𝑖, 𝑗 = 𝐿!" 𝑖, 𝑗 + Δ&
+       Initialize toroidal and poloidal
+       indices, 𝑖 = 1, 𝑗 = 1.                                                         No
+                                                                                                                  Propagate changes in 𝐿!" 𝑖, 𝑗 to 𝐿'" 𝑖′′, 𝑗′′
+                                                                            Increment 𝑖 by 1                      and construct 𝑆()*+ .
+
+
+                                                                    No
+                                                                               Is 𝑖 > 𝑖𝑚𝑎𝑥?
+                                                                                                                                     Are any coil
+                                                                                       Yes                                      interference points                   Yes
+                                                                                                                                  𝐼,",!)./ inside the
+                                                                                Set 𝑖 = 1                                       lofted surface 𝑆()*+
+                                                                            Increment 𝑗 by 1
+
+                                                                                                                                             No
+                                                               No
+                                                                               Is 𝑗 > 𝑗𝑚𝑎𝑥?
+                                                                                                                                     Are any FLD
+                                                                                       Yes                   No                 interference points
+                                                                                                                                  𝐼,",0(0 inside the
+                                                                             Is there at least                                  lofted surface 𝑆()*+
+                                                  Set 𝑖 = 1   Yes            one element in
+                                                  Set 𝑗 = 1                   𝑀#$% 𝑖, 𝑗 that
+                                                                                  is True?                                                  Yes
+
+
+                                                                                       No                         Set 𝑀#$% 𝑖, 𝑗 = False
+                                                                                                                  Move back 𝐿!" 𝑖, 𝑗 = 𝐿!" 𝑖, 𝑗 - Δ&
+                                                                                                                  Propagate the changes in 𝐿!" 𝑖, 𝑗 to
+                                                                                                                  𝐿'" 𝑖′′, 𝑗′′ ,
+                                                                                                                   Construct 𝑆()*+
+
+
+                                                                Finished. Lofted surface is given by 𝑆()*+
+
+
+
+
+      Figure 6: Auto-lofting: A flowchart for systematically adjusting the lofted toroidal surface
+      with interference checks with coils and diffusing field lines.
+
+
+
+
+239   2.5. Surface Export
+
+240         The lofted surface, SLof t , can be exported into a mesh of vertices and
+241   triangular patches consistent with the STL format.                                                                    The points located at
+242   (SLof t (i′ , j ′ ), SLof t (i′ + 1, j ′ ), SLof t (i′ , j ′ + 1), SLof t (i′ + 1, j ′ + 1)) form the
+243   vertices of a rectangular which is sub-divided into triangular patches. An exist-
+244   ing STL-file generation script [12] was simple enough to include in the workflow
+245   for exporting lofted surfaces to other CAD packages. Furthermore, a 2-D Fourier
+246   Transform algorithm is outlined in the Appendix.
+
+
+247   2.6. Multiple Lofts
+
+            The method may be generalized to allow several lofting steps using the 2-D
+      Fourier Transform of the intermediate lofted surfaces to define the location and
+      outward normal direction of the control and intermediate points at intermediate
+
+
+
+                                                                                              15
+      steps. For instance, a single intermediate step uses the first lofted surface,
+                            †     †     †        †
+      SLof t,1 , to define SCP , SIP , SEP and N̂EP (with indices i′′ and j ′′ ) such that:
+
+                                    †
+                        SLof t,2 = SEP (i′′ , j ′′ ) + L†EP (i′′ , j ′′ ) · N̂EP
+                                                                              †
+                                                                                 (i′′ , j ′′ )   (29)
+
+
+248   3. Surface Utility & Examples
+
+249      The base configuration considered here is the so-called quasi-helically sym-
+250   metric (QHS) configuration of the HSX stellarator, a 4 field period device with
+251   6 unique non-planar coils per half-field period. This QHS magnetic configura-
+252   tion is realized when each of the main non-planar coils are powered with equal
+253   current, IM 1 = IM 2 = IM 3 = IM 4 = IM 5 = IM 6 . A line-filament model of the
+254   corners of the copper conductors is used later in this section. Further details of
+255   HSX can be found in Reference [13].
+
+
+256   3.1. First wall
+
+257      The first example is a lofted surface that is 3 cm away from the last closed
+258   flux surface of the QHS configuration, Figure 7. This surface is very similar to
+259   the existing vacuum vessel and is very ‘compact’, i.e. is has abundant space
+260   (clearance) between the vessel and the coilset for assembly. However, very little
+261   room is available for a divertor, and the wall acts essentially as a limiter with
+262   large plasma-surface interaction regions close to the LCFS.
+263      Starting from a uniform lofted value of LCP = 7 cm, a surface was auto-
+264   lofted (see Section 2.4 and Figure 6 to within 1 cm of the set of interference
+265   points based on the line-filament model of the corners of the copper conductors.
+266   Subsequently, the loft was reduced by 2.54 cm (LCP ← LCP −2.54cm) to further
+267   increase the space between the coils and the surface. Without this reduction, the
+268   combined assembly of the coils with the vacuum vessel would require multiple
+269   vessel sections within a half-field-period to be joined either by welds or flanges,
+270   increasing the overall complexity of the vacuum vessel design and assembly
+271   strategy significantly. A similar surface is constructed if the auto-loft algorithm
+272   uses a loft step size of 3.54 cm with no post-autoloft step (=0). The differences
+
+
+                                                         16
+      Figure 7: Two views of the LCFS (cyan) and a manifold that is lofted 3 cm from the last
+      closed flux surface of the QHS configuration (transparent gray). This surface is very similar
+      to the existing vacuum vessel.
+
+
+
+273   are small, and vary with the relative step sizes and discrete steps of the loft
+274   step size. The former surface tends to conform more closely to the interference
+275   points, while the latter tends to conform more closely to the plasma.
+276       Two views of this reduced manifold are shown in figure 8. The param-
+277   eters that define the control and intermediate points are shown in Table 1.
+278   Other parameters of the auto-loft algorithm include an initial loft offset, and
+279   a ‘maximum’ loft distance defined which prevents control points from running
+280   out through poorly-constrained regions in space. The post auto-loft step is an
+281   additional adjustment that is applied to the already-refined surface.
+
+
+
+
+      Figure 8: Two views of the plasma LCFS (cyan) and a manifold that is auto-lofted to be within
+      1 cm of the nearest coil interference, and subsequently reduced by 2.54 cm (transparent gray).
+
+
+
+
+                                                   17
+             Parameter                Description                             Value
+
+             Φstart                   Toroidal angle of the
+                                      beginning of the section                0◦
+             Φend                     Toroidal angle of the
+                                      end of the section                      45◦
+             ∆Φ                       Control grid toroidal step size         9o
+                                      (Toroidal Control Points)               (6)
+             ∆θ                       Control grid poloidal step size         30o
+                                      (Poloidal Control Points)               (12)
+             ∆Φ′                      Evaluation grid toroidal step size      0.25◦
+                                      (Toroidal Evaluation Points)            (181)
+             ∆θ ′                     Evaluation grid poloidal step size      0.5◦
+                                      (Poloidal Evaluation Points)            (720)
+             Loft Initial Offset      Initial offset from target surface      7 cm
+             ∆e                       The loft step size                      1 cm
+             Max Offset               Maximum allowable loft value            40 cm
+             Post Auto-Loft Step      Modification to the lofted offset       -2.54 cm
+
+      Table 1: Lofting parameters for the control and intermediate grids for the vacuum vessel
+      auto-loft.
+
+
+
+282   3.2. Edge manifold
+
+283       An approximation of a volume-minimizing manifold around the diffusing flux
+284   lines can be found with the aid of the interference points IIP,F LD discussed in
+285   section 2.3 and shown in figure 5. The parameters of the control and interme-
+286   diate points for this edge manifold are in table 2. The auto-loft procedure was re-
+287   peated five times with decreasing step sizes of ∆e = −3 cm, −1 cm, −5mm, −2 mm, −1 mm,
+288   using the surface defined by one step as the initial staring surface for the next
+289   step. The surface found with the auto-loft using the first (largest) step-size is
+290   used as the initial surface for the second auto-loft, etc.
+291       The last-closed flux surface of the QHS configuration (blue surface), a subset
+
+
+                                                18
+                    Parameter               Value
+
+                    Φstart                  0◦
+                    Φend                    45◦
+                    ∆Φ                      2.25◦
+                                            (21 Toroidal Control Points)
+                    ∆θ                      1◦
+                                            (360 Poloidal Control Points)
+                    ∆Φ′                     0.25◦
+                                            (181 Toroidal Evaluations Points)
+                    ∆θ ′                    0.25◦
+                                            (1440 Poloidal Evaluations Points)
+                    Loft Initial Offset     7.5 cm
+                    ∆e                      -3 cm, -1 cm, -5 mm,
+                                            -2 mm, -1 mm
+
+      Table 2: Lofting parameters for the control and intermediate grids for the volume-minimizing-
+      manifold auto-loft.
+
+
+
+292   of interference points at the toroidal angles of the control points (in red), and
+293   the edge manifold of the 5th repetition of the auto-loft (with ∆e = 1 mm (semi-
+294   transparent manifold color-coded by vertical coordinate shown in Figure 9. The
+295   edge manifold is non-convex, and the effects of the finite step-size are visible
+296   on the boundary. High-order toroidal and poloidal ripple in the manifold can
+297   be partially reduced by converting the surface to a (truncated) spectral 2-D
+298   Fourier series and reconstructing the surface in real space (e.g. Appendix A).
+299   The result of such a transformation is shown in figure 10. In this figure, the mode
+300   spectrum includes all terms in the spectral range up to (Mmax , Nmax ) = (24, 44)
+301   with coefficients that exceed 1.0e-4. Because some amount of precision is lost
+302   in the the truncation, the reconstructed surface may no longer enclose all of the
+303   interference points, but a surface which is offset by a few mm (or more) can be
+304   constructed to enclose the set.
+
+
+                                                    19
+      Figure 9: The last-closed flux surface of the QHS configuration (blue surface). A subset of
+      interference points at the toroidal planes of the control Points (in red). The tightly-fitting
+      auto-lofted edge manifold (semi-transparent manifold color-coded by vertical coordinate.
+
+
+
+305   3.3. Initial analysis of strikeline locations
+
+306       Several lofted surfaces and interference Points at Φ = 0◦ , 45◦ are shown
+307   in figure 11. The black dash-dotted line is based on the auto-lofted surface
+308   (including the 2.54 cm offset inwards towards the plasma). The solid black
+309   and dotted black lines are offset by an additional 5 mm and 15 mm, respec-
+310   tively. The green dotted manifold is based on the reconstructed 2-D Fourier
+311   transformed surface.The solid green manifold is based on the reconstructed 2-D
+312   Fourier transformation of the auto-lofted surface which has been offset by an
+313   additional 5 mm away from the plasma. The black dashed line is based on a
+314   manifold with a uniform displacement of LCP = 3 cm from the plasma. Ma-
+315   genta and cyan points correspond to diffusing field lines which act as a proxy
+316   for electrons with Te ∼ 1 eV and 280 eV, respectively. The intersection of the
+317   green manifold and the black dotted line define regions where plasma-material
+318   interactions are predicted to occur (according to the diffusing field-line model)
+319   on the interior side of the vacuum vessel.
+320       Recent work has explored other possible QHS configurations that could
+
+
+                                                   20
+      Figure 10: A reconstructed 2D-Fourier Transform of the tightly-fitting Auto-Lofted manifold
+      of figure 9. The spectral range of the 2-D FFT/IFFT extends up to (Mmax , Nmax ) = (24, 44)
+      and includes terms whose coefficient exceeds 1.0e-4.
+
+
+
+321   be realized in HSX which exhibit modified elongation and predicted turbulent
+322   transport properties with a similar or better level of quasi-symmetry [14]. The
+323   modified plasma boundaries may have an impact on edge/SOL in the HSX
+324   configuration.
+
+
+325   4. Discussion and Summary
+
+326       This work has presented a simple method to loft a 3-D toroidal manifold in
+327   a direction perpendicularly outward/inward to its surface. A series of transfor-
+328   mations convert the lofting values defined at control points first onto a set of
+329   intermediate points and then onto the evaluation points defined on planes of
+330   constant toroidal angle. While not strictly necessary, the choice of working at
+331   constant Φ-planes allows for rapid calculation of the lofted surface.
+332       A set of interference points for coils and diffusing field lines proved to be
+333   useful to pre-generate as they provide points in space to exclude or enclose.
+334   An outline was shown for a simple automated routine to find maximal/minimal
+
+
+                                                   21
+      Figure 11: The projection of several lofted surfaces at Φ = 0 and a subset of the Poincaré map
+      of the diffusing field-lines. The black dashed-dotted line is based on the auto-lofted surface
+      (including the -2.54 cm post-autoloft offset). The solid black and dotted black lines are offset
+      by additional -5 mm and -15 mm. The dotted green manifold is based on the recontsruction
+      of the Fourier-transformed auto-lofted edge manifold, and the solid green manifold is similar,
+      but includes a +5 mm offset away from the plasma. The magenta and cyan points correspond
+      to diffusing field lines that act as a proxy for electrons with Te ∼ 1 eV and Te ∼ 280 eV,
+      respectively.
+
+
+
+335   volumes enclosed by lofted surface that include or exclude certain points in
+336   space. Exporting the surface data in STL format and as a 2-D Fourier series
+337   is possible, and multiple-stage lofted surfaces allow for very flexible manifold
+338   definitions. Two general cases, a quasi-volume-maximizing ‘Vacuum Vessel’ and
+339   a quasi-volume-minimizing ‘Edge Manifold’ are discussed.
+340       Automating portions of the vacuum vessel design, especially at early stages,
+341   can be useful for rapid virtual prototyping, enabling the ability to generate
+342   simplified-yet-relevant models of the vessel in a short amount of time with
+343   minimal human intervention. Larger vessels enable increased access and space
+344   for ports and input power injection routes. Diagnostic views can also be en-
+345   hanced/enabled because of the increased vacuum vessel boundary. Many aspects
+346   of the vessel design shape can also be applied to other components, including
+347   the breeding blanket and first wall. The assembly procedure may appear to be
+348   out-of-scope early in the design phase, but early availability of quality vessel
+349   designs may enable certain assembly choices to be made earlier in the process.
+
+
+                                                    22
+350       The analysis of the strike points of diffusing strike lines can inform the
+351   initial placement of plasma-facing components to form a divertor target in the
+352   edge region, but many physical aspects are neglected by this simplistic method,
+353   including neutral physics, more comprehensive collision models, electric fields,
+354   fluid effects, and more. This initial guess may be useful as a starting point from
+355   which more refined modeling can begin.
+
+
+356   Acknowledgements
+
+357       This work has been supported by the Department of Energy (DoE) under
+358   grant numbers DE-SC0014529, DE-SC0014210, DE-FG02-93ER54222, by the
+359   Research Forward program of the Vice Chancellor for Research and Gradu-
+360   ate Education at University of Wisconsin-Madison, WI, USA and by the Ad-
+361   vanced Opportunity Fellowship (AOF) through the Graduate Engineering Re-
+362   search Scholars (GERS) at University of Wisconsin—Madison, WI, USA. The
+363   authors thank Rex Wagner for mechanical and CAD models of coils of the HSX
+364   coilset. Our gratitude is also extended to Kurt Studt and Jeffrey Cherwinka
+365   for valuable discussions regarding the design challenges of 3-D toroidal vacuum
+366   chambers.
+367       The figure data is available at Zenodo at https://zenodo.org/records/
+368   10871407. The Matlab code used for the generation of the surfaces in this pub-
+369   lication is available at https://github.com/jcschmitt/Stelloft_UW_mlab.
+
+
+370   Appendix A. 2-D Fourier Transform
+
+          Let the 2-D Fourier transform of the lofted surface SLof t be denoted as
+      SLof t :
+
+                          2-D Fourier Transform [SLof t ] → SLof t                (A.1)
+
+
+
+
+                                             23
+      A convenient alternate set of inverse 2-D coordinates equations is given by:
+                X                                     X
+      R(θ, Φ) =    Rm,n,c (s) cos(mθ + N F P · nΦ) +     Rm,n,s (s) sin(mθ + N F P · nΦ)
+                                                                                           (A.2)
+                    X                                         X
+      Z(θ, Φ) =         Zm,n,c (s) cos(mθ + N F P · nΦ) +         Zm,n,s (s) sin(mθ + N F P · nΦ)
+                                                                                           (A.3)
+         The coefficients for the truncated set of 2-D Fourier harmonics can be defined
+      as follows:
+                ∆θ′ ∆Φ′                                      ∆θ′ ∆Φ′
+        Dnorm =         : m = 0, n = 0            Dnorm =            : otherwise (A.4)
+                 2π 2                                          4π 2
+                      XX
+        Rm,n,c =Dnorm        R (θi′ , Φj ′ ) cos(m ∗ θ) ∗ cos(nζ) − sin(m ∗ θ) ∗ sin(nζ)
+                            i′   j′
+
+                                                                                           (A.5)
+                           XX
+        Rm,n,s =Dnorm                 R (θi′ , Φj ′ ) sin(m ∗ θ) ∗ cos(nζ) + cos(m ∗ θ) ∗ sin(nζ)
+                            i′   j′
+
+                                                                                           (A.6)
+                           XX
+        Zm,n,c =Dnorm                 Z (θi′ , Φj ′ ) cos(m ∗ θ) ∗ cos(nζ) − sin(m ∗ θ) ∗ sin(nζ)
+                            i′   j′
+
+                                                                                           (A.7)
+                           XX
+        Zm,n,s =Dnorm                 Z (θi′ , Φj ′ ) sin(m ∗ θ) ∗ cos(nζ) + cos(m ∗ θ) ∗ sin(nζ)
+                            i′   j′
+
+                                                                                           (A.8)
+
+371   The indices i′ and j ′ span over the poloidal and toroidal grid dimensions, respec-
+372   tively, and ∆′θ and ∆Φ′ are the step sizes. This follows the same convention as
+373   Nescoil and Regcoil winding surfaces where the toroidal angle is in the opposite
+374   direction compared to the VMEC-like convention.
+
+
+375   References
+
+376    [1] E. Strumberger, SOL studies for W7-X based on the island divertor concept,
+377        Nuclear Fusion 36 (7) (1996) 891–908.
+
+378    [2] A. Bader, A. Boozer, C. Hegna, S. Lazerson, J. Schmitt, HSX as an example
+379        of a resilient non-resonant divertor, Physics of Plasmas 24 (3) (2017).
+
+
+                                                    24
+380    [3] K. Garcia, A. Bader, H. Frerichs, G. Hartwell, J. Schmitt, N. Allen,
+381       O. Schmitz, Exploration of non-resonant divertor features on the compact
+382       toroidal hybrid, Nuclear Fusion 63 (12) (2023) 126043.
+
+383    [4] J. Meiss, Thirty years of turnstiles and transport, Chaos: An Interdisci-
+384       plinary Journal of Nonlinear Science 25 (9) (2015).
+
+385    [5] A. Punjabi, A. H. Boozer, Simulation of non-resonant stellarator divertor,
+386       Physics of Plasmas 27 (1) (2020).
+
+387    [6] H. Frerichs, FLARE: field line analysis and reconstruction for 3D plasma
+388       boundary modeling, arXiv preprint arXiv:2402.05225 (2024).
+
+389    [7] Y. Feng, et al., Review of magnetic islands from the divertor perspec-
+390       tive and a simplified heat transport model for the island divertor, Plasma
+391       Physics and Controlled Fusion 64 (12) (2022) 125012.
+
+392    [8] Y. Feng, H. Frerichs, M. Kobayashi, A. Bader, F. Effenberg, D. Harting,
+393       H. Hoelbe, J. Huang, G. Kawamura, J. Lore, et al., Recent improvements
+394       in the EMC3-Eirene Code, Contributions to Plasma Physics 54 (4-6) (2014)
+395       426–431.
+
+396    [9] S. P. Hirshman, J. Whitson, Steepest-descent moment method for three-
+397       dimensional magnetohydrodynamic equilibria, The Physics of Fluids
+398       26 (12) (1983) 3553–3568.
+
+399   [10] Mathworks, Matlab (2023).
+400       URL https://www.mathworks.com/help/matlab/ref/spline.html
+
+401   [11] Mathworks, Matlab (2023).
+402       URL https://www.mathworks.com/help/matlab/ref/pchip.html
+
+403   [12] Mathworks, Matlab (2016).
+404       URL        https://www.mathworks.com/matlabcentral/fileexchange/
+405       20922-stlwrite-write-ascii-or-binary-stl-files
+
+
+
+                                              25
+406   [13] F. S. B. Anderson, A. F. Almagri, D. T. Anderson, P. G. Matthews, J. N.
+407       Talmadge, J. L. Shohet, The helically symmetric experiment,(HSX) goals,
+408       design and status, Fusion Technology 27 (3T) (1995) 273–277.
+
+409   [14] M. Gerard, B. Geiger, M. Pueschel, A. Bader, C. Hegna, B. Faber, P. Terry,
+410       S. Kumar, J. Schmitt, Optimizing the HSX stellarator for microinstability
+411       by coil-current adjustments, Nuclear Fusion 63 (5) (2023) 056004.
+
+
+
+
+                                            26
+

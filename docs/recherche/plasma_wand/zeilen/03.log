@@ -1,0 +1,16 @@
+Fertig. Zusammenfassung der Recherche für ARIES-CS (einziges Thema):
+
+**Quelle (Volltext, abruf.py geholt):** FZKA 7311, C. Mistrangelo 2007 (KITopen) — *MHD and Corrosion Analysis of Dual Coolant PbLi Blanket Modules for ARIES-CS*, Abruf `https://publikationen.bibliothek.kit.edu/270070030/3815132`
+*(Weitere Versuche: OSTI-Trade-Study 953484 = konzeptionell, keine Meterangaben; IOP-Nuclear-Fusion-2011 = CAPTCHA blockiert → verworfen; KITopen-Landing-Seite = keine Werte.)*
+
+**Ergebnis (`zeilen/03.md`):**
+
+| Größe | Wert | Beleg |
+|---|---|---|
+| Dicke Blanket (DCLL-Modul, radial) | 0.63 m | „…typical size of a blanket module (2 m tor x 2 m pol x 0.63 m rad) is compatible with…" |
+| minimaler Abstand Plasma→Spule (mindestens) | 0.63 m | gleicher Beleg + „…imposed by the minimum distance between plasma and coils, means more structure…" |
+| Dicke Abschirmung (Shield, allein) | nicht gefunden | — |
+
+Wichtig: Das offene ARIES-CS-Dokument gibt die **radiale Dicke des Blanket-Moduls (0.63 m)** an und stellt fest, dass die **Plasma-Spulen-Distanz die maßgebliche Größen-/Kosten-Randbedingung** ist; eine eigenständige, abgetrennte „Shield"-Dicke wird nirgends in Metern angegeben → ehrlich als *nicht gefunden* vermerkt. Die numerische Mindest-Abstands-Zahl ist nur aus dem 0.63-m-Build hergeleitet (analog HELIAS in 02.md).
+
+**Prüfung:** `pruefe.py zeilen/03.md` → **3 Belege bestätigt, 0 Fehler** (Ausgabe unten in der Datei).

@@ -1,0 +1,61 @@
+URL: https://publikationen.bibliothek.kit.edu/270070030
+KIT [https://kit.edu/] |
+KIT-Bibliothek [https://www.bibliothek.kit.edu/] |
+Impressum [https://www.bibliothek.kit.edu/76.php] |
+Datenschutz [https://www.bibliothek.kit.edu/datenschutz.php]
+[https://www.kit.edu]
+[https://www.bibliothek.kit.edu]
+Suche im KITopen-Katalog
+[https://publikationen.bibliothek.kit.edu/#&recordid=KITSRCE0270070030]
+Repository KITopen
+MHD and corrosion analysis of dual coolant PbLi blanket modules for ARIES-CS
+Mistrangelo, C.
+KITopen-Download
+[https://publikationen.bibliothek.kit.edu/270070030/3815132]
+Volltext
+[https://publikationen.bibliothek.kit.edu/270070030/3815132]
+KITopen-Lizenz "
+data-placement="top" data-original-title="Lizenzinformation"
+style="z-index:10;float:right;padding-right:5px;cursor:help">
+§
+DOI: 10.5445/IR/270070030
+Export
+Exportieren als ...
+BibTeX
+(UTF-8) [https://publikationen.bibliothek.kit.edu/publikationslisten/get.php?id=270070030&format=bibtex]
+BibTeX
+(ASCII) [https://publikationen.bibliothek.kit.edu/publikationslisten/get.php?id=270070030&format=bibtex_ascii]
+EndNote/Refer
+(.enw) [https://publikationen.bibliothek.kit.edu/publikationslisten/get.php?id=270070030&format=endnote_refer]
+RIS [https://publikationen.bibliothek.kit.edu/publikationslisten/get.php?id=270070030&format=ris]
+CSL-JSON [https://publikationen.bibliothek.kit.edu/publikationslisten/get.php?id=270070030&format=csl_json]
+ISI [https://publikationen.bibliothek.kit.edu/publikationslisten/get.php?id=270070030&format=isi]
+Statistiken
+Seitenaufrufe: 264
+seit 30.04.2018
+Downloads: 375
+seit 17.06.2016
+[https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fpublikationen.bibliothek.kit.edu%2F270070030]
+[https://bsky.app/intent/compose?text=MHD%20and%20corrosion%20analysis%20of%20dual%20coolant%20PbLi%20blanket%20modules%20for%20ARIES-CS+https%3A%2F%2Fpublikationen.bibliothek.kit.edu%2F270070030]
+auf
+Zugehörige Institution(en) am KIT |
+Institut für Kern- und Energietechnik (IKET) |
+Publikationstyp |
+Forschungsbericht/Preprint |
+Publikationsjahr |
+2007 |
+Sprache |
+Englisch |
+Identifikator |
+urn:nbn:de:0005-073112
+KITopen-ID: 270070030
+Reportnummer: FZKA-7311 |
+HGF-Programm |
+31.40.01 (POF I, LK 01) Brutblanket-Entwicklung |
+Erscheinungsvermerk |
+Wissenschaftliche Berichte, FZKA-7311 (Dezember 2007) |
+Externe Relationen |
+Abstract/Volltext [https://fzk.bibliothek.kit.edu/zb/abstracts/7311.htm]
+|
+KIT – Die Universität in der Helmholtz-Gemeinschaft
+KITopen Landing Page

@@ -1,0 +1,11 @@
+Fertig — `zeilen/08.md` geschrieben, **pruefe.py: 3 Belege bestätigt, 0 Fehler**.
+
+Ergebnis (5 Abrufe, 2 iopscience-PDFs und die SOL-Wikipedia-Seite waren 404/blocked, daher nicht als Beleg verwendet):
+
+| Größe | Ergebnis |
+|---|---|
+| Definition Wärmeflussbreite | e-folding-Längenskala des Wärmefluss-Abfalls quer über das SOL (ST40-Paper, arXiv 2406.16471) |
+| Tokamak-SOL-Breite in mm | **nicht gefunden** (alle Quellen mit mm-Werten lagen hinter iopscience/Zahltoren) |
+| W7-X Wärmeflussbreite am Divertor | **2–4 cm** (Strike-Line-Weite, EMC3-EIRENE-Validierung, arXiv 2201.06341) |
+| W7-X Simulation Strike-Line | 1–5 cm für D = 0,1–0,5 m²/s (gleiche Quelle) |
+| W7-X Kachel-Abstand zur LCFS | **nicht gefunden** (Geometrie-Paper „Development of Divertor Modules for W7-X" existiert, ist aber nur über iopscience erreichbar, das blockt Abrufe) |

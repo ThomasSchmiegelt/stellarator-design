@@ -16,3 +16,14 @@ Einordnung zu unserer Kette: Unsere Annahme package_min_m = 1,0 m liegt unter de
 (HELIAS 5-B: 1,3 m Blanket + Abschirmung). Unsere Hülle (Plasma bis Gehäuse-Innenseite) ist ein vergleichbarer Abstand.
 Sätze mit Hülle unter 1,3 m (DYU ×1,45: 1,27 m) liegen knapp darunter. Der Abstand Spule–Plasma unserer Sätze (0,85 bis 1,15 a) liegt im Bereich
 von Goodman et al. (0,87 bis 0,99 a), W7-X liegt bei 0,55 a.
+
+## Nachtrag: drei weitere Themen (Toleranz, Randschicht, Kacheln)
+
+| Wert | Urteil |
+|---|---|
+| W7-X Spulenfertigungstoleranz: bis 3 mm nicht-planare, 5 mm planare Spulen (OSTI 1484166) | wörtlich belegt, brauchbar |
+| W7-X Strike-Line-Breite am Divertor gemessen 2 bis 4 cm (arXiv 2201.06341) | wörtlich belegt, brauchbar |
+| W7-X Simulation Strike-Line „1–5 cm“ | nicht brauchbar: das Zitat sagt „1 … 2 cm“ am Niedrig-Iota-Target, PI-Wert passt nicht dazu |
+| W7-X maximale Wärmelast Divertor 3 bis 4 MW/m² (β ≈ 5 %) (OSTI 3366832) | wörtlich belegt, brauchbar |
+| Trim-Strom 5 %, 123 A | für uns ohne Belang |
+| Kacheldicke Graphit/Wolfram, Abstand Kachel zur LCFS, SOL-Breite Tokamak | nicht gefunden |

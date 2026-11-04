@@ -65,3 +65,21 @@ am Rand 0,31 bis 0,43 (0,20 bis 0,85); Rotationstransformation am Rand 0,07 bis 
 \emph{Erwartung vorher:} $R^2>0{,}5$ (getroffen), wichtigstes Merkmal Rotationstransformation oder Gradientenlänge
 (verfehlt). \emph{Grenze:} Die Spiegelverhältnisse sind selbst Messgrößen der Feldform und eng mit QI verwandt, also
 keine frei wählbaren Entwurfshebel; es bleibt eine Korrelation. Quelle: \texttt{stellarator/qi\_bereiche.py}.
+
+\subsection*{Parameterkorridor für ein optimales Plasma}
+Als „gut“ gilt hier QI $\le 0{,}001$ (2420 von 158\,685 Plasmen, 1,5\,\%). Ein \emph{Kasten} aus den 5.\ bis 95.\ Perzentilen der guten Plasmen:
+Aspektverhältnis 7,6 bis 9,7; Elongation 5,35 bis 7,45; Spiegelverhältnis Achse 0,27 bis 0,40, Rand 0,30 bis 0,43; Rotationstransformation je Periode
+am Rand 0,07 bis 0,25; Vakuum-Well $-0{,}145$ bis $-0{,}01$. Im Kasten sind 23\,\% der Plasmen gut (Grundrate 1,5\,\%) und er enthält 46\,\% aller guten.
+Ein flacher Entscheidungsbaum zeigt die Wechselwirkung: Der beste Bereich (Elongation $>6{,}06$, Spiegelverhältnis am Rand $\le0{,}43$, auf der Achse $>0{,}325$,
+Aspektverhältnis $\le9{,}09$) hat 40\,\% Reinheit bei 31\,\% Abdeckung. \emph{Erwartung vorher:} Kasten 3 bis 15\,\%, Baum 20 bis 50\,\% (getroffen bzw.\ übertroffen).
+Unsere Sätze DjLe3eL6, DYU und DPrcxq66 liegen im Kasten, DP9 liegt in mehreren Merkmalen außerhalb.
+\emph{Grenzen:} Die Kennzahlen sind Messgrößen der Feldform, keine Entwurfsparameter; auch im Korridor sind drei von fünf Plasmen nicht gut. Quelle: \texttt{stellarator/qi\_korridor.py}.
+
+\subsection*{Von den Kennzahlen zur Form: Formkoeffizienten}
+Eingabe sind die Zahl der Feldperioden und die Tabelle der Formkoeffizienten (\texttt{r\_cos}, \texttt{z\_sin}, je $5\times9$ Zahlen); sie beschreiben die Randfläche des Plasmas
+als Überlagerung von Wellen. Ein Gradient-Boosting-Modell sagt $\log_{10}$(QI) aus diesen 91 Eingaben mit $R^2=0{,}91$ auf zurückgehaltenen Daten voraus
+(Erwartung 0,6 bis 0,85, übertroffen). Am wichtigsten sind die Koeffizienten niedriger Ordnung ($m=0$ und $1$) und die Feldperiodenzahl.
+Ein \emph{Kasten} aus Bereichen der fünf wichtigsten Koeffizienten hat nur 2,3\,\% Reinheit (Erwartung 5 bis 15\,\%, verfehlt), der beste Bereich eines Entscheidungsbaums 5\,\%.
+\emph{Deutung:} Gute Formen entstehen aus dem Zusammenspiel der Koeffizienten und lassen sich nicht als Bereiche einzelner Koeffizienten angeben; das Modell kann es, ein Kasten nicht.
+Der nächste Schritt ist daher, neue Formen im Modell zu suchen und mit dem echten Rechner (VMEC++) nachzuprüfen.
+\emph{Grenzen:} nur im Datenbereich gültig, Indexkonvention nicht geprüft, QI misst nur die Feldform. Quelle: \texttt{stellarator/qi\_koeffizienten.py}.

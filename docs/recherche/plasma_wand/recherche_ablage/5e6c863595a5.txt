@@ -1,0 +1,2329 @@
+URL: https://publikationen.bibliothek.kit.edu/270070030/3815132
+Forschungszentrum Karlsruhe
+in der Helmholtz-Gemeinschaft
+Wissenschaftliche Berichte
+FZKA 7311
+
+
+
+
+MHD and Corrosion
+Analysis of Dual Coolant
+PbLi Blanket Modules for
+ARIES-CS
+
+C. Mistrangelo
+Institut für Kern- und Energietechnik
+Programm Kernfusion
+
+
+
+
+Dezember 2007
+      Forschungszentrum Karlsruhe
+         in der Helmholtz Gemeinschaft
+
+           Wissenschaftliche Berichte
+
+                   FZKA 7311
+
+
+
+
+MHD and corrosion analysis of Dual Coolant
+
+    PbLi blanket modules for ARIES-CS
+
+
+
+
+                  C. Mistrangelo
+
+
+
+
+       Institut für Kern- und Energietechnik
+                Programm Kernfusion
+
+
+
+
+  Forschungszentrum Karlsruhe GmbH, Karlsruhe
+                     2007
+Für diesen Bericht behalten wir uns alle Rechte vor
+
+  Forschungszentrum Karlsruhe GmbH
+    Postfach 3640, 76021 Karlsruhe
+Mitglied der Hermann von Helmholtz-Gemeinschaft
+       Deutscher Forschungszentren (HGF)
+                 ISSN 0947-8620
+             urn:nbn:de:0005-073112
+      MHD and corrosion analysis of Dual Coolant PbLi
+             blanket modules for ARIES-CS
+
+
+                                       Abstract
+
+
+     A Dual Coolant Lead Lithium (DCLL) blanket concept has been selected as
+reference design for the ARIES-CS compact stellarator power plant study. This con-
+figuration is characterized by helium cooled first wall and ferritic steel structures, and
+by a self-cooled breeding zone. Flow channel inserts (FCIs) made of fiber enforced
+silicon carbide (SiC) composite material are placed in the PbLi channels, serving
+both as thermal and electrical insulator. The goal is to optimize the Pb-17Li inlet
+and outlet temperatures for high power cycle eﬃciency while accommodating the
+material temperature limits, providing reasonable flow distribution and maintaining
+an acceptable pressure drop.
+     In support to this conceptual study of a compact stellarator, a numerical investi-
+gation of magnetohydrodynamic (MHD) flows in the poloidal channels that distribute
+the liquid metal in the breeder units has been carried out to assess the performance
+of such a concept with regard to the above mentioned goals and constraints. The
+analysis considers both the electromagnetic coupling of adjacent poloidal ducts and
+the one that can occur, across the channel insert, between the liquid metal in the
+bulk and that in the gap formed by the insulating liners and the walls. Moreover, the
+influence of various parameters such as the electrical conductivity of the SiC insert
+and the orientation of the magnetic field has been analyzed.
+
+    In the second part of this report the problem of the corrosion of the steel wall of
+poloidal ducts in a DCLL blanket module due to flowing liquid metal is investigated.
+The mass transfer problem is studied in the gaps formed between the flow channel
+inserts and the walls. The velocity profile obtained from the MHD analysis has been
+used as imposed velocity distribution. Results have been obtained considering two
+diﬀerent values of the electrical conductivity of the duct insert, i.e. σ F CI = 500
+Ω−1 m−1 and σ F CI = 100 Ω−1 m−1 . Larger velocities are present for the highest value
+of the electrical conductivity of the insert. A first assessment for the concentration
+of iron inside the gap and for the corrosion rate has been determined.
+    MHD- und Korrosionsanalyse des Dual Coolant PbLi
+               Blankets für ARIES-CS
+
+
+                              Zusammenfassung
+
+
+    Als Referenzdesign eines Fusionsblanket wurde im Rahmen der ARIES − CS
+Reaktorstudie (Compact Stellarator power plant study) ein so genanntes Dual-Coolant
+Lead Lithium (DCLL) Blanketkonzept ausgewählt. Dieses basiert auf der Verwen-
+dung Helium-gekühlter ferritischer Stahlstrukturen inklusive der ersten Wand und
+einer selbstgekühlten Blei-Lithium Brutzone. SiC Strömungskanaleinsätze in den
+PbLi Kanälen isolieren hierbei das Fluid von der Kanalwand sowohl elektrisch als
+auch thermisch. Ziel der Reaktorstudie ist es, Eintritts- und Austrittstemperaturen
+im Rahmen der zulässigen Grenztemperaturen der Materialien hinsichtlich eines ho-
+hen thermischen Wirkungsgrades zu optimieren und gleichzeitig den magnetohydro-
+dynamischen (MHD) Druckverlust in akzeptablen Grenzen zu halten.
+    Als Beitrag zur ARIES − CS Reaktorstudie wurden numerische Berechnungen
+der MHD-Strömungen in den poloidalen Flüssigmetall-Kanälen der Bruteinheiten
+durchgeführt, um das Verhalten dieses Konzepts hinsichtlich der genannten Ziele
+und Einschränkungen zu analysieren. Die Berechnungen berücksichtigen sowohl die
+elektromagnetische Kopplung des Fluids im Spalt zwischen Isolationseinsatz und
+Stahlstruktur mit dem Fluid im Inneren des Einsatzes, als auch eine Ankopplung
+benachbarter poloidaler Kanäle. Darüberhinaus wurde der Einfluss zahlreicher Pa-
+rameter wie der elektrischen Leitfähigkeit von SiC, und der Orientierung des Mag-
+netfeldes auf das Verhalten der MHD-Strömung untersucht.
+
+    Im zweiten Teil des Berichtes wird das Problem der Korrosion in poloidalen
+DCLL-Blanketkanälen untersucht, die dem strömenden Flüssigmetall ausgesetzt sind.
+Hierzu wird der Stoﬀübergang von der Stahlwand an das strömende Fluid im Spalt
+zwischen Isolationseinsatz und Wand analysiert. Hierzu wird das zuvor berechnete
+Geschwindigkeitsprofil der MHD-Strömung als gegeben vorausgesetzt. Als Beispiele
+dienen Berechnungen mit zwei verschiedenen elektrischen Leitfähigkeiten der Isola-
+tionseinsätze, σ F CI = 500 Ω−1 m−1 und σ F CI = 100 Ω−1 m−1 wobei sich für höhere
+Leitfähigkeiten größere Geschwindigkeiten ergeben. Ergebnisse der Rechnungen sind
+Korrosionsraten an der Wand sowie die Konzentrationsverteilungen von Eisen im
+Spalt.
+                                  Contents
+
+    Part I: MHD analysis of DCLL blanket modules for ARIES-CS                     1
+
+1 Introduction                                                                    1
+
+2 Problem specification                                                           3
+  2.1 DCLL blanket concept for ARIES-CS . . . . . . . . . . . . . . . . . .       3
+  2.2 Investigated geometry . . . . . . . . . . . . . . . . . . . . . . . . . .   5
+      2.2.1 Eﬀective wall conductance . . . . . . . . . . . . . . . . . . . .     7
+
+3 Governing equations                                                              8
+  3.1 MHD pressure drop . . . . . . . . . . . . . . . . . . . . . . . . . . . .    9
+  3.2 Electric flow coupling (multi channel eﬀect) . . . . . . . . . . . . . .    10
+  3.3 Flow partitioning among parallel ducts . . . . . . . . . . . . . . . . .    10
+
+4 Numerical model                                                                 11
+
+5 Results                                                                         12
+  5.1 Pure toroidal magnetic field . . . . . . . . . . . . . . . . . . . . . . . 12
+      5.1.1 Electric potential and current density . . . . . . . . . . . . . . 12
+      5.1.2 Flow distribution . . . . . . . . . . . . . . . . . . . . . . . . . 14
+      5.1.3 Variation of flow channel insert electrical conductivity . . . . . 15
+      5.1.4 Pressure drop and flow channel inserts . . . . . . . . . . . . . 17
+  5.2 Inclined magnetic field . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+
+6 Conclusions                                                                     21
+
+7 Future work                                                                     22
+
+    Part II: Corrosion in poloidal ducts of DCLL blankets                         25
+
+1 Introduction                                                                    25
+
+2 Formulation of the problem                                                      26
+  2.1 Geometry . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+  2.2 Assumptions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+  2.3 Temperature distribution and heat transfer . . . . . . . . . . . . . . . 27
+      2.3.1 Heat flow through a multi-layer barrier . . . . . . . . . . . . . 28
+
+3 Equations for mass transfer                                                   31
+  3.1 Boundary conditions . . . . . . . . . . . . . . . . . . . . . . . . . . . 32
+  3.2 Saturation concentration and diﬀusion coeﬃcient . . . . . . . . . . . 34
+
+4 Numerical model                                                                 36
+5 Results                 37
+
+6 Conclusions             40
+
+7 Future investigations   40
+
+References                41
+    MHD analysis of DCLL blanket modules for
+                                  ARIES-CS
+
+
+1     Introduction
+The development of nuclear fusion reactors presently focuses on magnetic confine-
+ment of the high-temperature plasma by using a toroidal configuration. Tokamaks
+and stellarators are the most advanced toroidal magnetic confinement concepts.
+    The tokamak provides the required twist to the magnetic field lines by driving
+a current through the plasma itself. The combination of various field components
+produces helical field lines, which wrap around the torus. This reactor configuration
+requires an array of active control strategies to stabilize the plasma, even under a
+constant magnetic field.
+    Stellarators have some important potential operational advantages as fusion power
+plants. Although they also have a toroidal magnetic field topology, the majority of
+the confining field is provided by external coils. Therefore, the absence of a net
+plasma current leads to an inherently steady-state operation with smaller recirculat-
+ing power and there is no need for continuous power input to the plasma to maintain
+the magnetic configuration. Plasma control is therefore simplified because the con-
+fining fields are controlled with external coils instead of current-drive techniques.
+The confined plasma is passively stable when a steady magnetic field is applied and
+therefore stellarators can be operated continuously. Moreover, it has been observed
+that, even in stellarator experiments with large plasma currents, the external fields
+stabilize the configuration preventing disruptions. In other words, since current drive
+power is not needed, the stellarator has a higher plant eﬃciency and there are no
+current-drive-related reliability problems.
+    Besides that, while tokamak configurations have two-dimensional symmetry, stel-
+larators are fully three-dimensional. The extra dimension makes available a wide
+range of diﬀerent configurations. Therefore, it might be possible to use this addi-
+tional degree of freedom to optimize a stellarator in ways that are not possible with
+tokamaks.
+    However the three-dimensional nature of the field, the plasma, and the vessel
+makes much more diﬃcult performing either theory or experimental diagnostics with
+stellarators and moreover, the helical geometry requires more complex and more
+sophisticated modules and magnets, and more costly maintenance procedures.
+    In addition to that, the larger aspect ratio of a stellarator leads to increased size
+compared to tokamaks. Although the resulting lower power density corresponds to
+longer component life, the larger dimension, generally dictated by the constraints
+imposed by the minimum distance between plasma and coils, means more structure
+and consequently higher cost.
+    In order to overcome these drawbacks and to increase the attractiveness of the
+stellarator configuration, approaches that combine the compactness and the moder-
+ate aspect ratio of advanced tokamaks with the disruption-free steady state oper-
+
+                                           1
+ation of stellarators have been developed and studied. These concepts are known
+as Compact Stellarators (CS). The compact stellarator exploits the bootstrap cur-
+rent, namely the self-generated plasma current induced by trapped particles, and
+three-dimensional plasma shaping to obtain the best features of both stellarators
+(low recirculating power) and advanced tokamaks (compact size and high power
+density). Decreasing the plasma aspect ratio should lead to a significant cost re-
+duction. Studies are needed to assess the potential advantages and design issues for
+compact stellarators as fusion power plants compared to conventional configurations
+like tokamaks.
+
+    The US stellarator community, in its 1998 white paper (Rome (Editor) (1998)),
+defined a research program with the goal of developing the knowledge about physics
+features, such as small aspect ratio, use of plasma current, and incorporation of
+magnetic symmetry in the concept design strategy of stellarator reactors, which
+could improve the understanding of this configuration. As part of this program, a
+detailed and integrated study of compact stellarator configurations, called ARIES-
+CS, was initiated to investigate promising CS power plants and to define key R&D
+areas (Najmabadi, Raﬀray, Ku, Lyon and the ARIES Team (2006)). The primary
+scope of the ARIES-CS reactor study is to develop a more compact machine lowering
+in this way the costs while preserving the advantages of a stellarator configuration.
+This project is divided into three phases. The first one focused on selecting a number
+of blanket concepts and maintenance schemes to be analyzed in detail in the second
+part of the program. The most promising configuration was used for a complete
+design analysis in the third phase (Najmabadi and the ARIES Team (2007)).
+
+    For the optimization of the stellarator configuration for a power plant, the choice
+of the breeding blanket plays a fundamental role. A suitable blanket design should
+assure good performance, reasonable development risk and moderate extrapolation
+of present knowledge. It should be optimized in order to maximize its heat load
+capability and thermal eﬃciency as it has a direct impact on the fusion power and
+machine size.
+    Diﬀerent blanket concepts have been proposed during this conceptual study. Af-
+ter evaluating the pros and cons of various designs a modular Dual Coolant Lead
+Lithium (DCLL) blanket concept with He-cooled ferritic steel structures and a self-
+cooled breeding zone containing slowly flowing PbLi has been assumed as a reference
+design (Najmabadi and Raﬀray (2006)). In section 2.1 a more detailed description
+of this concept is given.
+
+    In the first part of the present study the MHD flow in six poloidal channels
+that transport the PbLi in the breeder units is investigated numerically with the
+purpose to quantify the eﬀects of the interaction of the liquid metal flow with the
+external magnetic field. Key MHD issues, like flow distribution and pressure losses,
+are discussed taking into account the electrical flow coupling between the poloidal
+ducts and the eﬀect of the low but finite electrical conductivity of the flow channel
+inserts used to electrically and thermally insulate the bulk flow from the steel walls.
+The flow is studied for the case of a pure toroidal magnetic field (Sect.5.1) and for the
+
+                                           2
+case in which an additional radial component is present (Sect.5.2). Moreover, due to
+the uncertainties about the value of the electrical conductivity of the silicon carbide
+insert, diﬀerent values of this parameter are considered in the following analysis,
+starting from a very conservative value of σ F CI = 500 Ω−1 m−1 and reducing it
+to 50 Ω−1 m−1 (Sect.5.1.3). The obtained results are used to highlight the possible
+technical problems and to evaluate the feasibility of the present blanket configuration
+with respect to the afore-mentioned MHD issues.
+
+
+2     Problem specification
+2.1    DCLL blanket concept for ARIES-CS
+The Dual Coolant Lead Lithium (DCLL) blanket concept utilizes helium at high
+pressure and velocity to cool the ferritic steel structures, and slowly moving (10
+cm/s or less) Pb-17Li in the self-cooled breeder zone. The first DCLL blanket design
+was introduced in the EU blanket program around 1992 ( Malang, Bojarsky, Büh-
+ler, Deckers, Fischer, Norajitra and Reiser (1993)). Insulating coatings were used
+to reduce the MHD pressure drop (e.g. see Malang and Tillack (1995)). In this
+concept, the PbLi exit temperature was ∼450◦ C and a thermal eﬃciency of ∼35
+% was achieved. The DCLL blanket was further developed as part of the ARIES-
+ST study where insulating flow channel inserts (FCI) were introduced (Tillack and
+Malang (1997)). The use of insulating liners allowed for a higher PbLi exit tempera-
+ture (∼700◦ C) leading to an eﬃciency of ∼45%. The concept was further evolved as
+part of the ARIES-CS study, which is the focus of this report, including substantial
+progress in the areas of flow routing, module attachment, coolant connections, and
+system integration. The DCLL concept was also chosen as US reference ITER TBM
+design.
+
+    The blanket concepts based on the use of liquid metals have to take into account
+a number of feasibility issues related to magnetohydrodynamics (MHD) (Morley,
+Malang and Kirillov (2005)). If the breeding liquid metal flows in direction per-
+pendicular to the applied magnetic field, strong MHD eﬀects occur that lead to an
+increased pressure drop compared with hydrodynamic flows. This results in larger
+mechanical stresses and increased pumping power. The interaction between the mov-
+ing electrically conducting fluid and the confining magnetic field influences the flow
+distribution and can aﬀect the flow partitioning in parallel ducts. Moreover, the
+MHD velocity profile may influence the heat transfer between wall and bulk flow as
+well as tritium permeation due for instance to the occurrence of stagnant zones.
+
+    Figure 1 shows an ARIES-CS blanket module and the PbLi flow path inside the
+distributing poloidal ducts. The liquid metal enters the blanket module through
+the annular region between two concentric circular pipes, flows upwards in paral-
+lel poloidal channels arranged in a row along the first wall (FW). At the top of
+the breeder unit, according to a two-pass poloidal configuration, the PbLi turns by
+180◦ and moves downwards in a second row of ducts aligned with the back plate (BP).
+The liquid metal exits the module by flowing through the inner concentric pipe. The
+
+                                          3
+typical size of a blanket module (2 m tor x 2 m pol x 0.63 m rad) is compatible with
+a modular replacement through a number of maintenance ports using articulated
+booms.
+
+
+
+
+    Figure 1: (a) Blanket module. (b) Liquid metal flow path in poloidal ducts.
+
+    In order to minimize the MHD pressure drop to those in insulating channels
+(see Sect.3.1), in the present DCLL blanket design flow channel inserts (FCIs) made
+of silicon carbide composite material with low electrical conductivity are arranged
+inside the poloidal channels to electrically insulate the breeding zone from the walls.
+The inserts decouple electrically the PbLi flow from the steel walls by interrupting
+the current paths towards the conducting walls. Moreover, since the inserts have a
+low thermal conductivity, they act also as thermal insulation. This allows for high
+operation temperature, i.e. increased thermal eﬃciency, while accommodating the
+constraints related to the maximum allowable surface temperature of steel. Hence,
+the temperature at the fluid-wall interface is maintained below the compatibility
+limit. On the other hand, the use of FCIs carries a higher development risk mostly
+due to SiCf /SiC material development.
+    Figure 2 shows the typical arrangement of the flow channel insert in a poloidal
+duct. These inserts have no structural function. They are loosely fitted into the
+poloidal channels, and close to the duct walls there are narrow gaps filled with liquid
+metal. These latter are connected to the bulk region by a small slot that extends
+along the entire poloidal length of the liner. The main purpose of this opening and of
+the gap, as pointed out by Malang 2006 (private communication), is to minimize the
+primary stresses on the insert and to avoid strong mechanical interaction between
+the liners and the wall. Moreover, in that way the fabrication and insertion of these
+insulating components do not require too high precision. The gap should be as small
+as possible since the heat produced in the liquid metal passes into the helium coolant
+
+                                          4
+                                              Pb-Li Bulk
+                                                 flow
+                                        Gap
+
+                                                  ⊗
+                                       SiC FCI
+
+
+                     rad
+
+                           ⊗
+                                     Pressure equalization
+                      pol      tor
+                                     opening
+
+
+
+Figure 2: Cross-section of a poloidal duct with silicon carbide (SiC) flow channel
+insert (FCI). This latter has an opening that connects gap and bulk flow allowing to
+equalize the pressure in these two fluid domains to minimize the primary stresses on
+the insert.
+
+in the walls. This results in reduced eﬃciency of the power conversion cycle.
+    Another important aspect that has to be considered is the wall-material losses into
+the liquid metal due to corrosion. This latter should be controlled and maintained
+within acceptable values.
+
+2.2    Investigated geometry
+Figure 3a shows a partial view of the liquid metal path inside the poloidal ducts. By
+cutting this assembly by means of the rad − tor plane marked by the dashed line and
+indicated section A-A, the schematic cross-section displayed in Fig.3b is obtained.
+This represents the geometry used for the present numerical study where six poloidal
+channels have been considered.
+    The geometric features, the dimensions and the material properties are chosen
+according to the last review of the reference blanket design for ARIES-CS (Raﬀray,
+El-Guebaly, Ihli, Malang, Najmabadi, Wang and the ARIES-CS Team (2007)) as
+displayed in Fig.4. Here the dimensions of the gap and the slot are enlarged to show
+better the details of the geometry. In the figures the insulating inserts lining the
+internal surface of the ducts are indicated by solid bold lines. The channel cross-
+section is almost square (24.5 cm (tor)x 25 cm (rad)) and the gap between the FCI
+(tF CI = 5 mm) and the wall is very small (tgap = 1 mm) compared with the width
+of the central region of the ducts (2L = 23.3 cm). In the present study it is assumed
+that the poloidal ducts are long enough to assure that in most part of the channels
+fully developed flow conditions are established.
+    The six poloidal channels have common electrically conducting walls (grid plates
+and separation plate) through which an exchange of currents is possible. This leads
+to an electrical coupling of adjacent fluid domains. This phenomenon, known as
+multichannel eﬀect, may influence the velocity distribution, the pressure drop and
+flow partitioning in the ducts. We observe that in this geometry the poloidal ducts
+
+
+                                                  5
+Figure 3: (a) Partial view of PbLi flow path in poloidal channels. (b) Cross-section
+of six poloidal ducts as considered in the numerical analysis. The solid bold line
+indicates the flow channel inserts.
+
+
+
+
+Figure 4: Sketch of the investigated geometry with the dimensions given by the
+design. The table on the right summarizes the volume fraction of helium in the walls
+(FW=first wall, BP=back plate, SP=separation plate, GP=grid plate).
+
+
+                                         6
+are arranged in such a way that channels with co-current flow are electrically coupled
+through the grid plates. Moreover, they are aligned in a row along the toroidal direc-
+tion. This row is then coupled radially with counter-current flow domains through
+the separation plate. The global flow structure is the result of toroidal and radial
+electrical coupling, taking into account that the inserts should reduce the intensity
+of the coupling.
+    As mentioned before, primary mechanical stresses in the FCI are minimized by
+connecting the outer gap and the inner flow region by means of a slot made for
+equalizing the pressure in the two subdomains. Preliminary numerical analyses have
+been performed to understand the eﬀects of the presence of this opening on the flow
+distribution in the channel. Considering a pure toroidal magnetic field, aligned with
+the channel walls (first wall, back plate, separation plate), the slot can be positioned
+either close to the walls parallel to the magnetic field, called side walls, or on the
+portions near walls perpendicular to the field, named Hartmann walls. Calculations
+for the case with the opening at the side wall show that at this location it would
+cause a local strong reversed flow due to the presence inside the slot of current paths
+perpendicular to the applied magnetic field (Fig.5). These results are in agreement
+with the ones available in literature (Smolentsev, Morley and Abdou (2006)). For this
+reason, in the present study, the pressure equalization opening has been positioned
+at the Hartmann walls.
+
+                        B             SIDE WALL
+    HARTMANN WALL
+
+
+
+
+                                                Pb-Li Bulk                              VELOCITY DISTRIBUTION (along red dashed line)
+                            Gap                   Flow
+                                                                                                                  4
+
+                                                     u                                                            2
+
+                        SiC FCI                                                                                   0
+                                                                                     -0.8   -0.6   -0.4   -0.2         0   0.2   0.4   0.6   0.8
+                                                                                                                  -2
+y                                                                             u
+                                                                                                                  -4
+
+                                                                                                                  -6
+                                                Pressure equalization
+x                   z                                   slot                                                      -8
+
+                                  j                                                                              -10
+                                            SiC FCI
+                                                                                                                       y
+                                                                    Reversed
+                                            wall
+                                                                  velocity in slot
+
+
+                                          (a)                                                                     (b)
+
+
+Figure 5: (a) Cross section of a poloidal duct with flow channel insert. The detailed
+view shows the current distribution through the pressure equalisation slot. (b) As a
+result of the presence of currents perpendicular to the magnetic field, a strong locally
+reversed flow occurs in the opening.
+
+
+
+
+                                                                          7
+2.2.1    Eﬀective wall conductance
+Since each wall contains helium cooling channels, their real thickness has been re-
+duced for the numerical MHD analysis depending on the volume of helium flowing
+in the ducts. An eﬀective wall thickness tw,eﬀ has been defined as
+
+                                  tw,eﬀ = tw (1 − ε),                             (1)
+
+in which ε is the volume fraction of helium in the considered wall. The values of ε
+for the diﬀerent walls are summarized in the table in Fig.4. In that way, an eﬀective
+electrical conductance ceﬀ comparable to the real one c is obtained:
+                                 σ w tw          σ w tw,eﬀ
+                            c=          =⇒ ceﬀ =           ,                      (2)
+                                  σL                σL
+where σ w and σ are the electrical conductivity of the wall and fluid material, re-
+spectively, tw is the thickness of the wall and L is the characteristic length for the
+geometry under study corresponding to half toroidal width of one duct (see Fig.3b).
+The conductance parameter c describes the ratio of the electric conductance of the
+wall to the fluid one.
+
+
+3       Governing equations
+The equations describing the steady state laminar, incompressible, viscous, MHD
+flow are written in dimensionless form so that the relative importance of the diﬀerent
+terms can be inferred by the size of multiplying non-dimensional groups, whose
+magnitudes give an idea of the relative strength of the various forces acting on the
+flow. These dimensionless equations consist of conservation of momentum, mass and
+charge and Ohm’s law (Shercliﬀ (1965), Müller and Bühler (2001)):
+
+                      1                    1
+                        (v · ∇) v = −∇p +     ∇2 v + j × B,                       (3)
+                      N                   Ha2
+
+                                      ∇ · v =0,                                   (4)
+
+                                      ∇ · j = 0,                                  (5)
+
+                                 j = −∇φ + v × B.                                 (6)
+
+By combining equations (5) and (6) a Poisson equation for the electric potential is
+obtained:
+
+                                 ∇2 φ = ∇ · (v × B) .                             (7)
+
+
+   In these equations the variables v, p, j, B and φ denote the velocity, the pres-
+sure, the current density, the magnetic field and the electric potential scaled by the
+
+                                           8
+reference quantities v0 , σv0 B02 L, σv0 B0 , B0 and v0 B0 L, respectively. Here, the half
+width of the channel, measured along the toroidal direction, is chosen as character-
+istic length L (L = 11.65 cm) and the average velocity in a particular cross-section
+of the duct is taken as the velocity scale v0 . The quantity B0 is the magnitude of the
+imposed magnetic field. The fluid properties, namely the density ρ, the electrical
+conductivity σ and the kinematic viscosity ν are assumed to be constant.
+    By assuming a small magnetic Reynolds number (Rem << 1), the main eﬀect of
+the interaction between the electromagnetic field and the moving fluid is associated
+with the appearance of the electromagnetic force j × B, which is the source term
+in the momentum equation. This is the so called inductionless approximation since,
+under these conditions, the magnetic field induced by currents in the fluid is negligible
+compared to the external one (Walker (1986)). This means that the magnetic field
+is not aﬀected by the flow. Hydrodynamic equations and Maxwell’s equations are
+therefore coupled by the electromagnetic Lorentz force and the induced electric field
+v × B present in Ohm’s law.
+    In eq. (3) two non-dimensional groups, the Hartmann number Ha and the inter-
+action parameter N, are present:
+                                       r
+                                           σ            σLB02
+                           Ha = B0 L           , N=            .                       (8)
+                                          ρν             ρv0
+The square of the Hartmann number characterizes the ratio of electromagnetic forces
+to viscous forces while the interaction parameter represents the ratio of electromag-
+netic forces to inertia forces.
+    In the present study the channels have conducting walls with electrical conduc-
+tivity σ w . Moreover, the inserts have a certain conductivity σ F CI > 0. Therefore
+part of the current flowing in the fluid may close its path through the FCIs and the
+walls and the following equations have to be solved in the solid domains:
+                                   σs
+                             js = − ∇φs ,       ∇ · js = 0,                       (9)
+                                    σ
+where the subscript s stands for solid domains like the walls (σ s = σ w ) or the flow
+channel inserts (σ s = σ F CI ).
+   As boundary condition at all fluid-solid interfaces the no-slip condition is applied
+                                         v = 0.
+    The electric boundary conditions at the fluid-solid interface state the continuity
+of wall-normal component of current density and electric potential
+                                 jn = jns ,       φ = φs .
+The normal component of the electric current density vanishes at the external surface
+of the wall because the surrounding medium is assumed to be insulating.
+
+3.1    MHD pressure drop
+As mentioned before, the increased pressure drop due to MHD eﬀects represents a
+feasibility issue for the DCLL blanket concept. Since the MHD pressure drop depends
+
+                                              9
+on the magnitude of the total current induced in the fluid, it can be mitigated by
+decoupling the conducting walls from the electric circuit that controls the core current
+density. This can be obtained by using insulating flow channel inserts that prevent
+the current path from closing inside the electrically conducting duct walls leading to
+a lower induced current.
+    In electrically insulated ducts the currents have to close within the fluid via
+the thin Hartmann layers. This results in lower pressure drop than in ducts with
+electrically conducting walls. In order to show the importance of the flow channel
+insert as technical and design solution for the DCLL blanket concept, in the following
+the diﬀerence between the pressure distribution in electrically conducting ducts and
+the one in insulating channels is presented.
+    In the general case the MHD pressure gradient for strong magnetic fields can be
+expressed as
+                                 p = −(ρνv0 /L2 )kHa2 ,                             (10)
+where k(Ha, N, c, ...) stands for a pressure drop coeﬃcient that may depend on all
+the parameters aﬀecting the flow like the magnetic field, represented by the Hart-
+mann number Ha, inertial forces, given by the interaction parameter N, and wall
+conductivity, expressed by the conductance ratio c. The term in bracket, ρνv0 /L2 , is
+the laminar viscous hydrodynamic pressure scale. The formula (10) shows that the
+MHD pressure drop exceeds the hydrodynamic one by a factor kHa2 .
+   For fusion relevant conditions (Ha−1 ¿ c ¿ 1) we have k ≈ c in conducting
+channels, i.e. the pressure gradient is proportional to the square of the Hartmann
+number. Instead in insulating channels k ≈ Ha−1 and the pressure gradient scales
+only linearly with the applied magnetic field (Ha),
+
+                                 p = −(ρνv0/L2 )Ha.                                (11)
+
+Therefore, providing adequate insulation in the poloidal channels allows reducing the
+MHD pressure drop according to the previous formulas.
+
+3.2    Electric flow coupling (multi channel eﬀect)
+Poloidal channels have common electrically conducting walls across which leakage
+currents may flow that are responsible for electromagnetic coupling of adjacent flow
+domains. This phenomenon is known as multi channel eﬀect ( McCarthy and Abdou
+(1991), Molokov (1993)). The exchange of currents and electric power aﬀects the
+velocity distribution in parallel ducts influencing in this way the pressure drop and
+flow partitioning as well. The presence of the FCI should minimize or reduce this
+coupling.
+
+3.3    Flow partitioning among parallel ducts
+When the pressure drop along multiple ducts is forced to be the same, for instance
+due to the fact that the channels are fed by a common manifold or pipe system, as
+in the DCLL blanket design, the flow rate in each duct is in general diﬀerent from
+that in neighboring channels. This diﬀerence has to be evaluated in order to check if
+
+                                          10
+the fluid distributes homogeneously and uniformly among the parallel poloidal ducts.
+A proper arrangements of the channels forming the assembly may lead to a weak
+electric flow coupling that mitigate the flow rate imbalance in the ducts.
+
+
+4    Numerical model
+The present investigation is carried out using the commercial package CFX-5.6, which
+is based on the finite volume method and on a modified form of the SIMPLE algo-
+rithm for pressure-velocity coupling to ensure mass conservation (Patankar (1980)).
+The discrete system of linearized equations is solved by an iterative procedure.
+    Since magnetohydrodynamic equations are not available as option in CFX-5,
+these equations have been implemented in the code by means of Fortran subroutines.
+In order to describe MHD flows it is necessary to introduce the Lorentz force as a
+body force in the momentum equation and to solve a Poisson equation (7) for the
+electric potential. The implementation of MHD equations in CFX has been described
+by Mistrangelo (2005).
+    Another aspect that has to be carefully considered in CFD simulations is the mesh
+used to discretize the computational domain. It is important to resolve properly the
+geometric features that aﬀect the flow and the regions where the largest gradients
+of the variables occur, such as the boundary layers that develop along the walls. By
+increasing the magnetic field strength, namely the Hartmann number, the thickness
+of the boundary layers decreases. The size of those at walls parallel to the magnetic
+field varies as δ side ∼ Ha−1/2 , while the thickness of the boundary layers along
+walls perpendicular to the imposed field scales as δ Ha ∼ Ha−1 . Therefore the need
+of resolving adequately these layers, while preserving the mesh quality, leads to a
+progressive rise in the total number of nodes in the computational domain with
+increasing Hartmann number. As a consequence, restrictions on the accuracy of the
+solution at high Hartmann numbers are related to limitations in the memory storage
+and computer capabilities.
+    In the geometry under study, the liquid metal flows both in the internal large
+domains, surrounded by the flow channel inserts, almost electrically insulated from
+the external conducting walls, and in the small gaps between the inserts and the steel
+walls, where a strong reduction of the velocity is expected. In all the fluid domains
+viscous boundary layers develop along the walls and the FCIs, and their thickness
+varies depending on their orientation with respect to the magnetic field. These
+boundary layers match the solutions in the bulk region with the no-slip condition at
+the walls and along the inserts. In order to obtain an accurate and reliable solution,
+all these boundary layers have to be resolved adequately.
+    The convergence of the solution is judged both considering the value of the resid-
+uals of velocity and mass conservation and by monitoring the solution variables in
+fixed points in the computational domain during the run. Values of interest are for
+instance the maximum velocity in the parallel layers and the potential diﬀerence
+between the side walls. The calculations of MHD flows are stopped when all the root
+mean square residuals are equal or less than 10−5 and the variables at the monitored
+locations remain constant.
+
+                                         11
+5       Results
+The results presented first in this section for a pure toroidal magnetic field are ob-
+tained for the most conservative case that has been analyzed with a relatively high
+value of the electrical conductivity of the flow channel inserts, σ F CI = 500 Ω−1 m−1 .
+This case is presented in detail since it is useful to know the eﬀects of poor insulating
+properties of the insert related for instance to a partial deterioration of insulation
+during operation.
+    The influence of the electrical conductivity of the inserts has also been investi-
+gated since it may vary depending on the techniques used for fabricating the fiber
+enforced SiC composite material. In the last section, results for an inclined magnetic
+field, namely for the case when a radial component of the confining field is present,
+are described.
+
+5.1           Pure toroidal magnetic field
+5.1.1             Electric potential and current density
+Let us consider first the distribution of electric potential φ in the six poloidal ducts.
+
+
+
+
+                                                                                                       POTENTIAL DISTRIBUTION (along dashed line)
+                B
+                                                                                             1.5
+                                ch2c                    ch1c                                                   PRESSURE
+                                                                                                              EQUALIZATION
+                                                                                               1                 SLOT
+                                                                       FIRST WALL (FW)
+            BACK PLATE (BP)
+
+
+
+
+                                                                                             0.5
+               (side wall)
+
+
+
+
+                                                                           (side wall)
+
+
+
+
+                                                                                         φ
+                                                                                               0
+                                ch2b                    ch1b                                    -0.5         0.5           1.5          2.5        3.5    4.5
+
+                                                                                             -0.5
+
+                                                                                                                     FCI                        FCI
+                                                                                              -1
+
+                                                                                                       BP          core ch2b       SP         core ch1b   FW
+                                                                                                                                 rad
+                                ch2a                    ch1a
+
+      tor
+
+                              SEPARATION             GRID PLATES
+      pol               rad    PLATE (SP)           (Hartmann walls)
+                                (side wall)
+                                              (a)                                                                                (b)
+
+
+
+Figure 6: (a) Contour plot of the electric potential in the cross-section of the poloidal
+ducts. (b) The potential is plotted in radial direction along the dashed line passing
+through the central ducts, connecting the back plate and the first wall.
+
+   Figure 6a displays the contour plot for the electric potential in the various fluid
+domains. In Fig.6b the potential is plotted along the radial direction, namely along a
+
+
+                                                                               12
+line connecting the back plate (BP) to the first wall (FW), in the middle of the central
+ducts, as indicated by the dashed line. In this diagram the potential in the gaps is
+not visible due to their small size. The electric potential is nearly constant through
+the walls and strong gradients occur across the flow channel inserts. The amount
+of current that flows tangentially inside the insert is negligible compared with that
+crossing it. In the center of the ducts the potential distribution is locally deformed.
+The inflection points are caused by the presence of the pressure equalization slots
+in the inserts. The discontinuity in the electrical conductivity, represented by the
+opening, leads to the development of an internal parallel layers that spread into
+the fluid along magnetic field lines. Therefore this distortion in the potential profile
+propagates along the entire magnetic field line that passes through the slot linking the
+Hartmann wall and the opposite side of the insert. The uniform electric potential
+in the separation plate indicates that there is no exchange of currents across this
+wall. This observation is confirmed by the analysis of the current distribution in the
+assembly. It shows the presence of singular points, produced by the current vector
+field, located at the intersections between the separation plate and the grid plates.
+Figure 7c indicates how the currents coming radially from the grid plates redistribute
+tangentially in toroidal direction along the separation wall.
+
+
+                              j                                                   WALL
+
+       B                                                                FCI                 FCI
+                                  ch2c          ch1c
+
+                                                                     Pb-17Li
+
+                                                                                   (b)
+           BACK PLATE
+
+
+
+
+                                                        FIRST WALL
+
+
+
+
+                                  ch2b          ch1b
+                                                                                         Saddle
+                                                                                          Point
+
+
+
+                                                                              j
+                                  ch2a          ch1a
+     tor
+                                    EXTERNAL WALL                                  (c)
+     pol                rad              (a)
+
+
+Figure 7: Current streamlines showing (b) the deformation due to the presence of the
+slot and (c) the saddle point that indicates the distribution of currents from radial
+to toroidal direction in the separation plate.
+
+   FCIs do not carry a significant amount of current in tangential direction com-
+pared to that which flows within the adjacent thin Hartmann layers that form in the
+inner large duct at walls perpendicular to the magnetic field. The currents flow pref-
+erentially in these thin boundary layers instead of entering the flow channel insert,
+
+                                                       13
+choosing the path of lower electric resistance. The currents that pass through the
+insert move into the highly conducting region behind it, namely in the narrow liquid
+metal gap and in the walls.
+    Another interesting characteristic of the current distribution is the local deforma-
+tion of the streamlines caused by the pressure equalization opening (Fig.7b). This
+deformation is present in the whole parallel internal layer that develops in the fluid
+along magnetic field lines.
+    From this analysis of electric potential and current distribution it is possible to
+conclude that, as a result of the presence of the inserts and the particular arrangement
+of the ducts, the resulting electric coupling is weak and a rather uniform partition
+of the flow in the parallel poloidal ducts is expected.
+
+5.1.2   Flow distribution
+Figure 8a shows the contour plot of velocity in the cross-section of the geometry. In
+Fig.8b the non-dimensional velocity is plotted as a function of the radial coordinate
+along the dashed line in the middle of the central ducts, in the domain enclosed
+by the insert. The velocity distribution indicates that the presence of the internal
+layer, which develops from the pressure equalization slot, determines a local velocity
+deficit in the center of the ducts observable along the entire field lines crossing the
+opening. For the high value of the electrical conductivity of the insert considered in
+the present analysis (σ F CI = 500 Ω−1 m−1 ) the velocity in this zone changes even the
+direction and the flow is locally reversed.
+    The increased velocity along the FCIs at walls parallel to the magnetic field is
+related to the imperfect insulating properties of Hartmann walls. The side walls do
+not aﬀect strongly the flow since, due to the presence of the insert, they behave as
+being almost insulating. This is confirmed by the fact that, in the absence of the
+insulating barrier the electrically conducting side walls would lead to the formation
+of velocity jets with a higher maximum value close to the common internal wall
+(SP) and the velocity profile would exhibit a parabolic distribution along magnetic
+field lines. In this case instead the maximum velocity at the insert is comparable at
+each side wall and this rise of the velocity can be regarded as a deformation of the
+core flow (Bühler and Molokov (1994)). In the case of suﬃciently high σ F CI the jet
+velocity exceeds substantially the average bulk velocity. A detailed numerical study
+has been further performed showing that increasing the size of the slot leads to an
+enlargement in radial direction of the region where the velocity deficit occurs.
+    Considering now the velocity distribution in the gaps formed between the inserts
+and the separation plate (Fig.8c), it can be observed that the velocity profile is almost
+parabolic and the maximum velocity is less than half of that in the internal ducts.
+In the gaps near the back and the first wall a similar velocity distribution is found.
+    In the gaps formed between the Hartmann walls, perpendicular to the magnetic
+field, and the inserts, at some distance from the pressure equalization opening, the
+velocity distribution has the characteristics of the classic Hartmann flow with uniform
+core velocity and thin boundary layers with strong velocity gradients. Analogously,
+in the internal ducts the velocity profile along magnetic field lines is characterized
+by a constant core value and thin viscous boundary layers near the inserts, where
+
+                                           14
+Figure 8: (a) Contour plot of velocity in the assembly cross-section. The non-
+dimensional velocity is plotted along the radial direction (b) in the central internal
+ducts, and (c) in the side gaps formed between separation plate (SP) and inserts, for
+Ha = 5000 and σ F CI = 500 Ω−1 m−1 .
+
+the velocity decays exponentially to satisfy the no-slip condition. In the core the
+velocity is only a function of the radial coordinate.
+    This can be seen in Fig.9b where the dimensionless velocity is plotted as a function
+of the toroidal direction along the three lines A, B, C displayed in Fig.9a. The
+velocity profile along the line C, which marks the position of the internal parallel
+layer caused by the discontinuity in the electrical conductivity of the wall, shows the
+already mentioned local reduction of the velocity. For this large value of σ F CI a zone
+where the flow is reversed compared to the core stream appears. Approaching the
+slot the velocity reduces and the fluid turns in the main flow direction.
+
+5.1.3   Variation of flow channel insert electrical conductivity
+By comparing the results obtained for various values of the electrical conductivity
+of the flow channel inserts it is observed that, with decreasing the conductivity
+σ F CI , the velocity reduces in all external subdomains, namely in the gaps. This is
+shown in Fig.10b where the non-dimensional velocity in the side gaps adjacent to
+the separation plate is plotted along the radial direction for various σ F CI . A similar
+eﬀect on the velocity profile is observed in the gaps close to the back plate and the
+first wall. In the inner duct cores instead the flow tends towards a more uniform
+distribution: the velocity deficit in the internal parallel layer is attenuated and the
+increased velocity at side walls reduces (Fig.10a).
+
+
+                                           15
+                B                                                                                 0.4
+                                                                                                                               LINE Cthe slot)
+                                                                                                                     C (line through
+                                             ch2c              ch1c                                 0
+                                                                                                        2          2.5               3           3.5         4            4.5
+                                                                                                 -0.4
+                    BACK PLATE
+
+
+
+
+                                                                            FIRST WALL
+                                       A B       C                                                                                   LINE B
+                                                                                                 -0.8                    B
+                                                                                          v/v0
+                                                                                                 -1.2
+                                             ch2b              ch1b
+                                                                                                                      A (closeLINE  A wall)
+                                                                                                                               to side
+                                                                                                 -1.6
+
+                                                                                                   -2
+                                                                                                                                         tor
+                                                                                                        FCI                         Bulk flow                           Wall
+                                             ch2a              ch1a                                                                                    Slot + gap
+
+              tor
+
+                                                         (a)                                                                             (b)
+              pol                rad
+
+
+
+Figure 9: (a) Contour plot of the velocity in the cross-section of the geometry .
+(b) Non-dimensional velocity plotted along the toroidal direction in the central duct
+ch2b, for Ha = 5000 and σ F CI = 500 Ω−1 m−1 . The velocity profile along the line C
+shows the local velocity deficit in the internal parallel layer. For this high value of
+σ F CI the flow is even reversed compared to the main core stream.
+
+
+
+
+     2                                                                                                                                                            σFCI
+                                                                                                  0.6
+                                                                σFCI = 500 Ω-1m-1
+   1.5
+                                                                σFCI = 100 Ω-1m-1                 0.4
+     1
+                                                                                                        FCI                         Separation                          FCI
+   0.5                                                          σFCI = 50 Ω m -1         -1       0.2
+                                                                                                                                      Plate
+v/v0 0                                                                                        v/v0 0
+          0                            2             4                                              2.12      2.14           2.16         2.18         2.2       2.22         2.24
+   -0.5
+                                                                                                 -0.2
+    -1
+                                                                                                 -0.4
+   -1.5                                                                                                                                  GAP
+                                                                                                 -0.6
+    -2
+                                           rad                                                              σFCI                         rad
+                                           (a)                                                                                            (b)
+
+
+Figure 10: Non-dimensional velocity plotted along the radial direction (a) in the
+large inner fluid domains delimited by the FCIs, and (b) in the side gaps formed
+between separation plate and inserts, for Ha = 5000 and various σ F CI .
+
+
+
+
+                                                                                16
+    It is interesting to notice that the changes of the velocity profile by reducing the
+electrical conductivity of the insert from σ F CI = 100 Ω−1 m−1 to σ F CI = 50 Ω−1 m−1
+are quite modest. This can indicate that the insulating properties of the FCI are
+already suﬃciently good, so that a further reduction of their electrical conductivity
+will not seriously aﬀect the flow anymore at this Hartmann number.
+     Let us consider now the velocity distribution in toroidal direction, namely along
+the applied magnetic field lines, for diﬀerent values of the electrical conductivity of
+the flow channel insert σ F CI . In the inner ducts the velocity near the side walls,
+parallel to B, at a fixed radial location (line A in Fig.11), reduces with decreasing
+σ F CI . In the internal parallel layer the local deficit of the velocity is progressively
+attenuated with a reduction of the diﬀerence between this local minimum and the
+average bulk velocity. Moreover, the reversed flow disappears (velocity profile along
+line C in Fig.11).
+
+                                                    FCI          ch2b           FCI
+                                                      0
+                      ch2c            ch1c                                                         FCI         ch2b           Grid plate
+                                                           2     3          4         5
+                                                                                                  0.1
+   B                                                -0.2
+
+                                                    -0.4                                            0
+                                                                                                         2      3         4        5
+                                                                                                  -0.1
+                                                    -0.6        LINE A
+                                                                                                  -0.2
+    BACK WALL
+
+
+
+
+                                                    -0.8                                                      LINE
+                                                                                                               LINECC
+                                      ch1b
+                                             v/v0                                          v/v0 -0.3
+                                                     -1
+                                                                                                  -0.4
+                                                    -1.2
+                                                                                                  -0.5
+                                                    -1.4                                          -0.6
+                      ch2a            ch1a
+                                                    -1.6                                          -0.7
+  tor                                                          σFCI                                                 tor
+                         Separation                 -1.8
+                           Plate                                      tor                 σFCI = 500 Ω-1m-1
+  pol           rad
+                                                                                          σFCI = 100 Ω-1m-1
+                                                                                          σFCI = 50 Ω-1m-1
+
+
+
+
+Figure 11: Non-dimensional velocity in the internal duct, delimited by the FCI,
+plotted along the toroidal direction at various radial positions (line A and line C),
+for Ha = 5000 and diﬀerent values of σ F CI .
+
+    Figure 12 displays the flow distribution in the gaps at Hartmann walls. At some
+distance from the pressure equalization slot, the velocity distribution has the charac-
+teristics of the classical Hartmann flow with uniform core velocity and thin boundary
+layers with strong velocity gradients. By decreasing the electrical conductivity of the
+insert the core velocity reduces.
+
+5.1.4           Pressure drop and flow channel inserts
+As stated before, for the design of liquid metal blankets the knowledge of the pressure
+drop due to MHD phenomena is a fundamental requirement. Keeping the overall
+system at suﬃciently low pressure is necessary both for safety and for mechanical rea-
+sons. An excessively high pressure drop causes an increase in the required pumping
+power and strong mechanical loads.
+
+                                                                     17
+                      ch2c            ch1c                FCI      Ha Gap           Grid Plate
+                                                      0
+   B                                                   4.26     4.265     4.27      4.275   LINE B
+                                                  -0.05
+
+                                                   -0.1
+    BACK WALL
+
+
+
+
+                                                  -0.15
+
+                                      ch1b   v/v0 -0.2            σFCI
+                                                  -0.25
+
+                                                   -0.3
+
+                      ch2a            ch1a        -0.35
+  tor                                                               tor
+                         Separation
+                           Plate                                σFCI = 500 Ω-1m-1
+  pol           rad                                             σFCI = 100 Ω-1m-1
+                                                                σFCI = 50 Ω-1m-1
+
+
+
+Figure 12: Non-dimensional velocity in the Hartmann gap, close to wall perpendicu-
+lar to the magnetic field, plotted along the toroidal direction (line B), for Ha = 5000
+and diﬀerent values of σ F CI .
+
+
+
+
+Figure 13: Non-dimensional pressure gradient as a function of the flow channel insert
+electric conductivity σ F CI , for Ha = 5000.
+
+
+
+
+                                                18
+    In Fig.13 the dimensionless pressure gradient is plotted as a function of the elec-
+trical conductivity σ F CI of the insert. According to the described geometry and the
+PbLi physical properties (Jauch, Karcher, Schulz and Haase (1986)) the value of
+the magnetic field corresponding to Ha = 5000, as used for the numerical analy-
+sis, is about 1.6 T. Assuming an average velocity of 0.1 m s−1 , a pressure loss of
+∆p = 1.1 · 10−3 MPa m−1 for σ F CI = 100 Ω−1 m−1 is found.
+    The value of the magnetic field for which MHD flows have been investigated is
+lower than the one in real applications. This is related to the limited available com-
+putational resources and, as a consequences, to the maximum number of points that
+can be used to discretize the computational domain. This implies that boundary and
+internal layers can be properly resolved only up to a maximum Hartmann number.
+Nevertheless, studies for moderate Hartmann numbers lead to scaling laws that allow
+to extrapolate the results to higher magnetic fields.
+
+5.2    Inclined magnetic field
+Magnetic fields in stellarators are quite complex and exhibit in general, in addition
+to the main toroidal field Btor , also radial Brad and poloidal Bpol components. For
+that reason a slightly inclined magnetic field with Brad 6= 0 has been considered. The
+results discussed here are obtained for Brad = 10% Btor , σ F CI = 500 Ω−1 m−1 and
+Ha = 5000.
+    The solutions for the electric potential and the velocity are inclined along mag-
+netic field lines. In Fig.14 the contour plots of the electric potential are displayed to
+highlight this inclination according to the magnetic field orientation. The velocity
+distribution shows the presence of internal layers that spread into the fluid from the
+duct corners and from the location of the pressure equalization slot, developing par-
+allel to the magnetic field lines. Previously, for the case of a pure toroidal magnetic
+field, the maximum velocity was localized near the center of the side walls (parallel
+to B) .Now it is shifted towards one of the duct corners close to the lateral toroidal
+walls, as indicated by the crosses in Fig.14.
+
+
+
+
+                                           19
+                       B
+                        BACK PLATE
+
+
+
+
+                                                                        FIRST WALL
+             tor
+
+
+              pol      rad
+
+Figure 14: Contour plot of the electric potential for σ F CI = 500 Ω−1 m−1 , Ha = 5000
+and Brad = 10% Btor . The crosses indicates the position of the maximum velocity in
+each fluid domain.
+
+
+
+
+                                         20
+6     Conclusions
+The fully developed MHD flow in six poloidal channels of a DCLL blanket, selected
+as a reference design for the compact stellarator ARIES-CS, has been investigated
+numerically for a fixed Hartmann number Ha = 5000. Results are given for velocity,
+current, potential distribution and for pressure drop, considering the full electrical
+coupling between adjacent fluid domains and the influence of the electrical conduc-
+tivity of the flow channel inserts, These latter are used to electrically and thermally
+insulate the ducts. The geometric features are taken according to the last review of
+the DCLL blanket design for ARIES-CS.
+    The flow is studied both in the case of a pure toroidal magnetic field and in the
+case of an inclined field. The latter situation corresponds to the presence of a radial
+component of the imposed magnetic field.
+
+    When a toroidal magnetic field, namely a field parallel to the back plate, first wall
+and separation plate, is considered, the velocity profile in the radial direction, inside
+the inner large ducts is characterized by higher values along the side walls of the flow
+channel inserts. This rise of the velocity is due to the imperfect insulation of the
+Hartmann walls due to the finite conductivity of the insert material. The fact that the
+velocity distribution in radial direction does not show a strong asymmetry, even if the
+side walls have diﬀerent conductance, may indicate that these walls behave as being
+almost insulating even for the most conservative case with σ F CI = 500 Ω−1 m−1 .
+Therefore the flow distribution is only slightly influenced by the characteristics of
+the lateral walls (back plate, separation and first wall), but it is mainly governed
+by the properties of flow channel inserts at the Hartmann walls perpendicular to
+B. Owing to a discontinuity in the electrical conductivity of the wall represented
+by the pressure equalization slots, internal layers develop along magnetic field lines
+in which the velocity is reduced. This velocity deficit may lead to a local increase
+of the temperature that has to be taken into account. Moreover, for suﬃciently
+high σ F CI the flow in the internal layer may even be reversed compared to the
+main stream. Across the side gaps between the insulating inserts and the separation
+plate, the velocity profile is almost parabolic. Along magnetic field lines the velocity
+distribution, at some distance from the internal layer, resembles that of a classical
+Hartmann flow with uniform core velocity and thin boundary layers with strong
+velocity gradients.
+    The electric potential and current density distributions highlight the absence of
+current exchange across the separation plate. This indicates that the particular
+arrangement of the poloidal channels, characterized by co-current flow in ducts cou-
+pled at Hartmann walls (grid plates) and counter-current flow in the ones joined at
+the side wall (separation plate), and the use of the insulating liners lead to a weak
+electric coupling and a quite uniform partitioning of the flow in the ducts.
+    Concerning the MHD pressure drop in the poloidal channels, it has been verified
+that, even in the most conservative case with relatively high electrical conductivity
+of the insulating barriers, the pressure losses caused by 2D currents are small and
+acceptable.
+    If the Hartmann number is increased, the layers become thinner but it is expected
+
+                                           21
+that, by improving the insulation quality according to the rise of the magnetic field,
+a similar flow distribution remains and the scaling laws will be still valid.
+    Considering the possibility of tailoring the properties of the flow channel insert
+material by controlling the manufacturing process, we investigated the eﬀects of the
+electrical conductivity of the liner on the features of the MHD flow in the poloidal
+ducts. The reduction of the electrical conductivity of FCI leads to a decrease of the
+velocity at side walls, a more uniform core flow distribution and a mitigation of the
+velocity deficit in the internal parallel layer. Analogously, in the side and Hartmann
+gaps there is a progressive reduction of the velocity. For suﬃciently small values of
+the insert electrical conductivity the flow in the Hartmann gaps can be regarded as
+almost stagnant. Such a slow velocity may give rise to concerns about an increased
+permeation of tritium to the helium cooling channels, but reduces the risk of strong
+corrosion of steel walls.
+
+    The results for an inclined magnetic field (Brad 6= 0) show that the solutions for
+velocity and potential are inclined and aligned with the imposed field. The maximum
+velocity, located in the middle of the side layers for the case with Brad = 0, is now
+shifted towards one of the corners of the lateral toroidal walls.
+
+    Considering the described characteristics of the MHD multichannel flow, a quite
+positive picture of the possible performance of the present arrangement of poloidal
+channels in the selected blanket design is conveyed even for a conservative value of the
+electrical conductivity of the inserts. The MHD flow coupling between the parallel
+poloidal ducts is very weak. Nevertheless, it is necessary to keep in mind that a major
+issue for this blanket concept is represented by the possibility of constructing proper
+insulating barriers and producing insert materials with suitable properties. Moreover,
+as suggested in the following section, further problems have to be considered and
+analyzed to get a complete picture of MHD phenomena and to understand their
+importance in determining the performance of the DCLL blanket for the ARIES-CS.
+Particularly relevant are the contribution to the MHD pressure drop of 3D flows
+occurring e.g. in manifolds, expansions and concentric pipes, the uncertainties on
+the gap size and over the precise value of the electrical conductivity of the inserts
+during the lifetime of a blanket.
+
+
+7    Future work
+Three-dimensional calculations should be performed to predict the pressure drop in
+more complex 3D geometries. For instance in the region where the fluid expands
+from the feeding circular pipe into the poloidal ducts, in transition zones of varying
+magnetic field or in the 180◦ turn at the top of the blanket module. In these zones
+strong 3D MHD phenomena are expected, that can cause high pressure losses. While
+for fully developed 2D flows insulating inserts reduce eﬃciently the MHD pressure
+drop, these barriers cannot improve the situation for 3D cases, where the currents
+find a closure inside the fluid along 3D paths. The prediction of these 3D current
+flows, which can have a great influence on flow distribution especially in insulated
+ducts, requires additional theoretical and experimental work.
+
+                                          22
+    Considering the poloidal length of the channels, the inserts will be likely divided
+in various pieces overlapping at some point along the axis of the duct. The MHD flow
+in these zones may be important to analyze and its eﬀects should also be taken into
+account in the pressure drop assessment. Moreover, the inserts are placed loosely
+in the channels and a precise defined gap, constant over the entire poloidal length
+seems very diﬃcult to realize. Therefore, the study of the influence of the size of the
+gap can represent a further interesting topic.
+    In the case of toroidal magnetic field it could be useful to verify also the validity
+of the assumption of laminar flow. The presence of instabilities in the side layers
+cannot be excluded. They would lead to the appearance of vortices with axes aligned
+with the magnetic field, which therefore are not too strongly damped by the field.
+
+
+
+
+                                           23
+24
+    Corrosion in poloidal ducts of DCLL blankets
+
+
+1    Introduction
+The corrosion behavior of ferritic steel exposed to flowing PbLi is an issue for the
+feasibility of liquid metal blanket concepts. Therefore, one of the concerns for the
+DCLL blanket design is the compatibility of the moving PbLi with the steel struc-
+tures. Material losses should be maintained within acceptable limits. This implies
+the need of fixing criteria to limit these losses over the whole lifetime of a blanket
+module. Such a criterion could be given in terms of reduction of wall thickness, e.g.
+the limit could correspond to a maximum percentage of local wall thickness.
+    Some experimental studies for corrosion of steel due to flowing liquid metal exist
+whereas a limited number of theoretical analyses is available (see e.g. Malang (1984)).
+It has been found that ferritic or martensitic steel corrosion in PbLi is characterized
+by a homogeneous dissolution without the formation of a superficial corrosion layer
+and the intensity of this phenomenon is closely related to the temperature and to the
+hydrodynamics of the liquid metal flow (Broc, Flament, Fauvet and Sannier (1988),
+Flament, Tortorelli, Coen and Borgstedt (1992)). Corrosion tests have shown that
+the corrosion rate of martensitic steels is strongly dependent on the PbLi velocity,
+suggesting that the process is controlled by the diﬀusion of dissolved elements in the
+laminar sub-layer (Sannier, Flamment and Terlain (1991)).
+    The concentration of dissolved elements, the diﬀusion coeﬃcient and the mate-
+rial properties of liquid metal depend on the temperature, and the material losses
+are determined, among other factors, by the local fluid-wall interface temperature.
+Therefore, in order to perform a numerical corrosion analysis, it is necessary to es-
+timate the temperature distribution in the geometry under study. In section 2.3 a
+quite detailed description of the procedure used to evaluate the temperature field is
+given.
+    The saturation values for the concentration of iron in the eutectic alloy PbLi,
+required as boundary condition at the wall-fluid interface, and the mass diﬀusion
+coeﬃcient have been calculated from relations reported in literature (Sect.3.2). It
+should be noted that there are still uncertainties on the accuracy of these formulas due
+to the large scattering of published data, often obtained from experiments performed
+even under very diﬀerent conditions. In particular, most of the experiments have
+been performed in the turbulent regime. Therefore, it is not always easy to compare
+the results or to extrapolate them to the desired range of temperature required for
+the calculations. Moreover, the purpose of the present study is to obtain a first
+assessment for the concentration of iron in PbLi and for corrosion rate. For that
+reason, several assumptions have been made to simplify the problem.
+
+
+
+
+                                          25
+2     Formulation of the problem
+2.1    Geometry
+Figure 15 shows the geometry used for the numerical analysis described in this second
+part of the report. The flow in the gap between the flow channel insert (FCI) and
+the separation plate (SP) has been considered and the problem of mass transfer of
+corrosion products from the ferritic steel wall into the fluid has been investigated.
+    The calculations have been carried out starting from the MHD velocity distri-
+bution in the middle of a side gap at the wall parallel to the magnetic field, since
+this is the location where the highest gap velocity is observed. Therefore these flow
+conditions should represent the limiting case that produces the largest corrosion rate.
+    The gap has a width L = 0.001 m and the total poloidal length, considering the
+two-pass configuration, is equal to 4 m.
+
+
+
+                                             B         FCI
+                                                                First Wall
+
+
+
+                                             PbLi
+
+
+
+
+         Separation
+         plate (SP)
+                                     rad                        Back Plate
+                                                       Grid                  Separation
+                                                                             Plate (SP)
+                                                       Plates
+                                      pol        tor
+           PbLi gap
+
+
+
+                                 Flow Channel
+                                  Insert (FCI)
+
+
+            y, pol
+
+                x, rad
+                           u
+                 z, tor
+
+
+
+Figure 15: Geometry used for the numerical study of the corrosion problem. Thin
+slice through the side gap located between the flow channel insert (FCI) and the
+separation plate (SP).
+
+
+
+
+                                            26
+2.2    Assumptions
+A fixed fully developed MHD velocity distribution obtained from previous calcula-
+tions has been imposed in all the computational domain.
+    In order to simplify the mass transfer problem and to get a first estimation of the
+corrosion rate in the poloidal gaps in the channels forming a DCLL blanket module,
+some assumptions have been considered and applied to the problem.
+    It is assumed that the heat transfer is steady state, namely the quantity of heat
+flowing from one point to another by unit time is constant and the temperatures
+at each point in the system do not change with time. Moreover, for simplicity, the
+volumetric heat generations in the FCI and PbLi are not considered in this initial
+model. They would tend to increase the liquid metal temperature in the gap, and
+should be included in more detailed models.
+    It has been assumed that the temperature in the bulk flow increases linearly along
+the poloidal direction. This is equivalent to assume that, since the FCI is almost
+insulating from the thermal point of view, heat losses from the fluid into the gap
+through the liner are small. The temperature at the FCI surface, facing the internal
+large duct, is set equal to the value in the liquid metal core flow. In addition to
+that, since the temperature gradient through the gap, i.e. the diﬀerence between the
+temperature at the steel wall and the one at the FCI is quite small (see Sect.2.3.1), in
+the calculations it has been assumed that the material properties of PbLi are constant
+across the gap but they can change poloidally along the flow path. Since the gap is
+quite thin, the thermal conductivity of PbLi is high and the velocity is small, it is
+assumed also that the temperature in the gap is governed by heat conduction.
+
+2.3    Temperature distribution and heat transfer
+In order to calculate the temperature field in the gap, required for evaluating the
+saturation concentration at the wall and the diﬀusivity that depend on the tempera-
+ture distribution, it is necessary to consider the heat transfer process in the geometry
+under study.
+
+    The equation used to express the heat conduction through a wall is known as
+Fourier’s law. Under steady conditions where there is a linear temperature distribu-
+tion, for a one dimensional plane wall it can be written as:
+                                               ∆T
+                                     Q̇ = λA      ,                                (12)
+                                               ∆x
+where Q̇ [W ] is the heat transferred per unit time, λ [W m−1 K −1 ] is the thermal
+conductivity of the material, A [m2 ] the heat transfer area, ∆T [K] the temperature
+diﬀerence across the material and ∆x [m] the thickness of the considered layer.
+   Equation (12) can be rearranged as:
+                                              ∆T
+                                    Q̇ = A        .                                (13)
+                                             ∆x/λ
+
+
+
+                                          27
+   The inverse of the thermal conductivity, 1/λ, is called thermal resistivity and by
+multiplying it by the thickness of the wall we obtain the thermal resistance R of the
+barrier
+                                           ∆x
+                                              .   R=                            (14)
+                                            λ
+    The transfer of thermal energy between a surface and a moving fluid occurs
+instead due to convection. This process is described by the following equation:
+                                                 ∆T
+                                       Q̇ = hA∆T = A ,
+                                                 1/h
+where h [W m−2 K −1 ] is the heat transfer coeﬃcient and ∆T is the temperature
+diﬀerence between the surface and the bulk fluid. The inverse of the heat transfer
+coeﬃcient 1/h is the thermal resistance (in our case the resistance due to convection
+in helium).
+
+2.3.1   Heat flow through a multi-layer barrier
+The heat transfer through the helium ducts, the channel walls, the liquid metal gap,
+the flow channel insert and the PbLi bulk flow can be seen as a multi-layer heat
+transfer problem (see Fig.16).
+
+                               THe THe,w Tw                     TFCI1 TFCI2
+
+
+                                A         B             C           D         E
+                               He                      PbLi               PbLi
+                                          FS           (gap)       FCI (bulk flow)
+                              ducts
+                                                        Q
+                                          twall                    tFCI
+                              y, pol
+
+                                                            u
+
+                     z, tor      x, rad
+
+
+Figure 16: The investigated geometry consists of diﬀerent regions: A indicates the
+helium cooling ducts, B is the ferritic steel wall, C is the liquid metal gap, D the flow
+channel insert and E the PbLi bulk flow. Q̇ is the heat flux through the multi-layer
+barrier.
+
+   Each layer constitutes a resistance Ri to heat flow. Therefore, one can give an
+overall thermal resistance Rtot for the multi-layer barrier as:
+                                            X
+                                     Rtot =     Ri .                          (15)
+
+                                                   28
+In the specific problem under investigation the overall thermal resistance is given by:
+                                    1   twall    tgap   tF CI
+                          Rtot =      +       +       +       ,                     (16)
+                                   hHe λF S     λP bLi λSiC
+where hHe is the helium heat transfer coeﬃcient, twall , tgap and tF CI are the thickness
+of the wall, the width of the gap and the size of the flow channel insert, respectively.
+The thermal conductivities of ferritic steel, PbLi and SiC composite are indicated by
+λF S , λP bLi and λF CI . The general heat transfer formula becomes:
+                                      ∆T      (TF CI2 − THe )
+                             Q̇ = A        =A                 .                     (17)
+                                      Rtot         Rtot
+    Where TF CI2 and THe (Fig.16) are the temperatures at the FCI-liquid metal bulk
+flow interface and the one of the helium, respectively. As a first approximation it is
+assumed that TF CI2 coincides with the temperature in the core flow. The tempera-
+ture distribution can be calculated considering that the heat flux remains constant
+through all the layers, and assuming that the heat transfer area A is constant. The
+procedure followed to determine the temperature field is summarized in Table 1.
+
+
+                                   (TF CI2 −THe )
+                        Q̇            A
+                                        Rtot
+                    Helium    AhHe (THe,w − THe ) =⇒ THe,w
+                                λwall
+                    W all     A       (Tw − THe,w ) =⇒ Tw
+                                twall
+                                λP bLi
+                    P bLi gap A        (TF CI1 − Tw ) =⇒ TF CI1
+                                 tgap
+
+Table 1: Procedure to calculate the temperature distribution in the computational
+domain, knowing the temperature profile in the liquid metal bulk flow (TF CI2 ) and
+that of helium in cooling ducts (THe ). TF CI1 denotes the temperafture of the PbLi-
+FCI interface, which faces the gap.
+
+
+    It can be observed that the thermal conductivity of the liquid metal is a function
+of the temperature:
+
+                        λP bLi (TP bLi ) = 1.95 (1 + 0.0101 TP bLi ),               (18)
+
+therefore in order to calculate the transferred heat Q̇, required to estimate the tem-
+perature field, a suitable guess for the outlet temperature of the liquid metal in the
+gap has to be found. This temperature has been calculated by means of an easy
+iterative procedure, knowing the outlet temperature of helium THe and the one of
+the liquid metal in the bulk flow TF CI2 . Figure 17 shows the temperatures at the
+outlet of the duct in the steel wall, in the liquid metal gap and across the flow channel
+insert. In that way we can refine our guess till reaching a final value Tgap,out = 746
+K. This temperature has been assumed as the wall-fluid interface temperature Tw,out .
+
+                                             29
+                                                                                  tgap
+                                                                  twall                            tFCI
+                                       1000
+                                                                                                                           TFCI2
+                                       950
+
+
+                                       900
+
+
+                                       850
+                              Tout
+                               T out
+
+                                                                                                                PbLi
+                                       800                                                                      bulk
+                                                            WALL                                   FCI          flow
+                      Tw               750                                                                                  TFCI1
+                      THe,w
+                                       700
+
+
+                                       650
+                                              0           0.005             0.01          0.015          0.02     0.025
+                                                                                    rad
+                                                                                  rad            PbLi gap
+
+
+Figure 17: Temperature distribution at the outlet of the poloidal duct across the
+steel wall, the liquid metal gap and the FCI. In the temperature names the subscript
+”out” has been omitted to simplify the notation.
+
+
+
+                                                                                  4
+         THe THe,w Tw             TFCI1           TFCI2
+                                                                                 3.5
+
+                                                                                  3
+
+                                                                                 2.5
+                                                                   y (pol) [m]
+
+
+
+
+      He                  PbLi       PbLi                                         2
+                     FS   (gap) FCI (bulk)
+     ducts                                                                       1.5                                                  T He
+                                                                                                                                      T He,w
+                                                                                  1
+         y, pol                                                                                                                       Tw
+                                                                                 0.5                                                  TFCI1
+                                                                                                                                      TFCI2
+                                  u                                               0
+z, tor      x, rad                                                                 600     650     700      750    800    850   900   950   1000
+
+                                                                                                                  TT[K]
+                                                                                                                    [K]
+
+                          (a)                                                                                     (b)
+
+
+Figure 18: (a) Scheme of the considered geometry: He ducts, steel wall, PbLi gap,
+FCI and bulk flow. (b) Temperature distribution along the poloidal direction. THe
+is the temperature of helium, THe,w the value at the He-wall interface, Tw at the
+wall-PbLi gap interface, TF CI1 and TF CI2 the values on the two sides of the insert.
+
+
+                                                                                 30
+This assumption is justified by the fact that the variation of temperature across the
+gap width is very small.
+    Figure 18b shows the temperature distribution obtained by the described proce-
+dure. The diﬀerence between the temperature at the wall and the one at the insert is
+quite small as shown in Fig.19. The maximum diﬀerence, which occurs at the outlet,
+is lower than 3 K.
+
+                                                                   ∆Tout< 3K
+                                            4
+
+                                           3.5     T w (725.15-745.99)
+
+                                            3      T FCI1 (725.15-748.93)
+                                     [m]
+
+                                           2.5
+                             y (pol) [m]
+
+
+
+
+                                            2
+                         y (pol)
+
+
+
+                                           1.5
+
+                                            1
+
+                                           0.5
+
+                                            0
+                                             720   725     730        735     740   745   750
+                                                                      T [K]
+                                                                 T [K]
+
+
+Figure 19: Temperature distribution along the poloidal direction. Tw is the tem-
+perature at the wall-fluid interface in the gap and TF CI1 is the one at the fluid-FCI
+interface, facing the gap. The maximum temperature diﬀerence occurs at the outlet
+and it is ∆Tout < 3K.
+
+
+
+3     Equations for mass transfer
+Mass transfer process is the result of transporting material from a solid surface to
+the bulk of a flowing fluid and the driving force is the diﬀerence in the concentration
+of dissolved elements. The global transport is given by diﬀusion and bulk convection.
+In order to calculate the transport of a corrosion product, present in the liquid metal
+in a certain concentration ci , where i denotes the considered species i.e. the dissolved
+element, a convection-diﬀusion equation is used:
+                                            ∂ci
+                                                + (v·∇) ci = ∇ · (Di ∇ci )                      (19)
+                                            ∂t
+where v is the velocity of PbLi obtained from the analysis of the MHD flow (Sect.5,
+part I) and Di (T ) is the mass diﬀusion coeﬃcient or mass diﬀusivity of the solute i
+in the liquid metal that is a function of the temperature.
+    This equation can be written in dimensionless form by assuming a characteristic
+velocity v0 , chosen as the average velocity in a poloidal duct (v0 = 4 cm s−1 ), and
+a typical length L, taken here as the width of the gap (L = 0.001 m). For a steady
+
+
+
+                                                                 31
+state problem the non-dimensional equation reads as:
+                                    µ         ¶      µ       ¶
+                                      Di               1
+                   (v · ∇) ci = ∇ ·        ∇ci = ∇ ·      ∇ci ,                    (20)
+                                      v0 L             Pe
+where P e is the Peclet number that depends on the temperature through the diﬀusion
+coeﬃcient D(T ). The Peclet number is the ratio of the solute convected by the
+fluid to the amount transported by diﬀusion. In other words, it relates the rate of
+advection of a flow to its rate of diﬀusion, giving a measure of the relative importance
+of these two processes. It is given by the product of the Reynolds number Re with
+the Schmidt number Sc. This latter describes the ratio of momentum diﬀusivity
+(expressed by the kinematic viscosity ν) and mass diﬀusivity:
+                                            v0 L ν   v0 L
+                            P e = Re Sc =          =      .                        (21)
+                                             ν D      D
+Physically the Schmidt number relates the thickness of the hydrodynamic laminar
+layer δ h and the one of the mass-transfer boundary layer δ d . The higher the value of
+Sc, the thinner will be the diﬀusion layer and the faster will be its formation. For
+liquid metals, where ν À D, the Schmidt number is very high indicating that the
+mass diﬀusion layer δ d is submerged under the hydraulic boundary layer δ h (δ d ¿ δh ).
+    The mass flux of the solute i from the channel wall into the bulk of the fluid is
+given by:
+                                   ji = ki (cw    b
+                                             i − ci ),                             (22)
+where ki is the mass transfer coeﬃcient for the dissolved relevant species i and it
+depends only on the flow conditions, cwi is the concentration of the solute at the wall
+and cbi is the concentration in the bulk of the fluid or the average concentration in
+the cross-section. If cw     b
+                       i > ci the mass flux is directed from the wall into the fluid.
+The mass flux can be also expressed as
+                                                ∂ci
+                                     ji = −Di       ,                              (23)
+                                                ∂n
+where n is the coordinate normal to the steel wall (radial direction x in Fig.15).
+
+3.1    Boundary conditions
+For solving the present problem a fixed velocity profile has been imposed as obtained
+from the investigation of the MHD flow in poloidal ducts of a DCLL blanket (Sect.5,
+part I).
+   Figure 20 summarizes the boundary conditions for the temperature and the con-
+centration that have been used for the numerical study.
+   At the inlet a constant value of temperature has been considered, Tin = 452 ◦ C
+and the concentration has been set at the saturation value at the entrance tempera-
+ture, c0 = csat (Tin ).
+   At the interface between the separation plate and the liquid metal flowing in
+the gap the wall temperature distribution has been given as calculated considering
+the heat transfer across the multi-layer barrier formed by helium channels, wall,
+
+                                          32
+gap and insulating insert (see Sect.2.3). For this dissolution process, the surface
+concentration distribution has been assumed equal to the saturation values at the
+temperature of the wall cw = csat (Tw ) (He, Li and Mineev (2001)). The expression
+used to obtain such values is regarded as a possible option but uncertainties are still
+present (Sect.3.2) and ongoing discussions could lead in future to modifications of
+the considered formula.
+
+
+                Outlet                               BOUNDARY CONDITIONS
+                                                       T                cFe
+
+                                        Inlet         Tin          c0 = csat (Tin)
+
+                                                 Temp. profile        csat (Tw)
+                                        Wall
+                                                    Tw(y)        saturation values
+                                                 Temp. profile        No flux
+                                         FCI
+                                                   TFCI(y)           ∂c/∂n = 0
+            Separation
+            plate (wall)
+
+
+
+
+              PbLi gap
+                               Flow Channel
+                                Insert (FCI)
+
+
+
+
+            y, pol
+                               Inlet
+                x, rad
+                           u
+                 z, tor
+
+
+
+
+Figure 20: Sketch showing boundary conditions for the temperature T and iron
+concentration cF e applied in the calculations. Here csat indicates the saturation
+concentration, y is the poloidal coordinate and n is the transverse direction, normal
+to the FCI, here the radial direction x. The separation plate is simply called wall.
+
+    At the surface of the flow channel insert no flux has been assumed for the concen-
+tration. In Sect.2.3 it is shown that the temperature variation across the gap is very
+small. For that reason a temperature distribution equal to that at the wall-liquid
+metal interface has been give, i.e. TF CI1 (y) ' Tw (y). Here the subscript 1 indicates
+the PbLi-FCI interface at the gap side and 2 will be used to denote the interface at
+the bulk side.
+    The employed fluid dynamic code CFX assumes internally a boundary condition
+at the outlet and a constant gradient constraint is imposed, generally diﬀerent from
+zero.
+
+
+
+
+                                                33
+3.2    Saturation concentration and diﬀusion coeﬃcient
+Long-term exposure tests carried out on specimens of the martensitic steel MANET
+in the PbLi loop PICOLO (Borgstedt, Drechsler, Frees and Peric (1988)) showed
+that for ferritic steels the corrosion, after an incubation period, needed before the
+samples fully interact with the liquid metal, is governed by uniform dissolution of
+iron and chromium (Borgstedt and Röhrig (1991)). The incubation period can be
+related to the presence of a passivation layer that has to be dissolved before having
+a complete wetting of the steel surface. The authors show that the steady state
+corrosion of ferritic steel in flowing PbLi alloy for temperatures in the range 500−550
+◦
+  C is governed by dissolution processes. The experiments made in the PICOLO loop
+considered a flowing PbLi with a velocity of 0.3 m s−1 in the test section. Material
+losses were determined by measuring both the reduction in thickness and in weight
+of the specimens.
+    Borgstedt and Röhrig (1991) derived values for the diﬀusivity of iron and chromium
+in PbLi from the ones available in Pb by introducing a correction factor given by the
+ratio of the PbLi viscosity and the one of Pb, (η P bLi /η P b )−1 = 0.56, considering the
+Einstein-Stokes relation that connects the diﬀusion coeﬃcient D with the viscosity η
+(η ∼ T /D). According to Robertson (1968) who describes the diﬀusivity D through
+the relation
+                                                    Q
+                                    D = D0 exp(−        ),
+                                                    RT
+where D0 is a constant (D0.F e = 4.9 10−7 m2 s−1 ), R is the gas constant R = 8.31447
+J · K−1 mol−1 , T is the temperature in Kelvin and Q = 10500 ± 1500 cal mol−1 , the
+iron diﬀusivity in lead is given by:
+
+                    DF e/P b (T ) = 4.9 10−7 exp(−5280/T ) m2 s−1 .                 (24)
+
+By introducing the above mentioned correction factor a value DF e/P bLi (500◦ C) = 2.96
+10−10 m2 s−1 for the mass diﬀusivity of Fe in PbLi is obtained at T = 500◦ C.
+    In Fig.21 the mass diﬀusion coeﬃcient as given by (24) for the temperature range
+of the problem under study is plotted as a function of the wall temperature.
+    Borgstedt and Röhrig (1991) and Borgstedt and Feuerstein (1992) give also an
+expression for the solubility of iron in PbLi, assuming that it is similar to the one in
+Pb given by Stevenson and Wulﬀ (1961):
+                                                      14046
+                              cs (T ) = 31.6 exp(−          )                       (25)
+                                                        T
+or
+                                                6100
+                                log cs (T ) = 3.5 −   .                          (26)
+                                                  T
+In the last equation the saturation concentration is expressed in mole fraction (per-
+centage). The values obtained by this formula have been compared with the ex-
+perimental data from corrosion tests in turbulent flow ( Borgstedt and Feuerstein
+(1992)).
+
+
+
+                                           34
+                                      2.4E-10
+
+                                      2.3E-10
+
+                                      2.2E-10
+               D [mD2s-1]
+                                      2.1E-10
+
+                                       2E-10
+
+                                      1.9E-10
+
+                                      1.8E-10
+                                             720      725    730          735    740   745   750
+                                                                           T
+                                                                   Tw [K]
+
+Figure 21: Mass diﬀusion coeﬃcient plotted as a function of the wall temperature.
+
+
+
+
+                                       0.07
+
+                                      0.065
+
+                                       0.06
+                 csatcFe[wppm]
+                         sat [wppm]
+
+
+
+
+                                      0.055
+
+                                       0.05
+
+                                      0.045
+
+                                       0.04
+
+                                      0.035
+
+                                       0.03
+                                              720   725     730         735     740    745   750
+                                                                       T wall
+                                                                  T [K]
+
+Figure 22: Saturation concentration csat of iron atoms in PbLi as a function of the
+temperature.
+
+
+
+
+                                                                  35
+    In equation (25) cs is expressed in atomic fractions (atoms of iron/atoms of PbLi)
+and T is the absolute temperature. In order to convert this value of concentration
+in mass fraction it is necessary to multiply it by the ratio of the atomic mass of iron
+to the molecular weight of PbLi. The molecular weight can be calculated as the sum
+of the individual atomic masses of all the atoms forming the molecule. Although for
+an alloy the molecular weight should take into account the electronic structure of
+the molecule, as an approximation it has been calculated according to the common
+definition:
+               MWP bLi = 207.2 u · 0.83 + 6.941 u · 0.17 = 173.156 u,
+where u is called atomic mass unit.
+    Figure 22 shows the saturation concentration csat of iron from eq.(25) as a function
+of the temperature.
+    The validity of the described relations for the solubility and diﬀusion coeﬃcients
+of iron in the eutectic liquid alloy PbLi is also supported by Borgstedt and Gumin-
+ski (2002). They show that these data are consistent with the Einstein-Sutherland
+equation. Moreover, the authors justify the use of solubility values similar to the
+ones obtained for the iron in Pb by saying that the Fe-solubility in PbLi should not
+be strongly aﬀected by the presence of lithium. This is due to the fact that, since the
+alloy PbLi can be considered as a quasi-binary alloy of Pb-PbLi (Jauch et al. (1986)),
+Li interacts much more with Pb than with Fe atoms and therefore the dissolution of
+iron atoms by Li is unlikely.
+
+
+4    Numerical model
+The present problem is solved by using the commercial code CFX. Here an additional
+variable c is defined that describes the concentration of Fe atoms that dissolve in the
+liquid metal. A transport equation, which includes an advection and a diﬀusion
+term, is solved for this new variable. The concentration of iron has been defined as
+a specific additional variable given in terms of the amount of the conserved quantity
+per unit mass of fluid.
+    In CFX 5.6 the general form of a transport equation for additional variables is:
+                            ∂c
+                               + ∇ · (v c) = ∇ · (D∇c)
+                            ∂t
+where c is the conserved quantity per unit mass, D is the kinematic diﬀusivity for
+the scalar property.
+   The only equation solved during the run is the one for the concentration; the
+other variables, namely the velocity and the temperature, have been determined in
+advance and they stay at their imposed initial values. Fluid properties, saturation
+concentration and diﬀusion coeﬃcient are taken with reference to the local temper-
+ature determined according to the afore-mentioned procedure (Sect.2.3).
+
+
+
+
+                                          36
+5            Results
+Results have been obtained for two diﬀerent imposed velocity profiles, calculated
+for two values of the electrical conductivity of the flow channel insert, σ F CI = 500
+Ω−1 m−1 and σ F CI = 100 Ω−1 m−1 , as shown in Fig.10b (Sect.5.1.3). In the first case
+there is a higher maximum velocity. The velocity fields come from the analysis of the
+MHD flow in the poloidal ducts in a DCLL blanket module ( Mistrangelo, Raﬀray
+and Aries Team (2007) and Part I of this report).
+
+    Figure 23 shows the concentration of iron in the gap as a function of the radial
+direction, namely across the width of the gap for various poloidal positions. Here,
+the concentration is given in mass fraction, i.e. in grams of solute per grams of fluid
+[gsol /gf luid ]. A higher concentration of dissolved iron is present only in half of the
+gap, close to the steel wall. Figure 23a displays the results obtained considering a
+velocity distribution calculated for the case with σ F CI = 500 Ω−1 m−1 and Fig.23b
+corresponds to σ F CI = 100 Ω−1 m−1 , namely to smaller given velocities.
+
+        7.0E-08                                                           7.0E-08
+                             σFCI = 500 Ω-1m-1                                                σFCI = 100 Ω-1m-1
+        6.5E-08                                                           6.5E-08
+                                                        [mm]
+        6.0E-08                                                           6.0E-08
+                                                         y=200
+                                                         y=500
+        5.5E-08                                          y=1000           5.5E-08
+                             y (pol)
+cc Fe
+
+
+
+
+                                                                  cc Fe
+
+
+
+
+                                                         y=1500
+        5.0E-08                                          y=2000
+                                                                                               y (pol)
+                                                                          5.0E-08
+                                                         y=3500
+        4.5E-08                                          out
+                                                                          4.5E-08
+
+
+        4.0E-08                                                           4.0E-08
+
+
+        3.5E-08                                                           3.5E-08
+                  0   0.2   0.4    0.6        0.8   1                               0   0.2   0.4     0.6   0.8   1
+
+                            x (rad)
+                               x (rad) [mm]
+                                                                                              x (rad) [mm]
+                                                                                                x (rad)
+
+
+                            (a)                                                                (b)
+
+
+Figure 23: Concentration distribution given in grams of solute per grams of fluid
+(mass fraction) across the gap width, i.e. along the radial direction, at various
+poloidal positions. The results are obtained considering the MHD velocity profile
+obtained for (a) σ F CI = 500 Ω−1 m−1 and (b) σ F CI = 100 Ω−1 m−1 .
+
+    We observe that at a fixed radial position, namely at a given distance from the
+wall, the concentration of iron increases towards the exit of the duct. This is due to
+the fact that the atoms of iron that dissolve in the liquid metal in the gap are then
+transported by convection towards the exit of the channel. Moreover, this is related
+to the assumption that at the wall the concentration reaches the saturation value
+that increases with the temperature. This eﬀect can be seen also in Fig.24 where the
+iron concentration is plotted as a function of the poloidal direction for several radial
+locations.
+
+                                                          37
+                4000                                                                                      4000
+
+
+                3500                                                                                      3500
+
+
+                3000                                                            [mm]                      3000
+         [mm]
+
+
+
+
+                                                                                                   [mm]
+                2500                                                             x=0                      2500
+                                                                                 x=0.25
+
+
+
+
+                                                                                           y (pol)
+ y (pol)
+
+
+
+
+                2000                                                             x=0.5                    2000
+      y
+
+
+
+
+                                                                                               y
+                                                                                 x=0.8
+                1500                                                             x=1                      1500
+
+                1000                                                                                      1000
+
+                 500                                                                                      500
+                                         σFCI = 500 Ω-1m-1                                                                          σFCI = 100 Ω-1m-1
+                    0                                                                                        0
+                   3.0E-08    4.0E-08    5.0E-08      6.0E-08         7.0E-08                               3.0E-08       4.0E-08   5.0E-08       6.0E-08     7.0E-08
+
+                                        c
+                                              c
+                                                                                                                                     cc
+                                        (a)                                                                                         (b)
+
+
+ Figure 24: Concentration of iron (mass fraction) along the poloidal direction, at
+ various radial positions. The steel wall is located at x = 0 and the FCI at x = 1.mm
+ The results are obtained imposing the MHD velocity profile calculated for the case
+ with (a) σ F CI = 500 Ω−1 m−1 and (b) σ F CI = 100 Ω−1 m−1 .
+
+
+
+                1.0E-08
+                1.0E-05                                                                                    1.0E-05
+                                                                                                           1.0E-08
+
+                                                                                                          0.0E+00
+                                                                                                          0.0E+00
+                 -1.0E-05 0
+                -1.0E-08        0.2      0.4        0.6         0.8        1
+                                                                                                                      0      0.2    0.4         0.6     0.8       1
+                                                                                 [mm]                      -1.0E-05
+                                                                                                          -1.0E-08
+
+                 -3.0E-05
+                -3.0E-08                                                          out                      -2.0E-05
+                                                                                                          -2.0E-08
+                                                                                  y=3500
+                                                                                  y=2000                   -3.0E-05
+                                                                                                          -3.0E-08
+                 -5.0E-05
+                -5.0E-08
+  c/∂cx
+
+
+
+
+                                                                                                c/∂xc
+
+
+
+
+                                                                                  y=1500
+                                                                                              ∂gradx
+∂gradx
+
+
+
+
+                                                                                                           -4.0E-05
+                                                                                                          -4.0E-08
+                 -7.0E-05
+                -7.0E-08
+                                            y                                     y=1000                                                  y
+                                                                                  y=500                    -5.0E-05
+                                                                                                          -5.0E-08
+
+                                                                                  y=200
+                                                                                                           -6.0E-05
+                                                                                                          -6.0E-08
+                 -9.0E-05
+                -9.0E-08
+
+                                                                                                           -7.0E-05
+                                                                                                          -7.0E-08
+                 -1.1E-04
+                -1.1E-07
+                                                                                                          -8.0E-08
+                                                                                                           -8.0E-05
+                                            σFCI = 500 Ω-1m-1                                                                        σFCI = 100 Ω-1m-1
+                 -1.3E-04
+                -1.3E-07                                                                                   -9.0E-05
+                                                                                                          -9.0E-08
+                                                                                                                                         x
+                                         x (rad)
+                                             x   [mm]                                                                                 x (rad) [mm]
+
+                                              (a)                                                                                         (b)
+
+
+ Figure 25: Gradient of iron concentration in direction perpendicular to the wall
+ plotted along the radial direction, at various poloidal positions. The results are
+ obtained considering the MHD velocity profile calculated for (a) σ F CI = 500 Ω−1 m−1
+ and (b) σ F CI = 100 Ω−1 m−1 .
+
+
+                                                                                 38
+               4000                                                                        4000
+
+
+               3500                                                                        3500
+
+
+               3000                                                                        3000
+                                                                [mm]
+
+
+
+
+                                                                                    [mm]
+        [mm]
+
+
+
+               2500                                                                        2500
+                                                                 x=0 wall
+
+
+
+
+                                                                            y (pol)
+                                                                 x=0.5
+y (pol)
+
+
+
+
+               2000                                                                        2000
+    y
+
+
+
+
+                                                                                y
+                                                                 x=0.8
+                                                                 x=0.25
+               1500                                                                        1500
+
+
+               1000                                                                        1000
+
+
+                500                                                                        500
+                        σFCI = 500 Ω-1m-1                                                          σFCI = 100 Ω-1m-1
+                  0                                                                          0
+                 -1.5E-04
+                -1.5E-07     -1.0E-04
+                             -1.0E-07     -5.0E-05
+                                          -5.0E-08   0.0E+00
+                                                      0.0E+00                               -1.0E-04 -8.0E-05 -6.0E-08
+                                                                                            -1.0E-07 -8.0E-08 -6.0E-05 -4.0E-05
+                                                                                                                       -4.0E-08 -2.0E-05
+                                                                                                                                 -2.0E-08 0.0E+00
+                                                                                                                                           0.0E+00
+
+                                 ∂c/∂x
+                                    gradx c                                                                        gradx c
+                                                                                                                  ∂c/∂x
+                                   (a)                                                                              (b)
+
+
+ Figure 26: Gradient of iron concentration in direction perpendicular to the wall,
+ along the poloidal direction for several radial locations across the gap width. Results
+ are obtained considering the MHD velocity profile computed for (a) σ F CI = 500
+ Ω−1 m−1 and (b) σ F CI = 100 Ω−1 m−1 .
+
+     By comparing the results obtained imposing two diﬀerent velocity profiles we
+ notice that, in the case of larger electrical conductivity of the insert, when the velocity
+ is higher, the concentration at a selected position in the gap is smaller due to the
+ stronger advection.
+     The concentration gradient in direction perpendicular to the wall, i.e. the mass
+ flux that enters the fluid from the wall, increases along the poloidal direction as shown
+ in Figs.25-26. When the imposed velocity is larger (σ F CI = 500 Ω−1 m−1 ) the gradi-
+ ent, namely the corrosion rate, is higher than for lower velocity (σ F CI = 100 Ω−1 m−1 )
+
+     The corrosion rate is given by the product of the concentration gradient normal
+ to the wall (∂c/∂x) and the mass diﬀusion coeﬃcient (D). Since the concentration is
+ expressed in mass fraction, it is necessary to multiply the obtained quantity by the
+ ratio of the PbLi density (ρP bLi = 9.5 g cm−3 ) to that of iron (ρF e = 7.87 g cm−3 ) .
+ It is obtained that at the outlet the corrosion rate is of the order of 1 µm/year.
+ This value is smaller than the ones found in the literature (Bucenieks, Krishbergs,
+ Platacis, Lipsbergs, Shishko, Zik and Muktupavela (2005)). This can be related to
+ the assumption that the concentration at the entrance is equal to the saturation value
+ at the inlet temperature. The experiments performed at the University of Latvia
+ instead are obtained using a purified liquid metal at the inlet, obtained by installing
+ in the loop a cold trap to remove the dissolved corrosion products. Moreover, the
+ reference temperature in their experiments was higher (T = 550 ◦ C). We can also
+ notice that many experiments have been performed under turbulent flow conditions
+ and instead in the calculations a laminar fully developed MHD profile is assumed.
+
+
+                                                                 39
+6     Conclusions
+Calculations have been performed to analyze the mass transfer problem of corrosion
+products in flowing PbLi in the gaps formed between the flow channel inserts and the
+steel walls in the poloidal ducts that transport the liquid metal in a DCLL blanket
+module. This study has the purpose to give a first assessment of the importance of
+corrosion of the steel wall in a DCLL blanket. Uncertainties are still present concern-
+ing the saturation concentration and mass diﬀusivity values used in the numerical
+analysis. The large scattering among the available experimental data and the fact
+that often they do not cover the needed temperature range and flow conditions, re-
+quires still a careful evaluation of the selected formulas. Moreover, there is often a
+large diﬀerence between the flow conditions assumed in the numerical analysis and
+those used in the experiments. For that reason further investigations are required
+to refine these first results. Ongoing discussions and simulations will give a more
+complete and reliable picture of the importance of corrosion in the proposed blanket
+concept for ARIES-CS.
+    From the first analysis it seems that, due to the small velocities in the gaps formed
+between the flow channel inserts and the walls, these latter will not suﬀer from a
+strong and critical corrosion. A corrosion rate of the order of 1 µm/year has been
+found. Nevertheless, it is important to remark that some assumptions have been
+considered that may lead to an underestimation of the corrosion rate. In particular,
+one important reason for this low corrosion rate can be identified in the assumed
+saturation of the PbLi imposed at the inlet of the poloidal ducts. This could be an
+indication that the entire liquid metal loop have to be modelled in order to obtain
+the correct balance between corrosion and deposition processes. Therefore, a realistic
+quantitative estimation of the corrosion rate requires a dedicated model for the mass
+transfer of wall material into the fluid. This model should take into account local
+interface temperature and the possible under-saturation of the PbLi with iron and
+chromium at the duct entrance. Chromium has been omitted in the analysis due to
+the strong uncertainties over the data for diﬀusion coeﬃcient and saturation values.
+
+
+7     Future investigations
+In order to understand the eﬀect of the assumptions under which the problem has
+been studied, other calculations will be carried out for instance considering a diﬀer-
+ent temperature range and other initial conditions for the concentration assuming
+cin < csat (Tin ). Moreover, in this first investigation the properties of steel (e.g. the
+heat transfer coeﬃcient) have been considered constant, but a dependence on the
+temperature could be included.
+    Results in the literature (Borgstedt and Feuerstein (1992)) show that due to the
+presence of lithium the solubility of some metals in the eutectic PbLi alloy could
+increase compared to that in pure lead. Therefore, further studies are foreseen by
+using diﬀerent values of the iron solubility.
+
+
+
+
+                                           40
+References
+Borgstedt, H., Drechsler, G., Frees, G. and Peric, Z.: 1988, Corrosion testing of steel
+    x 18 CrMoVNb 12 1 (1.4914) in a Pb-17Li pumped loop, Journal of Nuclear
+    Materials 155-157, 728—731.
+
+Borgstedt, H. and Feuerstein, H.: 1992, The Solubility of Metals in Pb-17Li Liquid
+    Alloy, Journal of Nuclear Materials 191-194, 988—991.
+
+Borgstedt, H. and Guminski, C.: 2002, A model for the prediction of the corrosion of
+    steels in flowing liquid lead alloys, Journal of Nuclear Materials 303, 240—241.
+
+Borgstedt, H. U. and Röhrig, H. D.: 1991, Recent Results on Corrosion Behaviour
+    of MANET Structural Steel in Flowing Pb-17Li Eutectic, Journal of Nuclear
+    Materials 197-181, 596—598.
+
+Broc, M., Flament, T., Fauvet, P. and Sannier, J.: 1988, Corrosion of austenitic
+    and martensitic stainless steels in flowing 17Li–83Pb alloy, Journal of Nuclear
+    Materials 155-157(2), 710—714.
+
+Bucenieks, I., Krishbergs, R., Platacis, E., Lipsbergs, G., Shishko, A., Zik, A. and
+    Muktupavela, F.: 2005, Investigation of corrosion eﬀects of EUROFER steel
+    in Pb-17Li stationary flow in the magnetic field, Proceedings of the 15th Riga
+    and 6th PAMIR Conference on Fundamental and Applied MHD, June 27-July
+    1, Riga, Jurmala, Latvia 1, 255—258.
+
+Bühler, L. and Molokov, S.: 1994, Magnetohydrodynamic flows in ducts with insu-
+    lating coatings, Magnetohydrodynamics 30(4), 439—447.
+
+Flament, T., Tortorelli, P., Coen, V. and Borgstedt, H.: 1992, Compatibility of
+    materials in fusion first wall and blanket structures cooled by liquid metals,
+    Journal of Nuclear Materials 191-194, 132—138.
+
+He, X., Li, N. and Mineev, M.: 2001, A kinetic model for corrosion and precipitation
+    in non-isothermal LBE flow loop, Journal of Nuclear Materials 297(2), 214—219.
+
+Jauch, U., Karcher, V., Schulz, B. and Haase, G.: 1986, Thermophysical properties
+    in the system Li-Pb, Report KfK 4144, Kernforschungszentrum Karlsruhe.
+
+Malang, S.: 1984, Influence of a magnetic field on liquid metal corrosion, Fusion
+    Technology 1984, Proceedings of the 13th Symposium on Fusion Technology,
+    Varese, Italy, 24-28 September 1984, Pergamon Press, pp. 1424—1428.
+
+Malang, S., Bojarsky, E., Bühler, L., Deckers, H., Fischer, U., Norajitra, P. and
+    Reiser, H.: 1993, Dual coolant liquid metal breeder blanket, in C. Ferro, M. Gas-
+    parotto and H. Knoepfel (eds), Fusion Technology 1992, Proceedings of the 17th
+    Symposium on Fusion Technology, Rome, Italy, 14-18 September 1992, Elsevier,
+    pp. 1424—1428.
+
+
+
+                                          41
+Malang, S. and Tillack, M. S.: 1995, Development of self-cooled liquid metal breeder
+    blankets, Report FZKA 5581, Forschungszentrum Karlsruhe.
+McCarthy, K. A. and Abdou, M. A.: 1991, Analysis of liquid metal MHD flow
+   in multiple adjacent ducts using an iterative method to solve the core flow
+   equations, Fusion Engineering and Design 13, 363—380.
+Mistrangelo, C.: 2005, Three-dimensional MHD flow in sudden expansions, Report
+    FZKA 7201, Forschungszentrum Karlsruhe. PhD Thesis, University of Karl-
+    sruhe.
+Mistrangelo, C., Raﬀray, A. R. and Aries Team: 2007, MHD Analysis of Dual Coolant
+    Pb-17Li Blanket for ARIES-CS, Fusion Science and Technology 52(4), 849—854.
+Molokov, S.: 1993, Fully developed liquid-metal flow in multiple rectangular ducts
+    in a strong uniform magnetic field, European Journal of Mechanics, B/Fluids
+    12(6), 769—787.
+Morley, N. B., Malang, S. and Kirillov, I.: 2005, Thermofluid magnetohydrodynamic
+    issues for liquid breeders, Fusion Science and Technology 47(3), 488—501.
+Müller, U. and Bühler, L.: 2001, Magnetofluiddynamics in Channels and Containers,
+    Springer, Wien, New York. ISBN 3-540-41253-0.
+Najmabadi, F. and Raﬀray, A. R.: 2006, Recent progress in the ARIES compact
+    stellarator study Fusion Engineering and Design, Fusion Engineering and Design
+    81(23-24), 2679—2693.
+Najmabadi, F., Raﬀray, R., Ku, L. P., Lyon, J. F. and the ARIES Team: 2006,
+    Optimization of compact stellarator configuration as fusion devices, Physics of
+    Plasmas 13, 056123—1.
+Najmabadi, F. and the ARIES Team: 2007, Final report of ARIES-CS study. It
+    will be published as a special issue of Fusion Science and Technology. Preprints
+    available at http://aries.ucsd.edu/ARIES/.
+Patankar, S. V.: 1980, Numerical Heat Transfer and Fluid Flow, Hemisphere.
+Raﬀray, A. R., El-Guebaly, L., Ihli, T., Malang, S., Najmabadi, F., Wang, X. and
+    the ARIES-CS Team: 2007, Engineering challenges in designing an attractive
+    compact stellarator power plant, Fusion Engineering and Design 82, 2696—2704.
+Robertson, W.: 1968, Trans. Met. Soc. AIME 242, 2139.
+Rome (Editor), J. A.: 1998, U.S. Stellarator Program Plan, Stellarator News 57, 4—6.
+Sannier, J., Flamment, T. and Terlain, A.: 1991, Corrosion of martensitic steel in
+    flowing Pb17Li, Fusion Technology 1990, Esevier, pp. 881—885.
+Shercliﬀ, J. A.: 1965, A Textbook of Magnetohydrodynamics, Pergamon Press, Ox-
+    ford.
+
+                                        42
+Smolentsev, S., Morley, N. B. and Abdou, M.: 2006, Magnetohydrodynamic and
+    thermal issues of the SiCf/SiC flow channel insert, Fusion Science and Technol-
+    ogy 50(1), 107—119.
+
+Stevenson, D. and Wulﬀ, J.: 1961, Liquid-solid phase distribution studies in the
+     systems iron-lead, cobalt-lead, chromium-tin, and nickel-silver, Trans. Met. Soc.
+     AIME 221, 271—275.
+
+Tillack, M. S. and Malang, S.: 1997, High Performance PbLi Blanket, Proceedings
+     of the 17th IEEE/NPSS Symposium Fusion Engineering, San Diego, California
+     October 6-10, Vol. 2, Institute of Electrical and Electronics Engineers, Inc.,
+     pp. 1000—1004.
+
+Walker, J. S.: 1986, Liquid metal flow through a thin walled elbow in a plane per-
+    pendicular to a uniform magnetic field, Int. J. Engng. Sci. 24(11), 1741—1754.
+
+
+
+
+                                         43
+

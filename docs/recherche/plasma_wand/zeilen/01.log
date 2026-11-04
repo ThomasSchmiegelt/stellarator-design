@@ -1,0 +1,19 @@
+Fertig. Ergebnis in `/home/cae/hermes/fusion/docs/recherche/plasma_wand/zeilen/01.md`:
+
+| Größe | Ergebnis |
+|---|---|
+| Hauptradius R | 5.5 m (Wikipedia Wendelstein 7-X, belegt) |
+| kleiner Plasmaradius a | 0.53 m (Wikipedia Wendelstein 7-X, belegt) |
+| Abstand Plasma → erste Wand | nicht gefunden |
+| Abstand Plasma → Spulen | nicht gefunden |
+
+**Ablauf:** 2 Suchen (wiki/openalex/osti/arxiv), genau 5 Abrufe:
+1. en.wikipedia.org/wiki/Wendelstein_7-X → R, a ✓
+2. IOP „Status of W7-X construction“ (PDF) → leer (IOP blockiert Bots)
+3. OSTI 1484166 (Error fields W7-X) → Text ohne geometrische Zahlen
+4. arXiv 2511.15641 (X-/O-Punkte W7-X) → keine Wand-/Spulenradien
+5. arXiv 2610.23107 (Island-Divertor-Skalierung) → bestätigt R=5.5, a=0.53, aber keine Wand-/Spulenabstände
+
+Die Abstände Plasma–Wand bzw. Plasma–Spulen werden in den (offen zugänglichen) Quellen, die ich abrufen durfte, nicht als Meterzahl angegeben (die IOP-Papiere, in denen die Wandradien stehen, sind für abruf.py gesperrt) → gemäß Regel 4 als „nicht gefunden“ vermerkt.
+
+`pruefe.py`: **2 Belege bestätigt, 0 Fehler** (Ausgabe ist unten in der Datei abgelegt).

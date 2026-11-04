@@ -1,0 +1,335 @@
+URL: https://www.osti.gov/servlets/purl/953484
+               Princeton Plasma Physics Laboratory
+
+PPPL- 4410                                                          PPPL- 4410
+
+
+             Results of Compact Stellarator Engineering Trade Studies
+
+
+
+
+                         Tom Brown, L. Bromberg, M. Cole
+
+
+
+
+                                    May, 2009
+
+
+
+
+ Prepared for the U.S. Department of Energy under Contract DE-AC02-09CH11466.
+                   Princeton Plasma Physics Laboratory
+                           Report Disclaimers
+
+Full Legal Disclaimer
+       This report was prepared as an account of work sponsored by an agency of the United
+States Government. Neither the United States Government nor any agency thereof, nor any of
+their employees, nor any of their contractors, subcontractors or their employees, makes any
+warranty, express or implied, or assumes any legal liability or responsibility for the accuracy,
+completeness, or any third party’s use or the results of such use of any information, apparatus,
+product, or process disclosed, or represents that its use would not infringe privately owned
+rights. Reference herein to any specific commercial product, process, or service by trade name,
+trademark, manufacturer, or otherwise, does not necessarily constitute or imply its endorsement,
+recommendation, or favoring by the United States Government or any agency thereof or its
+contractors or subcontractors. The views and opinions of authors expressed herein do not
+necessarily state or reflect those of the United States Government or any agency thereof.
+
+Trademark Disclaimer
+      Reference herein to any specific commercial product, process, or service by trade name,
+trademark, manufacturer, or otherwise, does not necessarily constitute or imply its endorsement,
+recommendation, or favoring by the United States Government or any agency thereof or its
+contractors or subcontractors.
+
+
+
+                             PPPL Report Availability
+
+Princeton Plasma Physics Laboratory:
+
+      http://www.pppl.gov/techreports.cfm
+
+Office of Scientific and Technical Information (OSTI):
+      http://www.osti.gov/bridge
+
+
+Related Links:
+
+U.S. Department of Energy
+
+Office of Scientific and Technical Information
+
+Fusion Links
+         RESULTS OF COMPACT STELLARATOR ENGINEERING TRADE STUDIES *
+                                               T. Brown1, L. Bromberg2, M. Cole3
+                            1
+                            Princeton Plasma Physics Laboratory, P.O. Box 451, Princeton, NJ 08543
+                       2
+                           Massachusetts Institute of Technology, 167 Albany St., Cambridge, MA 02139
+                            3
+                              Oak Ridge National Laboratory, P.O. Box 2009, Oak Ridge, TN 37831
+                                                         tbrown@pppl.gov
+
+
+Abstract-- A number of technical requirements and                  configuration arrangement with design features that
+performance criteria can drive stellarator costs, e.g., tight      increases the power plant availability, improves operating
+tolerances, accurate coil positioning, low aspect ratio            reliability, decreases capital costs and reduces the
+(compactness), choice of assembly strategy, metrology,             assembly schedule time.
+and complexity of the stellarator coil geometry. With the
+completion of a seven-year design and construction effort          Past fusion power plant studies have shown that plant
+of the National Compact Stellarator Experiment (NCSX)              availability can be maximized with a configuration design
+it is useful to interject the NCSX experience along with           that allows the removal of large integrated plasma facing
+the collective experiences of the NCSX stellarator                 component segments that require frequent maintenance. A
+community to improving the stellarator configuration.              six year international fusion design study (1981-87) called
+Can improvements in maintenance be achieved by                     the International Tokamak Reactor (INTOR) conducted
+altering the stellarator magnet configuration with changes         near term power plant design studies centered on the
+in the coil shape or with the combination of trim coils?           Tokamak configuration with high operating availability as
+Can a mechanical configuration be identified that                  one of its design goals. The configuration design
+incorporates a partial set of shaped fixed stellarator coils       developed in this study was based on torus segmentation
+along with some removable coil set to enhance the overall          for horizontal access to remove large sectors between TF
+machine maintenance? Are there other approaches that               coils. A similar configuration arrangement was followed
+will simplify the concepts, improve access for                     in the ARIES-AT design.             In a further ARIES
+                                                                                                        6
+maintenance, reduce overall cost and improve the
+                                                                   maintenance comparison study             the comparative
+reliability of a stellarator based power plant? Using
+                                                                   advantage of the large sector removal verses through-a-
+ARIES-CS and NCSX as reference cases, alternative
+                                                                   port maintenance was documented. The ITER
+approaches have been studied and developed to show how
+                                                                   configuration follows a port based maintenance approach
+these modifications would favorably impact the
+                                                                   (depicting a “ship-in-a-bottle” arrangement). It was not
+stellarator power plant and experimental projects. The
+                                                                   designed for high operational availability, leading to
+current status of the alternate stellarator configurations
+                                                                   inefficient remote maintenance operations and
+being developed will be described and a comparison made
+                                                                   maintenance outages that range from several moths to
+to the recently designed and partially built NCSX device
+                                                                   multiple years. Even with the advent of time the ITER
+and the ARIES-CS reactor design study
+                                                                   configuration will impede a significant improvement in its
+                                                                   operational availability. The ARIES stellarator design
+                                                                   sturdy, ARIES-CS, did evaluate a port based maintenance
+    1.0 Stellarator Metrics and Design Philosophy
+                                                                   approach and deemed it acceptable, with expected plant
+                                                                   availability in the high 80’s; however optimistic
+To be successful a fusion power plant must meet physics
+                                                                   assumptions were invoked. The study assumed that
+performance requirements in an arrangement that offers
+                                                                   aggressive maintenance research and development
+attractive cost of electricity with reasonable plant
+                                                                   programs would be implemented to accomplish a robotic
+availability. High availability is important for fusion
+                                                                   maintenance system that would quickly and efficiently
+power plant operations, similar to fission plants, because
+                                                                   inspect, diagnose, repair, remove, replace, and inspect all
+of its inherent high capital cost. The mechanical systems,
+                                                                   components of the power core. The assumption here is
+design configuration and maintenance of a fusion power
+                                                                   that fully automated, autonomous maintenance machines
+plant is considerably more complex than a fission power
+                                                                   will efficiently accomplish the remote operations. Rather
+plant and it is not clear that time of operation would
+                                                                   than relying on an untested development program, a
+significantly improve the fusion power plants availability
+                                                                   preferred approach is to establish a design philosophy and
+(to approach a benchmark 90% availability) if it were not
+                                                                   component metrics that would avoid this path. To have
+designed for high operational availability in its initial
+                                                                   the best chance of meeting a 90% operation availability in
+design configuration. A design philosophy and physics /
+                                                                   a Stellarator power plant, three principle design goals
+engineering metrics should be set that fosters a
+                                                                   need to be followed in the configuration design:
+
+
+         * DE-AC02-09CH11466
+1. Provide straight (or nearly straight) outer modular coil                needed and be specific where it can be
+   legs. Incorporate trim coils or magnetic materials,                     degraded.
+   e.g., S/C pucks to magnetically reform the flux surface
+   or size the machine at a higher aspect ratio.              7 Consider making the modular coils "moldable" with a
+                                                                2-part mold (like W7AS and W7X) when developing a
+2. Position the modular coil back legs back far enough to       stellarator power plant design. This arrangement
+   allow sufficient access between the straightened             appears not to be practical for an experimental
+   modular coil back leg to extract the limited lifetime        configuration the size of NCSX due to the lack of
+   plasma facing components; removing each sector               space in the interior region.
+   straight back.
+                                                              8 Define a divertor system with full operational
+3. The configuration arrangement should foster                  reliability and availability consistent with all plasma
+   simplicity in the design of all components and services      facing components.
+   with the design driver being reliability and remote
+   maintenance of a fully integrated system.                       2.0 Stellarator Congfiguration Devleopment
+The machine capital cost and assembly schedule can be         A number of design options need to be investigated in
+improved by reducing component shape complexities and         order to determine relevant design features that will lead
+eliminating interferences in assembled components and in      to improvements in the stellarator configuration. In
+the machining process of the modular coils. Design            parallel to the engineering design process physics
+metrics include:                                              methodology used to define the magnetic windings needs
+                                                              to be reevaluated and augmented to respond to
+1 Avoid interlocking modular coil windings. This will         engineering constraints that will be imposed by an
+  reduce the modular coil/vacuum vessel period                availability driven stellarator configuration. Different
+  assembly time and costs. Incorporate trim coils,            design concepts will be investigated later this FY in
+  magnetic materials (e.g., S/C pucks) or higher aspect       pursuit of an improved stellarator configuration.
+  ratio to facilitate this.
+                                                              One configuration arrangement that was explored at the
+2 Define smooth, non-erratic, modular coil windings.          advent of the NCSX project was looking at the potential
+  This will reduce the complexity of the winding              benefit of incorporating monolithic High Temperature
+  support structure and reduce its machining costs. Coil                                                          1
+  winding times may also be improved.                         Superconductors (HTS) for stellarator applications . The
+                                                              diamagnetic properties of the bulk HTS material can be
+3 Define modular coil winding shapes that allow               used to provide simple mechanisms for field-shaping
+  adequate machine head access to help control                where the bulk superconducting materials provide
+  machining cost and schedules.                               diamagnetic control of stellarator fields through magnetic
+                                                              dipoles aligned against the ambient field. An initial study
+4 Define simpler geometries for the blanket/FW system         was undertaken to look at the far right spectrum where the
+  and vacuum vessel with adequate space for in-vessel         bulk HTS material replaces the traditional conductor
+  components and clearances. This will reduce its             shaped modular coil winding system, although a less
+  fabrication cost and also simplify the geometric            radical departure from the nominal winding design may
+  features of the plasma facing components; also              be of greater interest in future design studies.
+  reducing their capital costs.
+                                                                        3.0 HTS Stellarator Configuration
+5 Do not let the components shapes be unilaterally
+  driven by the output of physics magnetic codes.             A pure HTS puck stellarator configuration has been
+  Iterations need to be made between engineering and          developed using the ARIES-CS design point and
+  manufacturing to arrive at acceptable component             component features as a point of departure. The
+  geometries.                                                 ARIES-CS design was developed using a port-based
+                                                              maintenance scheme whereby replacement of the
+6 Relax magnetic field accuracy requirements wherever         blanket modules is done through a limited number of
+  possible; over specification increases costs.               designated maintenance ports.       Incorporating HTS
+       a) Limit the regions where minimum assembly            pucks in the design process allows magnetic forming
+             tolerances are needed.                           materials to be placed as tiles on a structural
+       b) Limit the regions where 1.02 magnet                 substructure, effectively allowing a traditional modular
+             permeability is needed; specify where it is      coil winding to be electrically split in the poloidal
+direction at any location. With the ability to electrically     radial motion centered on each of the two large angled
+disjoin a traditional winding provides one way for a            ports and bolted together at their interfacing flanges.
+stellarator to be designed with large openings that
+provide access to remove interior plasma facing
+                                                                                                          HTS puck inboard
+components, once restricted by highly shaped back legs                                                     structural shell
+of the modular coil winding.
+
+The general arrangement of the HTS puck stellarator                                                            HTS pucks shown
+                                                                                                            attached to inner shell
+concept is shown in Figure 1 illustrating the major
+details of the core components.
+
+      TF Coil                                      HTS puck
+                                                                                                             TF coil system
+                                                   structural
+                                                      shell
+
+
+
+
+                 Blanket /
+                FW module              Blanket /
+                                      FW module
+
+             HTS puck
+                                                                                         Inboard HTS puck
+          window module
+                                                                                        installation scheme
+
+
+      Figure 1. Isometric View of the HTS                              Figure 2. Isometric View of inboard HTS puck
+            puck stellarator concept                                                 assembly scheme
+
+                                                                                                    HTS puck outboard
+50° K, Monolithic High Temperature Superconductors               HTS puck inboard                     shell structure
+                                                                  structural shell
+(HTS) are used to provide field-shaping against an
+ambient field provided by three superconducting TF
+coils. The three TF coils are arranged and sized to
+allow each of the three field periods to be assembled
+with a straight line radial motion. The HTS pucks are
+pre-attached to the puck shell structure. Figures 2 and 3
+shows the local details of the vacuum vessel, the HTS
+puck structural shells and the modularization used in
+their assembly. The inboard HTS puck structural shell
+is made up from three pairs of sub modules assembled
+around the TF inboard leg and its bucking system
+support structure. Although details have not been                                                          TF coil
+                                                                                                           system
+developed, given the size of the overall assembly, there                                    VV period
+
+is adequate space for bolt access along the entire length
+of an exterior flange of the pucks structural shell. The                Figure 3. Vacuum vessel and outboard HTS puck
+installation of three vacuum vessel period segments is                               shell assembly scheme
+shown in Figure 3. A recessed area was provided in the
+inboard puck shell structure to allow room for the              The geometry of the blanket / FW system and vacuum
+vacuum vessel pump ducts located at the bottom of the           vessel was refined to provide the greatest amount of shape
+vessel, just inboard of the central horizontal port. A pair     simplification in an effort to minimize their fabrication
+of outboard puck shell structures is assembled with             costs. Where magnetic fields and plasma shaping is most
+                                                                critical on the inboard surface a simplified conformal
+                                                                shell structure was generated. Along the top and outboard
+regions the geometry was shaped using straight lines and
+circular arcs. Figure 4 illustrates the developed geometry
+of the blanket / FW period.
+
+
+
+
+  Segmented blanket
+     components
+
+
+
+
+                                                                   Figure 5 Section View through the HTS puck
+                                                                                 configuration
+
+                                                             Follow-up studies will be carried out this FY to look at a
+                                                             configuration that incorporates modified modular coil
+                                                             winding shapes in conjunction with trim coils and
+                                                             magnetic materials to improve the maintenance
+                                                             characteristics of the stellarator.
+             Figure 4 Blanket / FW components
+                                                             References
+The blanket/FW segmentation adopted in this study
+allowed every other sub module to be extracted straight      [1.] L. Bromberg,. et al., “Options for Magnetic Field
+back through the horizontal ports. This was predicated by         Shaping in Stellarators Using High Temperature
+maintaining the superimposed modular coil magnet                  Superconducting Monoliths”, 23rd Symposium on
+position used in the ARIES-CS design. In a follow up              Fusion Engineering, San Diego, Calif., 2009.
+design study this requirement will be changed to allow the   [2.] F. Najmabadi, et al. and the ARIES Team,
+magnet surface (or modular coils) to be positioned back           “Exploration of Compact Stellarator as Power
+far enough to allow each blanket segment to be extracted          Plants: Initial results from ARIES-CS Study,”.
+in a radial motion through individual vacuum vessel ports.   [3.] X.R. Wang, S. Malang, A.R. Raffray and the ARIES
+HTS puck window modules (shown in Fig. 1) are inserted            Team, “Initial Maintenance Assessment for ARIES-
+into the large horizontal ports to provide additional             CS Power Plant,” 20th IEEE/NPSS Symposium on
+shaping fields. The puck window modules would operate             Fusion Engineering, San Diego, California, Oct.
+at 50° K and have a cold-to-warm interface to carry the           2003
+magnetic loads to the room temperature vacuum vessel.        [4.] L. Waganer and J. Peipert-Jr, “ARIES-CS
+A double-walled vacuum vessel provides the vacuum                 Maintenance System Definition and Analysis”,
+boundary for the plasma components on the inside and the          ARIES-CS Maintenance System Final Report.
+superconducting TF and PF system on the outside. A           [5.] M.S. Tillack, S. Malang, L. Waganer, X. R. Wang,
+cross-sectional view of the HTS puck configuration is             D.K. Sze et al., and the ARIES Team,
+shown in Figure 5.                                                "Configuration and Engineering Design of the
+                                                                  ARIES-RS Tokamak Power Plant", Fusion Eng. &
+                 4.0 Concluding Remarks                           Des.,38(1997) 87-113.
+                                                             [6.] L. Waganer, “ARIES-At Maintenance System
+A pure HTS puck stellarator configuration was developed           Definition and Analysis”, ARIES-AT Maintenance
+using the ARIES-CS design point and component features            System Final Report.
+as a point of departure and provided further insight into    [7.] International Tokamak Reactor (INTOR), Phase
+options that might be used to simplify the stellartor             One and Two Final Reports, International Tokamak
+configuration.                                                    Reactor Workshop organized by the International
+                                                                  Atomic Energy Agency, Vienna, from 1985 to 1987.
+The Princeton Plasma Physics Laboratory is operated
+       by Princeton University under contract
+        with the U.S. Department of Energy.
+
+
+
+               Information Services
+       Princeton Plasma Physics Laboratory
+                    P.O. Box 451
+                Princeton, NJ 08543
+
+
+
+                Phone: 609-243-2750
+                 Fax: 609-243-2751
+             e-mail: pppl_info@pppl.gov
+       Internet Address: http://www.pppl.gov
+

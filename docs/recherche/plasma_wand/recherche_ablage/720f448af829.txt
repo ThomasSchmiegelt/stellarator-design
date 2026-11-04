@@ -1,0 +1,91 @@
+URL: https://publikationen.bibliothek.kit.edu/1000124072
+KIT [https://kit.edu/] |
+KIT-Bibliothek [https://www.bibliothek.kit.edu/] |
+Impressum [https://www.bibliothek.kit.edu/76.php] |
+Datenschutz [https://www.bibliothek.kit.edu/datenschutz.php]
+[https://www.kit.edu]
+[https://www.bibliothek.kit.edu]
+Suche im KITopen-Katalog
+[https://publikationen.bibliothek.kit.edu/#&recordid=KITSRCE1000124072]
+Repository KITopen
+Computational approaches for nuclear design analyses of the stellarator power reactor HELIAS
+Häußler, André
+Abstract:
+Der Helical-Axis Advanced Stellarator (HELIAS) ist ein konzeptioneller Entwurf eines nach dem Stellarator Konzept operierenden Fusionsleistungsreaktor, der vom Max-Planck-Institut für Plasmaphysik (IPP) Greifswald mit einer thermischen Fusionsleistung von 3000 MW entwickelt wurde. Die Form des Stellarators ist durch nicht-planare Magnetfeldspulen charakterisiert, die ein Plasma einschließendes Magnetfeld erzeugen. Für das HELIAS 5-B Reaktordesign wird eine erste umfassende Monte Carlo (MC) basierte Neutronik Designanalyse mit dem Monte Carlo N-Particle (MCNP) Strahlentransportcode durchgeführt, um wichtigen nukleare Kenngrößen wie die Neutronenwandbelastung (NWL), die Neutronenflussverteilung, die Tritium-Brutrate (TBR) und das Abschirmvermögen zu ermitteln.
+... mehr
+Die komplexe toroidal verdrillte HELIAS Stellaratorgeometrie wird vollständig durch Oberflächen höherer Ordnung beschrieben, welche der Form des Magnetfeldes folgen und von einem CAD-Modell in ein MCNP-Modell übertragen werden müssen. Es wurden drei verschiedene Möglichkeiten zur Geometriekonvertierung untersucht, wobei die facettierte Geometrie, die durch ein trianguliertes Oberflächennetz auf der CAD-Geometrie im Direct Accelerated Geometry Monte Carlo (DAGMC) Ansatz als die vielversprechendste Option angesehen wird, da sie die komplexe Geometrie ohne Einschränkungen nutzen kann.
+Für die neutronenphysikalische Charakterisierung von HELIAS wurde das ursprüngliche CAD-Modell in radialer Richtung in unterschiedliche funktionelle Schichten aufgeteilt und mit homogenisierten Materialmischungen gefüllt, basierend auf dem Helium Cooled Pebble Bed (HCPB) Brutblanket Konzept, der Stützstruktur, dem Vakuumbehälter und der Abschirmung. Die NWL Verteilung zeigt eine Variation der Belastung über die gesamte erste Wand mit einer Spitzenlast von 1.93 MW/m^2 und einer Durchschnittslast von 0.95 MW/m^2. Die Neutronenflussverteilung hat einem maximalen Wert innerhalb der Plasmakammer von 4*10^14 n/cm^2/s, die durch das Blanket und den Vakuumbehälter auf 10^10 n/cm^2/s abgeschwächt wird. Die TBR in dieser Konfiguration beträgt ~1.38; ein eher optimistischer Wert, welcher auf die Anwendung von homogenisierten Materialmischungen zurückzuführen ist.
+Die Reaktorkomponenten müssen ein ausreichendes Abschirmvermögen aufweisen, um strahlungsempfindliche Bauteile zu schützen. Die Abschwächung des Neutronenflusses um vier Größenordnungen durch die verwendete Abschirmung führt zur Erhöhung des statistischen Fehlers, der die Anwendung von Varianzreduktionsverfahren erforderlich macht. Die Abschirmberechnungen basierend auf der Technik der gitterbasierten Weight Window Verfahrens wurden in einem Bereich mit einem NWL von ~1.35 MW/m^2 und einer geringen radialen Baudicke von ~1.0 m durchgeführt. Die für den EU-Tokamak-Fusionsreaktor DEMO definierten Grenzwerte bezüglich des Abschirmvermögens können von HELIAS in dem aktuellen Design nicht erfüllt werden.Es wird deutlich, dass hier signifikante Verbesserungen der Abschirmung erforderlich sind, die durch die Erhöhung der radialen Abschirmungsschichtdicke und/oder der Anwendung fortschrittlicher Abschirmmaterialien erreichbar sind.
+Die hier vorgestellte Arbeit präsentiert erstmals eine umfassende neutronenphysikalische Untersuchung eines auf dem Stellaratorprinzip beruhendem Leistungsreaktors am Beispiel des HELIAS-Designs, die auf einer verifizierten numerischen Methodik für den Strahlungstransport basiert. Dieser Ansatz ist für zukünftige neutronenphysikalische Anwendungen für diesen Reaktortyp anwendbar. Er ermöglicht die Entwicklung optimierter Brutblanket-Konzepte und fortschrittlicher Strahlungsabschirmungen, die für einen Fusionsreaktor unverzichtbar sind.
+Abstract (englisch):
+The Helical-Axis Advanced Stellarator (HELIAS) is a conceptual design of a stel-larator-type fusion power reactor proposed by Max-Planck-Institute for Plasma Physics (IPP) Greifswald with a thermal fusion power of 3000 MW. The shape of the stellarator is defined by the non-planar shaped magnetic field coils, which generate a twisted plasma confining magnetic field. For the HELIAS 5-B reactor design, a comprehensive Monte Carlo based neutronic design analysis with the Monte Carlo N-Particle (MCNP) transport code is developed to provide important nuclear parameters like the neutron wall loading (NWL), the neutron flux distribution, the tritium breeding ratio (TBR) and the shielding performance.
+... mehr
+The complex toroidal twisted HELIAS stellarator geometry is created fully by higher-order surfaces following the shape of the magnetic field from a CAD model into an MCNP representation. Three different geometry transfer options have been investigated and the faceted geometry formed by a triangular surface mesh on the CAD geometry in the Direct Accelerated Geometry Monte Carlo (DAGMC) approach is considered as the most promising option because it is capable of using the complex geometry without any restrictions.
+For the neutronic characterisation of HELIAS, the original CAD envelope model is separated radially into different functional layers filled with homogenised material mixtures to represent the breeding blanket based on the Helium Cooled Pebble Bed (HCPB) concept, the back supporting structure, the vacuum vessel and the shielding. The NWL distribution shows a variation of the load across the first wall with a peak load of 1.93 MW/m^2 and an average load of 0.95 MW/m^2. The neutron flux distribution is obtained with a peak flux inside the plasma of 4*10^14 n/cm^2/s, which is attenuated through the blanket and vacuum vessel to 10^10 n/cm^2/s. The TBR in this configuration is ~1.38, a rather optimistic value due to the applied homogenised material mixtures.
+The reactor components need to provide sufficient shielding for the radiation protection of sensitive equipment. The attenuation of the plasma neutron flux by four orders of magnitude through the bulk shield leads to an increase of the relative statistical error which requires the application of variance reduction methods to reduce the statistical error in these domains. The shielding calculations conducted with application of the mesh based weight window approach for variance reduction have been assessed in an area with a NWL of ~1.35 MW/m^2 and less radial thickness of ~1.0 m. The requirements specified for the EU DEMO tokamak fusion reactor cannot be met by HELIAS and the need for enhancing the shielding capabilities is indicated by increasing the shielding layer and/or applying advanced shielding materials.
+Here, for the first time a comprehensive neutronic investigation of HELIAS is conducted, which is based on a verified computational radiation transport methodology. This approach is applicable to future nuclear engineering design analyses for this reactor type, targeting at optimised breeding blanket concepts and advanced nuclear shielding indispensable for a fusion reactor.
+KITopen-Download
+[https://publikationen.bibliothek.kit.edu/1000124072/88944777]
+Volltext
+[https://publikationen.bibliothek.kit.edu/1000124072/88944777]
+Creative Commons Namensnennung – Weitergabe unter gleichen Bedingungen 4.0 International "
+data-placement="top" data-original-title="Lizenzinformation"
+style="z-index:10;float:right;padding-right:5px;cursor:help">
+§
+DOI: 10.5445/IR/1000124072
+Veröffentlicht am
+01.10.2020
+Export
+Exportieren als ...
+BibTeX
+(UTF-8) [https://publikationen.bibliothek.kit.edu/publikationslisten/get.php?id=1000124072&format=bibtex]
+BibTeX
+(ASCII) [https://publikationen.bibliothek.kit.edu/publikationslisten/get.php?id=1000124072&format=bibtex_ascii]
+EndNote/Refer
+(.enw) [https://publikationen.bibliothek.kit.edu/publikationslisten/get.php?id=1000124072&format=endnote_refer]
+RIS [https://publikationen.bibliothek.kit.edu/publikationslisten/get.php?id=1000124072&format=ris]
+CSL-JSON [https://publikationen.bibliothek.kit.edu/publikationslisten/get.php?id=1000124072&format=csl_json]
+ISI [https://publikationen.bibliothek.kit.edu/publikationslisten/get.php?id=1000124072&format=isi]
+Statistiken
+Seitenaufrufe: 596
+seit 01.10.2020
+Downloads: 231
+seit 05.10.2020
+[https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fpublikationen.bibliothek.kit.edu%2F1000124072]
+[https://bsky.app/intent/compose?text=Computational%20approaches%20for%20nuclear%20design%20analyses%20of%20the%20stellarator%20power%20reactor%20HELIAS+https%3A%2F%2Fpublikationen.bibliothek.kit.edu%2F1000124072]
+auf
+Zugehörige Institution(en) am KIT |
+Institut für Neutronenphysik und Reaktortechnik (INR) |
+Publikationstyp |
+Hochschulschrift |
+Publikationsdatum |
+01.10.2020 |
+Sprache |
+Englisch |
+Identifikator |
+KITopen-ID: 1000124072 |
+HGF-Programm |
+31.03.08 (POF III, LK 01) Neutronik |
+Verlag |
+Karlsruher Institut für Technologie (KIT) |
+Umfang |
+XI, 149 S. |
+Art der Arbeit |
+Dissertation |
+Fakultät |
+Fakultät für Maschinenbau (MACH) |
+Institut |
+Institut für Neutronenphysik und Reaktortechnik (INR) |
+Prüfungsdatum |
+28.09.2020 |
+Schlagwörter |
+Stellarator, Fusion, Neutronics, MCNP, CAD, DAGMC |
+Nachgewiesen in |
+OpenAlex [https://openalex.org/W2884013883]
+|
+Globale Ziele für nachhaltige Entwicklung |
+[https://unric.org/de/17ziele/sdg-7/] |
+Referent/Betreuer |
+Stieglitz, R. |
+KIT – Die Universität in der Helmholtz-Gemeinschaft
+KITopen Landing Page

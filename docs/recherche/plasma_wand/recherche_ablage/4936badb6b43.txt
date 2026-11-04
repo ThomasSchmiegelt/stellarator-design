@@ -1,0 +1,856 @@
+URL: https://www.osti.gov/servlets/purl/1484166
+Error fields in the Wendelstein 7-X stellarator
+                Samuel A. Lazerson
+                Princeton Plasma Physics Laboratory, Princeton, NJ
+                E-mail: lazerson@pppl.gov
+
+
+                Sergey Bozhenkov
+                Max-Planck Institut für Plasmaphysik, Greifswald, Germany
+
+
+                Ben Israeli
+                Princeton Plasma Physics Laboratory, Princeton, NJ
+
+
+                Matthias Otte, Holger Niemann, Victor Bykov, Michael
+                Endler, Tamara Andreeva, Adnan Ali, Peter Drewelow, Marcin
+                Jakubowski, Aleix Puig Sitjes
+                Max-Planck Institut für Plasmaphysik, Greifswald, Germany
+
+
+                Fabio Pisano, Barbara Cannas
+                University of Cagliari, Cagliari, Italy
+
+
+                and the W7-X Team
+
+                Abstract. The role of error fields in stellarators is explored in this work through
+                simulations of and experiments performed on the Wendelstein 7-X (W7-X) stellarator.
+                Previous experimental results, based on limiter plasmas in W7-X, suggest that error
+                fields are small in the experiment based on limiter plasmas. In this work, we
+                document results from the first divertor campaign on W7-X with a focus on error
+                fields resonant with the edge island divertor structure. Divertor thermocouples
+                measurements corroborate earlier limiter results that the error fields are small and
+                correctible, requiring only 5% the total rated current of the trim coil system. The
+                effect of these error fields on magnetic geometry and topology are investigated using the
+                technique of flux surface measurement. The resulting divertor thermal load asymmetry
+                is modeled via field line diffusion and compared to experimental data.
+
+† Notice: This manuscript has been authored by Princeton University under Contract Number DE-
+AC02-09CH11466 with the U.S. Department of Energy. The publisher, by accepting the article
+for publication acknowledges, that the United States Government retains a non-exclusive, paid-up,
+irrevocable, world-wide license to publish or reproduce the published form of this manuscript, or allow
+others to do so, for United States Government purposes.
+Error fields in the Wendelstein 7-X stellarator   2
+
+Keywords: Fusion, Magnetic Fields, Stellarator
+
+
+Submitted to: Plasma Phys. Control. Fusion
+Error fields in the Wendelstein 7-X stellarator                                           3
+
+1. Introduction
+
+The goal of magnetically confined nuclear fusion is to tailor magnetic fields to form flux
+surfaces which confine a hot plasma, thus the minimization of errors in the magnetic
+field structure are of manifest relevance [1]. This is especially true of stellarators, in
+which the confining magnetic field arrises predominantly from external electromagnetic
+coils. Stellarators confine plasmas through careful three dimensional shaping of the
+magnetic flux surfaces produced by these coils. Manufacturing defects can result in
+deformations of said flux surfaces, topological breaking of flux surfaces, and periodicity
+changes in the magnetic field, which all reduce confinement times. In this work we
+analyze experimental data obtained from the Wendelstein 7-X (W7-X) stellarator to
+better understand the role and influence of error fields in stellarators.
+     Before discussing W7-X, it is worthwhile to review the history of stellarators with a
+focus on the effect that error fields had on their performance. Beginning with one of the
+earliest stellarators (Model C) the effect of perturbing magnetic fields on flux surfaces
+were already being investigated. Here it was shown that addition of a vertical field
+could significantly degrade flux surface quality, and comparisons between measurements
+and computer models did show discrepancies which (by today’s standards) would have
+suggested the presence of additional, unaccounted for magnetic fields [2]. The Advanced
+Toroidal Facility (ATF) used flux surface mapping techniques to measure the amplitude
+of a n/m = 1/2 island. The source of this field was attributed to coil bus-work and
+was corrected [3]. The URAGAN-3 stellarator built on the ATF results to measure
+and correct error fields associated with misalignment of their vertical field coil pair [4].
+The W7-AS stellarator performed extensive flux surface mapping of its configuration
+space finding both low and high order islands. Initial analysis could not conclude the
+source of these fields, here it was found that they did not scale with magnetic field
+strength, suggesting they arose from the coil system and current leads [5]. At the end
+of the experimental campaign, measurements were made of the edge island structure,
+confirming a change in rotational transform which was dependent on field strength.
+This was attributed to elastic deformations of the non-planar field coils [6]. The WEGA
+stellarator had large n/m = 1/3 and n/m = 1/4 island chains present and was able to
+image island chains with polodial mode numbers up to m = 9 [7]. The error field was
+attributed to mis-alignments between the helix and toroidal field coils. An ability to
+control island size through an external magnetic coil was also demonstrated. The W7-
+X flux surface mapping system capable of permanent installation and 2.5T operation
+was developed on WEGA. The Compact Toroidal Hybrid device found that a proper
+fix between modeled and measured axis position required a modified coil set based on
+measurements of the coil set [8]. The TJ-II device also measured error fields which
+were attributed to deviations in the toroidal field coils positions. These fields resulted
+in larger than expected islands at rational surfaces [9]. The desire to control error
+fields has even led to the cancelation of projects, as was the case for National Compact
+Stellarator Experiment (NCSX). Here mounting cost over-runs largely associated with
+Error fields in the Wendelstein 7-X stellarator                                             4
+
+coil tolerances ultimately ended the program before it could operate [10, 11]. The
+Large Helical Device (LHD) observed both n/m = 1/1 and n/m = 1/2 island chains
+by flux surface mapping. These islands were attributed to ferromagnetic materials in
+the torus hall and shown to be correctible by the Local Island Divertor (LID) coils
+[12]. In the H1-NF heliac, flux surface measurments were matched to deformations
+of the coils models to produce an improved coil model. The improved coil model
+indicated strong changes in the magnetic well profile near the edge of the plasma. [13]
+In the Columbia Non-neutral Torus (CNT) flux surface measurements were used to
+directly calculate the displacements of the coils [14]. It was later confirmed through
+numerical simulations that these displacements were consistent with those most likely
+to influence plasma shape [15]. Finally, it should be noted that while we have focused
+on stellarators, tokamaks also suffers from similar effects of error fields. In these devices,
+error fields can significantly reduce performance and provide ‘seed’ fields for a variety of
+symmetry breaking instabilities [16]. The desire to minimize these effects has similarly
+contributed to increases in cost of the ITER project. Clearly, the study of these fields,
+their correction, and development of robust configurations is of manifest relevance to
+the entire nuclear fusion program.
+      The W7-X experiment serves as an excellent case-study in the effects of error fields,
+given its coil set [17, 18], diagnostic set [19], and reactor relevance. The W7-X device is a
+five field period quasi-isodynamic stellarator with a plasma volume of approximately 30
+m3 . The three dimensional shape of the plasma arrises from a set of 50 non-planar and 20
+planar superconducting magnetic coils. The shaping of the magnetic field was optimized
+to confine the thermal part of the plasma distribution which undergoes a bounce motion
+between maxima in magnetic field strength [20]. Unintended fields can disturb the shape
+of these flux surfaces reducing the effective confinement of such particles. The interaction
+of the plasma with the first wall structures is controlled through the presence of a four,
+five, or six lobed magnetic island chain (ι = 5/4, 5/5, 5/6). Error fields which resonate
+with this magnetic structure have been predicted to result in overloading of first wall
+structures [21]. In particular magnetic fields with n/m = 1/1, 2/2, 3/3, 4/4 must be
+minimized. As a consequence, a great deal of effort has been spent to minimize said
+fields during construction [22]. This has yielded a device with low levels of resonant
+error [23].
+      It should be noted that finite plasma beta will also change the island position and
+structure, thereby changing the plasma wall interaction. These changes are nominally
+stellarator symmetric and preserve the five-fold symmetry of the device. However, they
+can amplify the effect of the error fields. In this work we focus on exploration of the
+error field effects themselves and leave a discussion of the interplay between plasma
+response and error fields to future work.
+      In the next section we will review the sources of error fields in the W7-X experiment
+and how they can be measured. In section 3, we will review experimental evidence of
+their effect on plasma operation. We will conclude in section 4 with a discussion of what
+can be done in future devices to tolerate, compensate, and minimize error fields.
+Error fields in the Wendelstein 7-X stellarator                                               5
+
+
+
+
+              Figure 1. The seven superconducting coil types of the Wendelstein 7-X experiment.
+              Each of five identical modules of W7-X possess a stellarator symmetry (flip mirror
+              about the half module) so that these 7 coil types result in 70 coils in total.
+
+
+
+2. Sources of error fields
+
+Any unintended magnetic field can be labeled an error field, and thus arise from a
+multitude of sources. Deviations in the winding of magnetic coils, errors in the placement
+of coil relative to each other, electromagnetic deformation of the coils, current feeds,
+auxiliary coils, and magnetic material can all produce error fields. Error fields are
+ubiquitous and impossible to avoid. One may then conclude they are ultimately terminal
+to the endeavor of magnetically confined nuclear fusion. And while these points are true,
+two additional facts negate this terminal conclusion. The first of which is that not all
+errors in the magnetic field matter equally. Secondly, error fields can be compensated
+via additional auxiliary magnetic coils. In this section, we will use W7-X as a case study
+in how magnetic field arise in a stellarator.
+     The design and construction of any stellarator begins with the design of magnetic
+fields and the coils which give rise to them. The magnetic field of W7-X, which confines
+the plasma and gives it its shape, arise from a set of five unique three dimensional
+magnetic coil shapes. These coils are mirrored about five field periods resulting in 50
+superconducting coils total. Two unique superconducting planar coils (again mirrored
+and repeated), allow fine tuning of the magnetic field rotational transform, along with
+radial repositioning of the magnetic flux surfaces. Figure 1 depicts the seven types of
+coils. These coils are supported on the inboard side of the device by a structural support
+ring. Sliding supports on the outboard side of the device allow some motion of the coils
+due to electromagnetic forces and reduce stresses in critical areas of the coil support
+structure. A small set of ten copper in-vessel ‘control’ coils allow tuning of the edge
+island chain, while five large trim coils provide a means to compensate critical error field
+components [24].
+     The superconducting coils could not be manufactured with infinite precision.
+Measurements of the coils upon delivery indicated deviations in the coil geometry by
+up to 3 mm for the non-planar coils and 5 mm for the planar coils. An extensive set of
+Error fields in the Wendelstein 7-X stellarator                                          6
+
+
+
+
+              Figure 2. Location of distance measurement units indicated on deformed finite
+              element (FE) model (mm) by red ovals (left). Measurement example (high iota
+              configuration with 2.5 T magnetic flux on plasma axis) in comparison with FE
+              prediction (right).
+
+
+
+measurements were used to predict the amplitude of the symmetry breaking error fields
+[22]. Complimentary computations were performed to estimate the optimum module
+position [25]. These computations allowed for optimum placement of each module,
+significantly reducing the total magnetic field error.
+     The interaction of the electromagnetic coils when energized result in deformation
+of the coils themselves. The ‘self-force’ of an energized three dimensional coil deforms
+the coil towards that of a simple planar circular hoop (this is the energetically favorable
+situation). This means that even if the errors in the construction and positioning of a
+coil do not exist, the rotational transform generated by a coil will be reduced as the coil
+is energized, as observed on W7-AS [6]. Again, assuming no errors in position exist,
+the coil-coil interactions will deform the positioning of the coils. This effect produces
+error fields which can deform the magnetic flux surfaces and produce high-order island
+chains. It is important to note that stellarator symmetry and field periodicity would
+not be broken in this case. It should be noted that while the calculation of forces
+from interacting coils is a linear calculation, inclusion of deformation results in a non-
+linearity in the problem. Once coil manufacture defects and module re-alignment are
+included, the error fields become a configuration dependent quantity. Modeling said
+system becomes difficult and the problem involves calculation of electromagnetic forces
+and structural response in a cryogenically cooled high-vacuum system.
+     The measurement of coil deformation becomes key in predicting error fields, and
+stellarators provide a unique means to allow direct assessment of error fields. To verify
+coil deformation and provide a device safety metric, a set of strain gauges and distance
+measurement units have been installed on the coil cases of the W7-X coil set (figure 2)
+Error fields in the Wendelstein 7-X stellarator                                         7
+
+[26]. These diagnostics provide useful data for the verification of finite element model
+(FEM) predictions. However, the most useful diagnostic tool available to stellarators
+is the ability to directly image the magnetic field itself using a technique know as flux
+surface mapping [27]. This technique takes advantage of the fact that the confining field
+of a stellarator arises predominately from the magnetic coils, so that even without a
+plasma the magnetic flux surfaces are present. An electron beam can then be injected
+onto a flux surface and the electrons will stay tied to the field-lines on which they are
+injected. If a fluorescent mesh or swept rod (in the case of W7-X) are placed in the
+path of said electron beam, the flux surface can be imaged (producing a Poincaré like
+pattern). Additionally, neutral gas can be injected into the vessel and the field-lines
+directly imaged. These techniques were used extensively to measure the presence of
+a n/m = 1/2 error field in W7-X [28]. Additionally, plasma wall interactions were
+studied with a technique known as a compass scan. Here, infrared cameras viewing all
+10 divertor modules were used to assess the asymmetry in divertor heat load.
+     Additional sources of error fields can arise from auxiliary magnetic systems and
+materials that become magnetized. As previously mentioned, W7-X is equipped with
+two perturbative coil sets (one inside the plasma vessel, and one outside the cryostat).
+These coils allow both the introduction, and compensation of, error fields in a controlled
+manner. However, other sources of magnetic field exist in and around the W7-X device.
+These include the magnets in the neutral beam system, and possible magnetization of
+the ICRH antenna. These systems should also be considered when attempting to model
+the error fields of the W7-X device.
+
+3. Prediciton and measurement of error fields
+
+In this section, the effort to predict, assess, and correct the effects of error fields
+is presented. It should be noted that the last subsection examines the plasma-wall
+interactions and as such cannot directly disentangle error fields from misalignments of
+plasma facing components. However, combined with flux surface measurements this
+second effect can be evaluated. Ultimately, the primary goal of error field correction is
+to symeterize the divertor heat loads, so as to maximize power exhaust. This in turn
+maximizes the achievable plasma performance.
+
+3.1. Model Formulation
+Formulation of a predictive model for W7-X error field effects requires the development
+of a detailed coil model. This model must not only include the position of each coil as
+measured but must take into account the effect of cryogenic cool-down, deformation
+under electromagnetic forces, and the proper material parameters of the coil. In
+particular the proper Young’s modulus must be specified for the coil system. One
+way to assess this is to compare the predicted change in plasma rotational transform
+with that measured in the device.
+Error fields in the Wendelstein 7-X stellarator                                                    8
+
+
+
+
+              Figure 3. Modeling of the ‘limiter’ magnetic configuration shows a ridged decrease in
+              the entire rotational transform profile (left). The position of the 5/6 island is shown
+              to be both a function of coil misalignment and electromagnetic load (right). The
+              measured position of the 5/6 island chain (from flux surface mapping) is shown.
+
+
+
+      The first experimental campaign (OP1.1) was conducted with an inboard limiter
+and a limiter magnetic configuration. This configuration had a n/m = 5/6 island
+chain just inside the limiter itself, allowing it to be imaged. This was done at multiple
+magnetic field strengths and the shift of this island chain (in a radial sense) qualitatively
+agreed with modeling. That is, the chain moved radially outward as the field strength
+increased, thus confirming that the rotational transform was decreasing with increasing
+field strength. This is the coil flattening effect discussed in section 2.
+      Simulations of coil deformation were then fed into the FIELDLINES code which
+allowed modeling of the flux surface mapping images. Figure 3 depicts the disagreements
+between modeling and flux surface measurements. Errors in island width measurements
+stem from difficulties imaging the islands at times and complications of mapping
+the islands to a sensible effective radial position. A refinement of the ANSYS
+magnetic system model was then introduced which improved the fit between model
+and experiment [29].
+
+3.2. Direct measurement of magnetic geometry
+The flux surface mapping technique allows stellarators to directly image the effect of
+error fields on both the magnetic geometry and topology of flux surfaces. Mapping of the
+‘standard’ and ‘high-iota’ magnetic configurations provide initial estimates of the impact
+of error fields on the W7-X experiment. The ‘high-iota’ configuration was investigated
+with respect to the ability to correct error fields. This resulted in the demonstration of
+the correction of the 1/1 error field component with the trim coils [30].
+     The main magnetic configuration of W7-X possess a n/m = 5/5 island chain at its
+edge. In the magnetic fields arising from the ideal coil set, fields with toroidal mode
+number less than n = 5 are not present and thus do not resonate with this island chain.
+Error fields in the Wendelstein 7-X stellarator                                               9
+
+
+
+
+              Figure 4. Flux surface mapping of the 5/5 island chain showing the presence of 1/1
+              features (arrows). If no 1/1 error were present only the single island image would
+              mapped and the bounding flux surfaces would not be connected.
+
+
+
+However, previously mentioned ‘as-built’ geometry of the coils give rise to these lower
+order, non-field periodic, resonances. Flux surface mappings of the ‘narrow mirror’
+configurations provided the first clear evidence of the interaction of a 1/1 error field and
+the island divertor. In this magnetic configuration, the planar superconducting coils
+were used to reduce toroidal flux, increasing iota. This in turn moved the 5/5 island
+chain off the divertor (radially inward) so it could be imaged. Figure 4 is a composite of
+images taken of the island flux surfaces in this configuration. The surfaces inside the 5/5
+island chain are clearly visible. They only appear in one island as in this configuration
+each lobe of the 5/5 island chain is a separate flux tube. The presence of surfaces outside
+the magnetic island lobe are attributed to the presence of a 1/1 error field. Flux surfaces
+inside and outside the island chain would not form a local x-point like structure as seen
+near the right arrow. Sharp truncations in the flux surfaces are due to the finite swing
+of the fluorescent rod. This provides clear evidence of error fields modifying the 5/5
+island chain.
+     The presence of the 1/1 error field was also measured in the ‘high-iota’ configuration
+[30]. In this configuration the rotational transform profile is modified (with the planar
+Error fields in the Wendelstein 7-X stellarator                                                 10
+
+
+
+
+              Figure 5. Flux surface mapping of the ‘high-iota’ configuration showing a clear shift
+              in the axis position.
+
+
+
+coils) so that the edge island chain is now a n/m = 5/4 chain and is no longer resonant
+with the low order toroidal modes. However, this has the consequence of placing the
+rotational transform slightly above ι = 1 on axis. The presence of error fields which are
+resonant create a helical shift in the magnetic axis, so long as the rotational transform
+profile remains above one. Should the profile fall below one then a 1/1 island chain
+should appear. We can directly assess the amplitude of the n = 1 magnetic field as the
+amplitude of the magnetic field harmonics fall off as the distance from the magnetic
+axis to the m power (where m is the poloidal mode number). So in this configuration
+only the m = 0 and m = 1 harmonics should dominate. This isolates the n/m = 1/1
+component of the magnetic field.
+     Figure 5 clearly indicates the presence of a helical axis shift of approximately 10 cm.
+While the measurement could be improved, the lack of a m/n = 1/1 island chain clearly
+implies that the rotational transform is sufficiently above unity, but not so far above that
+the helical axis displacement disappears. While we can determine the physical amplitude
+of the displacement, we cannot directly assess the amplitude of the error field. This is
+because the amplitude of the displacement depends both on the amplitude of the error
+Error fields in the Wendelstein 7-X stellarator                                                      11
+
+
+
+
+              Figure 6. Analysis of compass scan data from flux surface mapping of the ‘high-
+              iota’ configuration in W7-X. Here each datapoint corresponds to a different phase
+              and amplitude of a perturbing trim coil n = 1 magnetic field. At each datapoint, the
+              displacement of a axis from images is determined. Color contours represent a functional
+              fit to the dataset indicating that for a trim coil setting of 123 A at a phase of 174o the
+              axis displacement is minimized.
+
+
+
+field and the rotational transform of the configuration. As demonstrated before, the
+displacements which give rise to the error fields also give rise to changes in the rotational
+transform. A scan of field strength does show a dependence of the displacement on field
+strength but again the amplitude of the error field is also dependent on this quantity.
+Thus directly assessing the amplitude of the error field from this single measurement is
+not possible.
+      To solve this difficulty a compass scan was performed where the phase and
+amplitude of a probing magnetic field (due to the trim coil system) were varied and
+the change in axis displacement measured. Figure 6 depicts the analysis of this compass
+scan where the function f = e + (x − c)/a + (y − d)/c is fit to the dataset (here a, b, c, d,
+and e are coefficient to be determined through fitting). Here the amplitude and phase of
+the trim coils are defined by the function Ik = A0 × cos (2π (k − 1) /5 − φ), where Ik is
+the current in the k’th trim coil, A0 is the maximum coil current in the coils, and φ is the
+phase angle of the perturbation relative the module 1 trim coil centerline. The resulting
+fit suggests that for a trim coil setting of A0 = 123 A at φ = 174o the displacement in
+Error fields in the Wendelstein 7-X stellarator                                                        12
+
+
+
+
+              Figure 7. Particle diffusion simulation of the W7-X ‘standard’ configuration using the
+              ideal coil. Red points indicate intersections of particle trajectories with the triangulated
+              divertor and baffle surfaces (left). Colormap depicts a synthetic camera image of said
+              data by binning of the strike points in the camera pixel geometry (right). Image
+              geometry approximates the view of an actual IR camera.
+
+
+
+the axis should be minimized. This compares well with FEM analysis of the ‘as-built’
+coil set, where a trim coil setting of A0 = 134 A at φ = 180o is expected to minimize the
+error field. Application of these trim coil settings resulted in a shift in the axis position
+towards that estimated with field line tracing with the ideal coil set.
+
+3.3. Divertor operation
+Obtaining symmetry of divertor heat loads is the primary goal of error field correction
+in W7-X. One method to estimate divertor loads is to examine the effect of diffusing
+field line tracers given the different coil geometries. In this work the FIELDLINES
+code was applied using various coil models to estimate the level of asymmetry. In the
+experiment both infrared camera data and thermocouples located behind each divertor
+plate were used to measure the level of asymmetry. The trim coils were then used to
+perform compass scans in an attempt to find the magnetic field which provided the best
+divertor symmetry. The effect of an n = 0 perturbation to the field were also explored.
+     The tracing of magnetic field lines with small diffusive kicks provides a quick and
+accurate tool for assessing the effect of error fields on divertor symmetry. Figure
+7 depicts such as modeling effort using the ideal W7-X coil set and the ‘standard’
+magnetic configuration of W7-X. In this simulation, ∼ 256000 points are chosen on a
+flux surface found from vacuum field line tracing. Simulations are preformed by pushing
+the particles in both parallel and anti-parallel to the magnetic field with the inclusion
+of small kicks (see Appendix A for details of the diffusion model). Once a particle
+trajectory intersects the triangulated mesh of the divertor structure, the trajectory is
+stopped and the collision position recorded. Here an optimized version of the Möller and
+Trumbore method is utilized [31]. These points may be easily binned on the triangulated
+mesh. This is comparable to camera data only if the underlying mesh has a rather fine
+grid size. To avoid this we have mapped each strike point into the pixel space of our
+Error fields in the Wendelstein 7-X stellarator                                                     13
+
+
+
+
+              Figure 8. Analysis of the effect of error fields on divertor load symmetry based on
+              simulation data (left) and measured data from experiments (right) for the ‘standard’
+              magnetic configuration. Each bar represents the temperature rise as measured by a
+              thermocouple located in the main divertor (values in the upper half of the plot belong
+              to upper divertors while those in the bottom to the lower divertors). Simulation data
+              is computed by binning the number of diffusing particles hits on a given divertor finger.
+              Both simulation and experiment appear to show consistency between which upper and
+              lower modules receive the largest heat loads.
+
+
+
+simulated camera. This decouples the resolution of the computational mesh from that
+of the simulated image. There was less than 1% variation in the particle strikes when
+comparing each divertor module for this ideal case.
+     Simulations were preformed using the electromagnetically loaded ‘as-built’ coil set
+to predict the level of divertor load asymmetry. Figure 8 shows the results of this
+simulation binned by divertor module and compared to experimental data (a proxy
+for the thermocouple divertor temperature rise). A small asymmetry is present in the
+simulation results when comparing the number of particles striking various divertor
+modules. Experimental data is taken from a 3 M W , 2 s Helium fueled discharge with
+no error field correction applied. Thermocouple temperature rise is calculated by a
+difference between the temperature before the discharge and the maximum temperature
+rise and the following 120 s. Simulation data would suggest that the module 4 upper
+divertor would receive the largest heat load which is in clear conflict with the measured
+data. Experimental data indicates that the module 2 upper divertor receives the largest
+load. This suggest future refinements of the error field model. In particular, it should
+be noted that our model fails to account for up-down asymmetries due to particle drifts.
+     Infrared data for this discharge corroborates the thermocouple data. Figure 9 shows
+temperature data at the end of the discharge for 9 of the 10 divertor modules (note
+different lef to right ordering of modules as compared to figure 8). In these images the
+colors have been scaled to a common colormap for comparison. Here the upper divertor
+in module 2 and the lower divertor in module 4 are clearly experiencing the largest
+temperature rises. However, features in the IR camera data are present which were not
+Error fields in the Wendelstein 7-X stellarator                                                       14
+
+
+
+
+              Figure 9. Infrared camera images for nine of the ten divertor modules in W7-X. Image
+              data has been scaled to a common temperature map and data comes from near the end
+              of the discharge. Non-divertor related regions of the camera data have been masked
+              for clarity. Cameras named AEFX0 are located at the top of the machine observing
+              the lower divertor while those labeled AEFX1 are located at the bottom observing the
+              upper divertors.
+
+
+
+
+              Figure 10. Compass scans (n = 1) of the ‘standard’ (left) and ‘narrow-mirror’ (right)
+              magnetic configurations showing a slight variation in compensating fields. Data is
+              based on thermocouple measurements made at the backside of the divertor targets.
+              Circles indicate data points and color contours are a best fit to that data. Text indicates
+              the minimum in the fitting function.
+
+
+
+present in the simulation data. The AEF11 camera (observing upper divertor in module
+1) appears to show a double strike-line feature on the horizontal divertor target. This
+was not seen in the simulation data. Also some cameras show toroidally extended strike
+lines on the horizontal divertor while others show an abrupt discontinuity in the divertor
+strike line. This may be initial evidence of divertor mis-alignment. It should be noted
+that here we simply see a consistency between divertor temperature rise as measured
+by thermocouples and IR camera data. A more detailed analysis (at a later date) will
+generate heat flux maps from this dataset.
+     Compass scans (n = 1) were performed for two configurations with edge 5/5
+island divertor structures (figure 10). Both configurations exhibited similar amplitude
+Error fields in the Wendelstein 7-X stellarator                                          15
+
+correcting fields. Both configurations made use of approximately −700 A of planar
+coil current to compensate the reduction of rotational transform. The configurations
+differed in that the ‘narrow-mirror’ configuration required variation in the non-planar
+coil currents while the ‘standard’ configuration utilized the same current in each non-
+planar coil. This suggests that differences in electromagnetic loads between these
+configurations is small. It is worth noting that correcting field for these configurations
+and the ‘high-iota’ configuration differ in phase and amplitude. The differences arise
+from the large currents in the planar coils for the ‘high-iota’ configuration, as compared
+to the ‘standard’ and ‘narrow mirror’ configurations. Similar experiments performed
+with the limiter plasma suggested a slightly different phase for limiter heat flux balancing
+[32, 33]. In this configuration the planar coils were energized with opposite sign and
+half the amplitude of the ‘high-iota’ configuration. This lends some credibility to the
+notion that the interaction between the planar and non-planar coils can significantly
+change the phase of the correcting error field. Although it should be noted that in these
+experiments, the effect of divertor mis-alignment cannot be disentangled.
+      When error field compensation is applied the symmetry of the divertor module
+heat load becomes greatly improved. The maximum temperatures rise in any horizontal
+divertor thermocouple is reduced as compared to the uncorrected temperature rise
+(figure 11). In terms or relative numbers the largest temperature discrepancy falls from
+a factor of almost 4 to values below 2. The residual variance in temperatures appears
+to be due to a small uncompensated n = 2 error field. Attempts to compensate these
+fields with the trim coils proved un-successful as the trim coils drive a similar amplitude
+n/m = 3/3 when phased for n = 2 correcting field. Future experiments will attempt to
+use the 10 in-vessel control coils to compensate the n = 2 component.
+      A limited set of measurements were performed with the ‘standard’ configuration
+in a reversed field configuration. Assuming the error fields arise from the magnetic
+coils themselves, one would expect the symmetrizing field to be flipped in sign as
+well. Measurements could not confirm this. Both the previously established trim coil
+settings and those with flipped current (equivalently −180o phasing) failed to improve
+the symmetry of the divertor in the reversed field configuration. It was determined that
+the symmetrizing field lay somewhere in the range of −90o to −180o suggesting a complex
+interaction between the ‘as-built’ geometry and coil motion under electromagnetic forces.
+Experimental time was limited in this period of the campaign, so further investigation
+of this behavior is left to future work.
+      Scans of the effect of n = 0 correction were also performed. In these scans, the
+trim coils were all set to the same current (and sign). This provided a uniform radial
+field, shifting the vacuum flux surface in the bean shaped cross section up and down
+(dependent on sign of the current). These experiments indicated temperature rises
+and decreases consistent with a vertical shift of the plasma. However, there was no
+appreciable change in divertor heat load symmetry. However, these experiments were
+preliminary without n = 1 correction. Such experiments should be repeated with n = 1
+correction.
+Error fields in the Wendelstein 7-X stellarator                                                16
+
+
+
+
+              Figure 11. Horizontal divertor thermocouple temperature rise for symmetrizing trim
+              coil currents in the ‘standard’ configuration. The temperature rise in module 2 and
+              4 are clearly much smaller than the uncorrected case (8). Each bar represents the
+              temperature rise as measured by a thermocouple located in the main divertor (values
+              in the upper half of the plot belong to upper divertors while those in the bottom to
+              the lower divertors).
+
+
+
+4. Discussion
+
+The analysis of experimental data presented in this work confirms previously published
+results that the W7-X device was engineered and built to high accuracy. Such accuracy
+results in error field amplitudes which are small and well within the correcting ability
+of the trim and sweep coils. In practice, only approximately 5% the total trim coil
+correcting capabilities were utilized to provide significant improvements to divertor
+symmetry. The trim coil settings which provided improved symmetry in the device
+also appear to be configuration dependent. Specifically, the peak maximum trim coil
+current appears relatively fixed around 100 A, but the phase appears to change as a
+function of the superconducting planar coil interaction. An overview of symmetrizing
+fields can be found in table 1. The reversed field ‘standard’ configuration was omitted
+Error fields in the Wendelstein 7-X stellarator                                                  17
+
+from this table as results could only conclude that flipping the sign of the correcting
+field was not sufficient to achieve symmetry.
+
+              Table 1. Trim coil configurations providing greatest divertor symmetry. Toroidal
+              angle φT rim measured from the module 1 trim coil in a counter-clockwise fashion as
+              viewed from above. We should note that the limiter configuration had a significantly
+              reduced diagnostic set so the amplitude and phase which provided symmetry is difficult
+              to discriminate.
+
+                       Configuration       IA/B A     IT rim A   φT rim o
+                         Standard            -700         98       162
+                       Narrow Mirror         -750         99       163
+                         High-Iota          -9790       134        180
+                          Limiter           4980       ≤ 200     ∼ −72
+
+
+     Investigation into the error fields on W7-X have shown that a high level of
+manufacture precision was achieved in the construction of the device. One can now
+ask what can be learned from this data to help guide future stellarator designs. First, it
+should be pointed out that not all stellarators (or configurations of a given stellarator)
+are susceptible to the same magnetic error fields. So what holds for one stellarator may
+not necessarily hold for another. The key is the rotational transform profile and which
+rational numbers the profile crosses. If we examine the density of low order rationals we
+see that for rotational transform values below unity, the low order rationals tend to pile
+up below ι = 1/2. Thus keeping the entire rotational transform profile above this value
+significantly enhances the robustness to low order error fields. Second, it is also a well
+known fact that island widths tend to scale as the shear in the rotational transform.
+High shear suppresses the formation of islands at rational surfaces. However, both these
+facts are well established, and often difficult to incorporate into a design.
+     What we have demonstrated in this work is that trim coils can remedy the effects of
+error fields. This fact has been well established in tokamaks for decades. The assessment
+and correction of error fields from sources not directly part of the coil system (breeder
+blankets in reactor designs for example) is a straightforward process. For a component
+generating a given ’erroneous’ magnetic field, a trim coil set capable of mitigation is
+required. However, only recently have tools been developed which can directly assess
+the relaxation in tolerances for coil construction [34]. Such codes are already providing
+reliable estimates the most sensitive coil deformations [15]. As a future work it is
+proposed that a stellarator coil set be modeled in said code including a set of trim coils.
+One should then be able to gauge the decrease in sensitivity to coil deformations. Said
+work may also identify key trim coil shapes which reduce coil alignment tolerances.
+     What was not addressed in this work were the impacts of divertor displacements,
+plasma response modeling, or particle drifts. The compass scans performed in the
+‘standard’ and ‘narrow mirror’ configurations would nominally correct both the intrinsic
+error field and the effect of divertor mis-alignment. Thus it is difficult to disentangle
+Error fields in the Wendelstein 7-X stellarator                                             18
+
+the two effects. One may reason that the discrepancy between the error field corrections
+of these configurations and the high-iota is exactly due to this effect. However, this
+overlooks the fact that, in the high iota,the resonance of interest is located farther toward
+the plasma core and thus requires a slightly larger drive to compensate. Additionally,
+the error field should arise from the coil set itself while the correcting field arrises from
+the trim coils located farther away from the resonance. In the future, a ‘low-iota’
+configuration will be run with the n/m = 5/6 island chain at it’s edge and no ι = 1
+surface in the plasma. Analysis of this configuration should provide clarity on divertor
+alignment issues. Moreover, by reversing the magnetic field of this configuration, one
+could assess the role of divertor drifts on the up-down divertor asymmetry. One could
+also use the trim coils and ‘high-iota’ configuration to attempt to run a plasma discharge
+with large helical axis shift, this would then quantify the effect of surface distortions on
+plasma performance.
+
+Acknowledgments
+
+The authors would like to thank N. Logan, C. Paz-Soldan, J. Geiger, G. Wurden, and J.
+Harris for their useful discussions. This work has been carried out within the framework
+of the EUROfusion Consortium and has received funding from the Euratom research
+and training programme 2014-2018 under grant agreement No 633053. The views and
+opinions expressed herein do not necessarily reflect those of the European Commission.
+
+Appendix A. Model for field line diffusion
+
+ The FIELDLINES code is designed to push particles on a cylindrical grid (R, φ, Z). The
+ equation for a following a magnetic field line is simply one for the the stream-lines of
+ the magnetic field ∂~x/∂s = ~b, where ~x is the position of the particle along the field line,
+~b = B/|
+      ~ B|
+         ~ is the normalized magnetic field, and s is a parameter characterizing the path
+ along the field line (sometimes referred to as a pseudo-time). In cylindrical coordinates,
+ the dependance on s can be eliminated and the equation reduced from three components
+ to two, requiring one to solve
+                ∂R       BR
+                     =R                                                                  (A.1)
+                 ∂φ      Bφ
+               ∂Z    BZ
+                  =R                                                                     (A.2)
+               ∂φ    Bφ
+where subscripts denote components of the magnetic field in cylindrical coordinates. To
+incorporate diffusion a modified equation must be solved, specifically ∂~x/∂s = ~b + ~δ
+where ~δ is a small random kick to simulate diffusion. This equation can then again be
+simplified into two equations in terms of the toroidal angle (φ)
+               ∂R    BR |B|
+                  =R    +    δR                                                          (A.3)
+               ∂φ    Bφ   Bφ
+Error fields in the Wendelstein 7-X stellarator                                                  19
+
+
+
+
+               Figure A1. Test of diffusion coefficient as implemented in the FIELDLINES code.
+               Good agreement is seen between input and measured value of the diffusion coefficients
+               (left). Measured values are determined from the mean squared displacement of a
+               particle after 100 toroidal transits. A depiction of the random walk pattern for one
+               particle is shown for reference (right).
+
+
+
+               ∂Z    BZ |B|
+                  =R    +    δZ                                                              (A.4)
+               ∂φ    Bφ   Bφ
+where we’ve assumed the component of the diffusion in the toroidal direction δφ can be
+safely ignored. In systems with predominantly toroidal field (tokamaks and stellarators)
+this is similar to the assumption of purely radial diffusion. Thus our diffusion operator
+becomes a displacement in the 2D RZ plane of |B|  Bφ
+                                                     ~δ, applied at each regular interval in
+φ.
+     The 2D Brownian motion of particles is√characterized q by the standard deviation of
+displacement over a signal timestep as k = 2Dds = 2DR|B|∆φ/Bφ . Here D is the
+diffusion coefficient. Thus our diffusive terms can be implemented as
+                                     v
+               |B|        |B|              ∆φ
+                                     u
+                                   u
+                   δR/Z =     nR/Z t2DR|B|                                                   (A.5)
+               Bφ         Bφ               Bφ
+where the subscripts refer to the R and Z components, and n are normally distributed
+random values with σ = 1.
+     Figure A1 depicts results for a validation activity of this operator in the
+FIELDLINES code. A system with purely toroidal field was constructed (BR = BZ = 0).
+For a given choice of the diffusion coefficient D, 4096 particles were followed for 100
+toroidal transits. The mean squared displacement of these particles were then used
+to calculate an effective diffusion. Comparison with the input value of the diffusion
+coefficient shows excellent agreement.
+ [1] D W Kerst. The influence of errors on plasma-confining magnetic fields. Journal of
+      Nuclear Energy. Part C, Plasma Physics, Accelerators, Thermonuclear Research, 4(4):253–262,
+      December 2002.
+Error fields in the Wendelstein 7-X stellarator                                                    20
+
+ [2] R M Sinclair, J C Hosea, and G V Sheffield. MAGNETIC SURFACE MAPPINGS BY STORAGE
+       OF PHASE-STABILIZED LOW-ENERGY ELECTRON BEAMS. Applied Physics Letters,
+       17(2):92–95, July 1970.
+ [3] R J Colchin, F S B Anderson, A C England, R F Gandy, J H Harris, M A Henderson, D L Hillis,
+       R R Kindsfather, D K Lee, D L Million, M Murakami, George Hutch Neilson, M J Saltmarsh,
+       and C M Simpson. Electron beam and magnetic field mapping techniques used to determine
+       field errors in the ATF torsatron. Review of Scientific Instruments, 60(8):2680, 1989.
+ [4] R J Colchin, S I Fedotov, Jeffrey Harris, D K Lee, F I Ozherelev, O S Pavlichenko, D P Pogozhev,
+       J A Rome, J D Treffert, and V M Zalkind. Magnetic Field Alignment Studies for the URAGAN-
+       3 Torsatron. Technical Report ORNL/TM-9685, Oak Ridge National Laboratory, Oak Ridge,
+       February 1986.
+ [5] R Jaenicke, E Ascası́bar, P Grigull, I Lakicevic, A Weller, M Zippe, H Hailer, and K Schwörer.
+       Detailed investigation of the vacuum magnetic surfaces on the W7-AS stellarator. Nuclear
+       Fusion, 33(5):687–704, May 1993.
+ [6] Matthias Otte and R. Jaenicke. Magnetic flux surface measurements at Wendelstein W7-AS.
+       Stellarator News, 100:2–5, September 2005.
+ [7] Matthias Otte, D Andruczyk, E Holzhauer, J Howard, R König, L Krupnik, H P Laqua,
+       O Lischtschenko, S Marsen, and J Schacht. The WEGA stellarator: results and prospects.
+       AIP Conference Proceedings, 993(3):3–10, 2008.
+ [8] J T Peterson, G J Hartwell, S F Knowlton, James D Hanson, R F Kelly, and C Montgomery.
+       Initial Vacuum Magnetic Field Mapping in the Compact Toroidal Hybrid. Journal of Fusion
+       Energy, 26(1-2):145–148, December 2006.
+ [9] Enrique Ascasibar, Jiang Qin, and Antonio López-Fraguas. Magnetic Surface Mapping
+       Experiments in TJ-II. Journal of Plasma Fusion Research, 1:183–186, October 1997.
+[10] George Hutch Neilson, C O Gruber, J H Harris, D J Rej, R T Simmons, and R L Strykowsky.
+       Lessons learned in risk management on NCSX. In 2009 23rd IEEE/NPSS Symposium on Fusion
+       Engineering, pages 1–6. IEEE, 2009.
+[11] R L Strykowsky, Thomas Brown, J Chrzanowski, M Cole, P Heitzenroeder, George Hutch Neilson,
+       Donald Rej, and M Viol. Engineering cost & schedule lessons learned on NCSX. In 2009 23rd
+       IEEE/NPSS Symposium on Fusion Engineering, pages 1–4. IEEE, 2009.
+[12] Tomohiro Morisaki, Mamoru Shoji, Suguru Masuzaki, Satoru Sakakibara, Hiroshi Yamada, Akio
+       Komori, and Osamu Motojima. Flux Surface Mapping in LHD. Fusion Science and Technology,
+       58(1):465–470, 2010.
+[13] Santhosh T A Kumar, Boyd D Blackwell, and Jeffrey H Harris. Determination of error field
+       sources by accurate mapping of the magnetic geometry of the H-1 heliac. Nuclear Fusion,
+       49(3):035001–12, February 2009.
+[14] K C Hammond, A Anichowski, P W Brenner, Thomas Sunn Pedersen, S RAFTOPOULOS,
+       P Traverso, and F A Volpe. Experimental and numerical study of errorfields in the CNT
+       stellarator. Plasma Physics and Controlled Fusion, 58(07):074002, May 2016.
+[15] Caoxiang Zhu, Stuart R Hudson, Samuel A Lazerson, Yuntao Song, and Yuanxi Wan. Hessian
+       matrix approach for determining error field sensitivity to coil deviations. submitted to Plasma
+       Physics and Controlled Fusion, 2018.
+[16] R J Buttery, M De Benedetti, David A Gates, Yu Gribov, T C Hender, R J La Haye, P Leahy,
+       J A Leuer, A W Morris, A Santagiustina, J T Scoville, B J D Tubbing, JET Team, COMPASS-
+       D Research Team, and DIII-D Team. Error field mode studies on JET, COMPASS-D and
+       DIII-D, and implications for ITER. Nuclear Fusion, 39(11Y):1827–1835, May 2002.
+[17] Thomas Rummel, Konrad Riße, Gunnar Ehrke, Kerstin Rummel, Andre John, Thomas Mönnich,
+       Klaus-Peter Buscher, Walter H Fietz, Reinhard Heller, Olaf Neubauer, and Anatoly Panin.
+       The Superconducting Magnet System of the Stellarator Wendelstein 7-X. IEEE Transactions
+       on Plasma Science, 40(3):769–776, March 2012.
+[18] Thomas Rummel, Konrad Riße, Frank Fullenbach, Matthias Koppen, Johann Kisslinger, Tom
+Error fields in the Wendelstein 7-X stellarator                                                  21
+
+       Brown, Ron Hatcher, Stephen Langish, Mike Mardenfeld, and George Hutch Neilson. The
+       Wendelstein 7-X Trim Coil System. IEEE Transactions on Applied Superconductivity, 24(3):1–
+       4, 2014.
+[19] Maciej Krychowiak, A Adnan, A Alonso, Tamara Andreeva, J Baldzuhn, T Barbui, M Beurskens,
+       W Biel, C Biedermann, B D Blackwell, H S Bosch, Sergey A Bozhenkov, R Brakel, T Bräuer,
+       B Brotas de Carvalho, R Burhenn, B Buttenschön, A Cappa, G Cseh, A Czarnecka, A Dinklage,
+       P Drews, A Dzikowicka, F Effenberg, M Endler, V Erckmann, T Estrada, O Ford, T Fornal,
+       H Frerichs, G Fuchert, Joachim Geiger, O Grulke, J H Harris, H-J Hartfuß, D Hartmann,
+       D Hathiramani, M Hirsch, U Höfel, S Jablonski, M W Jakubowski, J Kaczmarczyk, T Klinger,
+       S Klose, J Knauer, G Kocsis, R König, P Kornejew, A Kramer-Flecken, N Krawczyk,
+       T Kremeyer, I Ksiazek, M Kubkowska, A Langenberg, H P Laqua, M Laux, Samuel Lazerson,
+       Y Liang, S C Liu, A Lorenz, A O Marchuk, S Marsen, V Moncada, D Naujoks, George Hutch
+       Neilson, O Neubauer, U Neuner, H Niemann, J W Oosterbeek, Matthias Otte, N Pablant,
+       E Pasch, Thomas Sunn Pedersen, F Pisano, K Rahbarnia, L Ryc, O Schmitz, S Schmuck,
+       W Schneider, T Schröder, H Schuhmacher, B Schweer, B Standley, T Stange, L A Stephey,
+       J Svensson, T Szabolics, T Szepesi, H Thomsen, J M Travere, H Trimino Mora, H Tsuchiya,
+       G M Weir, U Wenzel, A Werner, B Wiegel, T Windisch, Robert C Wolf, G A Wurden, D Zhang,
+       A Zimbal, S Zoletnik, and W7-X Team. Overview of diagnostic performance and results
+       for the first operation phase in Wendelstein 7-X (invited). Review of Scientific Instruments,
+       87(11):11D304, October 2016.
+[20] J Nührenberg and R Zille. Stable stellarators with medium β and aspect ratio. Physics Letters
+       A, 114(3):129–132, 1986.
+[21] Sergey A Bozhenkov, Joachim Geiger, M Grahl, Johann Kisslinger, A Werner, and R C Wolf.
+       Fusion Engineering and Design. Fusion Engineering and Design, 88(11):2997–3006, November
+       2013.
+[22] Tamara Andreeva, T Bräuer, M Endler, Johann Kisslinger, and Y Igitkhanov. Analysis of the
+       magnetic field perturbations during the assembly of Wendelstein 7-X. Fusion Science and
+       Technology, 46(2):388–394, September 2004.
+[23] Thomas Sunn Pedersen, Matthias Otte, Samuel Lazerson, Per Helander, Sergey A Bozhenkov,
+       Christoph Biedermann, T Klinger, Robert C Wolf, and H S Bosch. Confirmation of the topology
+       of the Wendelstein 7-X magnetic field to better than 1: 100,000. Nature Communications, 7,
+       2016.
+[24] R Stadler, A Vorköper, J Boscary, A Cardella, F Hurd, Ch Li, B Mendelevitch, A Peacock,
+       and H Pirsch. The in-vessel components of the experiment WENDELSTEIN 7-X. Fusion
+       Engineering and Design, 84(2-6):305–308, June 2009.
+[25] H S Bosch, Robert C Wolf, Tamara Andreeva, J Baldzuhn, D Birus, T Bluhm, T Bräuer,
+       H Braune, Victor Bykov, A Cardella, F Durodié, M Endler, V Erckmann, G Gantenbein,
+       D Hartmann, D Hathiramani, P Heimann, B Heinemann, C Hennig, M Hirsch, D Holtum,
+       J Jagielski, J Jelonnek, W Kasparek, T Klinger, R König, P Kornejew, H Kroiss, J G Krom,
+       G Kühner, H Laqua, H P Laqua, C Lechte, M Lewerentz, J Maier, P McNeely, A Messiaen,
+       G Michel, J Ongena, A Peacock, Thomas Sunn Pedersen, R Riedl, H Riemann, P Rong,
+       Norbert Rust, J Schacht, F Schauer, R Schroeder, B Schweer, Anett Spring, A Stabler,
+       Y Turkin, L Wegener, A Werner, D Zhang, M Zilker, T Akijama, R Alzbutas, E Ascası́bar,
+       M Balden, M Banduch, Ch Baylard, W Behr, Craig D Beidler, A Benndorf, T Bergmann,
+       C Biedermann, B Bieg, W Biel, M Borchardt, G Borowitz, V Borsuk, Sergey A Bozhenkov,
+       R Brakel, H Brand, Thomas Brown, B Brucker, R Burhenn, K P Buscher, C Caldwell-Nichols,
+       A Cappa, A Carls, P Carvalho, L Ciupiński, M Cole, J Collienne, A Czarnecka, G Czymek,
+       G Dammertz, C P Dhard, V I Davydenko, A Dinklage, M Drevlak, S Drotziger, A Dudek,
+       P Dumortier, G Dundulis, P v Eeten, K Egorov, T Estrada, H Faugel, J Fellinger, Y Feng,
+       H Fernandes, W H Fietz, W Figacz, F Fischer, J Fontdecaba, A Freund, T Funaba, H Fünfgelder,
+       A Galkowski, David A Gates, L Giannone, J M Garcı́a Regaña, Joachim Geiger, S Geißler,
+Error fields in the Wendelstein 7-X stellarator                                                     22
+
+       H Greuner, M Grahl, S Groß, A Grosman, H Grote, O Grulke, M Haas, L Haiduk, H-J
+       Hartfuß, J H Harris, D Haus, B Hein, P Heitzenroeder, P Helander, R Heller, C Hidalgo,
+       D Hildebrandt, H Höhnle, A Holtz, E Holzhauer, R Holzthüm, A Huber, H Hunger, F Hurd,
+       M Ihrke, S Illy, A Ivanov, S Jablonski, N Jaksic, M W Jakubowski, R Jaspers, H Jensen,
+       H Jenzsch, J Kacmarczyk, T Kaliatk, J Kallmeyer, U Kamionka, R Karaleviciu, S Kern,
+       M Keunecke, R Kleiber, J Knauer, R Koch, G Kocsis, A Könies, M Köppen, R Koslowski,
+       J Koshurinov, A Kramer-Flecken, R Krampitz, Y Kravtsov, Maciej Krychowiak, G Krzesinski,
+       I Ksiazek, Fr Kubkowska, A Kus, S Langish, R Laube, M Laux, Samuel Lazerson, M Lennartz,
+       C Li, R Lietzow, A Lohs, A Lorenz, F Louche, L Lubyako, A Lumsdaine, A Lyssoivan, Henning
+       Maaßberg, P Marek, C Martens, N Marushchenko, M Mayer, B Mendelevitch, Ph Mertens,
+       David R Mikkelsen, A Mishchenko, B Missal, T Mizuuchi, H Modrow, T Mönnich, T Morizaki,
+       S Murakami, F Musielok, M Nagel, D Naujoks, George Hutch Neilson, O Neubauer, U Neuner,
+       R Nocentini, J M Noterdaeme, Carolin Nührenberg, S Obermayer, G Offermanns, H Oosterbeek,
+       Matthias Otte, A Panin, M Pap, S Paquay, E Pasch, X Peng, S Petrov, D Pilopp, H Pirsch,
+       B Plaum, F Pompon, M Povilaitis, J Preinhaelter, O Prinz, F Purps, T Rajna, S Récsei,
+       Allan H Reiman, D Reiter, J Remmel, S Renard, V Rhode, J Riemann, S Rimkevicius, K Riße,
+       A Rodatos, I Rodin, M Romé, H J Roscher, K Rummel, Thomas Rummel, A M Runov,
+       L Ryc, J Sachtleben, A Samartsev, M Sanchez, F Sano, A Scarabosio, M Schmid, H Schmitz,
+       O Schmitz, M Schneider, W Schneider, L Scheibl, M Scholz, G Schröder, M Schröder, J Schruff,
+       H Schumacher, I V Shikhovtsev, M Shoji, G Siegl, J Skodzik, M Smirnow, E Speth, Don A
+       Spong, R Stadler, Z Sulek, V Szabó, T Szabolics, T Szetefi, Z Szökefalvi-Nagy, A Tereshchenko,
+       H Thomsen, M Thumm, D Timmermann, H Tittes, K Toi, M Tournianski, U v Toussaint,
+       J Tretter, S Tulipán, P Turba, R Uhlemann, J Urban, E Urbonavicius, P Urlings, S Valet,
+       D Van Eester, M Van Schoor, M Vervier, H Viebke, R Vilbrandt, M Vrancken, and T and...
+       Wauters. Technical challenges in the construction of the steady-state stellarator Wendelstein
+       7-X. Nuclear Fusion, 53(12):126001, November 2013.
+[26] V. Bykov, K. Egorov, J. Fellinger, J. P. Kallmeyer, F. Schauer, and M. Gasparotto. Wendelstein
+       7-x mechanical instrumentation system for commissioning and operation. Fusion Science and
+       Technology, 68(2):267–271, 2015.
+[27] Matthias Otte, D Aßmus, C Biedermann, Sergey A Bozhenkov, T Bräuer, A Dudek, Joachim
+       Geiger, G Kocsis, Samuel Lazerson, Thomas Sunn Pedersen, F Schauer, T Szepesi, B Standley,
+       and the W7-X Team. Setup and initial results from the magnetic flux surface diagnostics at
+       Wendelstein 7-X. Plasma Physics and Controlled Fusion, 58(06):064003, May 2016.
+[28] Samuel Lazerson, Matthias Otte, Sergey A Bozhenkov, Christoph Biedermann, Thomas Sunn
+       Pedersen, and the W7-X Team. First measurements of error fields on W7-X using flux surface
+       mapping. Nuclear Fusion, 56(10):106005, August 2016.
+[29] Victor Bykov, K Egorov, J Fellinger, J P Kallmeyer, F Schauer, and M Gasparotto. Wendelstein
+       7-X Mechanical Instrumentation System for Commissioning and Operation. Fusion Science and
+       Technology, 68(2):267–271, March 2017.
+[30] S.A. Bozhenkov, M. Otte, C. Biedermann, M. Jakubowski, S. A. Lazerson, T.S. Pedersen, R Wolf,
+       and the W7-X Team. Measurements and correction of the 1/1 error field in wendelstein 7-x.
+       submitted to Nuclear Fusion, XX(X):XX, 2018.
+[31] Tomas Möller and Ben Trumbore. Fast, minimum storage ray-triangle intersection. Journal of
+       Graphics Tools, 2(1):21–28, 1997.
+[32] Samuel Lazerson, Matthias Otte, Marcin Jakubowski, Ben Israeli, Glen A Wurden, Uwe Wenzel,
+       Tamara Andreeva, Sergey A Bozhenkov, Christoph Biedermann, Gabor Kocsis, Tamas Szepesi,
+       Joachim Geiger, Thomas Sunn Pedersen, David Gates, and the W7-X Team. Error field
+       measurement, correction and heat flux balancing on Wendelstein 7-X. Nuclear Fusion,
+       57(4):046026–9, March 2017.
+[33] Sergey A Bozhenkov, M W Jakubowski, H Niemann, Samuel Lazerson, G A Wurden,
+       C Biedermann, G Kocsis, R König, F Pisano, L A Stephey, T Szepesi, U Wenzel, Thomas Sunn
+Error fields in the Wendelstein 7-X stellarator                                                   23
+
+       Pedersen, Robert C Wolf, and W7-X Team. Effect of error field correction coils on W7-X limiter
+       loads. Nuclear Fusion, 57(12):126030–11, September 2017.
+[34] Caoxiang Zhu, Stuart R Hudson, Yuntao Song, and Yuanxi Wan. New method to design stellarator
+       coils without the winding surface. Nuclear Fusion, 58(1):016008–13, November 2017.
+

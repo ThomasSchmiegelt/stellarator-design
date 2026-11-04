@@ -1,0 +1,135 @@
+URL: http://arxiv.org/abs/2311.08619v1
+Skip to main content
+[https://arxiv.org/IgnoreMe]
+[https://arxiv.org/]
+Search
+[https://arxiv.org/search]
+Submit [https://arxiv.org/submit]
+Donate [https://info.arxiv.org/about/donate.html]
+Log in [https://arxiv.org/login]
+Search arXiv
+Press Enter to search · Advanced search [https://arxiv.org/search/advanced]
+-->
+Physics > Plasma Physics
+arXiv:2311.08619v1 (physics)
+[Submitted on 15 Nov 2023]
+Title: Analysis of the neutral fluxes in the divertor region of Wendelstein 7-X under attached and detached conditions using EMC3-EIRENE
+Authors: Dieter Boeyaerta [https://arxiv.org/search/physics?searchtype=author&query=Boeyaerta,+D], Yuhe Feng [https://arxiv.org/search/physics?searchtype=author&query=Feng,+Y], Heinke Frerichs [https://arxiv.org/search/physics?searchtype=author&query=Frerichs,+H], Thierry Kremeyer [https://arxiv.org/search/physics?searchtype=author&query=Kremeyer,+T], Dirk Naujoks [https://arxiv.org/search/physics?searchtype=author&query=Naujoks,+D], Felix Reimold [https://arxiv.org/search/physics?searchtype=author&query=Reimold,+F], Oliver Schmitz [https://arxiv.org/search/physics?searchtype=author&query=Schmitz,+O], Victoria Winters [https://arxiv.org/search/physics?searchtype=author&query=Winters,+V], Sergey Bozhenkov [https://arxiv.org/search/physics?searchtype=author&query=Bozhenkov,+S], Joris Fellinger [https://arxiv.org/search/physics?searchtype=author&query=Fellinger,+J], Marcin Jakubowski [https://arxiv.org/search/physics?searchtype=author&query=Jakubowski,+M], Ralf König [https://arxiv.org/search/physics?searchtype=author&query=K%C3%B6nig,+R], Maciej Krychowiak [https://arxiv.org/search/physics?searchtype=author&query=Krychowiak,+M], Valeria Perseo [https://arxiv.org/search/physics?searchtype=author&query=Perseo,+V], Georg Schlisio [https://arxiv.org/search/physics?searchtype=author&query=Schlisio,+G], Uwe Wenzel [https://arxiv.org/search/physics?searchtype=author&query=Wenzel,+U], W7-X team [https://arxiv.org/search/physics?searchtype=author&query=W7-X+team]
+View a PDF of the paper titled Analysis of the neutral fluxes in the divertor region of Wendelstein 7-X under attached and detached conditions using EMC3-EIRENE, by Dieter Boeyaerta and 16 other authors
+View PDF
+HTML (experimental) [https://arxiv.org/html/2311.08619v1]
+Abstract: This paper analyzes the neutral fluxes in the divertor region of the W7-X standard configuration for different input powers, both under attached and detached conditions. The performed analysis is conducted through EMC3-EIRENE simulations. They show the importance of the horizontal divertor to generate neutrals, and resolve the neutral plugging in the divertor region. Simulations of detached cases show a decrease in the number of generated neutrals compared to the attached simulations, in addition to a higher fraction of the ion flux arriving on the baffles during detachment. As the ionization takes place further inside the plasma during detachment, a larger percentage of the generated neutral particles leave the divertor as neutrals. The leakage in the poloidal and toroidal direction increases, just as the fraction of collected particles at the pumping gap. The fraction of pumped particles increases with a factor two, but stays below one percent. This demonstrates that detachment with the current target geometry, although it improves the power exhaust, is not yet leading to an increased particle exhaust.
+Subjects: |
+Plasma Physics (physics.plasm-ph) |
+Cite as: |
+arXiv:2311.08619 [https://arxiv.org/abs/2311.08619] [physics.plasm-ph] |
+|
+(or
+arXiv:2311.08619v1 [https://arxiv.org/abs/2311.08619v1] [physics.plasm-ph] for this version)
+|
+|
+https://doi.org/10.48550/arXiv.2311.08619 [https://doi.org/10.48550/arXiv.2311.08619]
+Focus to learn more
+arXiv-issued DOI via DataCite
+|
+Related DOI :
+|
+https://doi.org/10.1088/1361-6587/ad0e22 [https://doi.org/10.1088/1361-6587/ad0e22]
+Focus to learn more
+DOI(s) linking to related resources
+|
+Submission history
+From: Dieter Boeyaert [ view email ]
+[v1]
+Wed, 15 Nov 2023 00:57:44 UTC (23,582 KB)
+Full-text links:
+Access Paper:
+View a PDF of the paper titled Analysis of the neutral fluxes in the divertor region of Wendelstein 7-X under attached and detached conditions using EMC3-EIRENE, by Dieter Boeyaerta and 16 other authors
+View PDF
+HTML (experimental) [https://arxiv.org/html/2311.08619v1]
+TeX Source
+view license [http://arxiv.org/licenses/nonexclusive-distrib/1.0/]
+Current browse context:
+physics.plasm-ph
+< prev
+|
+next >
+new
+|
+recent
+| 2023-11
+Change to browse by:
+physics
+References & Citations
+SciX [https://scixplorer.org/abs/arXiv:2311.08619]
+Google Scholar [https://scholar.google.com/scholar_lookup?arxiv_id=2311.08619]
+Semantic Scholar [https://api.semanticscholar.org/arXiv:2311.08619]
+export BibTeX citation
+Loading...
+BibTeX formatted citation
+×
+loading...
+Data provided by:
+Bookmark
+[http://www.bibsonomy.org/BibtexHandler?requTask=upload&url=https://arxiv.org/abs/2311.08619&description=Analysis of the neutral fluxes in the divertor region of Wendelstein 7-X under attached and detached conditions using EMC3-EIRENE]
+[https://reddit.com/submit?url=https://arxiv.org/abs/2311.08619&title=Analysis of the neutral fluxes in the divertor region of Wendelstein 7-X under attached and detached conditions using EMC3-EIRENE]
+Bibliographic Tools
+Bibliographic and Citation Tools
+Bibliographic Explorer Toggle
+Bibliographic Explorer (What is the Explorer? [https://info.arxiv.org/labs/showcase.html#arxiv-bibliographic-explorer])
+Connected Papers Toggle
+Connected Papers (What is Connected Papers? [https://www.connectedpapers.com/about])
+Litmaps Toggle
+Litmaps (What is Litmaps? [https://www.litmaps.co/])
+scite.ai Toggle
+scite Smart Citations (What are Smart Citations? [https://www.scite.ai/])
+Code, Data, Media
+Code, Data and Media Associated with this Article
+alphaXiv Toggle
+alphaXiv (What is alphaXiv? [https://alphaxiv.org/])
+Links to Code Toggle
+CatalyzeX Code Finder for Papers (What is CatalyzeX? [https://www.catalyzex.com])
+DagsHub Toggle
+DagsHub (What is DagsHub? [https://dagshub.com/])
+GotitPub Toggle
+Gotit.pub (What is GotitPub? [http://gotit.pub/faq])
+Huggingface Toggle
+Hugging Face (What is Huggingface? [https://huggingface.co/huggingface])
+ScienceCast Toggle
+ScienceCast (What is ScienceCast? [https://sciencecast.org/welcome])
+Demos
+Demos
+Replicate Toggle
+Replicate (What is Replicate? [https://replicate.com/docs/arxiv/about])
+Spaces Toggle
+Hugging Face Spaces (What is Spaces? [https://huggingface.co/docs/hub/spaces])
+Spaces Toggle
+TXYZ.AI (What is TXYZ.AI? [https://txyz.ai])
+Related Papers
+Recommenders and Search Tools
+Link to Influence Flower
+Influence Flower (What are Influence Flowers? [https://influencemap.cmlab.dev/])
+Core recommender toggle
+CORE Recommender (What is CORE? [https://core.ac.uk/services/recommender])
+Author
+Venue
+Institution
+Topic
+About arXivLabs
+arXivLabs: experimental projects with community collaborators
+arXivLabs is a framework that allows collaborators to develop and share new arXiv features directly on our website.
+Both individuals and organizations that work with arXivLabs have embraced and accepted our values of openness, community, excellence, and user data privacy. arXiv is committed to these values and only works with partners that adhere to them.
+Have an idea for a project that will add value for arXiv's community? Learn more about arXivLabs [https://info.arxiv.org/labs/index.html].
+Which authors of this paper are endorsers? |
+Disable MathJax (What is MathJax? [https://info.arxiv.org/help/mathjax.html])
+We gratefully acknowledge support from our major funders [https://info.arxiv.org/about/major_funders.html],
+member institutions [https://info.arxiv.org/about/ourmembers.html] , ,
+and all contributors.
+About [https://info.arxiv.org/about] ·
+Help [https://info.arxiv.org/help] ·
+Contact [https://info.arxiv.org/help/contact.html] ·
+Subscribe [https://info.arxiv.org/help/subscribe.html] ·
+Copyright [https://info.arxiv.org/help/license/index.html] ·
+Privacy [https://info.arxiv.org/help/policies/privacy_policy.html] ·
+Accessibility [https://info.arxiv.org/help/web_accessibility.html] ·
+Operational Status (opens in new tab) [https://status.arxiv.org/]

@@ -1,0 +1,131 @@
+URL: http://arxiv.org/abs/2507.22516v1
+Skip to main content
+[https://arxiv.org/IgnoreMe]
+[https://arxiv.org/]
+Search
+[https://arxiv.org/search]
+Submit [https://arxiv.org/submit]
+Donate [https://info.arxiv.org/about/donate.html]
+Log in [https://arxiv.org/login]
+Search arXiv
+Press Enter to search · Advanced search [https://arxiv.org/search/advanced]
+-->
+Physics > Instrumentation and Detectors
+arXiv:2507.22516v1 (physics)
+[Submitted on 30 Jul 2025]
+Title: Manufacturing Tolerances of Non-Planar Coils for an Optimized Tabletop Stellarator
+Authors: Pedro F. Gil [https://arxiv.org/search/physics?searchtype=author&query=Gil,+P+F], Vitali Brack [https://arxiv.org/search/physics?searchtype=author&query=Brack,+V], Tristan Schuler [https://arxiv.org/search/physics?searchtype=author&query=Schuler,+T], Paul Huslage [https://arxiv.org/search/physics?searchtype=author&query=Huslage,+P], E. V. Stenson [https://arxiv.org/search/physics?searchtype=author&query=Stenson,+E+V]
+View a PDF of the paper titled Manufacturing Tolerances of Non-Planar Coils for an Optimized Tabletop Stellarator, by Pedro F. Gil and 4 other authors
+View PDF
+HTML (experimental) [https://arxiv.org/html/2507.22516v1]
+Abstract: Stellarator coils are known for their complexity and departure from planarity, along with tight manufacturing tolerances in order to achieve the target magnetic field accuracy. These requirements can lead to increased costs and delays in assembly; failure to meet them can compromise the stellarator's performance. Small-scale experiments offer opportunities to develop and benchmark stellarator coil design and evaluation methods more quickly and at lower budget. In this work, we analyze precise 3D scans of the manufacturing deviations of two 3D-printed coil frames (steel, Ti alloy) and one CNC-machined coil frame (Al alloy), as part of assessing these approaches to fabricating high-temperature superconducting (HTS) coils for a tabletop stellarator. The deviations are measured along the coil length, then modeled using Gaussian processes to extract characteristic length scales. Finally a statistical study of field accuracy is performed using relevant experimental parameters. We conclude that the manufacturing perturbations along the winding path from CNC-machining are almost an order of magnitude lower than those from Additive Manufacturing. Together with high overall fabrication accuracy, this allows for higher magnetic field precision and an improved assembly process.
+Subjects: |
+Instrumentation and Detectors (physics.ins-det) |
+Cite as: |
+arXiv:2507.22516 [https://arxiv.org/abs/2507.22516] [physics.ins-det] |
+|
+(or
+arXiv:2507.22516v1 [https://arxiv.org/abs/2507.22516v1] [physics.ins-det] for this version)
+|
+|
+https://doi.org/10.48550/arXiv.2507.22516 [https://doi.org/10.48550/arXiv.2507.22516]
+Focus to learn more
+arXiv-issued DOI via DataCite
+|
+Submission history
+From: Pedro Francisco Gil [ view email ]
+[v1]
+Wed, 30 Jul 2025 09:40:00 UTC (12,759 KB)
+Full-text links:
+Access Paper:
+View a PDF of the paper titled Manufacturing Tolerances of Non-Planar Coils for an Optimized Tabletop Stellarator, by Pedro F. Gil and 4 other authors
+View PDF
+HTML (experimental) [https://arxiv.org/html/2507.22516v1]
+TeX Source
+view license
+[http://creativecommons.org/licenses/by/4.0/]
+Current browse context:
+physics.ins-det
+< prev
+|
+next >
+new
+|
+recent
+| 2025-07
+Change to browse by:
+physics
+References & Citations
+INSPIRE HEP [https://inspirehep.net/arxiv/2507.22516]
+SciX [https://scixplorer.org/abs/arXiv:2507.22516]
+Google Scholar [https://scholar.google.com/scholar_lookup?arxiv_id=2507.22516]
+Semantic Scholar [https://api.semanticscholar.org/arXiv:2507.22516]
+export BibTeX citation
+Loading...
+BibTeX formatted citation
+×
+loading...
+Data provided by:
+Bookmark
+[http://www.bibsonomy.org/BibtexHandler?requTask=upload&url=https://arxiv.org/abs/2507.22516&description=Manufacturing Tolerances of Non-Planar Coils for an Optimized Tabletop Stellarator]
+[https://reddit.com/submit?url=https://arxiv.org/abs/2507.22516&title=Manufacturing Tolerances of Non-Planar Coils for an Optimized Tabletop Stellarator]
+Bibliographic Tools
+Bibliographic and Citation Tools
+Bibliographic Explorer Toggle
+Bibliographic Explorer (What is the Explorer? [https://info.arxiv.org/labs/showcase.html#arxiv-bibliographic-explorer])
+Connected Papers Toggle
+Connected Papers (What is Connected Papers? [https://www.connectedpapers.com/about])
+Litmaps Toggle
+Litmaps (What is Litmaps? [https://www.litmaps.co/])
+scite.ai Toggle
+scite Smart Citations (What are Smart Citations? [https://www.scite.ai/])
+Code, Data, Media
+Code, Data and Media Associated with this Article
+alphaXiv Toggle
+alphaXiv (What is alphaXiv? [https://alphaxiv.org/])
+Links to Code Toggle
+CatalyzeX Code Finder for Papers (What is CatalyzeX? [https://www.catalyzex.com])
+DagsHub Toggle
+DagsHub (What is DagsHub? [https://dagshub.com/])
+GotitPub Toggle
+Gotit.pub (What is GotitPub? [http://gotit.pub/faq])
+Huggingface Toggle
+Hugging Face (What is Huggingface? [https://huggingface.co/huggingface])
+ScienceCast Toggle
+ScienceCast (What is ScienceCast? [https://sciencecast.org/welcome])
+Demos
+Demos
+Replicate Toggle
+Replicate (What is Replicate? [https://replicate.com/docs/arxiv/about])
+Spaces Toggle
+Hugging Face Spaces (What is Spaces? [https://huggingface.co/docs/hub/spaces])
+Spaces Toggle
+TXYZ.AI (What is TXYZ.AI? [https://txyz.ai])
+Related Papers
+Recommenders and Search Tools
+Link to Influence Flower
+Influence Flower (What are Influence Flowers? [https://influencemap.cmlab.dev/])
+Core recommender toggle
+CORE Recommender (What is CORE? [https://core.ac.uk/services/recommender])
+Author
+Venue
+Institution
+Topic
+About arXivLabs
+arXivLabs: experimental projects with community collaborators
+arXivLabs is a framework that allows collaborators to develop and share new arXiv features directly on our website.
+Both individuals and organizations that work with arXivLabs have embraced and accepted our values of openness, community, excellence, and user data privacy. arXiv is committed to these values and only works with partners that adhere to them.
+Have an idea for a project that will add value for arXiv's community? Learn more about arXivLabs [https://info.arxiv.org/labs/index.html].
+Which authors of this paper are endorsers? |
+Disable MathJax (What is MathJax? [https://info.arxiv.org/help/mathjax.html])
+We gratefully acknowledge support from our major funders [https://info.arxiv.org/about/major_funders.html],
+member institutions [https://info.arxiv.org/about/ourmembers.html] , ,
+and all contributors.
+About [https://info.arxiv.org/about] ·
+Help [https://info.arxiv.org/help] ·
+Contact [https://info.arxiv.org/help/contact.html] ·
+Subscribe [https://info.arxiv.org/help/subscribe.html] ·
+Copyright [https://info.arxiv.org/help/license/index.html] ·
+Privacy [https://info.arxiv.org/help/policies/privacy_policy.html] ·
+Accessibility [https://info.arxiv.org/help/web_accessibility.html] ·
+Operational Status (opens in new tab) [https://status.arxiv.org/]
