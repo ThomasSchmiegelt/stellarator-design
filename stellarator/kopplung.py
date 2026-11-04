@@ -142,6 +142,38 @@ def geometrie(po: Path) -> None:
 
 
 # ---------------------------------------------------------------- 3. Struktur (wie surrogat.modell/rechne_probe)
+def reparieren(netz, spulen, W, bauen, runden_max: int = 6, je_station: bool = False):
+    """Reparaturschleife (F-182): an den Stationen umgestuelpter Elemente Waende weich um 20 % duennen, neu bauen.
+    W wird an Ort und Stelle geaendert; bauen() baut das Netz aus dem aktuellen W. Genutzt von struktur_netz
+    (Gesamtmodell) und submodell (eine verfeinerte Spule, spulen = [s2], W = [w2]). Rueckgabe (netz, runden).
+    je_station=False (Gesamtmodell, wie bisher): je umgestuelptem Element einmal duennen, mehrere Elemente an
+    derselben Station und ueberlappende Fenster multiplizieren sich (0,8^n). je_station=True: je Station und Runde
+    hoechstens 20 % (feines Submodell hat viel mehr Elemente je Station, sonst bis ~93 % Wandverlust in einer Runde)."""
+    from . import hexmodell as hm
+    runde = 0
+    while netz.info["elemente_negativ"] and runde < runden_max:
+        runde += 1
+        X, H = np.asarray(netz.X), np.asarray(netz.hexa)
+        neg = np.where(hm._jacobi_min(X, H) <= 0)[0]; sid = np.asarray(netz.spule)[neg]
+        for kk in np.unique(sid):
+            if kk < 0:                                   # Verbinder: gehoert keiner Spule
+                continue
+            P = spulen[kk].punkte; Nk = len(P)
+            orte = [int(np.argmin(np.linalg.norm(P - c, axis=1))) for c in X[H[neg[sid == kk]]].mean(1)]
+            fak = np.ones(Nk)
+            for i0 in orte:
+                for d_ in range(-3, 4):
+                    f_ = 1 - 0.2 * (1 - abs(d_) / 4)
+                    if je_station:                       # hoechstens 20 % je Station und Runde
+                        fak[(i0 + d_) % Nk] = min(fak[(i0 + d_) % Nk], f_)
+                    else:                                # wie bisher: Faktoren multiplizieren sich
+                        fak[(i0 + d_) % Nk] *= f_
+            for q in ("innen", "aussen", "links", "rechts"):
+                W[kk][q] *= fak
+        netz = bauen()
+    return netz, runde
+
+
 def struktur_netz(p: dict, po: Path, geo: dict):
     """Spulen, Waende und Hex-Netz wie in schritt_struktur, ohne Rechnung (Geometriepruefung, Varianten)."""
     from . import spulen as sp, cad, hexmodell as hm
@@ -170,6 +202,7 @@ def struktur_netz(p: dict, po: Path, geo: dict):
     hm.LAGER_ORT = p.get("lager_ort", FEST["lager_ort"])
     hm.VERB_MODUS = p.get("verb_modus", "standard")
     hm.SEITLICH_MIN = float(p.get("seitlich_min", 0.8))
+    hm.LUECKE_MAX = float(p.get("luecke_max_m", 4.0))            # nur verb_modus=luecken (B-034)
     W = waende(spulen, br, ho, w)
     if p.get("biegung") == "innenkontur":                         # Wand innen in der Kurve kappen (F-180)
         from .gehaeuse_netz import biegegrenze
@@ -183,25 +216,13 @@ def struktur_netz(p: dict, po: Path, geo: dict):
         for v in plan:
             v["i0"] = int(np.linalg.norm(spulen[v["k"]].punkte - np.asarray(v["xk"]), axis=1).argmin())
             v["j0"] = int(np.linalg.norm(spulen[v["m"]].punkte - np.asarray(v["xm"]), axis=1).argmin())
-    netz = hm.baue_netz(spulen, br, ho, W, FEST["verguss_m"], p["r_lager_m"], int(p.get("verbinder_je_paar", FEST["verbinder_je_paar"])),
-                        int(p.get("verbinder_halb", FEST["verbinder_halb"])), plan=plan)
-    runde = 0
-    while netz.info["elemente_negativ"] and p.get("biegung") == "innenkontur" and runde < 6:
-        # Reparaturschleife (F-182): an den Stationen umgestuelpter Elemente Waende weich um 20 % duennen, neu bauen
-        runde += 1
-        X, H = np.asarray(netz.X), np.asarray(netz.hexa)
-        neg = np.where(hm._jacobi_min(X, H) <= 0)[0]; sid = np.asarray(netz.spule)[neg]
-        for kk in np.unique(sid):
-            P = spulen[kk].punkte; Nk = len(P)
-            for c in X[H[neg[sid == kk]]].mean(1):
-                i0 = int(np.argmin(np.linalg.norm(P - c, axis=1)))
-                for d_ in range(-3, 4):
-                    f_ = 1 - 0.2 * (1 - abs(d_) / 4)
-                    for q in ("innen", "aussen", "links", "rechts"):
-                        W[kk][q][(i0 + d_) % Nk] *= f_
-        netz = hm.baue_netz(spulen, br, ho, W, FEST["verguss_m"], p["r_lager_m"], int(p.get("verbinder_je_paar", FEST["verbinder_je_paar"])),
-                            int(p.get("verbinder_halb", FEST["verbinder_halb"])), plan=plan)
-        (po / "reparatur.json").write_text(json.dumps({"runden": runde, "negativ": netz.info["elemente_negativ"]}))
+    bauen = lambda: hm.baue_netz(spulen, br, ho, W, FEST["verguss_m"], p["r_lager_m"], int(p.get("verbinder_je_paar", FEST["verbinder_je_paar"])),
+                                 int(p.get("verbinder_halb", FEST["verbinder_halb"])), plan=plan)
+    netz = bauen()
+    if p.get("biegung") == "innenkontur":
+        netz, runde = reparieren(netz, spulen, W, bauen)
+        if runde:
+            (po / "reparatur.json").write_text(json.dumps({"runden": runde, "negativ": netz.info["elemente_negativ"]}))
     if netz.info["elemente_negativ"]:
         raise RuntimeError(f"{netz.info['elemente_negativ']} Elemente mit negativer Jacobi-Determinante")
     (po / "verbinder_plan.json").write_text(json.dumps([
@@ -242,6 +263,9 @@ def schritt_struktur(p: dict, po: Path, geo: dict, timeout_s: float = 2400) -> t
     k["verbinder_ok"] = int(sum(v["ok"] for v in netz.info["verbinder"]))
     k["verbinder_kandidaten"] = len(netz.info["verbinder"])
     k["durchdringung_punkte"] = int(verlauf[-1]) if len(verlauf) else 0
+    if "luecken" in netz.info:                                     # verb_modus=luecken: groesste Restluecke, ergaenzte
+        k["luecken"] = netz.info["luecken"]
+        k["luecke_max_m"] = netz.info["luecken"]["luecke_max_m"]; k["verbinder_ergaenzt"] = netz.info["luecken"]["ergaenzt_ok"]
     k["elmer_s"] = t
     hm.als_vtu(netz, po / "struktur.vtu", {"vonmises_MPa": vm / 1e6}, {"verschiebung_m": U})
     shutil.rmtree(fall)
@@ -456,7 +480,8 @@ def main(argv=None):
         print(json.dumps({k: e[k] for k in ("spulen", "package", "bewertung", "zeiten")}, indent=1, default=float))
         s = e["struktur"]
         print("Struktur:", {k: s[k] for k in ("u_max_mm", "kraft_MN_max_je_spule", "I_spule_MA", "verbinder_ok",
-                                               "verbinder_kandidaten", "durchdringung_punkte")}, "Stahl", s["stahl"])
+                                               "verbinder_kandidaten", "durchdringung_punkte", "luecke_max_m",
+                                               "verbinder_ergaenzt") if k in s}, "Stahl", s["stahl"])
     elif a.befehl == "lauf":
         lauf(a.studie, a.n, a.stunden, a.speicher)
     else:

@@ -716,3 +716,17 @@ sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht 
 - 2026-11-04 12:58 Stufe 11 geprüft (F-200, Befund 10). Tabelle sim/submodell/tabelle.md. Temperatur: `schrumpf_stahl/_wp/_verguss` in kopplung.werkstoffe, wirkt im Gesamt- und Submodell; Werte fehlen, PI läuft: docs/recherche/schrumpf/lauf.sh, Ergebnis ergebnis.md (gegenlesen!). Danach: Erwartung ins Protokoll, Gesamt + Submodell für 0169 und DP9 rechnen.
 - 2026-11-04 13:00 Nutzer: 500 MPa nur angenommen, nicht belegt (F-201). Nicht ändern, aber als Annahme behandeln.
 - 2026-11-04 13:10 sim/qi_feld/kette12.sh läuft losgelöst (Abkühlen, Spanne A/B/C als Annahme, F-202), Ende „FERTIG Stufe 12“.
+- 2026-11-04 13:14 Rangfolge Nutzer (F-203): Plasma zuerst, Kollision und Spannung schließen nur Unrealistisches aus. sim/qi_feld/kette13.sh wartet auf Stufe 12, rechnet dann DjLe3eL6, DYU, DSD. Ende „FERTIG Stufe 13“.
+- 2026-11-04 13:15 Nutzer: Token sparen, Vorschlag Sonnet als Standard, Opus gezielt (F-204, Entscheidung offen). B-031 eingetragen.
+- 2026-11-04 13:21 Stufe 12 (Abkühlen) fertig (automatisch). Erwartung F-202. Noch nicht von Claude geprüft.
+- 2026-11-04 13:22 Stufe 12 von Claude geprüft: B-032, F-205. Offen: Hauptspannungen und Haftung Wickelpaket. Stufe 13 läuft.
+- 2026-11-04 13:35 Nutzer hat auf Sonnet umgestellt (F-206). Sonnet führt; Opus-Unteragent (model=opus) für Deutung Stufe 13 und Hauptspannungsprüfung; Haiku mechanisch; PI Suche. Stufe 13 läuft.
+- 2026-11-04 13:36 Stufe 13 (Plasma zuerst: DjLe3eL6, DYU, DSD) fertig (automatisch). Erwartung F-203. Noch nicht von Claude geprüft.
+- 2026-11-04 13:36 Stufe 13 fertig, B-033/F-207. Submodelle QI-Sätze scheitern (negative Elemente), Auslenkung 200–290 mm ungeklärt: Opus-Agent beauftragt (Ergebnisdatei docs/recherche/qi_tragwerk/opus_fehlersuche.md).
+- 2026-11-04 13:45 Opus-Fehlersuche fertig (B-034, F-208): Lücken ohne Verbinder erklären die Auslenkung; Submodell-Reparatur in kopplung.py/submodell.py (ungeprüft committet: nein). Nächster Hebel: Verbinder nach Lücken setzen.
+- 2026-11-04 13:50 Opus-Agent baut verb_modus=luecken (kopplung/hexmodell) und rechnet qi_proxima_dje 2; Bericht docs/recherche/qi_tragwerk/opus_luecken.md. Erwartung F-208. Nicht committet.
+- 2026-11-04 14:04 Lückenmodus (B-035, F-209): dje 241→42,5 mm, 620→405 MPa. sim/qi_feld/kette14.sh läuft losgelöst (dje 3, dyu 21, dsd 1 + Submodelle dje 2/3, dyu 21, dsd 1), Ende „FERTIG Stufe 14“. Code (hexmodell/kopplung/submodell) noch nicht committet.
+- 2026-11-04 14:15 Plasma-Einflüsse (B-036, F-211): im Gesamtdatensatz kehrt sich das Vorzeichen beim Aspektverhältnis um; Bericht DE/EN neuer Abschnitt qi_einfluss, PDFs gebaut. Stufe 14 läuft weiter. Nicht committet.
+- 2026-11-04 14:15 Stufe 14 (Plasma zuerst: DjLe3eL6, DYU, DSD) fertig (automatisch). Erwartung F-209. Noch nicht von Claude geprüft.
+- 2026-11-04 14:22 Nachtrag B-036/F-213: gemeinsames Modell R² 0,90, Spiegelverhältnisse wichtigste; Bericht DE/EN ergänzt, PDFs gebaut. Nicht committet.
+- 2026-11-04 15:14 Stufe 14 abgeholt (B-037, F-214): dje/dyu Tragwerk ok unter Annahme, Fluenz/Package/Kernheizung verletzt (Hülle zu eng). Submodell dje Punkt 3 fehlt.

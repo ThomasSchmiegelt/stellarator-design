@@ -1,0 +1,67 @@
+\section{Was das Plasma verbessert oder verschlechtert: Auswertung des Datensatzes}\label{sec:qi_einfluss}
+
+\textbf{Lesehilfe.} Die QI-Güte (Quasi-Isodynamie) misst, wie gut ein Plasma die Teilchen im Magnetfeld hält; ein
+kleinerer Wert ist besser. Die \emph{Rangkorrelation} sagt nur, ob zwei Größen im Datensatz gemeinsam steigen
+(positiv) oder gegenläufig sind (negativ). Sie ist \emph{keine Ursache}: Wir haben nie ein Plasma verändert und die Wirkung gemessen.
+
+Der Nutzer fragte, was sich positiv und was negativ auf das Plasma auswirkt. Die Plasmaform stammt aus dem öffentlichen
+Proxima-Datensatz; unsere Kette bewertet nur Spulen und Tragwerk dazu.
+
+\subsection*{Erwartung vorher}
+Aus den 182 vorsortierten Spulensätzen (Kraft-Scan) war das Aspektverhältnis der stärkste Einfluss (+0,30, größer ist
+schlechter). Erwartet wurde dasselbe Vorzeichen im ganzen Datensatz, mit größerem Betrag (0,3 bis 0,5).
+
+\subsection*{Ergebnis}
+158\,685 von 182\,222 Plasmen haben ein gültiges QI. Rangkorrelation mit $\log_{10}$(QI):
+
+\begin{tabular}{lr}
+\hline
+Merkmal & Rangkorrelation \\ \hline
+Randwert der Rotationstransformation (je Periode) & $+0{,}35$ \\
+kleinste normierte Gradientenlänge & $-0{,}34$ \\
+Aspektverhältnis & $-0{,}31$ \\
+größte Elongation & $-0{,}30$ \\
+Vakuum-Well & $-0{,}30$ \\
+Spiegelverhältnis am Rand & $+0{,}27$ \\
+mittlere Dreieckigkeit & $+0{,}22$ \\
+Spiegelverhältnis auf der Achse & $-0{,}21$ \\
+Flusskompression in schlechter Krümmung & $-0{,}20$ \\
+Feldperioden & $+0{,}14$ \\ \hline
+\end{tabular}
+
+\smallskip
+\noindent Medianes QI nach Feldperioden: 1: 0,0109; 2: 0,0085; 3: 0,0204; 4: 0,0145; 5: 0,0179. Das beste Einzelplasma hat
+2 Perioden (QI $6\cdot10^{-5}$).
+
+\subsection*{Vergleich mit der Erwartung: verfehlt}
+Das Vorzeichen beim Aspektverhältnis \emph{kehrt sich um} ($-0{,}31$ statt $+0{,}30$). Die Nachprüfung in Bereichen des
+Aspektverhältnisses zeigt, warum: unter 10 ist ein größeres Aspektverhältnis besser (etwa $-0{,}17$ bis $-0{,}34$), über 10
+schlechter ($+0{,}25$ und mehr). Unsere 182 Sätze liegen alle bei 9 bis 11, dort hat die Korrelation das andere
+Vorzeichen. Auch bei den Feldperioden ist die Gesamtzahl ($+0{,}14$) irreführend: innerhalb jeder Periodenzahl
+sind es $-0{,}14$ bis $-0{,}37$.
+
+\subsection*{Deutung und Grenzen}
+\begin{itemize}\itemsep1pt
+\item Die Korrelationen sind schwach (höchstens 0,35) und hängen vom betrachteten Bereich ab. Aus ihnen folgt
+  \emph{keine} Regel wie „flacher ist besser“.
+\item Belastbar ist nur: Die besten Plasmen liegen bei wenigen Feldperioden (2); 3 Perioden sind im Median am schlechtesten.
+\item Die frühere Aussage, mehr Kraft gehe mit besserem QI einher ($-0{,}26$), gilt nur für die 182 Sätze und ist im
+  Gesamtdatensatz nicht geprüft.
+\item QI ist ein Gütemaß der Feldform. Einschluss und Stabilität des Plasmas sind damit nicht gerechnet.
+\end{itemize}
+Quelle: \texttt{stellarator/qi\_einfluss.py}, Ergebnis \texttt{docs/recherche/qi\_tragwerk/qi\_einfluss.md}.
+
+\subsection*{Nachtrag: die Merkmale beeinflussen sich gegenseitig}
+Der Nutzer vermutete, dass es sich um Bereiche handelt, die sich gegenseitig beeinflussen. Ein gemeinsames Modell
+(Gradient Boosting, auf zurückgehaltenen Daten geprüft) bestätigt das: Es erklärt die QI-Güte mit $R^2=0{,}90$, jede
+Einzelkorrelation höchstens $0{,}12$. Am wichtigsten sind die beiden Spiegelverhältnisse (auf der Achse und am Rand), die
+einzeln gegenläufige Vorzeichen hatten und sich dadurch aufhoben. \emph{Lesehilfe:} Das Spiegelverhältnis sagt, wie stark
+das Feld entlang einer Feldlinie schwankt; bei guter QI sind die Schwankungen auf allen Flächen ähnlich.
+
+Bereiche der besten 1 \% (QI höchstens $0{,}00084$; 5. bis 95. Perzentil, in Klammern alle Plasmen):
+Aspektverhältnis 7,5 bis 9,7 (5,3 bis 10,6); Elongation 5,3 bis 7,4; Spiegelverhältnis Achse 0,28 bis 0,40 (0,12 bis 0,58),
+am Rand 0,31 bis 0,43 (0,20 bis 0,85); Rotationstransformation am Rand 0,07 bis 0,24; höchstens 4 Feldperioden.
+
+\emph{Erwartung vorher:} $R^2>0{,}5$ (getroffen), wichtigstes Merkmal Rotationstransformation oder Gradientenlänge
+(verfehlt). \emph{Grenze:} Die Spiegelverhältnisse sind selbst Messgrößen der Feldform und eng mit QI verwandt, also
+keine frei wählbaren Entwurfshebel; es bleibt eine Korrelation. Quelle: \texttt{stellarator/qi\_bereiche.py}.

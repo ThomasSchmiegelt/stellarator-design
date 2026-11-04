@@ -1,0 +1,66 @@
+\section{What improves or worsens the plasma: evaluation of the dataset}\label{sec:qi_einfluss}
+
+\textbf{Reading aid.} The QI quality (quasi-isodynamic) measures how well a plasma confines particles in the magnetic
+field; a smaller value is better. The \emph{rank correlation} only says whether two quantities rise together (positive)
+or in opposite directions (negative). It is \emph{not a cause}: we never changed a plasma and measured the effect.
+
+The user asked what has a positive and what a negative effect on the plasma. The plasma shape comes from the public
+Proxima dataset; our chain only evaluates coils and support structure for it.
+
+\subsection*{Expectation beforehand}
+Among the 182 pre-selected coil sets (force scan) the aspect ratio was the strongest influence (+0.30, larger is worse).
+The same sign was expected in the full dataset, with a larger magnitude (0.3 to 0.5).
+
+\subsection*{Result}
+158,685 of 182,222 plasmas have a valid QI. Rank correlation with $\log_{10}$(QI):
+
+\begin{tabular}{lr}
+\hline
+Quantity & Rank correlation \\ \hline
+edge rotational transform (per period) & $+0.35$ \\
+minimum normalised gradient length & $-0.34$ \\
+aspect ratio & $-0.31$ \\
+maximum elongation & $-0.30$ \\
+vacuum well & $-0.30$ \\
+edge mirror ratio & $+0.27$ \\
+average triangularity & $+0.22$ \\
+axis mirror ratio & $-0.21$ \\
+flux compression in bad curvature & $-0.20$ \\
+field periods & $+0.14$ \\ \hline
+\end{tabular}
+
+\smallskip
+\noindent Median QI by field periods: 1: 0.0109; 2: 0.0085; 3: 0.0204; 4: 0.0145; 5: 0.0179. The best single plasma has
+2 periods (QI $6\cdot10^{-5}$).
+
+\subsection*{Comparison with the expectation: missed}
+The sign for the aspect ratio \emph{reverses} ($-0.31$ instead of $+0.30$). Checking within aspect-ratio ranges shows
+why: below 10 a larger aspect ratio is better (about $-0.17$ to $-0.34$), above 10 worse ($+0.25$ and more). Our 182 sets
+all lie between 9 and 11, where the correlation has the other sign. The field periods are misleading as well:
+the overall value ($+0.14$) hides $-0.14$ to $-0.37$ inside each period count.
+
+\subsection*{Interpretation and limits}
+\begin{itemize}\itemsep1pt
+\item The correlations are weak (at most 0.35) and depend on the range considered. They give \emph{no} rule such as
+  ``flatter is better''.
+\item Only this holds: the best plasmas have few field periods (2); 3 periods are worst in the median.
+\item The earlier statement that more force goes with better QI ($-0.26$) applies to the 182 sets only and has not been
+  checked on the full dataset.
+\item QI measures the field shape. Confinement and stability of the plasma are not calculated.
+\end{itemize}
+Source: \texttt{stellarator/qi\_einfluss.py}, result \texttt{docs/recherche/qi\_tragwerk/qi\_einfluss.md}.
+
+\subsection*{Addendum: the quantities influence each other}
+The user suspected that these are ranges that influence each other. A joint model (gradient boosting, checked on held-out
+data) confirms this: it explains the QI quality with $R^2=0.90$, every single correlation at most $0.12$. The two mirror
+ratios (on the axis and at the edge) matter most; individually they had opposite signs and thereby cancelled.
+\emph{Reading aid:} the mirror ratio says how strongly the field varies along a field line; for good QI the
+variations are similar on all surfaces.
+
+Ranges of the best 1\,\% (QI at most $0.00084$; 5th to 95th percentile, all plasmas in brackets):
+aspect ratio 7.5 to 9.7 (5.3 to 10.6); elongation 5.3 to 7.4; axis mirror ratio 0.28 to 0.40 (0.12 to 0.58),
+edge 0.31 to 0.43 (0.20 to 0.85); edge rotational transform 0.07 to 0.24; at most 4 field periods.
+
+\emph{Expectation beforehand:} $R^2>0.5$ (met), most important quantity rotational transform or gradient length
+(missed). \emph{Limit:} the mirror ratios are themselves measures of the field shape and closely related to QI, so
+they are no freely selectable design levers; it remains a correlation. Source: \texttt{stellarator/qi\_bereiche.py}.

@@ -31,8 +31,11 @@ LAGER_ORT = "aussen"                                # Lagerflecken, siehe baue_n
 QUER = {"n_wand": 2, "n_verguss": 1, "n_wp": 4}      # Zellen je Schicht quer (je Richtung)
 # Verbinderanordnung (Plan Punkt 1, F-149): "standard" wie doe1 (Abstand nur auf Spule k, Nachbarn koennen sich
 # beruehren/ueberlappen), "getrennt" (Mindestabstand 2*halb+2 Stationen auf beiden Spulen -> einzelne Stege),
-# "platte" (lueckenlos aneinander ueber den ganzen seitlichen Bereich, gemeinsame Knoten -> durchgehende Platte)
+# "platte" (lueckenlos aneinander ueber den ganzen seitlichen Bereich, gemeinsame Knoten -> durchgehende Platte),
+# "luecken" (wie "standard", danach Verbinder ergaenzen, bis keine Strecke ohne Verbinder/Lager laenger als
+# LUECKE_MAX ist; SEITLICH_MIN wird dafuer stufenweise gelockert und je Verbinder ausgewiesen, B-034)
 VERB_MODUS = "standard"
+LUECKE_MAX = 4.0                                    # m, nur VERB_MODUS "luecken"
 MAT_NAMEN = {1: "wickelpaket", 2: "verguss", 3: "stahl", 4: "verbinder"}
 UDF_QUELLE = Path(__file__).resolve().parent / "elmer_udf" / "lorentz.f90"
 UDF_ORDNER = PROJEKT / "sim" / "surrogat" / "udf"
@@ -86,6 +89,7 @@ def baue_netz(spulen, br: float, ho: float, W: list[dict], verguss: float, r_lag
     mat_q = np.where((ba == 2) & (bc == 2), 1, np.where((ba >= 1) & (ba <= 3) & (bc >= 1) & (bc <= 3), 2, 3))
 
     X, hexa, mat, spule, lager, wp_kn, tang, gitter = [], [], [], [], [], [], [], []
+    lager_st = []                                         # je Spule: Stationen mit Lagerflaechen (nur "luecken")
     versatz = 0
     for k, (s, w) in enumerate(zip(spulen, W)):
         N = len(s.punkte)
@@ -118,6 +122,7 @@ def baue_netz(spulen, br: float, ho: float, W: list[dict], verguss: float, r_lag
         q4 = np.stack([idx[ii, A, cc], idx[jj, A, cc], idx[jj, A, cc + 1], idx[ii, A, cc + 1]], -1).reshape(-1, 4)
         eltern = (len(np.concatenate(spule)) - N * A * A) + (ii * A * A + (A - 1) * A + cc).ravel()
         mitte = Xk.reshape(-1, 3)[q4 - versatz].mean(1)
+        lager_st.append(np.zeros(N, bool))
         for il in orte:
             p_l = s.punkte[il] + n[il] * (br / 2 + w["aussen"][il])
             d = np.linalg.norm(mitte - p_l, axis=1)
@@ -125,6 +130,7 @@ def baue_netz(spulen, br: float, ho: float, W: list[dict], verguss: float, r_lag
             if len(wahl) < 2:
                 wahl = np.argsort(d)[:2]
             lager.append(np.c_[eltern[wahl], q4[wahl]])
+            lager_st[-1][wahl // A] = True
         versatz += N * (A + 1) ** 2
 
     # Verbinder zwischen toroidal benachbarten Gehaeusen
@@ -168,26 +174,13 @@ def baue_netz(spulen, br: float, ho: float, W: list[dict], verguss: float, r_lag
             d = (Pm[j0] - Pk[i0]) / np.linalg.norm(Pm[j0] - Pk[i0])
             auftraege.append({"k": k, "m": m, "i0": i0, "j0": j0, "fk": _seite(d, nk[i0], bk[i0]),
                               "fm": _seite(-d, nm[j0], bm[j0]), "abstand_achse_m": float(dk[i0])})
+    luecken_vorher = None
+    if VERB_MODUS == "luecken" and plan is None:
+        auftraege, luecken_vorher = _luecken_fuellen(spulen, gitter, folge, auftraege, lager_st, A, verb_halb,
+                                                     verb_lagen, LUECKE_MAX)
     for v in (plan if plan is not None else auftraege):
         k, m, i0, j0, fk, fm = (v[x] for x in ("k", "m", "i0", "j0", "fk", "fm"))
-        idk, Xk_, tk, nk, bk = gitter[k]
-        idm, Xm_, tm, nm, bm = gitter[m]
-        N, Nm = len(spulen[k].punkte), len(spulen[m].punkte)
-        si = (i0 + np.arange(-verb_halb, verb_halb + 1)) % N
-        aa = np.arange(A + 1)
-        F0, X0 = _flaeche(idk[si], fk, A), _flaeche(Xk_[si], fk, A)                  # (S+1, A+1)
-        # Zuordnung der Gegenflaeche (Stationen / Querindex vor- oder rueckwaerts): aus dem Plan oder
-        # die Variante mit den geradesten Verbindungslinien
-        best = None
-        for rs in ((v["rs"],) if "rs" in v else (1, -1)):
-            sj = (j0 + rs * np.arange(-verb_halb, verb_halb + 1)) % Nm
-            for rev in ((v["rev"],) if "rev" in v else (False, True)):
-                am = aa[::-1] if rev else aa
-                X1 = _flaeche(Xm_[sj], fm, A)[:, am]
-                L_ = np.linalg.norm(X1 - X0, axis=-1).sum()
-                if best is None or L_ < best[0]:
-                    best = (L_, _flaeche(idm[sj], fm, A)[:, am], X1, rs, rev)
-        _, F1, X1, rs, rev = best
+        si, F0, X0, F1, X1, rs, rev = _verbinder_flaechen(v, gitter, spulen, A, verb_halb)
         lagen = [F0]
         for l in range(1, verb_lagen):
             lam = l / verb_lagen
@@ -203,6 +196,9 @@ def baue_netz(spulen, br: float, ho: float, W: list[dict], verguss: float, r_lag
                                o[s_, a_], o[s_ + 1, a_], o[s_ + 1, a_ + 1], o[s_, a_ + 1]])
         verb.append(np.array(el)); verb_info.append({"k": k, "m": m, "i0": int(i0), "j0": int(j0), "fk": fk,
                                                      "fm": fm, "rs": int(rs), "rev": bool(rev)})
+        for x in ("ergaenzt", "seitlich_stufe", "ueberlappt"):                       # nur "luecken"
+            if x in v:
+                verb_info[-1][x] = v[x]
     Xall = np.vstack(X + X_neu)
     if VERB_MODUS == "platte" and X_neu:                 # deckungsgleiche Zwischenknoten benachbarter Verbinder vereinen
         _, erst, zu = np.unique(np.round(Xall, 6), axis=0, return_index=True, return_inverse=True)
@@ -235,7 +231,183 @@ def baue_netz(spulen, br: float, ho: float, W: list[dict], verguss: float, r_lag
     netz.info |= {"knoten": len(netz.X), "elemente": len(netz.hexa), "jacobi_min_rel": float(jm.min()),
                   "elemente_negativ": int((jm <= 0).sum()), "lagerflaechen": len(netz.lager),
                   "verbinder_ok": int(sum(v["ok"] for v in ok_verb)), "verbinder_gesamt": len(ok_verb)}
+    if luecken_vorher is not None:
+        st = _stuetzung(spulen, [v for v in ok_verb if v["ok"]], lager_st, verb_halb)
+        je = [max(l for *_, l in _luecken(_bogen(s.punkte), g)) for s, g in zip(spulen, st)]
+        erg = [v for v in ok_verb if v.get("ergaenzt")]
+        stufen = sorted({v["seitlich_stufe"] for v in erg}, reverse=True)
+        netz.info["luecken"] = {
+            "grenze_m": LUECKE_MAX, "luecke_max_m": float(max(je)), "luecke_max_vorher_m": luecken_vorher,
+            "spulen_ueber_grenze": int(sum(l > LUECKE_MAX for l in je)), "ergaenzt": len(erg),
+            "ergaenzt_ok": int(sum(v["ok"] for v in erg)),
+            "ergaenzt_gelockert": int(sum(v["seitlich_stufe"] < SEITLICH_MIN for v in erg)),
+            "ergaenzt_ueberlappend": int(sum(v["ueberlappt"] for v in erg)),
+            "ergaenzt_je_stufe": {f"{s:.1f}": int(sum(v["seitlich_stufe"] == s for v in erg)) for s in stufen},
+            "ergaenzt_laenge_max_m": float(max((v["laenge_m"] for v in erg), default=0.0)),
+            "seitlich_min": SEITLICH_MIN, "je_spule_m": [float(l) for l in je]}
     return netz
+
+
+def _verbinder_flaechen(v, gitter, spulen, A: int, verb_halb: int):
+    """Gegenueberliegende Flaechen eines Verbinders: Stationen si, Knoten/Koordinaten F0/X0 (Spule k), F1/X1 (Spule m)."""
+    k, m, i0, j0, fk, fm = (v[x] for x in ("k", "m", "i0", "j0", "fk", "fm"))
+    idk, Xk_, tk, nk, bk = gitter[k]
+    idm, Xm_, tm, nm, bm = gitter[m]
+    N, Nm = len(spulen[k].punkte), len(spulen[m].punkte)
+    si = (i0 + np.arange(-verb_halb, verb_halb + 1)) % N
+    aa = np.arange(A + 1)
+    F0, X0 = _flaeche(idk[si], fk, A), _flaeche(Xk_[si], fk, A)                  # (S+1, A+1)
+    # Zuordnung der Gegenflaeche (Stationen / Querindex vor- oder rueckwaerts): aus dem Plan oder
+    # die Variante mit den geradesten Verbindungslinien
+    best = None
+    for rs in ((v["rs"],) if "rs" in v else (1, -1)):
+        sj = (j0 + rs * np.arange(-verb_halb, verb_halb + 1)) % Nm
+        for rev in ((v["rev"],) if "rev" in v else (False, True)):
+            am = aa[::-1] if rev else aa
+            X1 = _flaeche(Xm_[sj], fm, A)[:, am]
+            L_ = np.linalg.norm(X1 - X0, axis=-1).sum()
+            if best is None or L_ < best[0]:
+                best = (L_, _flaeche(idm[sj], fm, A)[:, am], X1, rs, rev)
+    _, F1, X1, rs, rev = best
+    return si, F0, X0, F1, X1, rs, rev
+
+
+def _verbinder_ok(v, gitter, spulen, A: int, verb_halb: int, verb_lagen: int) -> bool:
+    """Wie die Pruefung in baue_netz (alle Jacobi-Determinanten > 0, ggf. Umlaufsinn umgedreht), fuer einen Verbinder allein."""
+    si, F0, X0, F1, X1, rs, rev = _verbinder_flaechen(v, gitter, spulen, A, verb_halb)
+    S, Aq = F0.shape
+    Xl = [(1 - l / verb_lagen) * X0 + l / verb_lagen * X1 for l in range(verb_lagen)] + [X1]
+    Xloc = np.concatenate([x.reshape(-1, 3) for x in Xl])
+    idx = np.arange(len(Xloc)).reshape(verb_lagen + 1, S, Aq)
+    s_, a_ = np.meshgrid(np.arange(S - 1), np.arange(A), indexing="ij")
+    el = [np.stack([u[s_, a_], u[s_ + 1, a_], u[s_ + 1, a_ + 1], u[s_, a_ + 1],
+                    o[s_, a_], o[s_ + 1, a_], o[s_ + 1, a_ + 1], o[s_, a_ + 1]], -1).reshape(-1, 8)
+          for u, o in zip(idx[:-1], idx[1:])]
+    e = np.vstack(el)
+    jm = _jacobi_min(Xloc, e)
+    if np.all(jm < 0):
+        jm = _jacobi_min(Xloc, e[:, [4, 5, 6, 7, 0, 1, 2, 3]])
+    return bool(np.all(jm > 0))
+
+
+def _flaechenpaare(d, nk, bk, nm, bm) -> list[tuple[int, int]]:
+    """Seitenflaechenpaare (fk, fm), deren Normalen zur jeweils anderen Spule zeigen; zuerst das von _seite."""
+    ak = np.array([-(d @ nk), d @ nk, -(d @ bk), d @ bk]); am = np.array([d @ nm, -(d @ nm), d @ bm, -(d @ bm)])
+    erst = (int(np.argmax(ak)), int(np.argmax(am)))
+    rest = sorted(((-(ak[i] + am[j]), i, j) for i in range(4) for j in range(4) if ak[i] > 0 and am[j] > 0))
+    return [erst] + [(i, j) for _, i, j in rest if (i, j) != erst]
+
+
+def _bogen(P) -> tuple[np.ndarray, float]:
+    """Bogenlaenge der geschlossenen Bahn an jeder Station (ab Station 0) und Gesamtlaenge."""
+    seg = np.linalg.norm(np.roll(P, -1, 0) - P, axis=1)
+    return np.r_[0.0, np.cumsum(seg)[:-1]], float(seg.sum())
+
+
+def _luecken(bogen, gestuetzt) -> list[tuple[int, int, float]]:
+    """Strecken zwischen aufeinanderfolgenden gestuetzten Stationen (a, b, Bogenlaenge a -> b), ringfoermig."""
+    s, ges = bogen
+    g = np.where(gestuetzt)[0]
+    if len(g) == 0:
+        return [(-1, -1, ges)]
+    if len(g) == 1:
+        return [(int(g[0]), int(g[0]), ges)]
+    b = np.roll(g, -1)
+    return [(int(x), int(y), float((s[y] - s[x]) % ges)) for x, y in zip(g, b)]
+
+
+def _stuetzung(spulen, verbinder, lager_st, verb_halb: int) -> list[np.ndarray]:
+    """Je Spule: Stationen mit Verbinderknoten (i0/j0 +- verb_halb) oder Lagerflaechen."""
+    st = [g.copy() for g in lager_st]
+    h = np.arange(-verb_halb, verb_halb + 1)
+    for v in verbinder:
+        st[v["k"]][(v["i0"] + h) % len(st[v["k"]])] = True
+        st[v["m"]][(v["j0"] + h) % len(st[v["m"]])] = True
+    return st
+
+
+def _luecken_fuellen(spulen, gitter, folge, auftraege, lager_st, A: int, verb_halb: int, verb_lagen: int,
+                     luecke_max: float, stufen_schritt: float = 0.1, kandidaten_max: int = 40,
+                     versatz_j: tuple = (0, 1, -1, 2, -2)):
+    """Greedy (B-034): groesste Strecke ohne Verbinder/Lager zuerst. Darin der Kandidat (Station der Spule, naechster
+    Punkt einer der beiden toroidalen Nachbarspulen), der die Strecke am gleichmaessigsten teilt (bei Gleichstand der
+    kuerzere), zuerst mit SEITLICH_MIN, dann stufenweise gelockert bis 0. Je Stufe zuerst Kandidaten, deren Flaeche
+    auf der Gegenspule frei ist, dann solche, die dort einen Verbinder ueberlappen (wie im Modus "standard" erlaubt).
+    Je Kandidat probiert: Gegenstation naechster Punkt, dann +-1, +-2 Stationen; Seitenflaechen zuerst die von _seite,
+    dann die anderen zugewandten Paare (hoechstens 3); Zuordnung der Gegenflaeche (rs, rev) alle vier. Der erste
+    Verbinder ohne umgestuelpte Elemente wird genommen, mit festem rs/rev (gleiche Topologie im Netzaufbau). Rueckgabe: (auftraege + ergaenzte, groesste Luecke vorher in m)."""
+    n_sp = len(spulen)
+    pos = {int(c): p for p, c in enumerate(folge)}
+    nachbarn = [sorted({int(folge[(pos[c] + 1) % n_sp]), int(folge[(pos[c] - 1) % n_sp])} - {c}) for c in range(n_sp)]
+    ok = [v for v in auftraege if _verbinder_ok(v, gitter, spulen, A, verb_halb, verb_lagen)]
+    h = np.arange(-verb_halb, verb_halb + 1)
+    verb_st = _stuetzung(spulen, ok, [np.zeros_like(g) for g in lager_st], verb_halb)
+    bogen = [_bogen(s.punkte) for s in spulen]
+    stufen = [SEITLICH_MIN] + [x for x in np.round(np.arange(SEITLICH_MIN - stufen_schritt, -1e-9, -stufen_schritt), 6)]
+    paar = {}
+    for c in range(n_sp):                              # naechster Punkt + Querguete je Station, je Nachbar
+        _, _, tc, nc, bc = gitter[c]
+        for nb in nachbarn[c]:
+            _, _, tn, nn, bn = gitter[nb]
+            Pc, Pn = spulen[c].punkte, spulen[nb].punkte
+            D = np.linalg.norm(Pc[:, None] - Pn[None], axis=2)
+            jn = D.argmin(1); dk = D.min(1)
+            dv = (Pn[jn] - Pc) / dk[:, None]
+            guete = np.minimum.reduce([np.abs(np.sum(dv * bc, 1)), np.abs(np.sum(dv * bn[jn], 1)),
+                                       np.abs(np.sum(tc * tn[jn], 1))])
+            paar[c, nb] = (jn, dk, dv, guete)
+    vorher = None; neu = []; aufgegeben = set()
+    while True:
+        st = [v | g for v, g in zip(verb_st, lager_st)]
+        alle = [(l, c, a, b) for c in range(n_sp) for a, b, l in _luecken(bogen[c], st[c]) if (c, a, b) not in aufgegeben]
+        if vorher is None:
+            vorher = float(max((l for l, *_ in alle), default=0.0))
+        alle = [x for x in alle if x[0] > luecke_max]
+        if not alle:
+            break
+        l, c, a, b = max(alle)
+        N = len(spulen[c].punkte); s, ges = bogen[c]
+        n_in = (b - a - 1) % N if a != b else N - 1
+        innen = [(a + 1 + t) % N for t in range(verb_halb, n_in - verb_halb)] if a >= 0 else []
+        bog = lambda x, y: float((s[y] - s[x]) % ges) if x != y else ges
+        gefunden = False
+        for stufe in stufen:
+            kand = []
+            for nb in nachbarn[c]:
+                jn, dk, dv, guete = paar[c, nb]
+                for i in innen:
+                    if not guete[i] > stufe:
+                        continue
+                    ueber = bool(verb_st[nb][(jn[i] + h) % len(verb_st[nb])].any())
+                    teil = max(bog(a, (i - verb_halb) % N), bog((i + verb_halb) % N, b))
+                    kand.append((ueber, teil, float(dk[i]), nb, i))
+            for ueber, teil, d_, nb, i in sorted(kand)[:kandidaten_max]:
+                jn, dk, dv, guete = paar[c, nb]
+                Nn = len(spulen[nb].punkte)
+                for dj in versatz_j:                     # Gegenstation: naechster Punkt, dann Nachbarstationen
+                    j0 = int((jn[i] + dj) % Nn)
+                    dd = spulen[nb].punkte[j0] - spulen[c].punkte[i]; d_ = float(np.linalg.norm(dd)); dd = dd / d_
+                    for fk, fm in _flaechenpaare(dd, gitter[c][3][i], gitter[c][4][i], gitter[nb][3][j0], gitter[nb][4][j0])[:3]:
+                        for rs, rev in ((1, False), (1, True), (-1, False), (-1, True)):
+                            v = {"k": c, "m": nb, "i0": int(i), "j0": j0, "fk": fk, "fm": fm, "rs": rs, "rev": rev,
+                                 "abstand_achse_m": d_, "ergaenzt": True, "seitlich_stufe": float(stufe),
+                                 "ueberlappt": bool(verb_st[nb][(j0 + h) % Nn].any())}
+                            if _verbinder_ok(v, gitter, spulen, A, verb_halb, verb_lagen):
+                                gefunden = True
+                                break
+                        if gefunden:
+                            break
+                    if gefunden:
+                        break
+                if gefunden:
+                    neu.append(v)
+                    verb_st[c][(i + h) % N] = True; verb_st[nb][(j0 + h) % Nn] = True
+                    break
+            if gefunden:
+                break
+        if not gefunden:
+            aufgegeben.add((c, a, b))
+    return auftraege + neu, vorher
 
 
 def _seite(d, n, b) -> int:

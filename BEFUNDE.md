@@ -6,6 +6,80 @@
 ---
 
 
+## B-037 Stufe 14: Lückenmodus bei allen Plasma-zuerst-Sätzen (2026-11-04)
+
+Gesamtmodell / Submodell (heißeste Spule, F4, p99 ohne Randzone), MPa, 500 MPa nur Annahme:
+
+| Satz | QI | Stahl p99 | Submodell | Auslenkung | Hülle | Fluenz n/cm² | Kernheizung | Grenzen |
+|---|---|---|---|---|---|---|---|---|
+| DjLe3eL6, Wände Lauf 4 (Pkt 3) | 0,00045 | 444 | – (Lauf fehlt) | 62 mm | 0,48 m | 5,5e21 | verletzt | Stahl, Dehnung ok; Package, Kernheizung, Fluenz verletzt |
+| DjLe3eL6, 0169-Wände (Pkt 2) | 0,00045 | 405 | 416 | 42 mm | 0,47 m | – | verletzt | wie oben |
+| DYUDcSV7 (Pkt 21) | 0,00045 | 417 | 456 | 32 mm | 0,81 m | 2,1e20 | ok | Stahl, Dehnung ok; Package, Fluenz verletzt |
+| DSD3rR5F (Pkt 1) | 0,00058 | 713 | 1459 | 119 mm | 1,09 m | 1,2e19 | ok | Stahl, Dehnung, Package, Fluenz verletzt |
+
+Erwartung F-209: DjLe3eL6 Gesamtmodell unter 450 getroffen (444), Submodell 500–700 verfehlt nach unten (416 bei Punkt 2, besser); DYU unter 700 getroffen; DSD unter 900 getroffen; Hülle unverändert getroffen. Ergebnis: Das Tragwerk ist für DjLe3eL6 und DYU unter der Annahme lösbar (Lückenmodus entscheidend). Offen ist der Platz: Zulässige Fluenz 3e18 wird um das 4- bis 1800-fache überschritten, die Abschirmung zwischen Plasma und Spule ist bei diesen Plasmen mit 0,5 bis 0,8 m zu dünn (0169: 1,24 m, 3,8e18 knapp darüber). DSD hat den Platz (1,09 m), nicht die Festigkeit. Kein Satz erfüllt derzeit alle Grenzen. Submodell zu Punkt 3 (DjLe3eL6, Wände Lauf 4) fehlt, Kette hat es übersprungen (nicht geklärt).
+
+## B-036 Was das Plasma beeinflusst: Datensatz-Auswertung (2026-11-04)
+
+158 685 von 182 222 Plasmen mit gültigem QI. Rangkorrelation mit log10(QI) (kleiner ist besser): Randwert Rotationstransformation je Periode +0,35, kleinste Gradientenlänge −0,34, Aspektverhältnis −0,31, Elongation −0,30, Vakuum-Well −0,30, Spiegelverhältnis Rand +0,27, Dreieckigkeit +0,22, Feldperioden +0,14. QI-Median nach Perioden: 1: 0,0109, 2: 0,0085, 3: 0,0204, 4: 0,0145, 5: 0,0179; bestes Einzelplasma 2 Perioden (6e-5).
+
+Erwartung F-210 (Aspektverhältnis wie in den 182 Sätzen +0,30) verfehlt: Vorzeichen kehrt sich um. Unter Aspektverhältnis 10 ist größer besser (−0,17 bis −0,34), darüber schlechter (+0,25); unsere 182 Sätze liegen bei 9 bis 11. Auch Perioden: gesamt +0,14, je Periodenzahl −0,14 bis −0,37. Aussage nur: wenige Perioden (2) sind im Median am besten, 3 am schlechtesten. Keine Regel wie „flacher ist besser“. Nur Korrelation, nicht Ursache, nur QI (Feldform), kein Einschluss. Die frühere Aussage „mehr Kraft geht mit besserem QI einher“ (−0,26) gilt nur für die 182 Sätze. Quelle: stellarator/qi_einfluss.py, docs/recherche/qi_tragwerk/qi_einfluss.md. Bericht: Abschnitt „Was das Plasma verbessert oder verschlechtert“ (DE/EN).
+
+Nachtrag B-036 (Wechselwirkung, F-212/F-213): Ein gemeinsames Modell (Gradient Boosting, zurückgehaltene Daten) erklärt die QI-Güte mit R² = 0,90, jede Einzelkorrelation höchstens 0,12. Wichtigkeit: Spiegelverhältnis auf der Achse 1,19 und am Rand 1,00, danach Rotationstransformation am Rand 0,17 und Elongation 0,16, alles andere unter 0,09. Die beiden Spiegelverhältnisse hatten einzeln entgegengesetzte Vorzeichen (−0,21 und +0,27) und verdeckten sich so. Bereiche der besten 1 % (QI höchstens 0,00084), 5. bis 95. Perzentil: Aspektverhältnis 7,5 bis 9,7 (alle 5,3 bis 10,6); Elongation 5,3 bis 7,4; Spiegelverhältnis Achse 0,28 bis 0,40 und Rand 0,31 bis 0,43 (alle 0,12 bis 0,58 und 0,20 bis 0,85); Rotationstransformation Rand 0,07 bis 0,24; Vakuum-Well −0,14 bis −0,01; höchstens 4 Perioden. Erwartung R² über 0,5 getroffen, wichtigstes Merkmal (Rotationstransformation/Gradientenlänge) verfehlt. Grenze: Spiegelverhältnisse sind selbst Messgrößen der Feldform und mit QI eng verwandt, also keine freien Entwurfshebel, und es bleibt Korrelation. Quelle: stellarator/qi_bereiche.py, docs/recherche/qi_tragwerk/qi_bereiche.md.
+
+## B-035 Verbinder nach Lücken: Auslenkung und Spannung fallen stark (2026-11-04)
+
+DjLe3eL6 (QI 0,00045), 0169-Wände, Gesamtmodell, Option `verb_modus=luecken` (Restlücke höchstens 4 m angestrebt, erreicht 4,09 m; 72 Verbinder ergänzt, 40 davon mit gelockerter Querbedingung bis 0,5):
+
+| Größe | vorher (Punkt 0) | mit Lückenmodus (Punkt 2) |
+|---|---|---|
+| größte Lücke | 17,4 m | 4,09 m |
+| Auslenkung | 241 mm | 42,5 mm |
+| Stahl p99 | 620 MPa | 405 MPa |
+| Wickelpaket p99 | – | 202 MPa |
+| Hüllenfreiraum | 0,47 m | 0,47 m |
+| Verbinder ok | 228/316 | 300/388 |
+
+Erwartung F-208 getroffen (u < 100 mm, Stahl < 500 MPa, Hülle unverändert). 500 MPa nur Annahme. Verletzt bleiben Package, Kernheizung und Fluenz (Hülle 0,47 m zu eng). Ungeprüft: Schräge Verbinder durch andere Spulen oder Plasma, Durchdringung überlappender Verbinder, Netzabhängigkeit, Submodell. Verbindermasse 11 511 → 15 547 t (Masse unwichtig). Quelle: docs/recherche/qi_tragwerk/opus_luecken.md (Opus-Unteragent, von Sonnet nur gegen ergebnis.json gelesen).
+
+## B-034 Auslenkung der QI-Sätze: Lücke ohne Verbinder (2026-11-04, Opus-Fehlersuche)
+
+190–290 mm sind echte Biegung, keine Starrkörperbewegung (81–88 % bleiben nach Abzug). Ursache laut Opus-Unteragent: lange Strecke ohne Verbinder und Lager (größte Lücke dje 17,4 m, dyu 14,8 m, dsd 11,8–14,4 m, DP9 6,6 m, 0169 1,8–3,1 m; Korrelation u_max zu Lücke hoch ^4: 0,98 dje, 0,96 dyu). Balkenüberschlag 40–210 mm passt. Die Lücke entsteht bei der Ortswahl der Verbinder (Querbedingung + nächster Abstand), nicht durch die verworfenen Verbinder. Vermutung, ungeprüft: Verbinder gezielt in Lücken setzen senkt die Auslenkung deutlich und damit auch die Spannung.
+
+Submodell: Reparaturschleife jetzt gemeinsame Funktion `reparieren` in kopplung.py, Gesamtmodell unverändert (Netz bis 4e-15 m gleich), Kontrolle F=1 392,850 MPa. Submodell-Werte (Opus, Stufe 1 → Submodell F4, MPa): dje 0: 896 → 986, dje 1: 756 → 830, dyu 20: 1454 → 1598. Grenze: Wand örtlich bis 59 % dünner als in Stufe 1, das erhöht die Werte mit. Von mir nur Dateien und Tabelle gegengelesen, nicht nachgerechnet. Bericht: docs/recherche/qi_tragwerk/opus_fehlersuche.md.
+
+## B-033 Stufe 13: Plasma zuerst, erste Tragwerkswerte (2026-11-04)
+
+Gesamtmodell, Hüllenfreiraum, MPa (500 MPa nur Annahme):
+
+| Satz | QI | Stahl p99 | Auslenkung mm | Hülle m | Verbinder ok |
+|---|---|---|---|---|---|
+| DjLe3eL6 (40 Spulen), 0169-Wände | 0,00045 | 620 | 241 | 0,47 | 228/316 |
+| DjLe3eL6, Wände Lauf 4 | 0,00045 | 589 | 206 | 0,48 | 232/316 |
+| DYUDcSV7 (32), Wände Lauf 4 | 0,00045 | 887 | 193 | 0,81 | 156/212 |
+| DYUDcSV7, 0169-Wände (älter) | 0,00045 | 615 | 79 | – | 168/212 |
+| DSD3rR5F (30) | 0,00058 | 1496 | 293 | 1,09 | 114/171 |
+
+Erwartung F-203: Stahl DjLe3eL6 450–650 getroffen; Hülle 0,8–1,1 m verfehlt (0,47 m); DSD über 900 MPa getroffen. Auslenkungen von 200–290 mm sind ungewöhnlich (0169: 19 mm), Ursache offen (Lagerung oder Geometrie, nicht geprüft). Submodelle für DjLe3eL6 und DYU schlugen fehl: 11–20 negative Elemente, das Submodell hat keine Reparaturschleife. Damit noch kein belastbares Urteil über die Sätze.
+
+## B-032 Abkühlen: für den Stahl klein, im Wickelpaket spürbar (2026-11-04)
+
+Spanne als Annahme (Stahl 0,297 % belegt, Wickelpaket und Verguss nicht). Fälle A/B/C gegen ohne Abkühlen, Magnetkraft jeweils dabei, MPa:
+
+| Größe | 0169 ohne | A | B | C | DP9 ohne | A | B | C |
+|---|---|---|---|---|---|---|---|---|
+| Stahl p99 gesamt | 308 | 310 | 336 | 324 | 383 | 383 | 400 | 397 |
+| Stahl p99 heißeste Spule (Submodell F4) | 434 | 429 | 427 | 437 | 673 | 670 | 671 | 682 |
+| Wickelpaket p99 | 149 | 161 | 196 | 138 | 234 | 246 | 277 | 226 |
+| Wickelpaket Mittel | 62 | 80 | 124 | 55 | 67 | 85 | 129 | 64 |
+| Verguss p99 | 88 | 88 | 96 | 155 | 101 | 99 | 105 | 167 |
+
+Stahl gesamt höchstens +9 %, an der heißesten Spule höchstens 2 %. Erwartung F-202 für den Stahl getroffen, für das Wickelpaket zu hoch (B: +47 statt +100 bis +200 MPa). Wahrscheinliche Ursache, nicht geprüft: von Mises zählt allseitigen Zug nicht mit. Ein rundum festgehaltenes Wickelpaket steht unter allseitigem Zug, das Modell weist ihn nicht aus. Überschlag bei voller Behinderung in Fall B: rund 250 MPa. Offen: Hauptspannungen und Haftung an der Grenzfläche prüfen. Grenzen: gleichmäßige Temperatur, fest verklebt, Steifigkeit bei Raumtemperatur.
+
+## B-031 Rangfolge: Plasma zuerst (2026-11-04)
+
+Die Plasmagüte sortiert die Spulensätze, Kollision und Spannung schließen nur Unrealistisches aus (Nutzerentscheidung, weil die 500-MPa-Grenze nur Annahme ist). Neu sortiert: DYUDcSV7 (32 Spulen) und DjLe3eL6 (40 Spulen) teilen dasselbe Plasma mit QI 0,00045, rund 15-mal besser als DP9. DjLe3eL6 hat rechnerisch 24 % weniger Kraft, aber engere Biegung (0,50 a). Tragwerksrechnung läuft (Stufe 13), noch kein Ergebnis.
+
 ### B-030 | QI-Tragwerk Proxima-Satz 2: Last statt Netz ist das Problem; 0169 dünn widerlegt (2026-11-04)
 - **Befund 1:** Die 1098 MPa von Satz 2 sind kein reines Netzartefakt. Nettokraft der sechs Spulentypen 31, 223, 641, 1170, 338, 112 MN
   (Filament-Nachrechnung bestätigt 1187 MN; alle Spulen gleicher Strom ist nur ±3 % falsch). Die Last sitzt auf wenigen Spulen.

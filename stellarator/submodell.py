@@ -7,6 +7,8 @@ Die Spule wird einzeln vernetzt: Stationen x F (Spline durch die Bahn), Zellen �
 Feld aller Spulen. Rand: an den Verbinderflächen die Verschiebung aus Stufe 1 (je Knoten interpoliert), an den Lagern null.
 Trick: Die Randverschiebung steht in derselben Knotentabelle kraft.dat wie die Last; Wickelpaket- und Randknoten sind getrennt.
 Kontrolle: F = 1 mit gleicher Querteilung muss Stufe 1 auf dieser Spule treffen.
+Negative Elemente im feinen Netz: dieselbe Reparatur wie das Gesamtmodell (kopplung.reparieren, je_station=True),
+Umfang steht in ergebnis.json unter "reparatur" (Wand dort dünner als in Stufe 1).
 Ergebnis: sim/submodell/<studie>_<nr>_s<K>_F<F>_w<W>_q<Q>/ (ergebnis.json, struktur.vtu).
 """
 import argparse
@@ -73,9 +75,19 @@ def main():
     A2 = sum([q2["n_wand"], q2["n_verguss"], q2["n_wp"], q2["n_verguss"], q2["n_wand"]])
     F = a.fein
     s2, w2 = verfeinern(spulen[k], W[k], F)
-    n2 = hm.baue_netz([s2], br, ho, [w2], kp.FEST["verguss_m"], p["r_lager_m"], 0, 1, q=q2)
+    bauen = lambda: hm.baue_netz([s2], br, ho, [w2], kp.FEST["verguss_m"], p["r_lager_m"], 0, 1, q=q2)
+    n2 = bauen(); neg0 = n2.info["elemente_negativ"]
+    # dieselbe Reparatur wie im Gesamtmodell (kp.reparieren, F-182); greift nur bei negativen Elementen,
+    # die Kontrolle F = 1 (Netz = Stufe 1, keine negativen Elemente) bleibt damit unberuehrt
+    w2_vor = {q_: v.copy() for q_, v in w2.items()}
+    n2, runden = kp.reparieren(n2, [s2], [w2], bauen, je_station=True) if neg0 else (n2, 0)
+    reparatur = {"negativ_vorher": int(neg0), "runden": runden, "negativ_nachher": int(n2.info["elemente_negativ"]),
+                 "wand_max_aenderung_rel": float(max(np.max(1 - w2[q_] / np.maximum(w2_vor[q_], 1e-12)) for q_ in w2)),
+                 "stationen_geaendert": int(np.any([w2[q_] != w2_vor[q_] for q_ in w2], axis=0).sum())}
+    if runden:
+        print("Reparatur Submodell", reparatur, flush=True)
     if n2.info["elemente_negativ"]:
-        raise SystemExit(f"{n2.info['elemente_negativ']} negative Elemente im Submodell")
+        raise SystemExit(f"{n2.info['elemente_negativ']} negative Elemente im Submodell (nach {runden} Reparaturrunden, vorher {neg0})")
     N1, N2 = len(spulen[k].punkte), len(s2.punkte)
     versatz = sum(len(s.punkte) * (A1 + 1) ** 2 for s in spulen[:k])
     id1 = versatz + np.arange(N1 * (A1 + 1) ** 2).reshape(N1, A1 + 1, A1 + 1)
@@ -156,7 +168,7 @@ def main():
     b1 = cKDTree(n2.X[np.r_[rand_k, lager_k]]).query(netz.X[netz.hexa[c1]].mean(1))[0] > RAND_M
     wp2 = n2.mat == 1; wp1 = (netz.mat == 1) & (netz.spule == k)
     e = {"studie": a.studie, "nr": a.nr, "spule": k, "fein": F, "quer": q2, "knoten": len(n2.X), "elemente": len(n2.hexa), "elmer_s": t,
-         "kraft_netto_MN": float(np.linalg.norm(Fn) / 1e6), "verbinderflaechen": flaechen,
+         "kraft_netto_MN": float(np.linalg.norm(Fn) / 1e6), "verbinderflaechen": flaechen, "reparatur": reparatur,
          "stufe1": {"stahl_p99": werte[k], "stahl_p99_ohne_rand": p99(vm1[c1][b1], V1[c1][b1]), "stahl_max": float(vm1[c1].max()),
                     "wp_p99": p99(vm1[wp1], V1[wp1]), "u_max_mm": float(1e3 * np.linalg.norm(U1[np.unique(netz.hexa[c1])], axis=1).max())},
          "submodell": {"stahl_p99": p99(vm[st], V[st]), "stahl_p99_ohne_rand": p99(vm[innen], V[innen]), "stahl_max": float(vm[st].max()),
