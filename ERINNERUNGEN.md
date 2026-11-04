@@ -740,3 +740,5 @@ sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht 
 - 2026-11-04 16:08 Stufe 16 (Wände dicker) fertig (automatisch). Erwartung F-219. Noch nicht von Claude geprüft.
 - 2026-11-04 16:39 Nutzer-Idee zwei Spulenringe (F-221), nur notiert, Test wartet auf Freigabe. Stufe 16 läuft.
 - 2026-11-04 16:55 ERSTER SATZ IM ZIEL (B-040, F-222): DPrcxq66 (sim/kopplung/qi_proxima_dpr Punkte 0001 und 0002) erfüllt im Gesamtmodell alle Grenzen. Stufe 17 (kette17.sh) sichert ab: Netz x1,5, Abkühlen A/B/C, Submodell. Bericht DE/EN Abschnitt „Ein Satz im Ziel“ neu. Zwei-Ringe-Test (F-221) läuft als Opus-Agent, Ergebnis docs/recherche/qi_tragwerk/zwei_ringe.md.
+- 2026-11-04 17:18 Stufe 17 (DPr Absicherung) fertig (automatisch). Erwartung F-222. Noch nicht von Claude geprüft.
+- 2026-11-04 17:30 Stufe 17 + Zwei-Ringe ausgewertet (B-041, F-223): DPrcxq66 im feinen Netz NICHT im Ziel (580 MPa, Hülle 1,19 m), Scan-Kraft f unzuverlässig (Kette-MN nehmen), zwei Ringe senken Kraft nicht. Bericht-Abschnitt ziel_de/en muss eingeschränkt werden (erledigt). Offen: Ursache der netzabhängigen Hülle (Opus-Agent).

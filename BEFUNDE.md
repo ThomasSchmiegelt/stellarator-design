@@ -6,6 +6,27 @@
 ---
 
 
+## B-041 Stufe 17: DPrcxq66 hält die Absicherung nicht, Kraftmaßstab des Scans stimmt nicht, zwei Ringe (2026-11-04)
+
+**Absicherung DPrcxq66 (Gesamtmodell, MPa; Grenzen Annahmen):**
+
+| Variante | Stahl p99 | Dehnung WP | Hülle | Fluenz | alle Grenzen |
+|---|---|---|---|---|---|
+| Wände ×1,6, Netz ×1 (Pkt 2) | 384 | 0,26 % | 1,56 m | 1,1e17 | ja |
+| ×1,6, Abkühlen A | 386 | 0,28 % | 1,56 m | 1,1e17 | ja |
+| ×1,6, Abkühlen B (Wickelpaket 0,4 %, Verguss 0,6 %) | 409 | 0,33 % | 1,56 m | 1,1e17 | nein (Dehnung) |
+| ×1,6, Abkühlen C (Verguss 1,16 %) | 399 | 0,26 % | 1,56 m | 1,1e17 | ja (Verguss p99 191) |
+| ×1,6, Netz ×1,5, fester Plan (Pkt 3) | 580 | 0,35 % | 1,19 m | 4,3e18 | nein (Stahl, Dehnung, Fluenz) |
+| ×1,3, Netz ×1,5, fester Plan (Pkt 7) | 650 | 0,34 % | 1,33 m | 1,0e18 | nein (Stahl, Dehnung, Durchdringung) |
+
+Submodell heißeste Spule: Pkt 2 602 MPa, Abkühlen B 601 MPa.
+
+Erwartung F-222: Abkühlen getroffen (Stahl höchstens +9 %, B Dehnung an der Grenze: 0,33). Feineres Netz verfehlt: +51 % statt +10 bis 30 %. Das Ziel-Ergebnis B-040 gilt damit nur für das Standardnetz; im feineren Netz scheitert DPrcxq66 an Stahl, Dehnung und Fluenz. Auffällig: Die Hülle sinkt beim feineren Netz von 1,56 auf 1,19 m (Ursache offen; Hüllenmaß sollte netzunabhängig sein) und kann die Fluenz allein erklären. Absprungbasis damit noch nicht festgeschrieben.
+
+**Kraftmaßstab des Scans (Nebenbefund des Opus-Agenten, von Sonnet gegen die Kette gelesen):** Kette in MN je f des Scans: DjLe3eL6 41, DYU 39, DSD 26, DP9 33, DPrcxq66 13,7, DGHe48vB 13,6. Der Scan teilt durch das DESC-Feld B0; das Spulenfeld auf der Achse weicht je Satz verschieden ab (bei DjLe3eL6 Faktor 2,5). Die Rangfolge nach Scan-Kraft stimmt nicht. Wirkliche Kräfte (Kette): DjLe3eL6 564, DYU 695, DPrcxq66 792, DGHe48vB 665, DSD 1099, DP9 340 MN. „3 bis 10-mal mehr Kraft bei mehr Abstand“ (F-215, B-038) war daher falsch; DPrcxq66 hat nur 1,4-mal die Kraft von DjLe3eL6.
+
+**Zwei Spulenringe (Nutzeridee F-221, Opus-Vortest, kein Optimierer ist konvergiert, alle stoppten am Iterationslimit):** Einring 0,85 a gegen 1,3 a: Kraft +53 %. Innenring (1 bis 7 MA) holt davon nichts zurück (B +7,5 %, B8 −3,8 %). Feldfehler mittel sinkt mit Innenring um Faktor 2,4, maximal um 1,6 (Erwartung Faktor 2: im Mittel getroffen, im Maximum nicht; Kraft sinkt nicht: verfehlt). Σ|I| ist in allen Fällen 580 MA (Durchflutungsgesetz). Einschränkung: Optimierer ohne Kraftziel, Vergleich mit Proxima-Satz nicht gleichwertig. Nächster Test: Kraftziel (LpCurveForce) und Bn ≤ 3e-3 festhalten. Datei docs/recherche/qi_tragwerk/zwei_ringe.md.
+
 ## B-040 Erster Satz erfüllt alle Grenzen im Gesamtmodell: DPrcxq66 (2026-11-04)
 
 Gesamtmodell, Lückenmodus, Hüllenfreiraum; Grenzen sind Annahmen (Stahl p99 500 MPa, Wickelpaket-Dehnung 0,3 %, Fluenz 3e18, Package 1,0 m):

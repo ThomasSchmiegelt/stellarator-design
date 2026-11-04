@@ -1,4 +1,4 @@
-\section{Ein Satz im Ziel: DPrcxq66 erfüllt im Gesamtmodell alle Grenzen}\label{sec:ziel}
+\section{Ein Satz im Ziel: DPrcxq66 erfüllt im Standardnetz alle Grenzen (im feineren Netz nicht)}\label{sec:ziel}
 
 \textbf{Lesehilfe.} „Im Ziel“ heißt hier: Das Gesamtmodell (alle Spulen, Mittel über die Spulen) hält die angenommenen Grenzen ein.
 Die Grenzen sind Annahmen und keine gemessenen Werte: Stahl-Vergleichsspannung (p99, 99\,\% des Materials liegen darunter) höchstens 500\,MPa,
@@ -36,6 +36,12 @@ nur DGHe48vB lag mit 0,34\,\% knapp über dem erwarteten Bereich 0,30 bis 0,33\,
 \begin{itemize}\itemsep1pt
 \item Die Grenzen sind Annahmen. Das Submodell der heißesten Spule liefert 602 bis 605\,MPa, also über 500\,MPa. Welcher Maßstab gelten soll, ist offen.
 \item Hülle 1,32\,m liegt knapp über dem belegten HELIAS-Wert von 1,3\,m, Kachel- und Toleranzwerte fehlen.
-\item Abkühlen und ein feineres Netz sind für diesen Satz in Arbeit; erst danach gilt er als Absprungbasis.
+\item \textbf{Nur im Standardnetz.} Im feineren Netz (Stationen $\times1{,}5$, fester Verbinderplan) fällt DPrcxq66 ($\times1{,}6$) durch: Stahl p99 580\,MPa, Dehnung 0,35\,\%, Hülle 1,19\,m (statt 1,56\,m), Fluenz $4{,}3\cdot10^{18}$. Erwartet waren $+10$ bis $+30$\,\%, gefunden $+51$\,\%. Abkühlen (drei Annahmefälle) hält bis auf Fall B (Dehnung 0,33\,\%). Der Satz ist damit \emph{keine} gesicherte Absprungbasis.
 \item QI ist ein Gütemaß der Feldform, Einschluss und Stabilität sind nicht gerechnet.
+\end{itemize}
+
+\subsection*{Zwei Berichtigungen und ein Test}
+\begin{itemize}\itemsep1pt
+\item Der Kraft-Scan der Spulensätze teilt durch das Feld $B_0$ aus den Datensatzmetriken; das tatsächliche Spulenfeld weicht je Satz verschieden ab. Die Rangfolge nach Scan-Kraft stimmt deshalb nicht. Die frühere Aussage, Sätze mit mehr Abstand hätten drei- bis zehnmal mehr Kraft, war falsch: DPrcxq66 hat nur das 1,4-fache von DjLe3eL6 (792 gegen 564\,MN je Spule).
+\item \emph{Zwei Spulenringe} (Idee des Nutzers; innerer Ring bei 0,85\,$a$, äußerer bei 1,3\,$a$): Der Feldfehler sinkt im Mittel auf ein Zweieinhalbstel, die größte Kraft sinkt nicht ($+7{,}5$\,\% bis $-3{,}8$\,\%). Der Einring bei 1,3\,$a$ braucht $+53$\,\% Kraft gegenüber 0,85\,$a$. Keine der Optimierungen ist konvergiert; der Vergleich mit dem Proxima-Satz ist nicht gleichwertig.
 \end{itemize}
