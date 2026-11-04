@@ -1,0 +1,41 @@
+\section{Ein Satz im Ziel: DPrcxq66 erfüllt im Gesamtmodell alle Grenzen}\label{sec:ziel}
+
+\textbf{Lesehilfe.} „Im Ziel“ heißt hier: Das Gesamtmodell (alle Spulen, Mittel über die Spulen) hält die angenommenen Grenzen ein.
+Die Grenzen sind Annahmen und keine gemessenen Werte: Stahl-Vergleichsspannung (p99, 99\,\% des Materials liegen darunter) höchstens 500\,MPa,
+Dehnung des Wickelpakets höchstens 0,3\,\%, Neutronen-Fluenz höchstens $3\cdot10^{18}$\,n/cm$^2$, Abschirmung mindestens 1,0\,m.
+Die Hülle ist der freie Abstand zwischen Plasmarand und Gehäuse-Innenseite der Spule.
+
+Der Nutzer wollte, dass wir einen Satz „ins Ziel bringen, auch um zu verstehen“, und ihn dann als Absprungbasis nehmen.
+
+\subsection*{Weg dorthin}
+\begin{enumerate}\itemsep1pt
+\item Verbinder nach Lücken setzen: größte Strecke ohne Verbinder von 17,4\,m auf 4\,m, Auslenkung von 241 auf 42\,mm (DjLe3eL6).
+\item Platz für die Abschirmung: Der Satz mit dem besten Plasma hat zu wenig Hülle (0,47\,m). Anlage vergrößern (DYU $\times1{,}45$) schafft Platz, aber die Spannung
+  bleibt nicht gleich (417 auf 627\,MPa). Ein Satz mit mehr Abstand (DPrcxq66) war der bessere Weg.
+\item Dickere Wände bei diesem Satz.
+\end{enumerate}
+
+\subsection*{Ergebnis (Gesamtmodell)}
+\begin{tabular}{lrrrrl}
+\hline
+Variante & Stahl p99 & Dehnung & Hülle & Fluenz & alle Grenzen \\ \hline
+DPrcxq66, Wände $\times1{,}3$ & 453\,MPa & 0,27\,\% & 1,32\,m & $1{,}1\cdot10^{18}$ & ja \\
+DPrcxq66, Wände $\times1{,}6$ & 384\,MPa & 0,26\,\% & 1,56\,m & $1{,}1\cdot10^{17}$ & ja \\
+DGHe48vB, Wände $\times1{,}3$ & 483\,MPa & 0,34\,\% & 1,35\,m & $7{,}9\cdot10^{17}$ & nein (Dehnung) \\
+DYU $\times1{,}45$, größeres Lager & 500\,MPa & 0,30\,\% & 1,27\,m & $9{,}7\cdot10^{17}$ & knapp nein \\ \hline
+\end{tabular}
+
+\smallskip
+\noindent DPrcxq66 hat zwei Feldperioden, QI-Güte 0,00079 (rund achtmal besser als DP9 mit 0,0068), Kraft 792\,MN je Spule.
+
+\subsection*{Erwartung vorher und Vergleich}
+Erwartet waren 460 bis 520\,MPa ($\times1{,}3$) und 400 bis 450\,MPa ($\times1{,}6$); gefunden 453 und 384\,MPa, also etwas besser. Die Dehnungsbereiche trafen,
+nur DGHe48vB lag mit 0,34\,\% knapp über dem erwarteten Bereich 0,30 bis 0,33\,\%.
+
+\subsection*{Grenzen der Aussage}
+\begin{itemize}\itemsep1pt
+\item Die Grenzen sind Annahmen. Das Submodell der heißesten Spule liefert 602 bis 605\,MPa, also über 500\,MPa. Welcher Maßstab gelten soll, ist offen.
+\item Hülle 1,32\,m liegt knapp über dem belegten HELIAS-Wert von 1,3\,m, Kachel- und Toleranzwerte fehlen.
+\item Abkühlen und ein feineres Netz sind für diesen Satz in Arbeit; erst danach gilt er als Absprungbasis.
+\item QI ist ein Gütemaß der Feldform, Einschluss und Stabilität sind nicht gerechnet.
+\end{itemize}

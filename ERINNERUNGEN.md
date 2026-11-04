@@ -730,3 +730,13 @@ sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht 
 - 2026-11-04 14:15 Stufe 14 (Plasma zuerst: DjLe3eL6, DYU, DSD) fertig (automatisch). Erwartung F-209. Noch nicht von Claude geprüft.
 - 2026-11-04 14:22 Nachtrag B-036/F-213: gemeinsames Modell R² 0,90, Spiegelverhältnisse wichtigste; Bericht DE/EN ergänzt, PDFs gebaut. Nicht committet.
 - 2026-11-04 15:14 Stufe 14 abgeholt (B-037, F-214): dje/dyu Tragwerk ok unter Annahme, Fluenz/Package/Kernheizung verletzt (Hülle zu eng). Submodell dje Punkt 3 fehlt.
+- 2026-11-04 15:18 Nutzer: beides (F-215). abstand_vorab.md; sim/qi_feld/kette15.sh läuft losgelöst (dyug x1,45, dsdg x1,12, dpr, dgh), Ende „FERTIG Stufe 15“. proxima_spulen.py: Umgebungsvariable GROESSE neu.
+- 2026-11-04 15:21 Nutzer-Ziel: einen Satz ins Ziel bringen (Absprungbasis) + Plasma-Wand-Abstand/Definition (F-216). PI-Suche docs/recherche/plasma_wand/lauf.sh läuft losgelöst, Ende „FERTIG Literatur“. Danach von Claude inhaltlich prüfen.
+- 2026-11-04 15:26 Nutzer-Idee Abstandsbilanz: Kachel + Formtoleranz + Regelgüte (F-217). Siebtes PI-Thema (Toleranzen, Randschichtbreite) nach Ende des Laufs nachschieben; dann Abstandsbilanz als Parameterliste in kopplung.py (Spalte, Package) belegen.
+- 2026-11-04 15:28 Skill plasma-wand-abstand angelegt (F-218). Nach PI-Suche Zahlen eintragen.
+- 2026-11-04 15:56 Stufe 15 (Abstand: dyug, dsdg, dpr, dgh) fertig (automatisch). Erwartung F-215. Noch nicht von Claude geprüft.
+- 2026-11-04 15:58 Stufe 15 abgeholt (B-038, F-219): Platz gelöst, Festigkeit offen. sim/qi_feld/kette16.sh läuft losgelöst (dpr x1,3/x1,6, dgh x1,3, dyug Lager/Verbinder), Ende „FERTIG Stufe 16“.
+- 2026-11-04 15:58 PI-Abstandssuche geprüft (B-039, F-220, pruefung_claude.md); drei Zusatzthemen laufen (docs/recherche/plasma_wand/lauf.sh). Stufe 16 läuft.
+- 2026-11-04 16:08 Stufe 16 (Wände dicker) fertig (automatisch). Erwartung F-219. Noch nicht von Claude geprüft.
+- 2026-11-04 16:39 Nutzer-Idee zwei Spulenringe (F-221), nur notiert, Test wartet auf Freigabe. Stufe 16 läuft.
+- 2026-11-04 16:55 ERSTER SATZ IM ZIEL (B-040, F-222): DPrcxq66 (sim/kopplung/qi_proxima_dpr Punkte 0001 und 0002) erfüllt im Gesamtmodell alle Grenzen. Stufe 17 (kette17.sh) sichert ab: Netz x1,5, Abkühlen A/B/C, Submodell. Bericht DE/EN Abschnitt „Ein Satz im Ziel“ neu. Zwei-Ringe-Test (F-221) läuft als Opus-Agent, Ergebnis docs/recherche/qi_tragwerk/zwei_ringe.md.

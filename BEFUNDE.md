@@ -6,6 +6,41 @@
 ---
 
 
+## B-040 Erster Satz erfüllt alle Grenzen im Gesamtmodell: DPrcxq66 (2026-11-04)
+
+Gesamtmodell, Lückenmodus, Hüllenfreiraum; Grenzen sind Annahmen (Stahl p99 500 MPa, Wickelpaket-Dehnung 0,3 %, Fluenz 3e18, Package 1,0 m):
+
+| Variante | Stahl p99 | Dehnung WP | Hülle | Fluenz | Kernheizung W/m³ | alle Grenzen |
+|---|---|---|---|---|---|---|
+| DPrcxq66 (nfp 2, QI 0,00079), Wände ×1,3 | 453 MPa | 0,27 % | 1,32 m | 1,1e18 | – | ja |
+| DPrcxq66, Wände ×1,6 | 384 MPa | 0,26 % | 1,56 m | 1,1e17 | 13 | ja |
+| DGHe48vB (QI 0,00116), Wände ×1,3 | 483 MPa | 0,34 % | 1,35 m | 7,9e17 | – | nein (Dehnung) |
+| DYU ×1,45, Lager 3,6 m, 20 Verbinder je Paar | 500 MPa | 0,30 % | 1,27 m | 9,7e17 | – | nein (knapp) |
+
+Kraft DPrcxq66 792 MN je Spule (Wände ändern sie nicht), größte Lücke ohne Verbinder 3,9 m, Verbinder 284 von 344. Erwartung F-219 getroffen (DPr ×1,3: 453 gegen 460–520, ×1,6: 384 gegen 400–450, beide etwas besser; DGH Dehnung 0,34 statt 0,30–0,33 knapp verfehlt).
+
+Was die Aussage trägt und was nicht: Gesamtmodell-p99 über alle Spulen, Hüllenmaß ganze Gehäuseseiten, 500 MPa und 0,3 % nur angenommen. Das Submodell der heißesten Spule gibt 605 MPa (×1,3) und 602 MPa (×1,6) und liegt damit über 500. Abkühlen und feineres Netz für DPr sind in Stufe 17 in Arbeit. Plasma: QI 0,00079 ist rund 8-mal besser als DP9 (0,0068), aber schlechter als DjLe3eL6 und DYU (0,00045); nfp 2. Hülle 1,32 m (×1,3) liegt knapp über dem belegten HELIAS-Wert 1,3 m (B-039).
+
+## B-039 Plasma-Wand-Abstand: was belegt ist (2026-11-04)
+
+PI-Suche (25 Belege im Wortlaut bestätigt, von Claude inhaltlich gelesen): HELIAS 5-B braucht 1,3 m Blanket + Abschirmung zwischen Plasma und Spulen (KIT); W7-X Abstand Spule–Plasma c/a ~0,55; QI-Kraftwerk (Goodman 2025) c/a 0,87 bis 0,99 (Tabellenzuordnung durch PI gedeutet); EU-DEMO-Pionierreaktor innen 0,53 m Blanket + 0,25 m Abschirmung. Definition: LCFS = äußerste geschlossene Flussfläche, davor die Randschicht (SOL) mit offenen Feldlinien bis zur Wand; Plasma–Spule = Plasma–Wand + Gefäß + Blanket + Abschirmung + Spalt. Nicht gefunden: Kachel- und Toleranzwerte, W7-X Abstand, Stellaris. Verworfen: ARIES-CS 0,63 m (Blanketmodul, kein Abstand). Folge: package_min 1,0 m liegt unter HELIAS 1,3 m; Sätze mit Hülle unter 1,3 m (DYU x1,45: 1,27 m) knapp. Datei: docs/recherche/plasma_wand/pruefung_claude.md. Drei weitere PI-Themen (Toleranz, Randschichtbreite, Kacheldicke) laufen.
+
+## B-038 Stufe 15: Platz für die Abschirmung gewonnen, Festigkeit nicht (2026-11-04)
+
+Gesamtmodell, Lückenmodus, Hüllenfreiraum; MPa; 500 MPa und 0,3 % Dehnung nur Annahmen:
+
+| Satz | QI | Kraft MN | Stahl p99 | WP-Dehnung | Hülle m | Fluenz n/cm² | verletzt |
+|---|---|---|---|---|---|---|---|
+| DYU ×1 (Referenz, Pkt 21) | 0,00045 | 695 | 417 | 0,23 % | 0,81 | 2,1e20 | Package, Kernheizung, Fluenz |
+| DYU ×1,45, Wände ×1,45 | 0,00045 | 1458 | 627 | 0,38 % | 1,27 | 9,7e17 | Stahl, Dehnung |
+| DSD ×1,12 | 0,00058 | 1377 | 791 | 0,54 % | 1,20 | 3,1e18 | Stahl, Dehnung, Fluenz, Durchdringung |
+| DPrcxq66 (nfp 2) ×1 | 0,00079 | 792 | 562 | 0,32 % | 1,46 | 2,7e17 | Stahl, Dehnung |
+| DGHe48vB (nfp 2) ×1 | 0,00116 | 665 | 538 | 0,36 % | 1,52 | 1,4e17 | Stahl, Dehnung |
+
+Submodell heißeste Spule (p99 ohne Randzone): DYU ×1,45 794, DSD 1692, DPrcxq66 1066; DGHe48vB fehlgeschlagen (43 negative Elemente nach 6 Reparaturrunden).
+
+Erwartung F-215: Hülle getroffen (DYU 1,27 statt 1,2–1,3; DPr 1,46 statt 1,3–1,6; DGH 1,52 gegen Schätzung 1,28, also Schätzung 0,24 m zu klein). Fluenz, Package, Kernheizung bei DYU ×1,45, DPr, DGH erfüllt. Verfehlt: Stahl DYU ×1,45 627 statt 410–480; die Spannung bleibt beim Hochskalieren nicht gleich (Kraft wuchs wie erwartet ×2,1, Spannung ×1,5). Vermutung, nicht geprüft: Lager (r_lager 2,5 m), Verbinder je Paar und weitere Referenzmaße wurden nicht mitskaliert. Besser als erwartet: DPr 562 statt über 700. Damit liegt der Engpass jetzt bei Festigkeit, nicht beim Platz. Nächste Läufe: dickere Wände bei DPr/DGH, Lager und Verbinder mitskalieren bei DYU. Hinweis: Das Submodell der heißesten Spule liegt 1,3- bis 1,9-mal über dem Gesamtmodell-p99; welcher der beiden Maßstäbe gelten soll, ist weiter Nutzerentscheidung.
+
 ## B-037 Stufe 14: Lückenmodus bei allen Plasma-zuerst-Sätzen (2026-11-04)
 
 Gesamtmodell / Submodell (heißeste Spule, F4, p99 ohne Randzone), MPa, 500 MPa nur Annahme:

@@ -12,6 +12,7 @@ Maßstab: Rand und Spulen mit f = (V_0169 / V_rand)^(1/3) in Einheitslänge verg
 L wie 0169 -> gleiches Plasmavolumen (1096 m3). Ströme mit f skaliert (B ~ I/L); die Kette kalibriert ohnehin auf 6,5 T.
 """
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -55,6 +56,7 @@ def vmec():
     m, w = forward_model.forward_model(srf.SurfaceRZFourier.model_validate(b), settings=settings)
     w.save(O / "wout_roh.nc")
     f = (volumen(WOUT0) / volumen(O / "wout_roh.nc")) ** (1 / 3)
+    f *= float(os.environ.get("GROESSE", "1"))                    # Anlage groesser als das 0169-Volumen (F-215), 1 = wie bisher
     for k in ("r_cos", "z_sin", "r_sin", "z_cos"):
         if b.get(k) is not None:
             b[k] = (np.asarray(b[k]) * f).tolist()
