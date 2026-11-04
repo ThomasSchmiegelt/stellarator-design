@@ -755,3 +755,4 @@ sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht 
 - 2026-11-04 18:41 Stufe 19 (DPr Wände je Spule) fertig (automatisch). Erwartung F-228. Noch nicht von Claude geprüft.
 - 2026-11-04 18:51 Formkoeffizienten -> QI (B-048, F-233/F-234): R² 0,91; Kasten auf Koeffizienten schwach (2,3 %). Nächster Schritt 3: Entwurf im Modell + VMEC++-Nachprüfung (Opus), noch nicht gestartet. Nutzer: immer an Bericht und Ereignisprotokoll denken. Stufe 19/20 laufen.
 - 2026-11-04 18:52 Stufe 20 (Überdimensionierung, Submodell-Streuung) fertig (automatisch). Erwartung F-229. Noch nicht von Claude geprüft.
+- 2026-11-04 18:53 Stufe 19 und 20 ausgewertet (B-049, F-235): DPr Punkt 12 vorläufig Absprungbasis nach Richtwerten (heißeste Spule 432 bis 531 MPa). Alle vier offenen Punkte erledigt. Offen: Entwurf neuer Formen (Schritt 3), Bericht ziel_de/en auf Endstand gebracht.

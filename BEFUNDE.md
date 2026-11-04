@@ -19,6 +19,21 @@ Gesamtmodell (Mittel über alle Spulen), MPa; Grenzen Annahmen:
 
 Submodell heißeste Spule Pkt 9: 527 MPa (Stufe 1 ohne Rand 532). Erwartung F-224: Standardnetz 380–400 getroffen (384); Netz x2 380–430 verfehlt (447, +16 %); Abkühlen B Dehnung 0,31–0,34 getroffen (0,33); x1,3 440–520 knapp verfehlt (424, besser), dort Durchdringung als neues Problem; Submodell 580–620 verfehlt (527, besser). Fazit: Netzabhängigkeit klein (+16 % bei doppelter Stationszahl), Dehnung des Wickelpakets liegt bei Netz x2 und Abkühlen B an der Grenze. Nach dem Nutzermaßstab (heißeste Spule, B-043) liegt DPr x1,6 bei 527 bis 602 MPa, also über 500; Wandanpassung je Spule läuft (Opus-Agent).
 
+## B-049 Absicherung DPrcxq66, Punkt 12: Absprungbasis nach Richtwerten (2026-11-04)
+
+DPr x1,6, huelle_min 1,5, Lückenmodus, Wände je Spule (Punkt 12). Spannung = p99 der heißesten Spule ohne Randzone, MPa; Richtwerte 500 MPa und 0,3 % Dehnung:
+
+| Variante | heißeste Spule | Stufe | Gesamt p99 | Dehnung WP | Hülle | Auslenkung |
+|---|---|---|---|---|---|---|
+| Standardnetz (Pkt 12) | 446 (Spule 11) | unter 500 | 362 | 0,25 % | 1,51 m | 42 mm |
+| Netz x1,5, freie Verbinder (Pkt 14) | 432 (Spule 20) | unter 500 | 392 | 0,27 % | 1,51 m | 48 mm |
+| Netz x2, freie Verbinder (Pkt 13) | 531 (Spule 12) | 500 bis 800 | 396 | 0,29 % | 1,50 m | 62 mm |
+| Abkühlen B (Pkt 15) | 447 (Spule 11) | unter 500 | 386 | 0,31 % | 1,51 m | 42 mm |
+| Wandziel 500 (Pkt 16) | 446 (Spule 11) | unter 500 | 364 | 0,24 % | 1,56 m | 40 mm |
+| Wandziel 480 (Pkt 17) | 462 (Spule 18) | unter 500 | 386 | 0,28 % | 1,55 m | 46 mm |
+
+Wandfaktoren: Ziel 450 gibt 1,30 an zwei Spulen (Pkt 12), Ziel 500 gibt 1,17 (Pkt 16), Ziel 480 gibt 1,22 (Pkt 17). Der Wert der heißesten Spule bleibt bei 446 MPa, weil sie bei Spule 11 liegt und die Anpassung hier nicht verändert wird; Punkt 12 war also dicker als nötig, Punkt 16 ist die schlankere Variante (Netz x2 und Abkühlen dafür nicht gerechnet). Submodell Spule 11 (Punkt 12): F1 446 (= Gesamtmodell), F2 474, F4 461 (Wandänderung höchstens 20 %): Streuung höchstens 6 %, Submodell vertrauenswürdig. Spitzenwerte (Stahl max ohne Rand) liegen bei 1145 bis 1823 MPa; sie sind netzabhängig und nicht Maßstab. Einordnung: Alle Richtwerte werden gehalten bis auf Netz x2 (531 MPa) und Abkühlen B (Dehnung 0,31 %), die knapp darüber liegen. Das gilt für die Annahmen (500 MPa, 0,3 %, Schrumpfwerte A/B/C), unter denen Abkühlen und Dehnung nur Spanne sind. Erwartung F-228/F-229 überwiegend getroffen (Abweichung: Wandziel 500 und 480 Spulenwert 446/462 statt 480 bis 530). DPr Punkt 12 gilt damit als Absprungbasis nach Richtwerten (vorläufig, Entscheidung der KI; Nutzer kann ändern).
+
 ## B-048 Formkoeffizienten -> QI (2026-11-04)
 
 Aus Feldperioden und je 45 Koeffizienten für r_cos und z_sin (Tabelle 5 x 9) sagt ein Gradient-Boosting-Modell log10(QI) mit R² = 0,91 voraus (zurückgehaltene Daten, 158 685 Plasmen). Wichtigste Eingaben (Verlust an R²): r_cos[1,-2] 0,19, z_sin[1,0] 0,19, r_cos[1,1] 0,18, r_cos[0,1] 0,17, r_cos[1,-1] 0,13, Feldperioden 0,09. Ein Kasten auf den fünf wichtigsten Koeffizienten (5. bis 95. Perzentil der guten): Reinheit 2,3 % bei Abdeckung 63 % (Grundrate 1,5 %); bester Bereich des Baums (Tiefe 5): 5 % (483 gut von 9050). Erwartung F-233: R² getroffen und übertroffen; Kasten verfehlt (2,3 statt 5 bis 15 %); wichtige Moden m = 0 und 1 getroffen, nahe n = 0 nicht. Folge: für den Entwurf neuer Formen ist das Modell brauchbar, Bereichsangaben für Koeffizienten nicht. Grenzen: nur im Bereich der Daten gültig (Datenpunkte stammen aus Optimierungen), Indexkonvention n nicht geprüft, QI ist nur das Maß der Feldform. Skript stellarator/qi_koeffizienten.py, Datei docs/recherche/qi_tragwerk/qi_koeffizienten.md.

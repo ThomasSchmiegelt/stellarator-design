@@ -1,5 +1,23 @@
 \section{A coil set at the target: DPrcxq66 meets all limits in the standard mesh (not in the finer mesh)}\label{sec:ziel}
 
+\subsection*{Final state after validation (authoritative)}
+Stress is now the p99 of the hottest coil (without boundary zone); the guideline value of 500\,MPa is an assumption, not a fixed limit. Set: DPrcxq66, walls $\times1.6$, deliberately thinned plasma side of the wall (clearance at least 1.5\,m), connectors placed by gaps, wall thickness adapted per coil.
+
+\begin{tabular}{lrrr}
+\hline
+Variant & hottest coil & strain & clearance \\ \hline
+Standard mesh & 446\,MPa & 0.25\,\% & 1.51\,m \\
+Mesh $\times1.5$ & 432\,MPa & 0.27\,\% & 1.51\,m \\
+Mesh $\times2$ & 531\,MPa & 0.29\,\% & 1.50\,m \\
+Cool-down (case B, assumed) & 447\,MPa & 0.31\,\% & 1.51\,m \\ \hline
+\end{tabular}
+
+\smallskip
+\noindent The submodel of the hottest coil deviates by at most 6\,\% from the global model (446, 474, 461\,MPa). The walls were over-dimensioned: a wall target of 500\,MPa
+instead of 450\,MPa needs a factor 1.17 instead of 1.3 at the same value of the hottest coil. The set counts provisionally as launch base \emph{by guideline values}; mesh $\times2$ and cool-down case B are just above.
+The earlier interim states below (average over all coils, fixed connector plans) are superseded: the failure in the finer mesh was a procedural error of the fixed connector plan, the clearance of 1.56\,m a coincidence of the untangling step.
+
+
 \textbf{Reading aid.} ``At the target'' here means: the global model (all coils, averaged over the coils) keeps the assumed limits.
 The limits are assumptions, not measured values: steel equivalent stress (p99, 99\,\% of the material lies below) at most 500\,MPa,
 winding-pack strain at most 0.3\,\%, neutron fluence at most $3\cdot10^{18}$\,n/cm$^2$, shielding at least 1.0\,m.
@@ -15,7 +33,7 @@ The user wanted us to ``bring one to the target, also to understand'', and then 
 \item Thicker walls for this set.
 \end{enumerate}
 
-\subsection*{Result (global model)}
+\subsection*{Interim state (superseded): global model}
 \begin{tabular}{lrrrrl}
 \hline
 Variant & steel p99 & strain & clearance & fluence & all limits \\ \hline
