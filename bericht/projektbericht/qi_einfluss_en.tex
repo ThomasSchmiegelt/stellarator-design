@@ -82,3 +82,9 @@ A \emph{box} from ranges of the five most important coefficients has only 2.3\,\
 \emph{Interpretation:} good shapes result from the interplay of the coefficients and cannot be given as ranges of single coefficients; the model can do it, a box cannot.
 The next step is therefore to search new shapes in the model and to verify them with the real solver (VMEC++).
 \emph{Limits:} valid only within the data range, index convention not checked, QI measures only the field shape. Source: \texttt{stellarator/qi\_koeffizienten.py}.
+
+\subsection*{Verification with the real solver and the official scoring}
+Ten shapes found in the surrogate were recomputed with VMEC++ (QI needs the setting \texttt{default\_high\_fidelity}, 70 to 155\,s per shape). With a wide search (1.5 standard deviations from the data) none of the ten shapes could be computed. With small steps (at most 0.3 standard deviations) 9 of 10 ran, all with QI below 0.00045, but only 3 better than their starting shape.
+\emph{Expectation beforehand:} 2 to 4 of 10 below QI 0.001, at most one better than DjLe3eL6; \emph{missed} for the wide search. The only own shape (half a step from the best data shape, QI $4.7\cdot10^{-5}$ versus $6.2\cdot10^{-5}$) is only a small variation.
+By the \emph{official scoring} of the leaderboard (determined locally, nothing submitted) all shapes receive the value 0, also the data shapes and the own one: violated are mirror ratio (0.35 to 0.54 instead of at most 0.2 to 0.25), edge rotational transform per period (0.07 to 0.21 instead of at least 0.25), vacuum well, flux compression and elongation. QI is only a constraint there.
+\emph{Consequence:} a shape with low QI is not automatically a good shape in the sense of the leaderboard. An upload therefore makes no sense.

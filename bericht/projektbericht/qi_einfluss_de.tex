@@ -83,3 +83,9 @@ Ein \emph{Kasten} aus Bereichen der fünf wichtigsten Koeffizienten hat nur 2,3\
 \emph{Deutung:} Gute Formen entstehen aus dem Zusammenspiel der Koeffizienten und lassen sich nicht als Bereiche einzelner Koeffizienten angeben; das Modell kann es, ein Kasten nicht.
 Der nächste Schritt ist daher, neue Formen im Modell zu suchen und mit dem echten Rechner (VMEC++) nachzuprüfen.
 \emph{Grenzen:} nur im Datenbereich gültig, Indexkonvention nicht geprüft, QI misst nur die Feldform. Quelle: \texttt{stellarator/qi\_koeffizienten.py}.
+
+\subsection*{Gegenrechnung mit dem echten Rechner und die offizielle Wertung}
+Zehn im Surrogat gefundene Formen wurden mit VMEC++ nachgerechnet (QI braucht die Einstellung \texttt{default\_high\_fidelity}, 70 bis 155\,s je Form). Bei weiter Suche (1,5 Standardabweichungen von den Daten) ließ sich keine der zehn Formen rechnen. Mit kleinen Schritten (höchstens 0,3 Standardabweichungen) rechneten 9 von 10, alle mit QI unter 0,00045, aber nur 3 besser als ihre Startform.
+\emph{Erwartung vorher:} 2 bis 4 von 10 unter QI 0,001, höchstens eine bessere als DjLe3eL6; \emph{verfehlt} bei der weiten Suche. Die einzige eigene Form (halber Schritt von der besten Datenform, QI $4{,}7\cdot10^{-5}$ gegen $6{,}2\cdot10^{-5}$) ist nur eine kleine Abwandlung.
+Nach der \emph{offiziellen Wertung} der Rangliste (lokal bestimmt, nichts eingereicht) erhalten alle Formen den Wert 0, auch die Datenformen und die eigene: verletzt sind Spiegelverhältnis (0,35 bis 0,54 statt höchstens 0,2 bis 0,25), Rotationstransformation am Rand je Periode (0,07 bis 0,21 statt mindestens 0,25), Vakuum-Well, Flusskompression und Elongation. QI ist dort nur Nebenbedingung.
+\emph{Folge:} Eine Form mit niedrigem QI ist nicht automatisch eine gute Form im Sinn der Rangliste. Ein Upload ist daher nicht sinnvoll.
