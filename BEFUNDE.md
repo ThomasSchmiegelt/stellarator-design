@@ -6,6 +6,35 @@
 ---
 
 
+## B-044 Stufe 18: DPr x1,6 mit freien Verbindern und gedünnter Plasmaseite (2026-11-04)
+
+Gesamtmodell (Mittel über alle Spulen), MPa; Grenzen Annahmen:
+
+| Variante | Stahl p99 | Dehnung WP | Hülle | Verbinder | verletzt |
+|---|---|---|---|---|---|
+| x1,6, huelle_min 1,5, Standardnetz (Pkt 8) | 384 | 0,26 % | 1,56 m | 284/344 | – |
+| x1,6, Netz x2, freie Verbinder (Pkt 9) | 447 | 0,32 % | 1,55 m | 260/332 | Dehnung |
+| x1,6, Abkühlen B (Pkt 10) | 409 | 0,33 % | 1,56 m | 284/344 | Dehnung |
+| x1,3, Netz x1,5 (Pkt 11) | 424 | 0,23 % | 1,57 m | 268/318 | Durchdringung |
+
+Submodell heißeste Spule Pkt 9: 527 MPa (Stufe 1 ohne Rand 532). Erwartung F-224: Standardnetz 380–400 getroffen (384); Netz x2 380–430 verfehlt (447, +16 %); Abkühlen B Dehnung 0,31–0,34 getroffen (0,33); x1,3 440–520 knapp verfehlt (424, besser), dort Durchdringung als neues Problem; Submodell 580–620 verfehlt (527, besser). Fazit: Netzabhängigkeit klein (+16 % bei doppelter Stationszahl), Dehnung des Wickelpakets liegt bei Netz x2 und Abkühlen B an der Grenze. Nach dem Nutzermaßstab (heißeste Spule, B-043) liegt DPr x1,6 bei 527 bis 602 MPa, also über 500; Wandanpassung je Spule läuft (Opus-Agent).
+
+## B-046 Wände je Spule: heißeste Spule hält den Richtwert (2026-11-04, Opus-Agent)
+
+Bewertung umgestellt auf die heißeste Spule ohne 0,5-m-Randzone (stahl_heiss), Stufen unter 500 / 500 bis 800 / über 800 MPa. Nachgerechnet (heisse_spule.py, ohne Elmer): DPr x1,6 Punkt 2 und 8: 585 MPa (Spule 18), Punkt 9 (Netz x2): 532 MPa (Spule 5). Punkt 12 = Punkt 8 mit wand_adapt: nach einer Runde nur Spulen 4 und 18 um den Faktor 1,3 dicker; heißeste Spule jetzt Spule 11 mit 446 MPa (vorher 585), Spule 18 fällt auf 287 MPa, Gesamtwert 362 MPa, Hülle 1,514 m (huelle_min 1,5), Dehnung 0,25 %, Fluenz 1,6e17, Auslenkung 42 mm, 282/344 Verbinder, Stahl +3 % (41 019 t). Submodell F4: Spule 11 461 MPa. Grenzen: Wand im Submodell bis -36 % verändert; Faktor p99/450 setzt vermutlich zu viel Wand an (nicht geprüft); Netz x2 und Abkühlen für Punkt 12 noch offen (Stufe 19). Datei docs/recherche/qi_tragwerk/opus_heissespule.md.
+
+## B-045 500 MPa ist Richtwert, keine feste Grenze (Nutzer 2026-11-04)
+
+Die Wertung „Grenze eingehalten oder nicht“ gilt ab jetzt nur als „hält den Richtwert 500 MPa“. Spannungen werden als Zahl genannt und in Stufen eingeordnet: unter 500 MPa; 500 bis 800 MPa (Stellaris: Membran unter 660, von-Mises-Ersatz unter 800, Gehäuse unter 700, Quelle Lion et al. 2025); über 800 MPa. Gleiches gilt sinngemäß für die Wickelpaket-Dehnung 0,3 % (Annahme). Frühere Ziel-Aussagen (B-040, B-042, B-044) lesen als „hält die Richtwerte“. Damit liegt DPr x1,6 an der heißesten Spule (527 bis 602 MPa) in der mittleren Stufe, nicht im Ausfall.
+
+## B-043 Spannungsmaßstab: heißeste Spule entscheidet (Nutzerentscheidung 2026-11-04)
+
+Maßgebend ist ab jetzt der p99 der am stärksten belasteten Spule (ohne 0,5-m-Randzone, Bestätigung per Submodell F4); der Wert über alle Spulen läuft nur mit. Grenze 500 MPa bleibt Annahme. Stand nach neuem Maßstab: DPr x1,6 602 MPa (Standardnetz, Submodell) bzw. 585 MPa (Stufe 1 ohne Rand, nachgerechnet, zuerst fälschlich 568), über der Grenze; 0169 normal 434 (Spule 8), 0169 dünn 509, D56 566, DP9 673 (Submodell, B-030). Damit ist der in B-040 und B-042 gemeldete Zielzustand nach altem Maßstab erreicht, nach neuem nicht. Nächster Schritt: Wanddicke je Spule an die Last anpassen.
+
+## B-042 Netzabhängigkeit geklärt: Verbinderplan und Seitenwand, nicht das Netz (2026-11-04, Opus-Agent)
+
+(1) Hülle: Die 1,56 m (B-040) waren Zufall des Entflechtens, das an Spule 6 die Seitenwand (0,80 m) auf 0,19 m kürzte, ohne dass eine Durchdringung vorlag. Volle Seitenwand: Hülle 1,17 bis 1,19 m (unter HELIAS 1,3 m, Fluenz um 4e18). (2) Das Durchfallen im feineren Netz (B-041) kam vom festen Plan: 38 von 284 Verbindern fielen durch, die größte Lücke wuchs von 3,9 auf 15,2 m (Spule mit u 146 mm, p99 1806 MPa). Kontrolle mit freien Verbindern, Netz x1,5, huelle_min_m 1,5 (neue Option: dünnt die Plasmaseite der Wand gezielt bis zur Grenze, 32 Stationen um höchstens 0,31 m): Stahl p99 386 MPa, Auslenkung 35 mm, Dehnung 0,26 %, Hülle 1,551 m, Fluenz 1,1e17, alle Grenzen erfüllt (Annahmen). Hinweise: Das Netz x1,5 ergibt wegen der Krümmungsabtastung nur etwa x1,25 Stationen; verbinder_halb 3 macht Verbinder etwa 20 % breiter. Für Netzstudien Verbinder frei setzen. B-040 gilt nur mit gezielt gedünnter Seitenwand (Entwurfsentscheidung). Berichtigt: B-041-Aussage, DPr falle im feinen Netz durch, war ein Verfahrensfehler (fester Plan). Datei: docs/recherche/qi_tragwerk/opus_huelle_netz.md. Prüfläufe in Stufe 18.
+
 ## B-041 Stufe 17: DPrcxq66 hält die Absicherung nicht, Kraftmaßstab des Scans stimmt nicht, zwei Ringe (2026-11-04)
 
 **Absicherung DPrcxq66 (Gesamtmodell, MPa; Grenzen Annahmen):**

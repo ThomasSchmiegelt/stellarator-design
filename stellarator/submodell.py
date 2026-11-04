@@ -32,6 +32,32 @@ def p99(v, V):
     return float(v[o][min(np.searchsorted(c, 0.99), len(v) - 1)])
 
 
+def p99_ohne_rand_je_spule(netz, vm, V, halb: int, rand_m: float = RAND_M) -> dict:
+    """Stufe 1 (Gesamtmodell) je Spule: Stahl-p99 und Stahl-p99 ohne Randzone, wie main() es für die gewählte Spule
+    rechnet (stufe1.stahl_p99_ohne_rand): Elemente, deren Mitte näher als rand_m an einem Knoten der eigenen
+    Verbinderflächen (ok-Verbinder, Stationen i0 +- halb) oder der eigenen Lagerflächen liegt, zählen nicht.
+    Massstab der Bewertung seit F-225 (B-043): max über die Spulen von p99_ohne_rand. vm in MPa, V Elementvolumen.
+    Rückgabe {"p99": [...], "p99_ohne_rand": [...]} je Spulenindex."""
+    A = netz.info["zellen_quer"]; N = netz.info["stationen"]
+    vers = np.r_[0, np.cumsum([n * (A + 1) ** 2 for n in N])]
+    ids = [vers[k] + np.arange(n * (A + 1) ** 2).reshape(n, A + 1, A + 1) for k, n in enumerate(N)]
+    rand = [[] for _ in N]
+    d = np.arange(-halb, halb + 1)
+    for v in netz.info["verbinder"]:
+        if not v["ok"]:
+            continue
+        for k, i0, seite in ((v["k"], v["i0"], v["fk"]), (v["m"], v["j0"], v["fm"])):
+            rand[k].append(hm._flaeche(ids[k][(i0 + d) % N[k]], seite, A).ravel())
+    lsp = np.asarray(netz.spule)[netz.lager[:, 0]]
+    stahl = netz.mat == 3; out = {"p99": [], "p99_ohne_rand": []}
+    for k in range(len(N)):
+        c = stahl & (netz.spule == k)
+        r = np.unique(np.concatenate(rand[k] + [netz.lager[lsp == k, 1:].ravel()]))
+        b = cKDTree(netz.X[r]).query(netz.X[netz.hexa[c]].mean(1))[0] > rand_m
+        out["p99"].append(p99(vm[c], V[c])); out["p99_ohne_rand"].append(p99(vm[c][b], V[c][b]))
+    return out
+
+
 def verfeinern(s, w, F):
     """Spule und Wände auf N*F Stationen; Station i alt = Station i*F neu."""
     N = len(s.punkte); t = np.arange(N + 1)

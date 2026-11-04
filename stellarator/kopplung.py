@@ -73,6 +73,24 @@ ANNAHMEN = {
     "marge_zul_K": (5.0, "a: Temperaturmarge"),
 }
 A = {k: v[0] for k, v in ANNAHMEN.items()}
+# Spannungsstufen der heissesten Spule (Nutzer 2026-11-04): 500 MPa ist Richtwert (Annahme), keine harte Grenze
+STUFEN_MPa = (500.0, 800.0)
+
+
+def stahl_stufe(v: float) -> str:
+    return "unter 500" if v < STUFEN_MPa[0] else ("500 bis 800" if v <= STUFEN_MPa[1] else "über 800")
+
+
+def wand_faktoren(p: dict, po: Path):
+    """Wanddicken-Faktor je Spule (Option wand_adapt / wand_von) oder None (Standard, Verhalten unveraendert).
+    wand_von=<studie>/<NNNN>: Faktoren aus deren wand_je_spule.json (reproduzierbar). wand_adapt: aktueller Stand der
+    Anpassung im eigenen Punktordner (rechne_punkt schreibt ihn vor jedem Lauf; Runde 0 = null = unveraendert)."""
+    if p.get("wand_von"):
+        st, nr = str(p["wand_von"]).split("/")
+        return json.loads((WURZEL / st / "punkte" / f"{int(nr):04d}" / "wand_je_spule.json").read_text())["faktoren"]
+    if p.get("wand_adapt") and (po / "wand_je_spule.json").exists():
+        return json.loads((po / "wand_je_spule.json").read_text())["faktoren"]
+    return None
 
 
 def plasma_laden(studie_ordner: Path) -> None:
@@ -204,11 +222,21 @@ def struktur_netz(p: dict, po: Path, geo: dict):
     hm.SEITLICH_MIN = float(p.get("seitlich_min", 0.8))
     hm.LUECKE_MAX = float(p.get("luecke_max_m", 4.0))            # nur verb_modus=luecken (B-034)
     W = waende(spulen, br, ho, w)
+    fak = wand_faktoren(p, po)
+    if fak is not None:                                           # Wand je Spule (F-225): alle vier Seiten x Faktor,
+        assert len(fak) == len(spulen), "wand_je_spule.json passt nicht zur Spulenzahl"
+        for wk, fk in zip(W, fak):                                # danach greifen Biegegrenze, Entflechten, Huellengrenze
+            for q in ("innen", "aussen", "links", "rechts"):
+                wk[q] = wk[q] * float(fk)
     if p.get("biegung") == "innenkontur":                         # Wand innen in der Kurve kappen (F-180)
         from .gehaeuse_netz import biegegrenze
         W, binfo = biegegrenze(spulen, W, br, ho, float(p.get("biege_grenze", 0.8)))
         (po / "biegegrenze.json").write_text(json.dumps(binfo))
     verlauf = entflechten(spulen, W, br, ho, max(br, ho) / 3, w.spiel, w.wand_min)
+    if p.get("huelle_min_m"):                                    # Plasmaseite kappen: Huelle netzstabil (opus_huelle_netz.md)
+        from scipy.spatial import cKDTree
+        hinfo = huelle_grenze(spulen, W, wp, cKDTree(np.load(po / "plasma_rand.npy")), float(p["huelle_min_m"]), w.wand_min)
+        (po / "huelle_grenze.json").write_text(json.dumps(hinfo))
     plan = None
     if p.get("plan_von"):                                         # Netzstudie: dieselben Verbinder am selben Ort (F-197)
         hm.PLAN_STRENG = False
@@ -258,6 +286,12 @@ def schritt_struktur(p: dict, po: Path, geo: dict, timeout_s: float = 2400) -> t
     U = hm.verschiebung(fall, netz)
     vm = hm.spannungen(netz, U, mat)
     k = hm.kennzahlen(netz, U, vm)
+    from .submodell import p99_ohne_rand_je_spule, RAND_M           # Massstab F-225: heisseste Spule ohne Randzone
+    je = p99_ohne_rand_je_spule(netz, vm / 1e6, hm.elementvolumen(netz.X, netz.hexa),
+                                int(p.get("verbinder_halb", FEST["verbinder_halb"])))
+    kh = int(np.argmax(je["p99_ohne_rand"]))
+    k["stahl_je_spule"] = {"p99_MPa": je["p99"], "p99_ohne_rand_MPa": je["p99_ohne_rand"], "rand_m": RAND_M}
+    k["stahl_heiss"] = {"spule": kh, "p99_ohne_rand_MPa": je["p99_ohne_rand"][kh], "p99_MPa": je["p99"][kh]}
     k["kraft_MN_max_je_spule"] = float(np.linalg.norm(F, axis=1).max() / 1e6)
     k["I_spule_MA"] = I / 1e6; k["wickelpaket_m"] = wp; k["stationen"] = stationen; k["loeser"] = p.get("loeser", "mumps")
     k["verbinder_ok"] = int(sum(v["ok"] for v in netz.info["verbinder"]))
@@ -292,6 +326,45 @@ def huelle_abstand(spulen, W, wp: float, baum, teile: int = 4, je_seite: int = 6
             d, _ = baum.query(X)
             seiten[q] = min(seiten[q], float(d.min())); alle.append(d)
     return np.concatenate(alle), seiten
+
+
+def huelle_grenze(spulen, W, wp: float, baum, grenze: float, wand_min: float = 0.003, runden: int = 20,
+                  teile: int = 4, je_seite: int = 6) -> dict:
+    """Option huelle_min_m: Wandseiten, deren Aussenflaeche (wie huelle_abstand: vier Seiten mit Ecken, auch zwischen den
+    Stationen) dem Plasma naeher kommt als grenze, an beiden Nachbarstationen um das Defizit duennen, bis die Huelle haelt.
+    Grund (opus_huelle_netz.md): ohne Grenze haengt die Huelle davon ab, ob entflechten eine Seitenwand zufaellig mitkuerzt
+    (Standardnetz 1,56 m, Netz x1,5 1,19 m bei DPrcxq66). W an Ort und Stelle; Rueckgabe Info."""
+    from . import spulen as sp
+    u = np.linspace(0, 1, je_seite); f = np.arange(teile) / teile
+    info = {"grenze_m": grenze, "runden": 0, "geduennt_stationen": 0, "abzug_max_m": 0.0}
+    alt = [{q: w[q].copy() for q in ("innen", "aussen", "links", "rechts")} for w in W]
+    for r in range(runden):
+        defizit_max = 0.0
+        for s, w in zip(spulen, W):
+            t, n, b = sp.rahmen(s); N = len(s.punkte)
+            n0, n1 = -(wp / 2 + w["innen"]), wp / 2 + w["aussen"]
+            b0, b1 = -(wp / 2 + w["links"]), wp / 2 + w["rechts"]
+            lin = lambda a_, c_: a_[:, None] + (c_ - a_)[:, None] * u[None]
+            voll = lambda x: np.broadcast_to(x[:, None], (N, je_seite))
+            abzug = {}
+            for q, (un, ub) in {"innen": (voll(n0), lin(b0, b1)), "aussen": (voll(n1), lin(b0, b1)),
+                                "links": (lin(n0, n1), voll(b0)), "rechts": (lin(n0, n1), voll(b1))}.items():
+                X = s.punkte[:, None] + un[..., None] * n[:, None] + ub[..., None] * b[:, None]          # (N, je_seite, 3)
+                X = X[:, None] * (1 - f)[None, :, None, None] + np.roll(X, -1, 0)[:, None] * f[None, :, None, None]
+                d = baum.query(X.reshape(-1, 3))[0].reshape(N, teile * je_seite)
+                fehl = np.maximum(0.0, grenze - d.min(1))                     # je Abschnitt i -> i+1
+                a_ = np.maximum(fehl, np.roll(fehl, 1))                        # beide Stationen des Abschnitts
+                abzug[q] = a_; defizit_max = max(defizit_max, float(fehl.max()))
+            for q, a_ in abzug.items():
+                w[q] = np.maximum(wand_min, w[q] - a_)
+        info["runden"] = r + 1
+        if defizit_max < 1e-3:
+            break
+    for w, w0 in zip(W, alt):
+        for q in w0:
+            d_ = w0[q] - w[q]; info["geduennt_stationen"] += int((d_ > 1e-6).sum()); info["abzug_max_m"] = max(info["abzug_max_m"], float(d_.max()))
+    info["defizit_rest_m"] = defizit_max
+    return info
 
 
 def schritt_package(spulen, W, geo: dict, s2: dict, WP_M: float = WP_M, huelle: bool = False) -> dict:
@@ -346,7 +419,10 @@ def schritt_package(spulen, W, geo: dict, s2: dict, WP_M: float = WP_M, huelle: 
 def bewerten(e: dict) -> dict:
     s, pk = e["struktur"], e["package"]
     dehnung = s["wickelpaket"]["vm_p99_MPa"] * 1e6 / 100e9
-    g = {"stahl_p99": s["stahl"]["vm_p99_MPa"] <= A["sigma_zul_MPa"],
+    alle = s["stahl"]["vm_p99_MPa"]
+    heiss = s.get("stahl_heiss")                                     # fehlt in alten Ergebnissen -> alter Massstab
+    massgebend = heiss["p99_ohne_rand_MPa"] if heiss else alle
+    g = {"stahl_p99": massgebend <= A["sigma_zul_MPa"],
          "dehnung_wp": dehnung <= A["dehnung_zul"],
          "package": pk["package_passt"],
          "kernheizung": pk["kernheizung_wp_W_m3"] <= A["kern_zul_W_m3"],
@@ -355,7 +431,13 @@ def bewerten(e: dict) -> dict:
          "marge": pk["marge_K"] >= A["marge_zul_K"],
          "feld_Bn": e["spulen"]["Bn_rel_mittel"] <= 3e-3,
          "durchdringung": s["durchdringung_punkte"] == 0}
-    return {"dehnung_wp": dehnung, "grenzen": g, "alle_ok": all(g.values())}
+    # alle_ok = Einhaltung der Richtwerte (500 MPa ist Annahme, keine harte Grenze); Spannung immer als Zahl + Stufe
+    return {"dehnung_wp": dehnung, "grenzen": g, "alle_ok": all(g.values()),
+            "stahl_massstab": "heisseste Spule ohne Randzone" if heiss else "alle Spulen (alt)",
+            "stahl_p99_alle": alle,
+            "stahl_heiss": {"spule": heiss["spule"] if heiss else None, "MPa": massgebend,
+                            "abstand_500_MPa": STUFEN_MPa[0] - massgebend, "abstand_800_MPa": STUFEN_MPa[1] - massgebend,
+                            "stufe": stahl_stufe(massgebend)}}
 
 
 def rechne_punkt(studie: str, nr: int, p: dict) -> dict:
@@ -372,7 +454,11 @@ def rechne_punkt(studie: str, nr: int, p: dict) -> dict:
                        env={"OMP_NUM_THREADS": "4", "PATH": "/usr/bin:/bin", "HOME": str(Path.home())})
     geo = json.loads((po / "geometrie.json").read_text()); z["geometrie_s"] = time.time() - t0 - z["spulen_s"]
     t1 = time.time()
-    k, spulen, W = schritt_struktur(p, po, geo); z["struktur_s"] = time.time() - t1
+    if p.get("wand_adapt"):
+        k, spulen, W = wand_anpassen(p, po, geo, s2)
+    else:
+        k, spulen, W = schritt_struktur(p, po, geo)
+    z["struktur_s"] = time.time() - t1
     pk = schritt_package(spulen, W, geo | {"_ordner": po}, s2, k["wickelpaket_m"], huelle=p.get("freiraum") == "huelle")
     e = {"param": p, "spulen": {kk: s2[kk] for kk in s2 if kk.startswith(("Bn", "kraft_je", "B_mittel", "laenge", "abstand"))},
          "geometrie": geo, "struktur": k, "package": pk, "zeiten": z | {"gesamt_s": time.time() - t0},
@@ -380,6 +466,48 @@ def rechne_punkt(studie: str, nr: int, p: dict) -> dict:
     e["bewertung"] = bewerten(e)
     (po / "ergebnis.json").write_text(json.dumps(e, indent=1, default=float))
     return e
+
+
+def wand_anpassen(p: dict, po: Path, geo: dict, s2: dict):
+    """Option wand_adapt (F-225): Wanddicke je Spule an die Last. Runde 0 = unveraenderte Waende; danach Faktor der Spule k
+    x max(1, p99_k / wand_ziel_MPa) (p99 ohne Randzone), hoechstens wand_fak_max (2) gesamt, hoechstens wand_runden (3)
+    Anpassungsrunden. Die Last wandert auf steifere Nachbarn -> iterieren. Stopp, sobald die heisseste Spule <= Richtwert
+    (sigma_zul, 500 MPa Annahme). Ablage wand_je_spule.json (faktoren = die des letzten Laufs = struktur.vtu)."""
+    ziel = float(p.get("wand_ziel_MPa", 450.0)); fmax = float(p.get("wand_fak_max", 2.0))
+    rmax = int(p.get("wand_runden", 3)); grenze = A["sigma_zul_MPa"]; hmin = p.get("huelle_min_m")
+    info = {"ziel_MPa": ziel, "richtwert_MPa": grenze, "fak_max": fmax, "runden_max": rmax, "faktoren": None,
+            "runden": [], "konvergiert": False}
+    schreib = lambda: (po / "wand_je_spule.json").write_text(json.dumps(info, indent=1))
+    schreib()
+    for r in range(rmax + 1):
+        k, spulen, W = schritt_struktur(p, po, geo)
+        je = k["stahl_je_spule"]["p99_ohne_rand_MPa"]; fak = info["faktoren"] or [1.0] * len(je)
+        pk = schritt_package(spulen, W, geo | {"_ordner": po}, s2, k["wickelpaket_m"], huelle=p.get("freiraum") == "huelle")
+        hg = json.loads((po / "huelle_grenze.json").read_text()) if hmin else {}
+        zeile = {"runde": r, "faktoren": fak, "p99_ohne_rand_MPa": je, "heiss_spule": k["stahl_heiss"]["spule"],
+                 "heiss_MPa": k["stahl_heiss"]["p99_ohne_rand_MPa"], "stahl_p99_alle_MPa": k["stahl"]["vm_p99_MPa"],
+                 "huelle_m": pk["freiraum_huelle_m"],
+                 "huelle_unter_min": bool(hmin and pk["freiraum_huelle_m"] < float(hmin) - 1e-3),
+                 "huelle_grenze": hg, "verbinder_ok": k["verbinder_ok"], "verbinder_kandidaten": k["verbinder_kandidaten"],
+                 "luecke_max_m": k.get("luecke_max_m"), "durchdringung_punkte": k["durchdringung_punkte"],
+                 "u_max_mm": k["u_max_mm"], "wp_p99_MPa": k["wickelpaket"]["vm_p99_MPa"], "masse_t": k["stahl"]["masse_t"],
+                 "fluenz_n_cm2": pk["fluenz_n_cm2"]}
+        info["runden"].append(zeile)
+        log(po.parent.parent.name, f"{po.name} wand_adapt Runde {r}: heisseste Spule {zeile['heiss_spule']} "
+            f"{zeile['heiss_MPa']:.0f} MPa, alle {zeile['stahl_p99_alle_MPa']:.0f}, Huelle {zeile['huelle_m']:.2f} m"
+            + (" UNTER huelle_min_m" if zeile["huelle_unter_min"] else ""))
+        if zeile["heiss_MPa"] <= grenze:
+            info["konvergiert"] = True; info["grund"] = "heisseste Spule <= Richtwert"; break
+        neu = [min(fmax, f * max(1.0, v / ziel)) for f, v in zip(fak, je)]
+        if r == rmax or np.allclose(neu, fak):
+            info["grund"] = "Rundenzahl erreicht" if r == rmax else "Faktoren am Anschlag"; break
+        info["faktoren"] = neu; schreib()
+    info["huelle_unter_min"] = info["runden"][-1]["huelle_unter_min"]
+    schreib()
+    k["wand_adapt"] = {"runden": len(info["runden"]) - 1, "konvergiert": info["konvergiert"], "grund": info["grund"],
+                       "heiss_je_runde_MPa": [z_["heiss_MPa"] for z_ in info["runden"]],
+                       "huelle_unter_min": info["huelle_unter_min"]}
+    return k, spulen, W
 
 
 # ---------------------------------------------------------------- DOE
@@ -434,7 +562,8 @@ def lauf(studie: str, n: int, stunden: float, speicher: str = "11G") -> None:
                 raise RuntimeError("beide Loeser gescheitert")
             e = json.loads((po / "ergebnis.json").read_text())
             b = e["bewertung"]; s = e["struktur"]; pk = e["package"]
-            log(studie, f"{nr:04d} ok {time.time()-t0:.0f} s | Bn {e['spulen']['Bn_rel_mittel']:.2e} | p99 {s['stahl']['vm_p99_MPa']:.0f} MPa"
+            log(studie, f"{nr:04d} ok {time.time()-t0:.0f} s | Bn {e['spulen']['Bn_rel_mittel']:.2e} | p99 alle {s['stahl']['vm_p99_MPa']:.0f} MPa"
+                        f" | heisseste Spule {b['stahl_heiss']['MPa']:.0f} MPa ({b['stahl_heiss']['stufe']})"
                         f" | frei {pk['freiraum_min_m']:.2f} m | q_wp {pk['kernheizung_wp_W_m3']:.0f} W/m3 | Ausl. {pk['auslastung']:.2f}"
                         f" | alle ok {b['alle_ok']}")
         except Exception as ex:
@@ -466,7 +595,7 @@ def main(argv=None):
     ap.add_argument("--von", default="", help="studie/NNNN: Spulen und Parameter uebernehmen (Netzstudie)")
     a = ap.parse_args(argv)
     if a.befehl == "punkt":
-        p = {k: (v if k in ("lager_ort", "loeser", "verb_modus", "abtastung", "biegung", "plan_von", "freiraum") else float(v)) for k, v in (x.split("=") for x in a.p)}
+        p = {k: (v if k in ("lager_ort", "loeser", "verb_modus", "abtastung", "biegung", "plan_von", "freiraum", "wand_von") else float(v)) for k, v in (x.split("=") for x in a.p)}
         if a.von:                                     # Parameter + Spulen eines frueheren Punkts uebernehmen
             q = ROOT_PUNKT(a.von)
             p = json.loads((q / "param.json").read_text()) | p
