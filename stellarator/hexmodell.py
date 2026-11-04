@@ -68,6 +68,9 @@ def _teilung(grenzen: np.ndarray, zellen: list[int]) -> np.ndarray:
     return np.hstack(teile)
 
 
+SEITLICH_MIN = 0.8   # Verbinder nur, wo Verbindungslinie/Tangenten so gut quer liegen; 0.8 passt zu 0169, QI-Spulen sind verdrillter
+
+
 def baue_netz(spulen, br: float, ho: float, W: list[dict], verguss: float, r_lager: float,
               verbinder_je_paar: int = 2, verb_halb: int = 1, verb_lagen: int = 2, q: dict = QUER,
               plan: list | None = None) -> HexNetz:
@@ -107,7 +110,8 @@ def baue_netz(spulen, br: float, ho: float, W: list[dict], verguss: float, r_lag
         # (LAGER_ORT "aussen", Standard), kleinstem Radius ("innen": Flaeche zeigt zur Torusachse, nimmt die
         # Zentrierkraft auf wie ein Stuetzzylinder) oder beiden ("beide").
         Rk = np.hypot(s.punkte[:, 0], s.punkte[:, 1])
-        orte = {"aussen": [np.argmax(Rk)], "innen": [np.argmin(Rk)], "beide": [np.argmax(Rk), np.argmin(Rk)]}[LAGER_ORT]
+        orte = {"aussen": [np.argmax(Rk)], "innen": [np.argmin(Rk)], "beide": [np.argmax(Rk), np.argmin(Rk)],
+                "vier": [np.argmax(Rk), np.argmin(Rk), np.argmax(s.punkte[:, 2]), np.argmin(s.punkte[:, 2])]}[LAGER_ORT]
         ii, cc = np.meshgrid(np.arange(N), np.arange(A), indexing="ij")
         jj = (ii + 1) % N
         q4 = np.stack([idx[ii, A, cc], idx[jj, A, cc], idx[jj, A, cc + 1], idx[ii, A, cc + 1]], -1).reshape(-1, 4)
@@ -138,8 +142,8 @@ def baue_netz(spulen, br: float, ho: float, W: list[dict], verguss: float, r_lag
         N = len(Pk)
         # nur echte Seitennachbarn: Verbindungslinie quer (b) zu beiden Spulen, Bahnen parallel
         dv = (Pm[jn] - Pk) / dk[:, None]
-        seitlich = ((np.abs(np.sum(dv * bk, 1)) > 0.8) & (np.abs(np.sum(dv * bm[jn], 1)) > 0.8)
-                    & (np.abs(np.sum(tk * tm[jn], 1)) > 0.8))
+        seitlich = ((np.abs(np.sum(dv * bk, 1)) > SEITLICH_MIN) & (np.abs(np.sum(dv * bm[jn], 1)) > SEITLICH_MIN)
+                    & (np.abs(np.sum(tk * tm[jn], 1)) > SEITLICH_MIN))
         orte = []
         abst = lambda a, b, n_: np.abs(((a - b + n_ // 2) % n_) - n_ // 2)
         if VERB_MODUS == "platte":                       # jede (2*halb)-te seitliche Station

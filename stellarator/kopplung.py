@@ -169,6 +169,7 @@ def struktur_netz(p: dict, po: Path, geo: dict):
                   t_max=p["t_min_m"] + p["t_zusatz_m"], spiel=FEST["spiel_m"], wand_min=0.003)
     hm.LAGER_ORT = p.get("lager_ort", FEST["lager_ort"])
     hm.VERB_MODUS = p.get("verb_modus", "standard")
+    hm.SEITLICH_MIN = float(p.get("seitlich_min", 0.8))
     W = waende(spulen, br, ho, w)
     if p.get("biegung") == "innenkontur":                         # Wand innen in der Kurve kappen (F-180)
         from .gehaeuse_netz import biegegrenze

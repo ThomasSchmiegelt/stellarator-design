@@ -6,6 +6,31 @@
 ---
 
 
+### B-030 | QI-Tragwerk Proxima-Satz 2: Last statt Netz ist das Problem; 0169 dünn widerlegt (2026-11-04)
+- **Befund 1:** Die 1098 MPa von Satz 2 sind kein reines Netzartefakt. Nettokraft der sechs Spulentypen 31, 223, 641, 1170, 338, 112 MN
+  (Filament-Nachrechnung bestätigt 1187 MN; alle Spulen gleicher Strom ist nur ±3 % falsch). Die Last sitzt auf wenigen Spulen.
+- **Befund 2:** Querbedingung |d·b| > 0,8 war auf 0169 abgestimmt und ließ bei QI nur 204 von 468 Verbindern zu. Neue Optionen `seitlich_min`, `lager_ort=vier`.
+  Bester Stand mit 0169-Wänden: Lauf 31 579 MPa, u 93 mm. u = 306 mm war eine einzelne Spule (3), nicht das Gesamttragwerk.
+- **Befund 3:** Dicke Wände halten Stahl und Dehnung (Lauf 42: 325 MPa, 0,27 %, u 58 mm), nehmen aber der Abschirmung den Platz
+  (Freiraum 1,52 → 0,38 m; Package, Kernheizung, Fluenz fallen durch). Zielkonflikt Tragwerk/Abschirmung. Stufe 5 trennt die Wände.
+- **Befund 4 (Korrektur):** 0169 mit dünnen Wänden ist NICHT zulässig: 426 → 512 → 591 MPa bei Stationen ×1 / ×1,25 / ×1,5, nicht konvergiert.
+  Die Angabe aus B-028/F-181 („426 MPa, alle Grenzen, 3648 t“) gilt nicht. Netzeinfluss Satz 2 bei ×1,25: Lauf 16 +8 % (721 → 779), Lauf 41 −11 % (428 → 380). Lauf 71 +28 % (336 → 429, F-195). Unsicherheit also bis rund 30 %, Richtung offen; feineres Netz ändert auch die Verbinderzahl (355 → 377), ist somit keine reine Netzstudie.
+- **Befund 5:** Kraft-Scan (182 Sätze, stellarator/qi_kraft_scan.py): bezogene Höchstkraft 2,5–172, Satz 2 45,8 (Rang 124). Bezugsgröße nur als Rangfolge
+  gültig, Absolutwert von Satz 2 wird nicht getroffen. Datensatz enthält keine Kräfte, Proximas Sätze sind also nicht danach ausgesucht.
+- **Literatur:** Stellaris (Lion et al. 2025, offener Volltext KIT, im Original gelesen): 100–350 MN je Spule bei 9 T, 15 mm, 316LN Streckgrenze rund 1000 MPa,
+  Grenze 800 MPa (von Mises als Näherung), Membran 660 MPa; dicke Gehäuse, 0,7–1 m Platten zwischen den Spulen, innere Stützringe. Unsere Grenze 500 MPa ist strenger.
+- **Fehler der Agenten:** Haiku zählte mit Maximum statt Mittelwert des Feldfehlers (korrigiert); PIs Zusammenfassung verwechselte Nummern (gekennzeichnet);
+  Sonnet erreichte den Stellaris-Volltext nicht, PI schon. Sonnets und PIs übrige Zitate: pruefe.py 54/54 für PI, inhaltlich nicht gegengelesen.
+- **Fundstelle:** sim/qi_feld/ (lokal), docs/recherche/qi_tragwerk/, stellarator/qi_feld_auswertung.py, qi_kraft_scan.py, qi_guete.py. Protokoll F-186 bis F-191.
+- **Befund 6:** Wände einzeln (Stufe 5): Außenwand kostet massiv Freiraum (2,5 m → 0,09 m), Seitenwand fast nichts (0,7 m → 1,49 m). Vermutung, nicht geprüft: „außen“ = vom Spulenschwerpunkt weg zeigt bei gewundenen Spulen stellenweise zum Plasma.
+- **Befund 7:** Spulenauswahl ist der stärkste Hebel, nötig ist Kraft UND Abstand UND QI-Güte (docs/recherche/qi_tragwerk/kraft_scan_qi.csv):
+  D5WFs QI 0,034 (schlechtes Plasma); D56VPJ7 157 MN, 316 MPa, QI 0,0023, aber Spule-Plasma 1,21 m (Abschirmung fällt durch);
+  DRDP96E 393 MN, 749 MPa; DYUDcSV7 QI 0,0004, 695 MN, 615 MPa; DP9Xr4m 340 MN, 459 MPa, QI 0,0068.
+- **Befund 8:** DP9Xr4m (48 Spulen, nfp 4) Lauf 4 hält im groben Netz ALLE Grenzen (383 MPa, 0,23 %, Freiraum 1,27 m); im Netz ×1,25 Lauf 14: 441 MPa, 0,29 %, aber Freiraum 1,17 m, Fluenz 4,9e18 > 3e18. Kein belastbares Ergebnis. QI-Güte dreimal schlechter als Satz 2.
+- **Befund 9:** Der Freiraum wird nur an den Stationen gemessen; feineres Netz senkt ihn um rund 0,10 m. Grobe Package-Werte sind zu günstig. Stahl nicht konvergiert (Änderungen −30 % bis +28 %), Netz und Verbinderplan vermischt.
+- **Offen:** Freiraum stationsunabhängig messen; echte Netzstudie mit festem Verbinderplan; Lager sind starre Flecken, Stützringe/Platten wie Stellaris nicht modelliert; 500-MPa-Grenze (Stellaris 660/800) ist Nutzerentscheidung.
+- **Status:** ⚠️ noch kein QI-Satz, der alle Grenzen in beiden Netzen hält.
+
 ### B-029 | Variantenbericht-PDF unter 20 MB: Steckbriefe nur noch für die sieben zulässigen, Mosaik als JPG (2026-11-03)
 - **Befund:** Beide PDFs hatten 26,7 / 26,6 MB. Fast alles davon sind Bilder: 13 Steckbriefe je ~0,9–1,06 MB
   (Spannungsbild + Treppenschnitt als PNG), Katalog 188 JPG ~14 MB, Mosaik aller 3D-Modelle 5 MB (PNG 2400×3360).
@@ -28,7 +53,7 @@
   REGCOIL-Hüllflächenstrom (Proxima: REGCOIL → DESC).
 - **Proximas Spulen in unserer Kette:** Feldfehler nachgerechnet 8,17e-4 / 9,34e-4 = Proxima. In 8058 Sätzen keiner mit
   Feldfehler < 3e-3 UND Biegeradius ≥ 0,7 a. Satz 2 (36 Spulen, Biegeradius 1,0 m) mit dünnem Gehäuse: σ99 1358 MPa,
-  u 650 mm, Kraft je Spule 1187 MN (0169: 500 MN). Gegenprobe 0169 dünn: 426 MPa, alle Grenzen ok, 3648 t Stahl.
+  u 650 mm, Kraft je Spule 1187 MN (0169: 500 MN). Gegenprobe 0169 dünn: 426 MPa, alle Grenzen ok, 3648 t Stahl. **(Widerlegt, siehe B-030: Netzeffekt, 512–591 MPa im feineren Netz.)**
 - **Korrektur (F-176):** Das Hex-Netz scheitert/verfälscht bei engen Biegungen, weil es nur 52 Stationen je Spule hat
   (0,8–1,7 m Abstand, Querschnitt dreht bis 73° je Station, Bahn bis 0,8 m daneben) – nicht wegen der Wandtiefe
   (zuerst falsch addiert: beide Seiten statt nur der Seite innen in der Kurve). Abhilfe 1: Abtastung nach Krümmung

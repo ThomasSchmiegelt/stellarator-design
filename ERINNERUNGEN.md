@@ -674,3 +674,35 @@ sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht 
   committen und pushen (lokal 8 Commits voraus). Alter Film: sim/video_varianten/varianten_68s_alt.mp4.
 - 20:00 Variantenbericht-PDF unter 20 MB (B-029, F-185): Steckbriefe nur noch die 7 zulässigen, Mosaik als JPG →
   DE/EN je 16,9 MB. Alte Mosaik-PNGs liegen in sim/_temp_2026-11-03b/ (Sitzungsende fragen). Noch nicht committet.
+- KORREKTUR 2026-11-04: Die Zeilen 19:45/20:00 sind überholt. Nutzer hat den Film 84 s freigegeben („der Film ist super“,
+  lädt ihn am Wochenende selbst hoch). Film + Bericht sind committet und gepusht (b70c9a4), Repo = origin.
+  Versehentlich mitgepusht: bericht/variantenbericht/variantenbericht.zip (nicht von Claude erstellt, Zwischen-PDF 20,97 MB);
+  Antwort des Nutzers offen, ob aus dem Repo nehmen. Temp-Ordner sim/_temp_2026-11-03b/: Antwort ebenfalls offen.
+  Timer hermes-abschalten-2330 ist abgelaufen. Nutzer 2026-11-04: weiter am QI-Feld, Arbeit auf Claude/Sonnet/Haiku/PI verteilen.
+- 2026-11-04 QI-Tragwerk LÄUFT LOSGELÖST (überlebt Claude-Ende): `sim/qi_feld/kette.sh` (FE-Varianten, Stufe 2 wählt selbst den besten Stand)
+  und `docs/recherche/qi_tragwerk/lauf.sh` (PI-Literatur). Fertig: „FERTIG qi_feld“ und „FERTIG PI-Abschluss“ in sim/qi_feld/kette.log.
+  Ergebnisse: sim/qi_feld/tabelle.md, docs/recherche/qi_tragwerk/ergebnis.md, pi_zusammenfassung.md (ungeprüft). Neustart nach Abbruch: Skripte
+  einfach erneut mit setsid nohup starten, Fertiges wird übersprungen. Erwartung: F-186. Danach Pflicht für den Übernehmenden: Tabelle gegen F-186
+  vergleichen, BEFUNDE + Skill stellarator-constellaration + Ereignisprotokoll nachtragen. Neue Optionen: seitlich_min, lager_ort=vier.
+- 2026-11-04 09:48 Zwischenstand QI (F-187): bester Stand Lauf 16 721 MPa, Grenze 500 nicht erreicht; u 306 mm hängt an EINER schlecht angebundenen Spule (3).
+  „rc 0“ in kette.log ist falsch (Skriptfehler), maßgeblich ist ob ergebnis.json existiert bzw. journalctl (OOM bei 20 GB: 0169 dünn fein, Lauf 17).
+  `sim/qi_feld/kette3.sh` wartet auf kette.sh und rechnet Stufe 3 mit 25 GB; Ende „FERTIG Stufe 3“. Offen danach: Verbinder nach Lücken statt nach Abstand setzen,
+  durchgehende Struktur je Feldperiode testen (docs/recherche/qi_tragwerk/konzept_sonnet.md, Zitate ungeprüft), Kandidat DoUj68… (spulensaetze_scan.md).
+- 2026-11-04 09:57 QI-Kette fertig (automatisch): Tabelle sim/qi_feld/tabelle.md, Log sim/qi_feld/kette.log. Noch nicht von Claude geprüft.
+- 2026-11-04 10:05 QI-Stufe 3 fertig (automatisch), Tabelle sim/qi_feld/tabelle.md. Noch nicht von Claude geprüft.
+- 2026-11-04 10:06 sim/qi_feld/kette4.sh läuft losgelöst (Kombination, F-188), Ende „FERTIG Stufe 4“. 0169 dünn widerlegt: 426→512→591 MPa.
+- 2026-11-04 10:10 Kraft-Scan läuft losgelöst: stellarator/qi_kraft_scan.py -> docs/recherche/qi_tragwerk/kraft_scan.csv, Log sim/qi_feld/kraft_scan.log (Ende „FERTIG kraft_scan“, Neustart überspringt Fertiges). Erwartung F-189.
+- 2026-11-04 10:13 Stand: Lauf 42 hält Stahl+Dehnung (325 MPa, 0,27 %), aber Abschirmung fällt durch (F-190). sim/qi_feld/kette5.sh wartet auf Stufe 4, trennt die Wände, Ende „FERTIG Stufe 5“. Kraft-Scan neu gestartet (Fehler behoben).
+- 2026-11-04 10:12 QI-Stufe 4 fertig (automatisch), Tabelle sim/qi_feld/tabelle.md. Noch nicht von Claude geprüft.
+- 2026-11-04 10:16 Kraft-Scan fertig (F-191): docs/recherche/qi_tragwerk/kraft_scan.csv, bester Satz D5WFs… (2,5 gegen 45,8). sim/qi_feld/kette6.sh läuft losgelöst, Ende „FERTIG Stufe 6“.
+- 2026-11-04 10:22 QI-Stufe 5 fertig (automatisch), Tabelle sim/qi_feld/tabelle.md. Noch nicht von Claude geprüft.
+- 2026-11-04 10:24 QI-Stufe 6 fertig (automatisch): kraftarme Sätze, Tabelle sim/qi_feld/tabelle.md, QI-Güte sim/constellaration/qi/proxima_spulen_{d5w,b36}/qi_guete.json. Noch nicht von Claude geprüft. Erwartung F-191.
+- 2026-11-04 10:26 sim/qi_feld/kette7.sh läuft losgelöst, Ende „FERTIG Stufe 7“: Wandkombination Satz 2 + kraftarme Sätze mit guter QI-Güte D56VPJ7…, DRDP96E… (docs/recherche/qi_tragwerk/kraft_scan_qi.csv). Stufe 6 entfallen (Skriptfehler). Erwartung F-193.
+- 2026-11-04 10:49 QI-Stufe 7 fertig (automatisch): sim/qi_feld/tabelle.md, QI-Güte sim/constellaration/qi/proxima_spulen_{d56,drd}/qi_guete.json. Noch nicht von Claude geprüft. Erwartung F-193.
+- 2026-11-04 10:51 Stand (F-194): D56VPJ7… hält mit 0169-Wänden die ganze Mechanik (157 MN, 316 MPa, 0,17 %, 26 mm, QI wie Satz 2), Package fällt durch (Spule-Plasma 1,21 m, nötig ~1,75 m).
+  Satz 2 Lauf 71: nur Dehnung 0,32 %. sim/qi_feld/kette8.sh läuft losgelöst (DP9Xr4m…, DYUDcSV7…, Netzprüfungen), Ende „FERTIG Stufe 8“. Auswahltabelle: docs/recherche/qi_tragwerk/kraft_scan_qi.csv.
+- 2026-11-04 11:08 QI-Stufe 8 fertig (automatisch): sim/qi_feld/tabelle.md, QI-Güte sim/constellaration/qi/proxima_spulen_{dp9,dyu}/qi_guete.json. Noch nicht von Claude geprüft. Erwartung F-194.
+- 2026-11-04 11:09 Stand (F-195): DP9Xr4m… verletzt nur noch Fluenz (340 MN, 459 MPa, 0,27 %, Freiraum 1,14 m, QI 0,0068). Netzunsicherheit bis ~30 % (Lauf 71 336→429). sim/qi_feld/kette9.sh läuft losgelöst, Ende „FERTIG Stufe 9“.
+- 2026-11-04 11:22 QI-Stufe 9 fertig (automatisch): sim/qi_feld/tabelle.md, QI-Güte sim/constellaration/qi/proxima_spulen_{dp9,dyu}/qi_guete.json. Noch nicht von Claude geprüft. Erwartung F-195.
+- 2026-11-04 11:23 Stufe 9 fertig und von Claude geprüft (F-196, B-030): DP9 Lauf 4 grob alle Grenzen, Netz ×1,25 (Lauf 14) Fluenz verletzt. Nichts läuft mehr. Keine weitere Stufe ohne Nutzerentscheidung.
+  Nächste Schritte zur Wahl: Freiraum stationsunabhängig messen, Netzstudie mit festem Verbinderplan, Stützringe/Platten nach Stellaris modellieren. Offen vom Nutzer: variantenbericht.zip, Temp-Ordner, 500-MPa-Grenze. Änderungen nicht committet.
