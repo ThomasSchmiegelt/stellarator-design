@@ -68,6 +68,7 @@ def _teilung(grenzen: np.ndarray, zellen: list[int]) -> np.ndarray:
     return np.hstack(teile)
 
 
+PLAN_STRENG = True   # True: Verbinder aus dem Plan auch bei schlechter Jacobi-Determinante behalten (Surrogat); False: dann weglassen
 SEITLICH_MIN = 0.8   # Verbinder nur, wo Verbindungslinie/Tangenten so gut quer liegen; 0.8 passt zu 0169, QI-Spulen sind verdrillter
 
 
@@ -217,7 +218,7 @@ def baue_netz(spulen, br: float, ho: float, W: list[dict], verguss: float, r_lag
         inf["jacobi_min"] = float(jm.min()); inf["laenge_m"] = float(np.linalg.norm(
             Xall[e[:, 4:]].mean(1) - Xall[e[:, :4]].mean(1), axis=1).mean())
         inf["ok"] = bool(np.all(jm > 0))
-        if inf["ok"] or plan is not None:                              # mit Plan: feste Topologie
+        if inf["ok"] or (plan is not None and PLAN_STRENG):            # mit Plan: feste Topologie
             hx.append(e); mt.append(np.full(len(e), 4)); spl.append(np.full(len(e), -1))
         ok_verb.append(inf)
     netz = HexNetz(Xall, np.vstack(hx), np.concatenate(mt), np.concatenate(spl), np.vstack(lager), wp_kn, tang,
@@ -337,11 +338,15 @@ End
 Constants
 End
 """]
+    warm = any(m.get("eps_th") for m in material.values())   # Eigendehnung: Temperaturfeld 1, Referenz 0, alpha = eps_th
+    if warm:
+        S.append("Initial Condition 1\n  Temperature = 1.0\nEnd\n")
     for k, name in MAT_NAMEN.items():
         S.append(f'Body {k}\n  Name = "{name}"\n  Equation = 1\n  Material = {k}\n'
-                 + ("  Body Force = 1\n" if k == 1 else "") + "End\n")
+                 + ("  Body Force = 1\n" if k == 1 else "") + ("  Initial Condition = 1\n" if warm else "") + "End\n")
+        th = (f'  Heat Expansion Coefficient = {material[k].get("eps_th", 0.0):.9e}\n  Reference Temperature = 0.0\n' if warm else "")
         S.append(f'Material {k}\n  Name = "{name}"\n  Youngs Modulus = {material[k]["E_Pa"]:.6e}\n'
-                 f'  Poisson Ratio = {material[k]["nu"]}\nEnd\n')
+                 f'  Poisson Ratio = {material[k]["nu"]}\n{th}End\n')
     S.append("Body Force 1\n" + "".join(
         f'  Stress Bodyforce {i} = Variable Time\n    Real Procedure "{so}" "kraft_{c}"\n' for i, c in ((1, "x"), (2, "y"), (3, "z")))
         + "End\n")
@@ -352,7 +357,7 @@ Solver 1
   Equation = "Stress"
   Procedure = "StressSolve" "StressSolver"
   Variable = -dofs 3 "Displacement"
-  Calculate Stresses = Logical False
+{'  Exported Variable 1 = -dofs 1 "Temperature"' + chr(10) if warm else ""}  Calculate Stresses = Logical False
   Displace Mesh = Logical False
 {ls}End
 Solver 2
@@ -395,6 +400,7 @@ def spannungen(netz: HexNetz, U: np.ndarray, material: dict) -> np.ndarray:
     J = np.einsum("eki,kj->eij", netz.X[netz.hexa], d)
     G = np.einsum("eki,kj->eij", U[netz.hexa], d) @ np.linalg.inv(J)
     eps = 0.5 * (G + G.transpose(0, 2, 1))
+    eps = eps - np.array([material[k].get("eps_th", 0.0) for k in range(1, 5)])[netz.mat - 1][:, None, None] * np.eye(3)
     E = np.array([material[k]["E_Pa"] for k in range(1, 5)])[netz.mat - 1]
     nu = np.array([material[k]["nu"] for k in range(1, 5)])[netz.mat - 1]
     lam, mu = E * nu / ((1 + nu) * (1 - 2 * nu)), E / (2 * (1 + nu))

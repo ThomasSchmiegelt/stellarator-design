@@ -13,7 +13,7 @@
   Bester Stand mit 0169-Wänden: Lauf 31 579 MPa, u 93 mm. u = 306 mm war eine einzelne Spule (3), nicht das Gesamttragwerk.
 - **Befund 3:** Dicke Wände halten Stahl und Dehnung (Lauf 42: 325 MPa, 0,27 %, u 58 mm), nehmen aber der Abschirmung den Platz
   (Freiraum 1,52 → 0,38 m; Package, Kernheizung, Fluenz fallen durch). Zielkonflikt Tragwerk/Abschirmung. Stufe 5 trennt die Wände.
-- **Befund 4 (Korrektur):** 0169 mit dünnen Wänden ist NICHT zulässig: 426 → 512 → 591 MPa bei Stationen ×1 / ×1,25 / ×1,5, nicht konvergiert.
+- **Befund 4 (ZURÜCKGENOMMEN, F-199):** Mit festem Verbinderplan und mitskalierter Verbinderbreite 0169 dünn 426 → 448 MPa, alle Grenzen eingehalten (×2 nicht gerechnet). Ursprünglicher, falscher Text: 0169 mit dünnen Wänden ist NICHT zulässig: 426 → 512 → 591 MPa bei Stationen ×1 / ×1,25 / ×1,5, nicht konvergiert.
   Die Angabe aus B-028/F-181 („426 MPa, alle Grenzen, 3648 t“) gilt nicht. Netzeinfluss Satz 2 bei ×1,25: Lauf 16 +8 % (721 → 779), Lauf 41 −11 % (428 → 380). Lauf 71 +28 % (336 → 429, F-195). Unsicherheit also bis rund 30 %, Richtung offen; feineres Netz ändert auch die Verbinderzahl (355 → 377), ist somit keine reine Netzstudie.
 - **Befund 5:** Kraft-Scan (182 Sätze, stellarator/qi_kraft_scan.py): bezogene Höchstkraft 2,5–172, Satz 2 45,8 (Rang 124). Bezugsgröße nur als Rangfolge
   gültig, Absolutwert von Satz 2 wird nicht getroffen. Datensatz enthält keine Kräfte, Proximas Sätze sind also nicht danach ausgesucht.
@@ -22,13 +22,16 @@
 - **Fehler der Agenten:** Haiku zählte mit Maximum statt Mittelwert des Feldfehlers (korrigiert); PIs Zusammenfassung verwechselte Nummern (gekennzeichnet);
   Sonnet erreichte den Stellaris-Volltext nicht, PI schon. Sonnets und PIs übrige Zitate: pruefe.py 54/54 für PI, inhaltlich nicht gegengelesen.
 - **Fundstelle:** sim/qi_feld/ (lokal), docs/recherche/qi_tragwerk/, stellarator/qi_feld_auswertung.py, qi_kraft_scan.py, qi_guete.py. Protokoll F-186 bis F-191.
-- **Befund 6:** Wände einzeln (Stufe 5): Außenwand kostet massiv Freiraum (2,5 m → 0,09 m), Seitenwand fast nichts (0,7 m → 1,49 m). Vermutung, nicht geprüft: „außen“ = vom Spulenschwerpunkt weg zeigt bei gewundenen Spulen stellenweise zum Plasma.
+- **Befund 6 (KORRIGIERT, F-197/F-199):** Alte Freiraummessung nahm nur die Mitte der Innenwand an den Stationen. Neu `freiraum=huelle` (alle vier Seiten, zwischen den Stationen, netzstabil): 0169 normal 1,24 m (Fluenz 3,8e18 > 3e18!), 0169 dünn 1,28 m, DP9 Lauf 4 1,14 m, D56 0,58 m, Satz 2 Lauf 71 0,28 m statt 1,27 m. Alle Freiraumzahlen der Stufen 5–9 und des Variantenberichts sind mit der alten Messung zu günstig. „Seitenwand kostet nichts“ war Artefakt.
 - **Befund 7:** Spulenauswahl ist der stärkste Hebel, nötig ist Kraft UND Abstand UND QI-Güte (docs/recherche/qi_tragwerk/kraft_scan_qi.csv):
   D5WFs QI 0,034 (schlechtes Plasma); D56VPJ7 157 MN, 316 MPa, QI 0,0023, aber Spule-Plasma 1,21 m (Abschirmung fällt durch);
   DRDP96E 393 MN, 749 MPa; DYUDcSV7 QI 0,0004, 695 MN, 615 MPa; DP9Xr4m 340 MN, 459 MPa, QI 0,0068.
+- **Hinweis zu Befund 8/9:** Mit Hüllenmessung hält DP9 Lauf 4 die Fluenz auch im groben Netz NICHT. Netzänderungen des Gesamtnetzes sind durch Verbinderverlust und -breite vermischt; Spulenspannung über stellarator/submodell.py prüfen.
 - **Befund 8:** DP9Xr4m (48 Spulen, nfp 4) Lauf 4 hält im groben Netz ALLE Grenzen (383 MPa, 0,23 %, Freiraum 1,27 m); im Netz ×1,25 Lauf 14: 441 MPa, 0,29 %, aber Freiraum 1,17 m, Fluenz 4,9e18 > 3e18. Kein belastbares Ergebnis. QI-Güte dreimal schlechter als Satz 2.
 - **Befund 9:** Der Freiraum wird nur an den Stationen gemessen; feineres Netz senkt ihn um rund 0,10 m. Grobe Package-Werte sind zu günstig. Stahl nicht konvergiert (Änderungen −30 % bis +28 %), Netz und Verbinderplan vermischt.
-- **Offen:** Freiraum stationsunabhängig messen; echte Netzstudie mit festem Verbinderplan; Lager sind starre Flecken, Stützringe/Platten wie Stellaris nicht modelliert; 500-MPa-Grenze (Stellaris 660/800) ist Nutzerentscheidung.
+- **Befund 10 (Submodell, stellarator/submodell.py):** Einzelne Spule, Verschiebungen aus Gesamtmodell. Kontrolle F = 1 exakt. Heißeste Spule, p99 ohne 0,5-m-Randzone, fein: 0169 normal 439 MPa (grob 420), 0169 dünn 495 (509), D56 575 (398), DP9 673 und noch steigend (520). Gesamtnetz reicht für 0169, unterschätzt QI-Biegungen um 29–44 %. Maßstabsfrage offen: p99 aller Spulen gegen p99 heißeste Spule.
+- **Hinweis:** Die 500 MPa sind eine unbelegte Annahme (Nutzer, F-201). „Hält/fällt durch“ beim Stahl heißt nur: Vergleich mit dieser Annahme.
+- **Offen:** Maßstab der 500-MPa-Grenze; Abkühlspannungen (eingebaut, Werte fehlen); Lager sind starre Flecken, Stützringe/Platten wie Stellaris nicht modelliert; 500-MPa-Grenze (Stellaris 660/800) ist Nutzerentscheidung.
 - **Status:** ⚠️ noch kein QI-Satz, der alle Grenzen in beiden Netzen hält.
 
 ### B-029 | Variantenbericht-PDF unter 20 MB: Steckbriefe nur noch für die sieben zulässigen, Mosaik als JPG (2026-11-03)

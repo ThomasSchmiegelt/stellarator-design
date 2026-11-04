@@ -176,8 +176,15 @@ def struktur_netz(p: dict, po: Path, geo: dict):
         W, binfo = biegegrenze(spulen, W, br, ho, float(p.get("biege_grenze", 0.8)))
         (po / "biegegrenze.json").write_text(json.dumps(binfo))
     verlauf = entflechten(spulen, W, br, ho, max(br, ho) / 3, w.spiel, w.wand_min)
+    plan = None
+    if p.get("plan_von"):                                         # Netzstudie: dieselben Verbinder am selben Ort (F-197)
+        hm.PLAN_STRENG = False
+        plan = json.loads((ROOT_PUNKT(p["plan_von"]) / "verbinder_plan.json").read_text())
+        for v in plan:
+            v["i0"] = int(np.linalg.norm(spulen[v["k"]].punkte - np.asarray(v["xk"]), axis=1).argmin())
+            v["j0"] = int(np.linalg.norm(spulen[v["m"]].punkte - np.asarray(v["xm"]), axis=1).argmin())
     netz = hm.baue_netz(spulen, br, ho, W, FEST["verguss_m"], p["r_lager_m"], int(p.get("verbinder_je_paar", FEST["verbinder_je_paar"])),
-                        int(p.get("verbinder_halb", FEST["verbinder_halb"])), plan=None)
+                        int(p.get("verbinder_halb", FEST["verbinder_halb"])), plan=plan)
     runde = 0
     while netz.info["elemente_negativ"] and p.get("biegung") == "innenkontur" and runde < 6:
         # Reparaturschleife (F-182): an den Stationen umgestuelpter Elemente Waende weich um 20 % duennen, neu bauen
@@ -193,11 +200,26 @@ def struktur_netz(p: dict, po: Path, geo: dict):
                     for q in ("innen", "aussen", "links", "rechts"):
                         W[kk][q][(i0 + d_) % Nk] *= f_
         netz = hm.baue_netz(spulen, br, ho, W, FEST["verguss_m"], p["r_lager_m"], int(p.get("verbinder_je_paar", FEST["verbinder_je_paar"])),
-                            int(p.get("verbinder_halb", FEST["verbinder_halb"])), plan=None)
+                            int(p.get("verbinder_halb", FEST["verbinder_halb"])), plan=plan)
         (po / "reparatur.json").write_text(json.dumps({"runden": runde, "negativ": netz.info["elemente_negativ"]}))
     if netz.info["elemente_negativ"]:
         raise RuntimeError(f"{netz.info['elemente_negativ']} Elemente mit negativer Jacobi-Determinante")
+    (po / "verbinder_plan.json").write_text(json.dumps([
+        v | {"xk": spulen[v["k"]].punkte[v["i0"]].tolist(), "xm": spulen[v["m"]].punkte[v["j0"]].tolist()}
+        for v in netz.info["verbinder"] if v["ok"]]))
     return netz, spulen, br, ho, wp, I, stationen, verlauf, W
+
+
+def werkstoffe(p: dict) -> dict:
+    """Werkstoffe je Bereich. Abkuehlen (F-200): schrumpf_* = integrale Kontraktion 293 K -> Betrieb (positiv, z. B. 0.003).
+    Die Stahlstruktur schrumpft frei mit (Stuetzen folgen), Spannung entsteht nur aus dem Unterschied zum Stahl:
+    Eigendehnung eps_th = -(schrumpf_i - schrumpf_stahl). Stahl und Verbinder bleiben bei null, starre Lager ohne Artefakt."""
+    from .struktur import WP
+    st = float(p.get("schrumpf_stahl", 0.0))
+    th = lambda k: -(float(p[k]) - st) if k in p else 0.0
+    return {1: {"E_Pa": WP["E_Pa"], "nu": WP["nu"], "eps_th": th("schrumpf_wp")},
+            2: {"E_Pa": FEST["E_verguss_GPa"] * 1e9, "nu": 0.3, "eps_th": th("schrumpf_verguss")},
+            3: {"E_Pa": 200e9, "nu": 0.3}, 4: {"E_Pa": p["E_verbinder_GPa"] * 1e9, "nu": 0.3}}
 
 
 def schritt_struktur(p: dict, po: Path, geo: dict, timeout_s: float = 2400) -> tuple[dict, list, list]:
@@ -209,8 +231,7 @@ def schritt_struktur(p: dict, po: Path, geo: dict, timeout_s: float = 2400) -> t
     f, F = hm.lorentzdichte(netz, spulen, br, ho)
     fall = po / "elmer"
     shutil.rmtree(fall, ignore_errors=True); fall.mkdir()
-    mat = {1: {"E_Pa": WP["E_Pa"], "nu": WP["nu"]}, 2: {"E_Pa": FEST["E_verguss_GPa"] * 1e9, "nu": 0.3},
-           3: {"E_Pa": 200e9, "nu": 0.3}, 4: {"E_Pa": p["E_verbinder_GPa"] * 1e9, "nu": 0.3}}
+    mat = werkstoffe(p)
     hm.schreibe_fall(fall, netz, f, mat, "iterativ" if p.get("loeser") == "iterativ" else "mumps")
     t = hm.rechne(fall, timeout_s)
     U = hm.verschiebung(fall, netz)
@@ -228,7 +249,28 @@ def schritt_struktur(p: dict, po: Path, geo: dict, timeout_s: float = 2400) -> t
 
 
 # ---------------------------------------------------------------- 4. Package + 5. Temperatur
-def schritt_package(spulen, W, geo: dict, s2: dict, WP_M: float = WP_M) -> dict:
+def huelle_abstand(spulen, W, wp: float, baum, teile: int = 4, je_seite: int = 6) -> tuple[np.ndarray, dict]:
+    """Abstand Plasma - ganze Gehaeuseaussenflaeche (alle vier Seiten mit Ecken), auch zwischen den Stationen (F-197).
+    Die alte Messung nimmt nur die Mitte der Innenwand an den Stationen: Seitenwaende und Ecken fehlen dort."""
+    from . import spulen as sp
+    u = np.linspace(0, 1, je_seite); f = np.arange(teile) / teile
+    alle, seiten = [], {q: np.inf for q in ("innen", "aussen", "links", "rechts")}
+    for s, w in zip(spulen, W):
+        t, n, b = sp.rahmen(s)
+        n0, n1 = -(wp / 2 + w["innen"]), wp / 2 + w["aussen"]
+        b0, b1 = -(wp / 2 + w["links"]), wp / 2 + w["rechts"]
+        lin = lambda a_, c_: a_[:, None] + (c_ - a_)[:, None] * u[None]
+        voll = lambda x: np.broadcast_to(x[:, None], (len(x), je_seite))
+        for q, (un, ub) in {"innen": (voll(n0), lin(b0, b1)), "aussen": (voll(n1), lin(b0, b1)),
+                            "links": (lin(n0, n1), voll(b0)), "rechts": (lin(n0, n1), voll(b1))}.items():
+            X = s.punkte[:, None] + un[..., None] * n[:, None] + ub[..., None] * b[:, None]
+            X = (X[:, None] * (1 - f)[None, :, None, None] + np.roll(X, -1, 0)[:, None] * f[None, :, None, None]).reshape(-1, 3)
+            d, _ = baum.query(X)
+            seiten[q] = min(seiten[q], float(d.min())); alle.append(d)
+    return np.concatenate(alle), seiten
+
+
+def schritt_package(spulen, W, geo: dict, s2: dict, WP_M: float = WP_M, huelle: bool = False) -> dict:
     from scipy.spatial import cKDTree
     from . import spulen as sp
     rand = np.load(geo["_ordner"] / "plasma_rand.npy")
@@ -240,7 +282,11 @@ def schritt_package(spulen, W, geo: dict, s2: dict, WP_M: float = WP_M) -> dict:
         dist, _ = baum.query(innen)
         frei.append(dist)
     frei = np.concatenate(frei)
-    g_min = float(frei.min())
+    g_alt = float(frei.min())
+    d_h, seiten = huelle_abstand(spulen, W, WP_M, baum)
+    g_min = float(d_h.min()) if huelle else g_alt
+    if huelle:
+        frei = d_h
     abschirm = max(0.0, g_min - A["spalte_m"])                            # alles ausser Spalten schirmt ab
     gamma_mittel = 0.8 * P_FUS_MW / geo["plasma_flaeche_m2"]              # MW/m2 Neutronenwandlast
     gamma_spitze = A["spitzenfaktor_wand"] * gamma_mittel
@@ -263,7 +309,8 @@ def schritt_package(spulen, W, geo: dict, s2: dict, WP_M: float = WP_M) -> dict:
         return A["f_sc"] * Kc / A["t_band_m"]
     ausl = J_op / Je_c(B_peak, A["T_betrieb_K"])
     T_cs = 4.2 + 20.0 * np.log(A["f_sc"] * 2638e2 / A["t_band_m"] / (1 + B_peak / 11.44) ** 1.188 / J_op)
-    return {"freiraum_min_m": g_min, "freiraum_p05_m": float(np.quantile(frei, 0.05)),
+    return {"freiraum_alt_m": g_alt, "freiraum_huelle_m": float(d_h.min()), "freiraum_seiten_m": seiten,
+            "freiraum_min_m": g_min, "freiraum_p05_m": float(np.quantile(frei, 0.05)),
             "freiraum_median_m": float(np.median(frei)), "abschirmung_m": abschirm,
             "package_passt": bool(abschirm >= A["package_min_m"]),
             "wandlast_mittel_MW_m2": gamma_mittel, "wandlast_spitze_MW_m2": gamma_spitze,
@@ -302,7 +349,7 @@ def rechne_punkt(studie: str, nr: int, p: dict) -> dict:
     geo = json.loads((po / "geometrie.json").read_text()); z["geometrie_s"] = time.time() - t0 - z["spulen_s"]
     t1 = time.time()
     k, spulen, W = schritt_struktur(p, po, geo); z["struktur_s"] = time.time() - t1
-    pk = schritt_package(spulen, W, geo | {"_ordner": po}, s2, k["wickelpaket_m"])
+    pk = schritt_package(spulen, W, geo | {"_ordner": po}, s2, k["wickelpaket_m"], huelle=p.get("freiraum") == "huelle")
     e = {"param": p, "spulen": {kk: s2[kk] for kk in s2 if kk.startswith(("Bn", "kraft_je", "B_mittel", "laenge", "abstand"))},
          "geometrie": geo, "struktur": k, "package": pk, "zeiten": z | {"gesamt_s": time.time() - t0},
          "annahmen": ANNAHMEN}
@@ -395,7 +442,7 @@ def main(argv=None):
     ap.add_argument("--von", default="", help="studie/NNNN: Spulen und Parameter uebernehmen (Netzstudie)")
     a = ap.parse_args(argv)
     if a.befehl == "punkt":
-        p = {k: (v if k in ("lager_ort", "loeser", "verb_modus", "abtastung", "biegung") else float(v)) for k, v in (x.split("=") for x in a.p)}
+        p = {k: (v if k in ("lager_ort", "loeser", "verb_modus", "abtastung", "biegung", "plan_von", "freiraum") else float(v)) for k, v in (x.split("=") for x in a.p)}
         if a.von:                                     # Parameter + Spulen eines frueheren Punkts uebernehmen
             q = ROOT_PUNKT(a.von)
             p = json.loads((q / "param.json").read_text()) | p

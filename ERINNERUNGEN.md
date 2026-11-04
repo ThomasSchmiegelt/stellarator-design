@@ -706,3 +706,13 @@ sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht 
 - 2026-11-04 11:22 QI-Stufe 9 fertig (automatisch): sim/qi_feld/tabelle.md, QI-Güte sim/constellaration/qi/proxima_spulen_{dp9,dyu}/qi_guete.json. Noch nicht von Claude geprüft. Erwartung F-195.
 - 2026-11-04 11:23 Stufe 9 fertig und von Claude geprüft (F-196, B-030): DP9 Lauf 4 grob alle Grenzen, Netz ×1,25 (Lauf 14) Fluenz verletzt. Nichts läuft mehr. Keine weitere Stufe ohne Nutzerentscheidung.
   Nächste Schritte zur Wahl: Freiraum stationsunabhängig messen, Netzstudie mit festem Verbinderplan, Stützringe/Platten nach Stellaris modellieren. Offen vom Nutzer: variantenbericht.zip, Temp-Ordner, 500-MPa-Grenze. Änderungen nicht committet.
+- 2026-11-04 12:21 Nutzer: Vorschlag ja, 500 MPa bleiben (Ideen sammeln: docs/recherche/qi_tragwerk/ideen_stahlgrenze.md, Sonnet), Commit ja. Zip aus Repo-Stand raus und gepusht, Commit 3d98f31 + spätere NUR lokal (Push nicht beauftragt).
+  ACHTUNG (F-197): Freiraum in Stufen 5–9 misst nur die Mitte der Innenwand; Verbinderbreite hängt an den Stationen, also sind alle bisherigen Netzprüfungen vermischt, auch „0169 dünn widerlegt“.
+  sim/qi_feld/kette10.sh läuft losgelöst (Hüllenmessung, fester Plan), Ende „FERTIG Stufe 10“, Erwartung F-197.
+- 2026-11-04 12:39 Submodell (Nutzeridee, F-198): stellarator/submodell.py, Kontrolle F=1 trifft Gesamtmodell (392,85 gegen 392,86 MPa). sim/qi_feld/kette11.sh wartet auf Stufe 10 und rechnet die Verfeinerungsreihe, Ende „FERTIG Stufe 11“, Tabelle sim/submodell/tabelle.md.
+- 2026-11-04 12:42 QI-Stufe 10 fertig (automatisch): sim/qi_feld/tabelle.md. Noch nicht von Claude geprüft. Erwartung F-197.
+- 2026-11-04 12:43 Stufe 10 geprüft (F-199): 0169 normal verfehlt mit Hüllenmessung die Fluenz (3,8e18), 0169 dünn hält (448 MPa, 1,28 m). „0169 dünn widerlegt“ zurückgenommen. Variantenbericht (öffentlich) nutzt die alte Messung: Nutzer entscheidet. Stufe 11 läuft.
+- 2026-11-04 12:57 Stufe 11 fertig (automatisch): sim/submodell/tabelle.md. Noch nicht von Claude geprüft. Erwartung F-198.
+- 2026-11-04 12:58 Stufe 11 geprüft (F-200, Befund 10). Tabelle sim/submodell/tabelle.md. Temperatur: `schrumpf_stahl/_wp/_verguss` in kopplung.werkstoffe, wirkt im Gesamt- und Submodell; Werte fehlen, PI läuft: docs/recherche/schrumpf/lauf.sh, Ergebnis ergebnis.md (gegenlesen!). Danach: Erwartung ins Protokoll, Gesamt + Submodell für 0169 und DP9 rechnen.
+- 2026-11-04 13:00 Nutzer: 500 MPa nur angenommen, nicht belegt (F-201). Nicht ändern, aber als Annahme behandeln.
+- 2026-11-04 13:10 sim/qi_feld/kette12.sh läuft losgelöst (Abkühlen, Spanne A/B/C als Annahme, F-202), Ende „FERTIG Stufe 12“.

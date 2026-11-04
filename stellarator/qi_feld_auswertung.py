@@ -41,12 +41,13 @@ def zeile(st, nr, stufe, name, extra):
     rep = json.loads(r.read_text())["runden"] if r.exists() else 0
     return (f"| {st} | {nr} | {name} | {s['verbinder_ok']}/{s['verbinder_kandidaten']} | {s['u_max_mm']:.0f} | {p90:.0f} | "
             f"{s['stahl']['vm_p99_MPa']:.0f} | {je} | {s['stahl']['vm_max_MPa']:.0f} | {100 * b['dehnung_wp']:.2f} | "
-            f"{s['stahl']['masse_t']:.0f} | {rep} | {'ja' if b['alle_ok'] else 'nein'} |")
+            f"{s['stahl']['masse_t']:.0f} | {rep} | {e['package'].get('freiraum_alt_m', e['package']['freiraum_min_m']):.2f} | "
+            f"{e['package'].get('freiraum_huelle_m', float('nan')):.2f} | {'ja' if b['alle_ok'] else 'nein'} |")
 
 
 def tabelle():
     k = ("| Studie | Nr | Variante | Verbinder ok/Plätze | u max mm | Stahl p90 MPa | Stahl p99 MPa | p99 je Spule MPa | "
-         "Stahl max MPa | Dehnung WP % | Stahl t | Reparaturrunden | alle Grenzen |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n")
+         "Stahl max MPa | Dehnung WP % | Stahl t | Reparaturrunden | Freiraum alt m | Freiraum Hülle m | alle Grenzen |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n")
     t = "# QI-Tragwerk: Varianten (automatisch aus den Rechendaten)\n\nGrenzen: Stahl p99 500 MPa, Dehnung Wickelpaket 0,3 %.\n\n" + k
     t += "\n".join(zeile(*v[:5]) for v in varianten()) + "\n"
     (ORD / "tabelle.md").write_text(t)
