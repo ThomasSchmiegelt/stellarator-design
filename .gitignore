@@ -46,3 +46,4 @@ bericht/**/*.fls
 bericht/**/*.out
 bericht/**/*.toc
 /.venv-constellaration/
+bericht/variantenbericht/*.zip
