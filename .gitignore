@@ -47,3 +47,4 @@ bericht/**/*.out
 bericht/**/*.toc
 /.venv-constellaration/
 bericht/variantenbericht/*.zip
+!/start_berechnungsmatrix.sh
