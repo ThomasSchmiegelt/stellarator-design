@@ -1,5 +1,7 @@
 # Paarvergleich: Wege zu einem funktionierenden Plasma (2026-11-04)
 
+**Berichtigung 2026-11-05 (B-051):** Die hier genannte QI-Grenze 0,001 und die Schwellen stammen aus meinem Gedaechtnis und sind falsch. Nach dem installierten Paket (problems.py) gilt: Aufgabe 3 QI <= 0,00032 (zulaessig 0,00034), Aufgabe 2 QI <= 0,0001 (zulaessig 0,00011); iota als Betrag; Elongation/Spiegel nur Aufgabe 2, Vakuummulde/Flusskompression nur Aufgabe 3. Gemessen mit echten Schwellen: ohne QI 166 (Aufgabe 3) bzw. 786 (Aufgabe 2) Formen, mit QI 0. Die Reihenfolge der Wege bleibt, der Abstand zum Ziel ist groesser (bestes QI 0,00178, Faktor 5 ueber Aufgabe 3).
+
 "Funktionierend" heisst hier: offizielle Wertung (ConStellaration) groesser 0, mit VMEC++ bestaetigt.
 
 ## Messung (Datensatz, 182 222 Zeilen, ohne VMEC)
