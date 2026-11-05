@@ -51,7 +51,7 @@ CPU_GRENZE = 3600                    # s Prozess-CPU-Zeit je VMEC++-Rechnung (Pa
 CPU_GRENZE_DS = 5400                 # Datensatzprobe: VMEC++ + Boozer + 7 Flaechen
 BASEN = ["do3", "k3", "dje", "d8z"]
 NAMEN = {"do3": "Do3Qy", "k3": "Kandidat 3 halb", "dje": "DjLe3eL6", "d8z": "D8ZNt2"}
-N_DS = 60
+N_DS = 400
 K_NACHBARN = 4000
 ZIELE = {"spiegel": "edge_magnetic_mirror_ratio", "elongation": "max_elongation", "dreieck": "average_triangularity",
          "iota": "edge_rotational_transform_over_n_field_periods", "log10qi": "qi"}
@@ -72,7 +72,7 @@ def formplan():
     for fi, b in enumerate(BASEN):
         v = [("vernunft", "basis", {}, 1)]
         for j in range(9):
-            for s in (0.2, -0.2):
+            for s in (0.2, -0.2, 0.1, -0.1, 0.3, -0.3):
                 v.append(("vernunft", "koef", {"j": j, "schritt": s}, 1))
         v += [("vernunft", "aspekt", {"f": 0.95}, 1), ("vernunft", "aspekt", {"f": 1.05}, 1)]
         v += [("vernunft", "richtung", {"ziel": "elongation", "vz": -1, "schritt": 0.2}, 1),
@@ -82,10 +82,11 @@ def formplan():
               ("vernunft", "richtung", {"ziel": "spiegel", "vz": -1, "schritt": 0.3}, 1),
               ("vernunft", "richtung_orth", {"ziel": "spiegel", "vz": -1, "schritt": 0.2}, 1),
               ("vernunft", "richtung", {"ziel": "iota", "vz": 1, "schritt": 0.2}, 1)]
-        w = [("wild", "gauss", {"sigma": 0.5}, 2)] * 2 + [("wild", "gauss", {"sigma": 1.0}, 2)] * 3 + \
-            [("wild", "gauss", {"sigma": 2.0}, 2)] * 2 + [("wild", "vorzeichen", {}, 2)] * 2 + \
-            [("wild", "kreuz", {"partner": k}, 2) for k in range(3)] + [("wild", "misch", {"partner": 0, "t": 0.5}, 2)] + \
-            [("wild", "logskala", {}, 2)] * 3
+        w = [("wild", "gauss", {"sigma": 0.5}, 2)] * 6 + [("wild", "gauss", {"sigma": 1.0}, 2)] * 8 + \
+            [("wild", "gauss", {"sigma": 2.0}, 2)] * 5 + [("wild", "vorzeichen", {}, 2)] * 5 + \
+            [("wild", "kreuz", {"partner": k}, 2) for k in range(3)] + \
+            [("wild", "misch", {"partner": 0, "t": tt}, 2) for tt in (0.25, 0.5, 0.75)] + \
+            [("wild", "logskala", {}, 2)] * 10
         lin = [("vernunft", "koef", {"j": 0, "schritt": s}, 3) for s in (0.1, -0.1, 0.3, -0.3)]
         for nr, (modus, art, par, prio) in enumerate(v + w + lin):
             seed = SEED0 + 100 * fi + nr
@@ -115,11 +116,11 @@ def stromplan():
             ("grad_auf_voll", 1 + 0.05 * g, "mit der Ableitung (Verschlechterung, Linearitaet)")]
     for k, (art, f, gr) in enumerate(fest):
         dazu("vernunft", art, f, gr, SEED0 + 4000 + k)
-    n_lhs = 40 - len(fest); rng = np.random.default_rng(SEED0 + 4100)
+    n_lhs = 150 - len(fest); rng = np.random.default_rng(SEED0 + 4100)
     L = np.stack([(rng.permutation(n_lhs) + rng.uniform(size=n_lhs)) / n_lhs for _ in range(5)], 1)
     for i in range(n_lhs):
         dazu("vernunft", "lhs", 0.95 + 0.10 * L[i], "Latin Hypercube im geprueften Bereich +-5 %", SEED0 + 4100)
-    for art, n in (("u20", 70), ("u50", 70), ("vz", 60)):
+    for art, n in (("u20", 250), ("u50", 250), ("vz", 200)):
         for _ in range(n):
             seed = SEED0 + 5000 + len(P); r = np.random.default_rng(seed)
             if art == "u20":
