@@ -751,3 +751,6 @@ s. w7x-eckdaten.md).
 
 ---
 Neue Einträge: oben. Status-Legende wie oben.
+## B-057 Gegenprüfung der Strom-Ausreißer mit freier Grenze: keine konvergiert (2026-11-06)
+
+Erwartung F-254 (vorher): 008 und 037 frei bei 0,00040–0,00043, die ±50-%-Fälle über 0,0005 oder nicht konvergent. Ergebnis (VMEC++ free-boundary, Standardeinstellungen, `sim/qi_spulen/faelle/i_p008_b056, i_p037, i_w588_u50, i_w470_u50`): **alle vier nicht konvergiert** ("did not converge"; bei den ±50-%-Fällen JACOBIAN_75_TIMES_BAD). Erwartung also nur halb getroffen: für die ±50-%-Fälle ja, für die beiden ±5-%-Proben nein (ich hatte Konvergenz erwartet, weil i_opt am Rand von ±5 % konvergierte). Folge: Der Wert 0,000392 (B-056) und die Wegs-ii-Werte 0,00019 sind **nicht bestätigt**; belegt bleibt nur i_opt frei 0,000415. Nicht geprüft: ob andere Solver-Einstellungen (ftol, niter, nvacskip) Konvergenz bringen. Nutzerhinweis: Fehlerort durch fortgesetztes Halbieren eingrenzen (Strecke Basis → Probe 008, Fälle i_p008_t0.25/0.5/0.75, Lauf angestoßen 21:20).
