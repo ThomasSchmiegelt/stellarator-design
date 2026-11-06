@@ -458,7 +458,7 @@ def auswertung():
                   "modus": r["modus"], "art": r["art"], "param": json.dumps(r.get("param", "")), "seed": r.get("seed"),
                   "ausserhalb_geprueft": r.get("ausserhalb_geprueft", ""), "abstand_sd": r.get("abstand_sd", ""),
                   "rechenbar": int(bool(r.get("konvergiert", r.get("ok")))), "cpu_s": r.get("cpu_s"), "sekunden": r.get("sekunden"),
-                  "fehler": (r.get("fehler") or "").replace("\n", " ")[:200], "qi_datensatz": r.get("qi_datensatz", "")})
+                  "fehler": str(r.get("fehler") or "").replace("\n", " ")[:200], "qi_datensatz": r.get("qi_datensatz", "")})
         if r["typ"] == "form":
             z["qi_basis"] = qib.get(r["basis"], ""); z["qi_verh_basis"] = r.get("verh") or ""
         for k in metr:
