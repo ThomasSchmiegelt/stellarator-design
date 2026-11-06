@@ -74,7 +74,7 @@ Verfehlt: Ich habe die Rechenbarkeit der wilden Proben überschätzt. Der Rechne
 **Was ich sehe.**
 - Bis 0,8 sd Abstand sind 83–92 % rechenbar (n = 87, 94, 94, 9).
 - Ab 0,8 sd fällt der Anteil auf 67 % und 64 % (n = 15 und 11).
-- Über 3 sd sind nur noch **11 % rechenbar, bei 118 Proben**. Das sind fast alle wilden Proben.
+- Über 3 sd sind nur noch **11 % rechenbar, bei 118 Proben**. Das sind überwiegend wilde Proben.
 
 **Deutung (Folgerung).** Etwa bis 1 sd Abstand ist die Form sicher rechenbar, danach bricht der Anteil ein. Das ist ein Hinweis auf eine Faustregel für die Schrittweite einer Suche. **Vorsicht:** Die mittleren Säulen enthalten nur 9 bis 15 Proben, die Kante zwischen „rechenbar“ und „nicht rechenbar“ ist daher grob, nicht scharf. Und nicht rechenbar bedeutet nicht „schlecht“, sondern „Rechner liefert nichts“.
 
@@ -90,7 +90,7 @@ Verfehlt: Ich habe die Rechenbarkeit der wilden Proben überschätzt. Der Rechne
 - Dieselben Koeffizienten haben bei verschiedenen Formen **verschiedene Vorzeichen**: `r_cos[1,-2]` ist bei Do3Qy (−0,5) und Kandidat 3 (−1,3) negativ, bei D8ZNt2 stark positiv (+3,3). `z_sin[1,1]` ist bei den zwei Formen mit Balken negativ (−1,4 und −0,8).
 - Bei DjLe3eL6 (grün) fehlen die meisten Balken: Hier waren die Nachbarproben oft nicht rechenbar (Formproben 66 % rechenbar).
 
-**Deutung (Folgerung).** Es gibt keine allgemeine Regel „Koeffizient X senken hilft“. Die Wirkung hängt von der Ausgangsform ab. Nur wo alle Formen mit Balken dasselbe Vorzeichen haben (etwa `r_cos[1,-1]`, `r_cos[1,0]`, `r_cos[0,1]` bei den meisten), ist die Richtung belastbar. **Vorsicht:** Die Zahl „je 1 sd“ ist aus einem Schritt von nur 0,2 sd hochgerechnet; die Linearitätstabelle in `qi_experiment.md` zeigt, dass QI schon bei +0,2 sd um Faktor 4 bis 6 steigt. Als Rangfolge der Empfindlichkeit taugt das Bild, als Vorhersage großer Schritte nicht.
+**Deutung (Folgerung).** Es gibt keine allgemeine Regel „Koeffizient X senken hilft“. Die Wirkung hängt von der Ausgangsform ab. Nur wo alle Formen mit Balken dasselbe Vorzeichen haben (etwa `r_cos[1,-1]`, `r_cos[1,0]`, `r_cos[0,1]` bei den meisten), ist die Richtung belastbar. **Vorsicht:** Die Zahl „je 1 sd“ ist aus einem Schritt von nur 0,2 sd hochgerechnet; die Linearitätstabelle in `qi_experiment.md` zeigt, dass QI schon bei +0,2 sd je nach Form um Faktor 2 bis 30 steigt. Als Rangfolge der Empfindlichkeit taugt das Bild, als Vorhersage großer Schritte nicht.
 
 ### 4.4 Bild „Strom-Proben: trägt die Linearität?“ (`qi_experiment/strom_linear.png`)
 
@@ -102,7 +102,7 @@ Verfehlt: Ich habe die Rechenbarkeit der wilden Proben überschätzt. Der Rechne
 - Die blauen ±5-%-Punkte sind im Bild nicht zu erkennen; sie liegen unter den anderen (ob das nur Überdeckung ist, habe ich nicht gesondert geprüft). Der Wert R² = 0,966 steht im Bericht, im Bild erkenne ich ihn nicht.
 - Grüne (±20 %) und gelbe (±50 %) Punkte hängen links an einem **Boden bei etwa 3·10⁻⁴**: Das Modell sagt kleinere Werte voraus (bis 10⁻⁵), die Rechnung gibt aber nie weniger als etwa 2–3·10⁻⁴. Das Modell ist dort zu optimistisch.
 - Nach rechts biegen die Punkte steil nach oben ab: Wo das Modell 10⁻³ sagt, gibt die Rechnung 10⁻² bis 3·10⁻¹. Die roten Punkte (Vorzeichenwechsel) liegen am höchsten.
-- Ganz links bei 10⁻⁶ stehen etwa 20–30 Punkte; ihr wirkliches QI reicht von 2·10⁻⁴ bis 2·10⁻³.
+- Ganz links bei 10⁻⁶ stehen viele Punkte untereinander; ihr wirkliches QI reicht von 2·10⁻⁴ bis 2·10⁻³.
 
 **Deutung (Folgerung).** Das lineare Modell trägt nur im geprüften Bereich ±5 %. Darüber nimmt die Aussagekraft ab (R² bei ±20 % 0,82, bei ±50 % 0,23). Die beste gerechnete Stromprobe (QI 0,000192) liegt bei ±50 % und wurde **nicht** mit der freien Grenze (Weg i) geprüft. **Sie ist daher nicht belastbar**, auch wenn sie unter der Basis liegt. Der Boden bei 3·10⁻⁴ ist ein Hinweis, dass sich allein durch Ströme vermutlich kein beliebig kleines QI erreichen lässt; das ist noch nicht untersucht.
 
@@ -111,7 +111,7 @@ Verfehlt: Ich habe die Rechenbarkeit der wilden Proben überschätzt. Der Rechne
 **Belegt.**
 - Vernünftig verändert: 88 % rechenbar, 16 % besser als die Basis, 64 % innerhalb Faktor 3.
 - Wild verändert: 28 % rechenbar (13 % bei ≥ 1 sd oder Kreuzung), 0 % besser als die Basis.
-- Zulässige Formen nach Aufgabe 2 oder 3: **keine** unter 1 252 Form- und Datensatzproben. Die kleinste Verletzungssumme (Aufgabe 3) liegt bei f = 0,0224.
+- Zulässige Formen nach Aufgabe 2 oder 3: **keine** unter 832 Form- und Datensatzproben. Die kleinste Verletzungssumme (Aufgabe 3) liegt bei f = 0,0224.
 - Datensatz-Stichprobe: Median-QI 0,0175; der Rand ist bei 271 von 351 Formen die schlechteste Fläche.
 - Strom: Linear im Bereich ±5 % (R² 0,966, jede Probe einmal weggelassen), bei ±50 % nicht (0,225).
 
