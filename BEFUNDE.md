@@ -6,6 +6,10 @@
 ---
 
 
+## B-056 Strom-Optimum aus B-053 ist nicht global (2026-11-06, aus Demonstrator-Bau)
+
+Unter den 150 Strom-Proben im geprüften Bereich ±5 % (Matrix Stufe 5, sim/qi_flaeche/experiment/strom) liegt eine zufällige Probe bei QI 0,000392 am Rand, kleiner als das L-BFGS-B-Optimum aus B-053 (0,000408). Das Optimum von B-053 war also ein lokales; die Zufallsprobe liegt nach Weg (ii) (Störungsmodell) um etwa 4 % darunter. Nicht geprüft: Gegenprobe mit freier Grenze (Weg i), Spiegelverhältnis und iota dieser Probe, ob die Probe die Nebenbedingungen verletzt. Das quadratische Modell an den 150 Proben hat bei Weglassen einer Probe typisch 3,2 % Fehler, schlimmstenfalls 14 %. Quelle: Bericht des Demonstrator-Agenten; die Zahl 0,000392 habe ich nicht selbst nachgerechnet.
+
 ## B-055 QI und Verdrillung: großer Durchmesser hilft nicht, Krümmungsstetigkeit nicht, zu viel Drehung des Querschnitts schadet (2026-11-05, Opus-Agent) ✅
 
 Nutzer-Hypothese: lokaler QI hängt mit der Verdrillung zusammen, großer Durchmesser gibt mehr Raum, krümmungsstetiger ist besser. Skript stellarator/qi_verdrillung.py, Ergebnisse sim/qi_flaeche/verdrillung/, Bericht docs/recherche/qi_tragwerk/qi_verdrillung.md (+ Ordner qi_verdrillung/). Erwartung F-247, Ergebnis F-250.
