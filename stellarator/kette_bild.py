@@ -8,7 +8,7 @@ FARBE = {"belegt": "#2a7ab0", "teilweise": "#e6a000", "fehlt": "#c0392b"}
 G = [
     ("1 Plasmaform", "80 Koeffizienten\n(Wellen der Fläche)", "belegt"),
     ("2 Feld, iota, QI", "VMEC++ rechnet\naus der Form", "belegt"),
-    ("3 Spulenform", "aus der Plasmaform\n(Rückwärtsproblem)", "fehlt"),
+    ("3 Spulenform", "Werkzeuge da, eigene Spulen\nnur für DjLe3eL6 (A085)", "teilweise"),
     ("4 Ströme S1–S5", "Verhältnis ändert QI\n(nur ±5 % geprüft)", "teilweise"),
     ("5 Freie Grenze", "Plasma im Spulenfeld\n(konvergiert kaum)", "teilweise"),
     ("6 Tragwerk, Spannung", "nur für den\nvorhandenen Spulensatz", "teilweise"),
