@@ -60,7 +60,7 @@ def lauf(fall, maxiter=2000, runden=2):
     if (AUS / f"{fall}.fertig").exists():
         print("fertig, uebersprungen:", fall); return
     weiter = fall.endswith("_w"); kern = fall[:-2] if weiter else fall
-    teile = kern.split("_"); kern = "_".join(teile[:2]); rb = 0.5   # Varianten: _o<Ordnung>, _k<Biegeradius in 1/100 a>, _lr
+    teile = kern.split("_"); kern = "_".join(teile[:2]); rb = 0.5; ss = 0.3   # Varianten: _o<Ordnung>, _k<Biegeradius in 1/100 a>, _s<Spule-Spule in 1/100 a>, _lr
     laenge_ref = False                                            # _lr: Laengengrenze wie zwei_ringe (24,9 a je Spule, Proxima-Satz)
     for t in teile[2:]:
         if t == "lr":
@@ -69,11 +69,13 @@ def lauf(fall, maxiter=2000, runden=2):
             zr.ORD = int(t[1:])
         elif t.startswith("k"):
             rb = int(t[1:]) / 100
+        elif t.startswith("s"):
+            ss = int(t[1:]) / 100
     d, n = FAELLE[kern]
     s_h, s_v, s_d, R0, a = flaechen(); nfp = s_v.nfp
     ref = json.loads((ROOT / "sim" / "qi_zwei_ringe" / "C.json").read_text())
     msk_max = ref["msk_max"] * (ref["a_u"] / a) ** 2
-    k_max = 1 / (rb * a); ss_min = 0.3 * a
+    k_max = 1 / (rb * a); ss_min = ss * a
     basis, I0 = [], []
     for i in range(n):
         phi = (i + 0.5) * 2 * np.pi / (2 * nfp * n)
@@ -110,7 +112,7 @@ def lauf(fall, maxiter=2000, runden=2):
         res = minimize(fun, JF.x, jac=True, method="L-BFGS-B", options={"maxiter": maxiter, "maxcor": 300}, tol=1e-15)
         JF.x = res.x
         e = zr.auswerten(basis, sp, 1, s_v, s_v, a, ringe_idx)       # Abstand auf dem feinen Rand (s_d 96x48 ueberschaetzt ihn)
-        verl = {"ss": e["spule_spule_min_a"] < 0.98 * 0.3, "sp": e["ringe"]["ring0"]["abstand_plasma_a"] < 0.98 * d,
+        verl = {"ss": e["spule_spule_min_a"] < 0.98 * ss, "sp": e["ringe"]["ring0"]["abstand_plasma_a"] < 0.98 * d,
                 "k": e["biegeradius_min_a"] < 0.98 * rb, "l": float(sum(CurveLength(c).J() for c in basis)) > 1.02 * l_max,
                 "m": e["msk_max"] > 1.02 * msk_max}
         zeile = {"runde": runde, "iter": int(res.nit), "meldung": str(res.message), "Jf": float(Jf.J()), "gewichte": dict(w),
@@ -125,7 +127,7 @@ def lauf(fall, maxiter=2000, runden=2):
             if v:
                 w[k] *= 10
     e.update(fall=fall, abstand_soll_a=d, spulen_je_halbperiode=n, form=str(FORM.relative_to(ROOT)),
-             grenzen={"spule_spule_min_a": 0.3, "biegeradius_min_a": rb, "fourier_ordnung": zr.ORD, "laengenregel": "zwei_ringe" if laenge_ref else "1,25 x Start", "msk_max": msk_max, "laenge_max": l_max, "laenge_start": l_start},
+             grenzen={"spule_spule_min_a": ss, "biegeradius_min_a": rb, "fourier_ordnung": zr.ORD, "laengenregel": "zwei_ringe" if laenge_ref else "1,25 x Start", "msk_max": msk_max, "laenge_max": l_max, "laenge_start": l_start},
              konvergenz={"runden": len(verlauf), "letzte_meldung": verlauf[-1]["meldung"], "grenzen_verletzt": verlauf[-1]["verletzt"],
                          "iter_letzte": verlauf[-1]["iter"]}, laufzeit_s=time.time() - t0,
              laenge_summe=float(sum(CurveLength(c).J() for c in basis)))

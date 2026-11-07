@@ -10,9 +10,9 @@ G = [
     ("2 Feld, iota, QI", "VMEC++ rechnet\naus der Form", "belegt"),
     ("3 Spulenform", "Werkzeuge da, eigene Spulen\nnur für DjLe3eL6 (A085)", "teilweise"),
     ("4 Ströme S1–S5", "Verhältnis ändert QI\n(nur ±5 % geprüft)", "teilweise"),
-    ("5 Freie Grenze", "Plasma im Spulenfeld\n(konvergiert kaum)", "teilweise"),
-    ("6 Tragwerk, Spannung", "nur für den\nvorhandenen Spulensatz", "teilweise"),
-    ("7 Kühlung, Verguss", "Kühlsegment bearbeitet,\nVerguss geplant", "teilweise"),
+    ("5 Freie Grenze", "Plasma im Spulenfeld\n(läuft, Toleranz nicht erreicht)", "teilweise"),
+    ("6 Tragwerk, Spannung", "gerechnet für DPrcxq66,\nnoch nicht für unsere Spulen", "teilweise"),
+    ("7 Kühlung, Verguss", "Gefäßwand, nur für QA-Form\n(kennt unser Plasma nicht)", "teilweise"),
 ]
 fig, ax = plt.subplots(figsize=(13, 5.2)); ax.set_xlim(0, 14); ax.set_ylim(0, 6); ax.axis("off")
 pos = [(0.4, 3.6), (3.9, 3.6), (7.4, 3.6), (10.9, 3.6), (2.2, 0.7), (5.9, 0.7), (9.6, 0.7)]

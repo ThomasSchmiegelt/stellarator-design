@@ -5,6 +5,21 @@
 
 ---
 
+## B-061 Prüfung der Sonnet-Arbeit vom 6./7. November: B-057 widerlegt, Verlustfaktor unbelastet, f falsch gelesen (2026-11-07, Opus) ⚠
+
+Anlass: Nutzer „überprüf auch, was Sonnet gemacht hat“. Geprüft an den Rohdaten. Erwartung/Ergebnis F-272, F-273.
+**B-057 falsch.** Die neun Fälle (i_p008_b056, i_p037, i_w588_u50, i_w470_u50, i_p008_t0.25/0.5/0.75 …) liefen ohne nzeta 48, ftol, niter und `trotzdem`, die alle früheren Fälle hatten. Mit denselben Einstellungen wie i_opt: j_p008 QI 0,000397, j_p037 0,000407 (i_opt 0,000415, Basis k_n3000 0,000579, fsqr 1,1e-10). Damit ist B-056 auf dieser Stufe bestätigt (Weg ii 0,000392, 1,3 % Abstand). j_w588/j_w470 brechen auch richtig eingestellt ab (Jacobian): 0,00019 ist nicht erreichbar. Die Halbierung war sinnvoll gedacht, maß aber nur den Fehlaufruf; die „Erwartung Kante in der Mitte“ im Nachtrag stand vorher nirgends.
+**„Konvergiert“ stimmt nicht.** Kein Lauf mit freier Grenze erreichte ftol 1e-14 (fsqr 2e-13 bis 2e-10, `trotzdem`). QI hängt an der Schrittzahl: Proxima 0,000579 → 0,000671, A085 0,000451 → 0,000558, K3 lr 5,61e-5 → 5,45e-5. Verlustfaktoren aus B-059/B-060 sind Zwischenstände. Lange Läufe siehe F-272.
+**f ist Summe der Quadrate** (qi_filter_suche.py Zeile 11). Zulässig heißt f ≤ 5e-4 (5 Bedingungen je 0,01). Die Bezeichnung „Verletzungssumme“ und der Vergleich von f = 0,0114 mit 0,01 waren falsch und ließen das Ziel näher wirken. Beste Matrixprobe: f 0,0224, größte Verletzung 0,12. K3 halb selbst: größte Verletzung rund 0,8.
+**Empfindlichkeit:** 18 von 27 ±0,2-sd-Paaren sind nach beiden Seiten schlechter; das Vorzeichen der Balken ist keine Richtung. Korrigiert in qi_experiment_bericht.md.
+**Strom gegen Spiegel:** ±5 %: Korrelation log QI / Spiegel −0,81; 262 von 292 besseren Proben haben schlechteres Spiegelverhältnis.
+**Kein Vergleich K3 gegen Proxima:** Feldfehler 2,15e-4 (K3) und 2,4e-3 (Proxima, DjLe3eL6) gehören zu verschiedenen Formen. d085_n10_lr hält Spule–Spule nur 0,30 a, die Rohre durchdringen sich. Die Aussage „Technik kostet 15 bis 25 %“ gilt für einen Satz, der nicht in den Bauraum passt.
+**Bauraum:** Abbruchgrenze 0,72 a (1,3 m) wurde an der Spulenmittellinie gemessen, die 1,3 m gelten aber zwischen Plasma und Spule. Rohr–Plasma: d085_n10 0,95 m (zu wenig), d085_n10_lr 1,76 m (durchdringt sich). Kein Satz hält beides.
+**Druck:** Alle Rechnungen laufen praktisch ohne Plasmadruck (pres_scale 1,0 Pa, curtor 0). Das war in B-058 offen.
+**Kette:** Tragwerk lief für DPrcxq66 (B-040 bis B-049), nicht für Proxima-DjLe3eL6 allein; `kopplung.py` nimmt mit plasma.json fremde Formen. Kühlung ist die Gefäßwand, nicht das Spulenpaket, und `gyroid_gefaess.randflaeche` ist fest auf die QA-Form qa_nfp2_A45 verdrahtet: Sie kennt kein QI-Plasma.
+**Protokoll:** Nummer F-253 doppelt vergeben (2026-11-05 und 2026-11-06); Experimentmatrix hatte keinen eigenen Befund (nachgeholt hier); B-057 stand am Dateiende.
+Bestätigt: Zahlen der Matrix-Tabellen, Repo-Name ema-motor-analysis (gibt es, öffentlich), 832 Proben, Faktor 1,29/1,50 (Proxima).
+
 ## B-060 Kette K3 komplett: eigene Spulen für K3 halb (Feldfehler 2,1e-4), PicoGK-Rohre, freie Grenze Verlustfaktor 1,14 bis 1,17 – K3 halb bleibt mit Spulen das beste Plasma (2026-11-07, Sonnet-Agent) ✅ (Rand ⚠)
 
 Erwartungen F-262, F-265 bis F-268, Ergebnisse F-267/F-269. Skripte `stellarator/k3_spulen.py` (Stage 2 beliebige Form, zwei_ringe-Ansatz; Varianten `_w` fortsetzen, `_o<N>` Fourier-Ordnung, `_k<NN>` Biegeradius, `_lr` Längenregel wie zwei_ringe), `stellarator/k3_rohr.py`, `stellarator/kette_k3_bilder.py`; Läufe `sim/kette_k3/` (lauf_stage2*.sh, lauf_teil2…5.sh, lauf_frei_k3.sh), Ergebnisse `sim/kette_k3/stage2/` (Spulen satz_<fall>/, freie Grenze satz_<fall>/frei/faelle/), Plan B `sim/kette_k3/planb/`, Kontrolle `sim/kette_k3/kontrolle_dje/`.
@@ -787,7 +802,7 @@ s. w7x-eckdaten.md).
 
 ---
 Neue Einträge: oben. Status-Legende wie oben.
-## B-057 Gegenprüfung der Strom-Ausreißer mit freier Grenze: keine konvergiert (2026-11-06)
+## B-057 Gegenprüfung der Strom-Ausreißer mit freier Grenze: keine konvergiert (2026-11-06) ❌ WIDERLEGT durch B-061: falsch aufgerufen
 
 Erwartung F-254 (vorher): 008 und 037 frei bei 0,00040–0,00043, die ±50-%-Fälle über 0,0005 oder nicht konvergent. Ergebnis (VMEC++ free-boundary, Standardeinstellungen, `sim/qi_spulen/faelle/i_p008_b056, i_p037, i_w588_u50, i_w470_u50`): **alle vier nicht konvergiert** ("did not converge"; bei den ±50-%-Fällen JACOBIAN_75_TIMES_BAD). Erwartung also nur halb getroffen: für die ±50-%-Fälle ja, für die beiden ±5-%-Proben nein (ich hatte Konvergenz erwartet, weil i_opt am Rand von ±5 % konvergierte). Folge: Der Wert 0,000392 (B-056) und die Wegs-ii-Werte 0,00019 sind **nicht bestätigt**; belegt bleibt nur i_opt frei 0,000415. Nicht geprüft: ob andere Solver-Einstellungen (ftol, niter, nvacskip) Konvergenz bringen. Nutzerhinweis: Fehlerort durch fortgesetztes Halbieren eingrenzen (Strecke Basis → Probe 008, Fälle i_p008_t0.25/0.5/0.75, Lauf angestoßen 21:20).
 

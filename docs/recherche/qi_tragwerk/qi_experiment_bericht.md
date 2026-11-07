@@ -2,6 +2,8 @@
 
 *English summary at the end.*
 
+> **Korrektur 2026-11-07 (Prüfung durch Opus, B-061).** Vier Aussagen der ersten Fassung waren falsch oder irreführend und sind unten berichtigt: (1) Das Empfindlichkeitsbild zeigt keine Stellschrauben-Richtung: Bei 18 von 27 Koeffizienten wird QI nach beiden Seiten schlechter. (2) f ist keine Summe der Verletzungen, sondern die Summe ihrer Quadrate. (3) Die Stromverbesserung erkauft man mit einem schlechteren Spiegelverhältnis. (4) Die Faustregel „bis 1 sd sicher rechenbar“ gaben die Daten nicht her.
+
 Dieser Bericht beschreibt den Rechenvorgang „Experimentmatrix“ (Ereignisprotokoll F-252, F-253), seine Ergebnisse und die vier Bilder der automatischen Auswertung. Die vollständigen Tabellen stehen in `qi_experiment.md` (gleicher Ordner). Jede Aussage ist als **belegt** (aus den Ergebnisdateien), **Folgerung** (Deutung) oder **offen** gekennzeichnet. Die Bilder habe ich einzeln angesehen; was ich darauf sehe und was nicht, steht jeweils dabei.
 
 ## 1 Wozu das Ganze?
@@ -76,7 +78,7 @@ Verfehlt: Ich habe die Rechenbarkeit der wilden Proben überschätzt. Der Rechne
 - Ab 0,8 sd fällt der Anteil auf 67 % und 64 % (n = 15 und 11).
 - Über 3 sd sind nur noch **11 % rechenbar, bei 118 Proben**. Das sind überwiegend wilde Proben.
 
-**Deutung (Folgerung).** Etwa bis 1 sd Abstand ist die Form sicher rechenbar, danach bricht der Anteil ein. Das ist ein Hinweis auf eine Faustregel für die Schrittweite einer Suche. **Vorsicht:** Die mittleren Säulen enthalten nur 9 bis 15 Proben, die Kante zwischen „rechenbar“ und „nicht rechenbar“ ist daher grob, nicht scharf. Und nicht rechenbar bedeutet nicht „schlecht“, sondern „Rechner liefert nichts“.
+**Deutung (Folgerung).** Bis etwa 0,8 sd sind die Proben fast immer rechenbar, zwischen 0,8 und 3 sd noch rund zwei Drittel, darüber bricht der Anteil ein. Das ist ein Hinweis für die Schrittweite einer Suche. **Vorsicht:** Die mittleren Säulen enthalten nur 9 bis 15 Proben, die Kante zwischen „rechenbar“ und „nicht rechenbar“ ist daher grob, nicht scharf. Und nicht rechenbar bedeutet nicht „schlecht“, sondern „Rechner liefert nichts“.
 
 ### 4.3 Bild „Empfindlichkeit des QI je Koeffizient“ (`qi_experiment/empfindlichkeit.png`)
 
@@ -90,7 +92,7 @@ Verfehlt: Ich habe die Rechenbarkeit der wilden Proben überschätzt. Der Rechne
 - Dieselben Koeffizienten haben bei verschiedenen Formen **verschiedene Vorzeichen**: `r_cos[1,-2]` ist bei Do3Qy (−0,5) und Kandidat 3 (−1,3) negativ, bei D8ZNt2 stark positiv (+3,3). `z_sin[1,1]` ist bei den zwei Formen mit Balken negativ (−1,4 und −0,8).
 - Bei DjLe3eL6 (grün) fehlen die meisten Balken: Hier waren die Nachbarproben oft nicht rechenbar (Formproben 66 % rechenbar).
 
-**Deutung (Folgerung).** Es gibt keine allgemeine Regel „Koeffizient X senken hilft“. Die Wirkung hängt von der Ausgangsform ab. Nur wo alle Formen mit Balken dasselbe Vorzeichen haben (etwa `r_cos[1,-1]`, `r_cos[1,0]`, `r_cos[0,1]` bei den meisten), ist die Richtung belastbar. **Vorsicht:** Die Zahl „je 1 sd“ ist aus einem Schritt von nur 0,2 sd hochgerechnet; die Linearitätstabelle in `qi_experiment.md` zeigt, dass QI schon bei +0,2 sd je nach Form um Faktor 2 bis 30 steigt. Als Rangfolge der Empfindlichkeit taugt das Bild, als Vorhersage großer Schritte nicht.
+**Deutung (korrigiert 2026-11-07).** Das Bild darf nicht als Richtung gelesen werden. Die Steigung kommt aus den Punkten +0,2 und −0,2 sd, und bei 18 von 27 Koeffizienten ist QI an **beiden** Punkten schlechter als die Basis (Do3Qy 6 von 9, Kandidat 3 halb 7 von 9, DjLe3eL6 2 von 2, D8ZNt2 3 von 7). Die Basis liegt dort unten in einem engen Tal; der Balken misst nur, welche Talwand steiler ist. Das Vorzeichen sagt also nicht, in welche Richtung man drehen soll, und die verschiedenen Vorzeichen sind kein Beleg für verschiedene Wirkung. Echte Richtungen gibt es nur, wo eine Seite besser wird, vor allem bei der schlechten Startform D8ZNt2 (`r_cos[1,-1]` −0,2 sd: QI × 0,25). Maschinenbaubild: Die guten Formen sitzen wie eine eingepasste Welle im Minimum, jedes Verstellen in fast jede Richtung verschlechtert. Als Rangfolge, wie eng das Tal je Koeffizient ist, taugt das Bild; das ist die eigentliche Aussage.
 
 ### 4.4 Bild „Strom-Proben: trägt die Linearität?“ (`qi_experiment/strom_linear.png`)
 
@@ -104,24 +106,24 @@ Verfehlt: Ich habe die Rechenbarkeit der wilden Proben überschätzt. Der Rechne
 - Nach rechts biegen die Punkte steil nach oben ab: Wo das Modell 10⁻³ sagt, gibt die Rechnung 10⁻² bis 3·10⁻¹. Die roten Punkte (Vorzeichenwechsel) liegen am höchsten.
 - Ganz links bei 10⁻⁶ stehen viele Punkte untereinander; ihr wirkliches QI reicht von 2·10⁻⁴ bis 2·10⁻³.
 
-**Deutung (Folgerung).** Das lineare Modell trägt nur im geprüften Bereich ±5 %. Darüber nimmt die Aussagekraft ab (R² bei ±20 % 0,82, bei ±50 % 0,23). Die beste gerechnete Stromprobe (QI 0,000192) liegt bei ±50 % und wurde **nicht** mit der freien Grenze (Weg i) geprüft. **Sie ist daher nicht belastbar**, auch wenn sie unter der Basis liegt. Der Boden bei 3·10⁻⁴ ist ein Hinweis, dass sich allein durch Ströme vermutlich kein beliebig kleines QI erreichen lässt; das ist noch nicht untersucht.
+**Deutung (Folgerung).** Das lineare Modell trägt nur im geprüften Bereich ±5 %. Darüber nimmt die Aussagekraft ab (R² bei ±20 % 0,82, bei ±50 % 0,23). Ein Modell auf log10(QI) bleibt deutlich besser (R² bei ±50 % 0,89), das hatte die erste Fassung weggelassen. Die beste gerechnete Stromprobe (QI 0,000192) liegt bei ±50 %; die freie Grenze bricht dort ab (B-061), der Wert ist **nicht erreichbar**. **Nachtrag: Die Verbesserung ist nicht umsonst.** Im Bereich ±5 % hängen QI und Spiegelverhältnis gegenläufig zusammen (Korrelation −0,81): 262 von 292 Proben mit besserem QI haben ein schlechteres Spiegelverhältnis, und genau das ist eine der Bedingungen, an denen die Formen scheitern. Der Boden bei 3·10⁻⁴ ist ein Hinweis, dass sich allein durch Ströme vermutlich kein beliebig kleines QI erreichen lässt; das ist noch nicht untersucht.
 
 ## 5 Was haben wir gelernt?
 
 **Belegt.**
 - Vernünftig verändert: 88 % rechenbar, 16 % besser als die Basis, 64 % innerhalb Faktor 3.
 - Wild verändert: 28 % rechenbar (13 % bei ≥ 1 sd oder Kreuzung), 0 % besser als die Basis.
-- Zulässige Formen nach Aufgabe 2 oder 3: **keine** unter 832 Form- und Datensatzproben. Die kleinste Verletzungssumme (Aufgabe 3) liegt bei f = 0,0224.
+- Zulässige Formen nach Aufgabe 2 oder 3: **keine** unter 832 Form- und Datensatzproben. Das kleinste f (Summe der **Quadrate** der Verletzungen, Aufgabe 3) ist 0,0224 bei einer größten Einzelverletzung von 0,12. Zulässig heißt: jede Verletzung höchstens 0,01, also f höchstens 0,0005. Die beste Probe ist damit 12-mal über der Grenze.
 - Datensatz-Stichprobe: Median-QI 0,0175; der Rand ist bei 271 von 351 Formen die schlechteste Fläche.
 - Strom: Linear im Bereich ±5 % (R² 0,966, jede Probe einmal weggelassen), bei ±50 % nicht (0,225).
 
 **Folgerung (nicht von mir nachgeprüft: die regelbasierten Deutungen im Bericht).**
 - Lokale Suche in kleinen Schritten um gute Formen ist der richtige Weg; Zufall bringt Daten über Grenzen, keine Treffer.
-- Die Wirkung eines Koeffizienten hängt von der Ausgangsform ab.
+- Die guten Formen liegen in engen Tälern: Kleine Änderungen einzelner Koeffizienten verschlechtern QI meist nach beiden Seiten (18 von 27).
 - Für Stromänderungen über ±5 % braucht jede Aussage eine Gegenprüfung mit der freien Grenze.
 
 **Offen.**
-- Die beste Stromprobe (0,000192) und der Zufallswert B-056 (0,000392) mit Weg i prüfen.
+- Erledigt 2026-11-07 (B-061): Probe 008 frei 0,000397 (Weg ii 0,000392), bestätigt. Die ±50-%-Proben (0,000192) brechen auch mit richtigen Einstellungen ab; ihr Wert ist nicht erreichbar.
 - Aus den Daten (`alle_proben.csv`, rund 1 700 neue Proben plus 158 685 Datensatzformen) ein Surrogat bauen und kleine Schritte vergleichen, dann gezielt suchen und mit VMEC++ nachrechnen (Opus-Agent, vom Nutzer freigegeben).
 - Das „nachgeführte Rohr“ (Nutzerhinweis) ist noch nicht geklärt.
 
@@ -137,4 +139,4 @@ Die letzte Auswertung (`AUSW_EXPERIMENT`) brach nach rund 1 700 Rechnungen ab, w
 
 **Figures.** (1) *Distribution:* reasonable steps cluster around 1–10 times the base QI, wild ones are mostly not computable and never better. (2) *Computable vs distance:* 83–92 % up to about 0.8 sd, only 11 % beyond 3 sd (middle bins have few samples). (3) *Sensitivity:* the effect of a coefficient depends on the base shape; the sign differs between shapes, so there is no general rule. (4) *Current linearity:* a linear model fitted on ±5 % current changes predicts well inside that range (R² 0.966) but fails beyond it (R² 0.23 at ±50 %); the model is too optimistic and the real QI seems to have a floor near 3·10⁻⁴.
 
-**Caveat.** The best current probe (QI 0.000192, at ±50 %) is not checked with the free-boundary computation and is therefore not reliable.
+**Corrections 2026-11-07 (B-061).** The sensitivity figure is not a direction: for 18 of 27 coefficients QI gets worse on both sides, so good shapes sit in narrow valleys. f is a sum of squares; the best probe still violates a constraint by 0.12 (allowed 0.01). Current trimming trades QI against mirror ratio (correlation −0.81 within ±5 %). The ±50 % probe (QI 0.000192) fails in the free-boundary computation and is not reachable; probe 008 is confirmed at 0.000397.
