@@ -788,3 +788,4 @@ sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht 
 - 2026-11-06 21:20 B-057: Strom-Ausreißer (p008, p037, w588, w470) frei nicht konvergiert. Läuft: Halbierung Basis→p008 (sim/qi_spulen/lauf_halbierung.log, Fälle i_p008_t0.25/0.5/0.75). Nächstes: Auswerten, weiter halbieren bis Kante, dann QI entlang der Strecke. Danach Surrogat+Suche (Opus).
 - 2026-11-06 Methode Halbieren in Memory (methode-halbieren) und Protokoll F-255/F-256 abgelegt.
 - 2026-11-07 08:26 Halbierung t=0,25/0,5/0,75 alle nicht konvergiert (B-057 Nachtrag). Nächstes: t=0,125/0,06 + Basis-Neurechnung; Abbruchkriterium mit dem Nutzer festlegen.
+- 2026-11-07 Kettenbild docs/recherche/spulen_suche/kette_plasma_maschine.(png|md), Skript stellarator/kette_bild.py. Opus-Agent prüft Machbarkeit Plasma→Spulen (Bericht spulen_machbarkeit.md, läuft).
