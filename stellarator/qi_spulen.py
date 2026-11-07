@@ -25,6 +25,7 @@ Faelle (Teil B/C): Name -> Faktoren je Spulengruppe (Strom) bzw. Verschiebung ei
 Ergebnis: sim/qi_spulen/faelle/<name>.json (+ wout); fertige Faelle werden uebersprungen.
 """
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -34,6 +35,11 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 QUELLE = ROOT / "sim" / "constellaration" / "qi" / "proxima_spulen_dje"
 AUS = ROOT / "sim" / "qi_spulen"
+# Eigener Spulensatz (2026-11-07, Kette K3): QI_SATZ=<Ordner mit boundary.json + spulen.json> (stellarator/spulen_satz.py);
+# Ergebnisse dann in <Ordner>/frei/ statt sim/qi_spulen. Ohne QI_SATZ unveraendert Proxima DjLe3eL6.
+if os.environ.get("QI_SATZ"):
+    QUELLE = (ROOT / os.environ["QI_SATZ"]).resolve()
+    AUS = QUELLE / "frei"
 S = [0.02, 0.05, 0.1, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75, 0.8, 0.9, 1.0]
 NR, NZ = 201, 201          # Gitter R, Z (Abstand ~1,7 mm bzw. ~2,9 mm im Datensatzmassstab)
 RAND_A = 0.45              # Gitterrand: Plasmaausdehnung + 0,45 a
@@ -60,6 +66,11 @@ def rand_rz(b, th, ze):
 
 def basis_kurven(nq=400, vorzeichen=-1):
     from simsopt.geo import CurveXYZFourier
+    if (QUELLE / "spulen.json").exists():                        # eigener Satz (simsopt-Basiskurven, Datensatzmassstab)
+        d = json.loads((QUELLE / "spulen.json").read_text()); out = []
+        for x in d["basis_x"]:
+            k = CurveXYZFourier(max(nq, d["nq"]), d["order"]); k.x = np.asarray(x, float); out.append(k)
+        return out, np.asarray(d["currents"], float), int(d["nfp"])
     c = json.loads((QUELLE / "coilset.json").read_text()); N = 7
     out = []
     for i in range(len(c["currents"])):
@@ -217,15 +228,16 @@ def pruefe_interpolation(name="basis"):
 
 # ---------------------------------------------------------------- Faelle
 def faelle():
-    F = {"basis": {"strom": [1, 1, 1, 1, 1]}, "fest": {"strom": [1, 1, 1, 1, 1], "fest": True}}  # fest = offizielle Rechnung ohne Spulen
+    ng = len(basis_kurven(nq=8)[0]) if os.environ.get("QI_SATZ") else 5
+    F = {"basis": {"strom": [1] * ng}, "fest": {"strom": [1] * ng, "fest": True}}  # fest = offizielle Rechnung ohne Spulen
     # (a) alle gemeinsam: mit phiedge mitskaliert (muss identisch sein) und bei festem phiedge (Plasmagrenze wandert)
     F["a_alle_1.05_fluss_mit"] = {"strom": [1.05] * 5, "phiedge": 1.05}
     for f in (0.95, 0.99, 1.01, 1.05):
         F[f"a_alle_{f}"] = {"strom": [f] * 5}
     # (b) je Spulengruppe (Basisspule + 7 Symmetrie-Kopien); Fluss folgt dem Spulenfluss (gleiche Plasmamenge je Feld)
-    for g in range(5):
+    for g in range(ng):
         for f in (0.95, 0.99, 1.01, 1.05):
-            v = [1.0] * 5; v[g] = f; F[f"b_S{g + 1}_{f}"] = {"strom": v, "phiedge": "fluss"}
+            v = [1.0] * ng; v[g] = f; F[f"b_S{g + 1}_{f}"] = {"strom": v, "phiedge": "fluss"}
     # (C) Verschiebung/Verdrehung je Basisspule (alle 8 Kopien), W7-X-Toleranz 3-5 mm in der Anlage
     return F
 
@@ -391,7 +403,7 @@ class Modell2:
         """QI je Flaeche fuer Stroeme I0*faktoren (vmec_feld=True: |B| der VMEC-Rechnung selbst, Kontrolle des Verfahrens)."""
         from constellaration.omnigeneity import qi
         from stellarator.qi_karte import ausschnitt
-        I = self.I0 * (np.ones(5) if faktoren is None else np.asarray(faktoren, float)); Bg = self.Bg if Bg is None else Bg
+        I = self.I0 * (np.ones(len(self.I0)) if faktoren is None else np.asarray(faktoren, float)); Bg = self.Bg if Bg is None else Bg
         bm_neu = self.bz.bmnc_b.copy(); rest = []
         for js in range(self.bz.n_boozer_flux_surfaces):
             if vmec_feld:
