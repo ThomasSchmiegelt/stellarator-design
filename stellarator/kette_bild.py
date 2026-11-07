@@ -10,7 +10,7 @@ G = [
     ("2 Feld, iota, QI", "VMEC++ rechnet\naus der Form", "belegt"),
     ("3 Spulenform", "Werkzeuge da, eigene Spulen\nnur für DjLe3eL6 (A085)", "teilweise"),
     ("4 Ströme S1–S5", "Verhältnis ändert QI\n(nur ±5 % geprüft)", "teilweise"),
-    ("5 Freie Grenze", "Plasma im Spulenfeld\n(läuft, Toleranz nicht erreicht)", "teilweise"),
+    ("5 Freie Grenze", "Plasma im Spulenfeld\n(48000 Schritte, ohne Druck)", "teilweise"),
     ("6 Tragwerk, Spannung", "gerechnet für DPrcxq66,\nnoch nicht für unsere Spulen", "teilweise"),
     ("7 Kühlung, Verguss", "Gefäßwand, nur für QA-Form\n(kennt unser Plasma nicht)", "teilweise"),
 ]

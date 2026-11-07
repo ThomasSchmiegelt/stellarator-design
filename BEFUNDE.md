@@ -5,6 +5,13 @@
 
 ---
 
+## B-062 Kreis, Durchläufe 1 und 2: Spulen im Bauraum, Verlust 1,07; Abflachung senkt die Spitzenkraft 19 %, Ursache nicht belegt (2026-11-07, Opus) ⚠
+
+Bericht docs/recherche/spulen_suche/kreis_bericht.md, Protokoll F-273 bis F-278. Skripte `sim/kette_k3/lauf_kreis1.sh`, `lauf_kreis2.sh`, `stellarator/kreis_kraft.py`, `stellarator/kreis_bilder.py`; `k3_spulen.py` Variante `_s<NN>`. Annahmen a = 1,80 m, B0 6,5 T, 1,3 m Freiraum, Paket 1,0 m.
+Durchlauf 1 (K3 halb, d100_n10_lr_s56): Feldfehler 2,10e-4, Abstand 1,18 a, Spule–Spule 0,56 a, Biegeradius 0,50 a, keine Durchdringung, Rohr–Plasma 1,70 m, frei 48000: 5,14e-5 (fsqr 4,0e-14), Verlust 1,07, Nettokraft bis 1261 MN.
+Durchlauf 2 (k3_wild_91_misch, Elongation 6,33, QI fest 1,12e-4): Feldfehler 1,79e-4, Abstand 1,31 a, frei 12000: 1,17e-4 (fsqr 8,3e-14, vorläufig), Verlust 1,04, Nettokraft bis 1021 MN, Summe 4411 gegen 4361 MN, Längensumme gleich (Grenze bindend). Grün gegen Blau im Bild: d085_n10_lr hat an derselben Form 1635 MN. Abflachung als Ursache nicht belegt.
+Lange Läufe: Proxima 1,53, A085 1,29, K3 1,07. Strom 48000: Basis 0,000681, i_opt 0,000443, p008 0,000431 (fsqr 1,0e-14), Spiegel 0,359 -> 0,375/0,376. Offen: Kraft als Ziel von Stage 2 (LpCurveForce), Plasmadruck, FEM, Kühlung, Streuung von Stage 2.
+
 ## B-061 Prüfung der Sonnet-Arbeit vom 6./7. November: B-057 widerlegt, Verlustfaktor unbelastet, f falsch gelesen (2026-11-07, Opus) ⚠
 
 Anlass: Nutzer „überprüf auch, was Sonnet gemacht hat“. Geprüft an den Rohdaten. Erwartung/Ergebnis F-272, F-273.

@@ -10,7 +10,7 @@
 | 2 Feld, iota, QI | belegt | VMEC++ rechnet aus der Form (B-050 bis B-056) |
 | 3 Spulenform | teilweise | Werkzeuge installiert (simsopt, DESC); eigene Spulen A085 nur für DjLe3eL6 (Feldfehler 6,6e-4, Proxima 2,4e-3); für neue Formen nicht gerechnet (B-058, nicht von mir nachgerechnet) |
 | 4 Ströme S1–S5 | teilweise | Verhältnis ändert QI; lineares Modell nur bis ±5 % (qi_experiment_bericht.md) |
-| 5 Freie Grenze | teilweise | läuft mit den Einstellungen aus B-053; Toleranz nie erreicht, QI hängt an der Schrittzahl (B-061). B-057 war ein Fehlaufruf |
+| 5 Freie Grenze | teilweise | erst ab 48000 Schritten belastbar (Proxima 1,53, A085 1,29, K3 1,07); ohne Plasmadruck (B-061, B-062) |
 | 6 Tragwerk, Spannung | teilweise | gerechnet für DPrcxq66 (B-040 bis B-049), noch nicht für unsere Spulen; `kopplung.py` nimmt fremde Formen |
 | 7 Kühlung, Verguss | teilweise | Kühlung ist die Gefäßwand; Rand fest auf die QA-Form verdrahtet, kennt kein QI-Plasma (B-061) |
 
