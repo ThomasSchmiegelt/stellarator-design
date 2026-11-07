@@ -134,15 +134,18 @@ def tabelle(name="basis", spec=None, nzeta=None):
     r = np.linspace(gi["r_min"], gi["r_max"], NR); z = np.linspace(gi["z_min"], gi["z_max"], NZ)
     ph = 2 * np.pi / nfp * np.arange(nzeta) / nzeta
     P, Zg, Rg = np.meshgrid(ph, z, r, indexing="ij")          # Reihenfolge (k, jz, ir) wie mgrid_provider
-    xyz = np.stack([Rg * np.cos(P), Rg * np.sin(P), Zg], -1).reshape(-1, 3)
-    br, bp, bz = [], [], []
+    xyz = np.ascontiguousarray(np.stack([Rg * np.cos(P), Rg * np.sin(P), Zg], -1).reshape(-1, 3))
+    c, s = np.cos(P.ravel()), np.sin(P.ravel()); del Rg, Zg
+    # vorbelegte Felder statt Listen (2026-11-07: 10 Gruppen x nzeta 100 sprengten mit Liste + np.array-Kopie den 6-GB-Scope)
+    br, bp, bz = (np.empty((len(basis), len(xyz))) for _ in range(3))
     for g in range(len(basis)):
         sp = coils_via_symmetries([basis[g]], [Current(1.0)], nfp, True)
-        bs = BiotSavart(sp); bs.set_points(np.ascontiguousarray(xyz)); B = bs.B()
-        c, s = np.cos(P.ravel()), np.sin(P.ravel())
-        br.append(B[:, 0] * c + B[:, 1] * s); bp.append(-B[:, 0] * s + B[:, 1] * c); bz.append(B[:, 2])
+        bs = BiotSavart(sp); bs.set_points(xyz); B = bs.B()
+        br[g] = B[:, 0] * c + B[:, 1] * s; bp[g] = -B[:, 0] * s + B[:, 1] * c; bz[g] = B[:, 2]
+        del bs, B, sp
         print("Gruppe", g, "fertig", flush=True)
-    np.savez(datei, b_r=np.array(br), b_p=np.array(bp), b_z=np.array(bz), r=r, z=z, phi=ph, nfp=nfp, nzeta=nzeta,
+    del xyz, c, s
+    np.savez(datei, b_r=br, b_p=bp, b_z=bz, r=r, z=z, phi=ph, nfp=nfp, nzeta=nzeta,
              gamma=np.array([k.gamma() for k in basis]), spec=json.dumps(spec or {}), **{k: v for k, v in gi.items()})
     return datei
 

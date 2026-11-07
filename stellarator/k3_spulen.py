@@ -60,9 +60,12 @@ def lauf(fall, maxiter=2000, runden=2):
     if (AUS / f"{fall}.fertig").exists():
         print("fertig, uebersprungen:", fall); return
     weiter = fall.endswith("_w"); kern = fall[:-2] if weiter else fall
-    teile = kern.split("_"); kern = "_".join(teile[:2]); rb = 0.5   # Varianten: _o<Ordnung>, _k<Biegeradius in 1/100 a>
+    teile = kern.split("_"); kern = "_".join(teile[:2]); rb = 0.5   # Varianten: _o<Ordnung>, _k<Biegeradius in 1/100 a>, _lr
+    laenge_ref = False                                            # _lr: Laengengrenze wie zwei_ringe (24,9 a je Spule, Proxima-Satz)
     for t in teile[2:]:
-        if t.startswith("o"):
+        if t == "lr":
+            laenge_ref = True
+        elif t.startswith("o"):
             zr.ORD = int(t[1:])
         elif t.startswith("k"):
             rb = int(t[1:]) / 100
@@ -76,6 +79,8 @@ def lauf(fall, maxiter=2000, runden=2):
         phi = (i + 0.5) * 2 * np.pi / (2 * nfp * n)
         basis.append(zr.startkurve(s_v, phi, 1.08 * d * a)); I0.append(1e5)
     l_start = float(sum(CurveLength(c).J() for c in basis)); l_max = 1.25 * l_start
+    if laenge_ref:                                                # wie zwei_ringe.optimieren: n * (Mittel Proxima-Satz + Umfangszuwachs)
+        l_max = float(n * (np.mean(ref["ringe"]["ring0"]["laenge_basis_a"]) + 2 * np.pi * max(d - 0.85, 0)) * a)
     roh = [Current(x / 1e5) for x in I0]
     if weiter:                                                    # Kurven und Stroeme aus dem fertigen Lauf
         from simsopt import load
@@ -120,7 +125,7 @@ def lauf(fall, maxiter=2000, runden=2):
             if v:
                 w[k] *= 10
     e.update(fall=fall, abstand_soll_a=d, spulen_je_halbperiode=n, form=str(FORM.relative_to(ROOT)),
-             grenzen={"spule_spule_min_a": 0.3, "biegeradius_min_a": rb, "fourier_ordnung": zr.ORD, "msk_max": msk_max, "laenge_max": l_max, "laenge_start": l_start},
+             grenzen={"spule_spule_min_a": 0.3, "biegeradius_min_a": rb, "fourier_ordnung": zr.ORD, "laengenregel": "zwei_ringe" if laenge_ref else "1,25 x Start", "msk_max": msk_max, "laenge_max": l_max, "laenge_start": l_start},
              konvergenz={"runden": len(verlauf), "letzte_meldung": verlauf[-1]["meldung"], "grenzen_verletzt": verlauf[-1]["verletzt"],
                          "iter_letzte": verlauf[-1]["iter"]}, laufzeit_s=time.time() - t0,
              laenge_summe=float(sum(CurveLength(c).J() for c in basis)))

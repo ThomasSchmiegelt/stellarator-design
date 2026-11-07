@@ -28,11 +28,13 @@ def profil():
               ("DjLe3eL6 frei, eigene Spulen A085, 3000", K / "satz_A085/frei/faelle/k_n3000.json", "#1b6ca8", "--"),
               ("DjLe3eL6 frei, eigene Spulen A085, 12000", K / "satz_A085/frei/faelle/k_n12000.json", "#1b6ca8", ":"),
               ("DjLe3eL6 frei, A085 nach PicoGK-Glättung", K / "satz_A085_glatt/frei/faelle/k_n3000.json", "#2a9d8f", "-.")]
-    for p in sorted(K.glob("stage2/satz_*/frei/faelle/fest_nz48.json")):
+    for p in sorted(K.glob("stage2/satz_*/frei/faelle/fest_nz*.json")):
         reihen.append((f"K3 halb fest (ohne Spulen)", p, "#6a4c93", "-"))
         break
+    farbe = {"d085_n10": "#f4a261", "d085_n10_lr": "#e76f51", "d085_n10_lr_glatt": "#9b2226", "d085_n8": "#e9c46a"}
     for p in sorted(K.glob("stage2/satz_*/frei/faelle/k_n*.json")):
-        reihen.append((f"K3 halb frei, eigene Spulen {p.parts[-4][5:]}, {p.stem[3:]}", p, "#e76f51", "--"))
+        satz = p.parts[-4][5:]
+        reihen.append((f"K3 halb frei, eigene Spulen {satz}, {p.stem[3:]}", p, farbe.get(satz, "#e76f51"), ":" if "12000" in p.stem else "--"))
     fig, ax = plt.subplots(figsize=(9, 5.5), constrained_layout=True)
     for lab, p, c, ls in reihen:
         if not p.exists():

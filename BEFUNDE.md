@@ -5,6 +5,26 @@
 
 ---
 
+## B-060 Kette K3 komplett: eigene Spulen für K3 halb (Feldfehler 2,1e-4), PicoGK-Rohre, freie Grenze Verlustfaktor 1,14 bis 1,17 – K3 halb bleibt mit Spulen das beste Plasma (2026-11-07, Sonnet-Agent) ✅ (Rand ⚠)
+
+Erwartungen F-262, F-265 bis F-268, Ergebnisse F-267/F-269. Skripte `stellarator/k3_spulen.py` (Stage 2 beliebige Form, zwei_ringe-Ansatz; Varianten `_w` fortsetzen, `_o<N>` Fourier-Ordnung, `_k<NN>` Biegeradius, `_lr` Längenregel wie zwei_ringe), `stellarator/k3_rohr.py`, `stellarator/kette_k3_bilder.py`; Läufe `sim/kette_k3/` (lauf_stage2*.sh, lauf_teil2…5.sh, lauf_frei_k3.sh), Ergebnisse `sim/kette_k3/stage2/` (Spulen satz_<fall>/, freie Grenze satz_<fall>/frei/faelle/), Plan B `sim/kette_k3/planb/`, Kontrolle `sim/kette_k3/kontrolle_dje/`.
+Stage 2 K3 halb (Form form_k3_f0.5.json, nfp 2, 2 Runden à 2000 Schritte, Feldfehler auf Prüfrand 128 × 64, Abstand fein):
+
+| Fall | Spulen | Längenregel | Feldfehler mittel / max | Abstand (a) | Spule–Spule (a) | Zeit |
+|---|---|---|---|---|---|---|
+| d085_n8 (+ _w, 2 weitere Runden) | 32 | 1,25 × Start | 8,0e-3 / 5,0e-2 | 0,78 | 0,76 | 7 + 12 min |
+| d072_n10 | 40 | 1,25 × Start | 4,35e-3 / 2,9e-2 | 0,62 (< 0,72) | 0,66 | 17 min |
+| d085_n10 | 40 | 1,25 × Start | 2,80e-3 / 1,8e-2 | 0,79 | 0,56 | 19 min |
+| **d085_n10_lr** | 40 | 24,9 a je Spule (zwei_ringe) | **2,15e-4 / 1,7e-3** | **1,22** | 0,30 (Grenze) | 11 min |
+| Plan B DATJ5FC d085_n5 | 40 | 1,25 × Start | 5,0e-3 / 3,1e-2 | 0,82 | 0,59 | 10 min |
+| Kontrolle DjLe3eL6 d085_n5 | 40 | 1,25 × Start | 4,36e-3 (Runde 1) | 0,81 | 0,69 | 8 min |
+| Kontrolle DjLe3eL6 d085_n5_lr | 40 | zwei_ringe | 9,0e-4 (2 Runden) | 0,83 | 0,30 | 15 min |
+
+Ursache der schlechten ersten Läufe (gemessen): meine Längengrenze 1,25 × Startlänge war bindend (K3 172,4 a bei Grenze 172,3 a; DjLe3eL6 88,9 a statt 124,5 a bei zwei_ringe). Mit der Regel aus zwei_ringe (Summe 249 a, an der Grenze) erreicht K3 halb 2,15e-4. Die Kontrolle trifft A085 (6,6e-4) mit 9,0e-4 nur in der Größenordnung (Faktor 1,36). Spulen: 27 bis 55 m lang, Biegeradius und Spule–Spule an ihren Grenzen, stark gewunden und weit ausladend (bis etwa 10 m über der Mittelebene, Bild kette_k3/schnitt_K3_d085_n10_lr.png).
+PicoGK (d085_n10_lr): 10 Rohre geschlossen (0 offene Kanten), Durchmesser 0,851 bis 0,854 m, 86 s; Rohre durchdringen sich (0,81 m³, Spule–Spule 0,54 m < 0,85 m); Rohr–Plasma ≥ 1,76 m (0,98 a); Glättung Feldfehler +0,05 %. d085_n10: Durchdringung 0, Rohr–Plasma 0,95 m, Glättung +0,01 %.
+Freie Grenze K3 (nzeta 100, 3000 Schritte, fest 4,79e-5): d085_n10_lr QI Rand 5,61e-5 → **Verlustfaktor 1,17**, s = 0,5 1,26, innen 0,96 bis 1,30; d085_n10 (2,8e-3) 6,37e-5 → 1,33, s = 0,5 1,56. Randabweichung beider Sätze 0,018/0,019 a mittel, 0,16 a max, Elongation 7,15 → 6,8 bei beiden (Verdacht: Rechengrenze, nicht Spulen). Gegenprobe 12000 Schritte d085_n10_lr: QI 5,45e-5 → **1,14**, s = 0,5 1,17, Randabweichung 0,014/0,13 a, Elongation 6,92 – längere Rechnung verkleinert Abweichung und Verlust (bei DjLe3eL6 umgekehrt, 1,01 → 1,25). iota/Spiegel ±1 %.
+Belegt: Die ganze Kette Plasmaform → Spulen → Rohr (PicoGK, STL) → freie Grenze → Verlustfaktor läuft für unser eigenes Plasma. Mit Spulen QI 5,6e-5 bis 6,4e-5 gegen DjLe3eL6 mit A085 4,5e-4 bis 5,6e-4 (Faktor 8). Folgerung: QI des Plasmas taugt als Auswahlmaß, der Spulenverlust (1,2 bis 1,6) ist kleiner als der Formvorteil. QI nach Glättung (d085_n10_lr, 3000): Rand +0,02 %, s = 0,5 −0,4 %. Offen: Baubarkeit der Spulen (Länge, Windungen, Durchdringung bei Rohr 0,85 m → Spule–Spule-Grenze ≥ 0,5 a nötig), Kräfte/Spannungen, Plan B mit Längenregel nicht gerechnet. Bericht docs/recherche/spulen_suche/kette_k3.md.
+
 ## B-059 Kette K3, Schritt 1: eigene Spulen (A085) durch die freie Grenze – Verlustfaktor 1,01 bis 1,25 statt 1,30 bis 1,50 mit Proxima; PicoGK-Rohr kostet nichts (2026-11-07, Sonnet-Agent) ✅
 
 Erwartung F-261 (Schritt 1) und F-263 (Rohr, an A085 erprobt). Werkzeug: `stellarator/spulen_satz.py` (simsopt-JSON -> Satz-Ordner boundary.json + spulen.json, Längenfaktor), `stellarator/qi_spulen.py` liest mit `QI_SATZ=<Ordner>` eigene Sätze (ohne Variable unverändert Proxima; Ergebnisse in `<Ordner>/frei/`), `stellarator/k3_rohr.py` + PicoGK-Konsolen-App `picogk/SpulenRohr` (Balkenkette mit Kreisquerschnitt, Voxel 25 mm, Glättung TripleOffset 100 mm, STL je Spule). Läufe `sim/kette_k3/lauf_schritt1.sh`, `slot.sh` (2 Plätze, Scope 6 GB).
