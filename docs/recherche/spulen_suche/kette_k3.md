@@ -4,6 +4,8 @@
 
 **Kurzantwort.** Ja. Für K3 halb gibt es jetzt einen eigenen Spulensatz (40 Spulen, Feldfehler 2,1·10⁻⁴, Abstand zum Plasma 1,22 a), daraus geschlossene Rohre als STL (PicoGK, geglättet), und das Plasma aus diesem Spulenfeld hat QI 5,6·10⁻⁵ statt 4,8·10⁻⁵ ohne Spulen: **Verlustfaktor 1,17** am Rand (3000 Rechenschritte; mit 12000 Schritten 1,14), 1,26 in halber Tiefe. Damit bleibt K3 halb auch mit Spulen etwa 8-mal besser als DjLe3eL6 mit eigenen Spulen. Die Glättung kostet praktisch nichts (Feldfehler +0,05 %, QI am Rand +0,02 %). Zwei Einschränkungen: Die Spulen sind lang (27 bis 55 m), stark gewunden und liegen so eng beieinander (0,54 m), dass sich Rohre von 0,85 m Durchmesser durchdringen; und der Randwert der freien Grenze ist rechnerisch nicht ganz sicher (siehe Schritt 1).
 
+> **Einschränkung 2026-11-07 (B-061).** Die Kette läuft, aber dieser Bericht sagt mehr, als er trägt. „Konvergiert“ heißt hier nur: Die Rechnung hat ein Ergebnis geliefert; die Toleranz wurde in keinem Lauf erreicht, und die Verlustfaktoren hängen an der Schrittzahl. Der beste Satz d085_n10_lr passt nicht in den Bauraum (Rohre durchdringen sich), und der Vergleich seines Feldfehlers mit Proxima gilt nicht, weil es verschiedene Formen sind. Alles läuft ohne nennenswerten Plasmadruck. Fortsetzung: `kreis_bericht.md`.
+
 Befunde B-059 und B-060, Erwartungen und Ergebnisse im Ereignisprotokoll F-261 bis F-271. Vorarbeit: Machbarkeit B-058 (`spulen_machbarkeit.md`), Kettenbild `kette_plasma_maschine.md`.
 
 ## Begriffe (für Maschinentechniker)
