@@ -28,14 +28,15 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-FORM = Path(os.environ.get("K3_FORM", ROOT / "sim" / "qi_flaeche" / "gegenrechnung_klein" / "form_k3_f0.5.json"))
-AUS = Path(os.environ.get("K3_AUS", ROOT / "sim" / "kette_k3" / "stage2"))
+FORM = (ROOT / os.environ.get("K3_FORM", "sim/qi_flaeche/gegenrechnung_klein/form_k3_f0.5.json")).resolve()
+AUS = (ROOT / os.environ.get("K3_AUS", "sim/kette_k3/stage2")).resolve()
 ORD = 7
 
 # Fall: (Abstand in a, Spulen je halbe Periode); Reihenfolge = Priorität
 FAELLE = {"d085_n8": (0.85, 8), "d085_n10": (0.85, 10), "d100_n8": (1.00, 8), "d072_n10": (0.72, 10),
           "d100_n10": (1.00, 10), "d085_n6": (0.85, 6),
-          "d085_n5": (0.85, 5)}                                           # Plan B DATJ5FC… (nfp 4) wie A085 bei DjLe3eL6
+          "d085_n5": (0.85, 5),                                           # Plan B DATJ5FC… (nfp 4) wie A085 bei DjLe3eL6
+          "d100_n5": (1.00, 5), "d100_n6": (1.00, 6)}                     # Vergleich DATJ5FC im Bauraum (2026-11-08)
 
 
 def flaechen():

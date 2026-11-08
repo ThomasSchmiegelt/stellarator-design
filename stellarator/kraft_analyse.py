@@ -47,7 +47,10 @@ def analyse(ordner: Path) -> dict:
     bs = load(str(ordner / "biot_savart.json"))
     coils = bs.coils
     fak = kalibrierung(bs)
-    n_basis = len(coils) // 4                                  # nfp = 2, stellsym -> 4 Kopien je Basisspule
+    from scipy.io import netcdf_file
+    with netcdf_file(str(WOUT), mmap=False) as w:
+        nfp = int(w.variables["nfp"].data)
+    n_basis = len(coils) // (2 * nfp)                          # stellsym -> 2 * nfp Kopien je Basisspule (nfp aus WOUT)
     out = []
     for k in range(n_basis):
         c = coils[k]; cu = c.curve
