@@ -5,6 +5,13 @@
 
 ---
 
+## B-068 Glätten mit fünf Verfahren entlang der Bogenlänge (darunter der CAD-Weg des Nutzers): Feldfehler hängt nur an der Verschiebung, die „8“ bleibt immer (2026-11-08, Opus) ⚠
+- **Herkunft:** DATJ5FC, DATENSATZ-Form unverändert, EIGENE Spulen d100_n5_lr_s56 (Original 1,05e-3).
+- **Verfahren:** CAD-Weg (N Punkte + geschlossener Spline, N 64…8), Glättungsspline splprep, Taubin, Fourier entlang der Bogenlänge, Savitzky-Golay. Alle glätten entlang der Kurve, nicht über räumliche Nähe.
+- **Ergebnis:** Alle Verfahren liegen auf einer Linie. 0,1 m Verschiebung kostet etwa 1,5e-3, 0,5 m etwa 7e-3, 1 m etwa 2e-2. Seiten-Achter bleiben in allen Stufen, auch bei 8 Punkten. Der Biegeradius wird in den brauchbaren Stufen kaum besser.
+- **Folge:** Glätten ist nur Feinschliff, ohne großen Feldverlust bis etwa 15 cm Verschiebung (CAD-Weg mit 32 bis 64 Punkten). Die 8 ist Feldbedarf, kein Rauschen. Taubin bläht bei vielen Durchgängen auf.
+- Skript stellarator/spulen_spline.py, Bild docs/recherche/spulen_suche/glaettung/methoden.png.
+
 ## B-067 Baubare Spulen für DATJ5FC: Torsionsstrafe macht ruhiger, aber nicht eben; ebene Spulen sind eben, aber 30–45-mal ungenauer (2026-11-08, Opus) ⚠
 - **Herkunft:** DATJ5FC, DATENSATZ-Form unverändert. Spulen EIGEN (Stage 2 k3_spulen, Bauraum d = 1,0 a).
 - **Torsionsstrafe** (_t3/_t30/_t300): Torsionssumme 2400 → 1330/740/590, Feldfehler 1,26e-3/1,58e-3/1,87e-3. Höhe aus der Ebene bleibt 4,8–8,0 m, Seiten-Achter bleiben 1–4 je Spule. Geringe Torsion heißt nicht eben.
