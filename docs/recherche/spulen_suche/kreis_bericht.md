@@ -77,6 +77,14 @@ Die Verletzungen stammen aus den fest gerechneten Formen. Der Plasmaradius a ist
 
 **Was das Bild zeigt.** Grün und Blau unterscheiden sich an Spule 5 um den Faktor 2, obwohl das Plasma gleich ist. Der Spulensatz allein verschiebt die Kraft also stärker als die Abflachung (Blau gegen Orange). Die Summe der Nettokräfte bleibt praktisch gleich, die Spitze wandert nur. **Damit ist nicht belegt, dass die Abflachung die Kraft senkt.** Die 19 % liegen innerhalb dessen, was ein anderer Spulensatz derselben Form ausmacht. Die Kraft ist bisher auch kein Ziel der Spulensuche, sie fällt nur an.
 
+## Die Formen im Schnitt
+
+![Querschnitte](kreis/querschnitte.png)
+
+**Lesehilfe.** Jede Zeile ist eine Form, jede Spalte ein Schnitt quer zum Ring, wie Schnitte durch ein gebogenes Rohr in einer Zeichnung. Von links nach rechts geht man eine halbe Periode weiter (bei nfp 2 von 0° bis 90°, bei DjLe3eL6 mit nfp 4 von 0° bis 45°). Waagerecht steht der Abstand von der Ringachse, senkrecht die Höhe, beides geteilt durch den Hauptradius; der Maßstab ist überall gleich. Die gepunkteten Linien markieren Hauptradius und Mittelebene.
+
+**Was man sieht.** Kandidat 3 halb steigt innerhalb einer halben Periode von der Mittelebene bis auf etwa 0,9 Hauptradien nach oben und wieder zurück; in der Mitte ist der Querschnitt eine schmale Sichel. Das „hohe Band“ ist also vor allem ein Auf und Ab des ganzen Rohrs, dazu ein sehr schmaler Querschnitt (daher Elongation über 7). Die flachere Form steigt nur bis etwa 0,8 und ist kaum dicker; Abflachen hat die Grundform wenig verändert. DjLe3eL6 bleibt dagegen in der Mittelebene (Höhe höchstens 0,25) und dreht ein dreieckiges Profil. Für die Spulen heißt das: Bei Kandidat 3 müssen sie einem Rohr folgen, das sich weit aus der Ebene hebt; das erklärt die langen, weit ausladenden Spulen (Folgerung, nicht gerechnet).
+
 ## Erwartung gegen Ergebnis
 
 | Erwartung | gemessen | Urteil |
