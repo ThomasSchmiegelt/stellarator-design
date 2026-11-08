@@ -208,13 +208,19 @@ def struktur_netz(p: dict, po: Path, geo: dict):
     hm.QUER["n_wand"] = int(p.get("n_wand", 2)); hm.QUER["n_wp"] = int(p.get("n_wp", 4))
     I = B0 / geo["B_achse_einheit_T"] * geo["I_einheit_A"]           # B ~ I/L: Einheit (R0~1) -> Anlage (x L)
     I *= L
-    for s in spulen:
-        s.strom = np.sign(s.strom) * I
+    if p.get("strom_je_spule"):                                      # verschiedene Stroeme je Spule (Kette K3, B-Befund F-283)
+        I0 = abs(spulen[0].strom)                                    # Bezug wie geometrie(): I_einheit = |Strom Spule 0|
+        I_je = [np.sign(s.strom) * abs(s.strom) / I0 * I for s in spulen]
+    else:
+        I_je = [np.sign(s.strom) * I for s in spulen]
+    for s, I_k in zip(spulen, I_je):
+        s.strom = I_k
         if p.get("abtastung") == "kruemmung":                       # dichter an engen Biegungen (F-176)
             s.punkte = cad.neu_abtasten_kruemmung(s.punkte, stationen, np.radians(float(p.get("winkel_max_grad", 10))))
         else:
             s.punkte = cad.neu_abtasten(s.punkte, stationen)
-    br = ho = wp = WP_M * np.sqrt(I / 22.11e6)                     # gleiche Stromdichte wie 16 Spulen (Stufe 0)
+    I_wp = max(abs(x) for x in I_je) if p.get("strom_je_spule") else I   # Wickelpaket aus dem Maximalstrom (konservativ)
+    br = ho = wp = WP_M * np.sqrt(I_wp / 22.11e6)                  # gleiche Stromdichte wie 16 Spulen (Stufe 0)
     w = Namespace(wand_innen=p["wand_innen_m"], wand_seite=p["wand_seite_m"], t_min=p["t_min_m"],
                   t_max=p["t_min_m"] + p["t_zusatz_m"], spiel=FEST["spiel_m"], wand_min=0.003)
     hm.LAGER_ORT = p.get("lager_ort", FEST["lager_ort"])
@@ -293,7 +299,11 @@ def schritt_struktur(p: dict, po: Path, geo: dict, timeout_s: float = 2400) -> t
     k["stahl_je_spule"] = {"p99_MPa": je["p99"], "p99_ohne_rand_MPa": je["p99_ohne_rand"], "rand_m": RAND_M}
     k["stahl_heiss"] = {"spule": kh, "p99_ohne_rand_MPa": je["p99_ohne_rand"][kh], "p99_MPa": je["p99"][kh]}
     k["kraft_MN_max_je_spule"] = float(np.linalg.norm(F, axis=1).max() / 1e6)
-    k["I_spule_MA"] = I / 1e6; k["wickelpaket_m"] = wp; k["stationen"] = stationen; k["loeser"] = p.get("loeser", "mumps")
+    k["I_spule_MA"] = I / 1e6; k["wickelpaket_m"] = wp
+    if p.get("strom_je_spule"):
+        k["I_max_MA"] = max(abs(s.strom) for s in spulen) / 1e6
+        k["I_je_spule_MA"] = [abs(s.strom) / 1e6 for s in spulen]
+    k["stationen"] = stationen; k["loeser"] = p.get("loeser", "mumps")
     k["verbinder_ok"] = int(sum(v["ok"] for v in netz.info["verbinder"]))
     k["verbinder_kandidaten"] = len(netz.info["verbinder"])
     k["durchdringung_punkte"] = int(verlauf[-1]) if len(verlauf) else 0
@@ -367,7 +377,7 @@ def huelle_grenze(spulen, W, wp: float, baum, grenze: float, wand_min: float = 0
     return info
 
 
-def schritt_package(spulen, W, geo: dict, s2: dict, WP_M: float = WP_M, huelle: bool = False) -> dict:
+def schritt_package(spulen, W, geo: dict, s2: dict, WP_M: float = WP_M, huelle: bool = False, I_max: float | None = None) -> dict:
     from scipy.spatial import cKDTree
     from . import spulen as sp
     rand = np.load(geo["_ordner"] / "plasma_rand.npy")
@@ -399,7 +409,7 @@ def schritt_package(spulen, W, geo: dict, s2: dict, WP_M: float = WP_M, huelle: 
         Bmax = max(Bmax, float(np.linalg.norm(sp.biot_savart(x, seg), axis=1).max()))
     B_peak = Bmax
     I = B0 / geo["B_achse_einheit_T"] * geo["I_einheit_A"] * L
-    J_op = I / WP_M ** 2
+    J_op = (I if I_max is None else I_max) / WP_M ** 2             # I_max (nur Option strom_je_spule): Maximalstrom
 
     def Je_c(B, T):      # Senatore 2024 / Pardo 2026, ungünstigster Winkel (theta = 30 grad -> Nenner maximal)
         Kc = 2638e2 * np.exp(-(T - 4.2) / 20.0) / (1 + B / 11.44) ** 1.188      # A/m Bandbreite
@@ -459,7 +469,8 @@ def rechne_punkt(studie: str, nr: int, p: dict) -> dict:
     else:
         k, spulen, W = schritt_struktur(p, po, geo)
     z["struktur_s"] = time.time() - t1
-    pk = schritt_package(spulen, W, geo | {"_ordner": po}, s2, k["wickelpaket_m"], huelle=p.get("freiraum") == "huelle")
+    pk = schritt_package(spulen, W, geo | {"_ordner": po}, s2, k["wickelpaket_m"], huelle=p.get("freiraum") == "huelle",
+                         I_max=k["I_max_MA"] * 1e6 if p.get("strom_je_spule") else None)
     e = {"param": p, "spulen": {kk: s2[kk] for kk in s2 if kk.startswith(("Bn", "kraft_je", "B_mittel", "laenge", "abstand"))},
          "geometrie": geo, "struktur": k, "package": pk, "zeiten": z | {"gesamt_s": time.time() - t0},
          "annahmen": ANNAHMEN}
@@ -482,7 +493,8 @@ def wand_anpassen(p: dict, po: Path, geo: dict, s2: dict):
     for r in range(rmax + 1):
         k, spulen, W = schritt_struktur(p, po, geo)
         je = k["stahl_je_spule"]["p99_ohne_rand_MPa"]; fak = info["faktoren"] or [1.0] * len(je)
-        pk = schritt_package(spulen, W, geo | {"_ordner": po}, s2, k["wickelpaket_m"], huelle=p.get("freiraum") == "huelle")
+        pk = schritt_package(spulen, W, geo | {"_ordner": po}, s2, k["wickelpaket_m"], huelle=p.get("freiraum") == "huelle",
+                         I_max=k["I_max_MA"] * 1e6 if p.get("strom_je_spule") else None)
         hg = json.loads((po / "huelle_grenze.json").read_text()) if hmin else {}
         zeile = {"runde": r, "faktoren": fak, "p99_ohne_rand_MPa": je, "heiss_spule": k["stahl_heiss"]["spule"],
                  "heiss_MPa": k["stahl_heiss"]["p99_ohne_rand_MPa"], "stahl_p99_alle_MPa": k["stahl"]["vm_p99_MPa"],

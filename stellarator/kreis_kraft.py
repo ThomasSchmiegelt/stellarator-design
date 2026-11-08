@@ -14,7 +14,7 @@ import numpy as np
 from stellarator import kraft_analyse as ka
 
 ROOT = Path(__file__).resolve().parents[1]
-S2 = Path(os.environ.get("K3_AUS", ROOT / "sim" / "kette_k3" / "stage2"))
+S2 = (ROOT / os.environ.get("K3_AUS", "sim/kette_k3/stage2")).resolve()
 A_M = 1.80
 
 
