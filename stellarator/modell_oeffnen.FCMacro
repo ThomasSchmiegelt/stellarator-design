@@ -1,6 +1,7 @@
 # Öffnet beide Stellarator-Modelle, setzt Farben und passt die Ansicht ein (2026-11-08)
 import FreeCAD, FreeCADGui
-M = "/home/cae/hermes/fusion/sim/kette_k3/vergleich/modell"
+import os
+M = os.path.abspath(os.environ.get("MODELL_DIR", "sim/kette_k3/vergleich/modell"))   # aus dem Repo-Wurzelordner starten
 for n in ("k3_halb", "datj5fc"):
     d = FreeCAD.openDocument(f"{M}/{n}/{n}.FCStd")
     FreeCADGui.activateWorkbench("MeshWorkbench")
