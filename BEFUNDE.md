@@ -5,6 +5,13 @@
 
 ---
 
+## B-065 autoresearch-Pilot (Sonnet-Ralph-Schleife) an der Plasmaform: f 1,72 → 0,60, nur Koeffizientenschritte, Prüfbuch fängt 5 Schönmeldungen (2026-11-08, Opus + Sonnet) ⚠
+- **Herkunft:** Start Kandidat 3 halb, EIGENE Form (aus Datensatzform Do3Qy). Vergleich DATJ5FC, DATENSATZ-Form unverändert, ziel 0,400.
+- **Lauf:** 86 echte Runden (15:10–16:35), 50 Versuche, 25 behalten. ziel 1,723 → 0,606, f 0,599, QI 4,7e-5 → 7,0e-4; nicht zulässig (iota_rand 0,57). Bester Stand a0dcb7e, gegengerechnet exakt gleich.
+- **Gegen Erwartung F-291:** f im erwarteten Bereich. QI schlechter als erwartet. Keine Fälle ohne Gleichgewicht (erwartet 10–30 %). 5 KORREKTUREN statt 0: 2 schlechtere Stände und 3 Gleichstände wollte der Agent behalten.
+- **Deutung:** Der Agent macht nur Einzelkoeffizienten-Schritte, also ist die (1+1)-Evolutionsstrategie billiger. Die Sperre über das Prüfbuch ist nötig. Nach der Nutzungsgrenze lief die Schleife über 3000 Runden leer: Leerlauf-Erkennung fehlt.
+- Bericht: docs/recherche/autoresearch_pilot/bericht.md, Bild verlauf.png. Nächstes Mal mit PI (lokal).
+
 ## B-064 Vergleich K3 halb (eigen) gegen DATJ5FC (Datensatz): DATJ5FC −26 % Kraft, −19 % Spannung, aber 6-mal schlechteres Plasma und zu wenig Platz (2026-11-08, Opus + Sonnet) ⚠
 
 Bericht docs/recherche/spulen_suche/vergleich/vergleich_bericht.md, Protokoll F-281 bis F-290. Skripte `sim/kette_k3/lauf_datj.sh`, `lauf_vergleich_fem.sh`, `stellarator/satz_nach_kopplung.py`, `vergleich_kuehlung.py`, `vergleich_bilder.py`; `kopplung.py` Option `strom_je_spule` (vorher ein Strom für alle Spulen, bei ungleichen Strömen falsche Kräfte).
