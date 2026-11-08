@@ -5,6 +5,13 @@
 
 ---
 
+## B-069 „8“ durch Weglassen, Ausdünnen oder Stauchen entfernen: Die Schlaufe ist die halbe Spule, jede Variante zerstört das Feld (2026-11-08, Opus) ⚠
+- **Herkunft:** DATJ5FC, DATENSATZ-Form unverändert, EIGENE Spulen d100_n5_lr_s56 (Original 1,05e-3).
+- **Weglassen und Ausdünnen** (Nutzeridee, CAD-Weg mit 64 Stützpunkten): Die kürzere Schlaufe der Seiten-8 ist 43–48 % der Spule. Weglassen schneidet die halbe Spule ab (Verschiebung 1,5–3,8 m), Feldfehler 1,35e-1. Ausdünnen ergibt 1,37e-1. An den Schnittstellen entstehen neue Ösen, keine Spule wird frei.
+- **Höhe aus der Ebene stauchen:** Die Achter bleiben bei jedem Faktor über 0, weil Stauchen in der Projektion keine Kreuzung ändert. Erst ganz eben (Faktor 0) sind sie weg, dann ist der Feldfehler 1,4e-1. Schon 10 % weniger Höhe kosten 14 ×.
+- **Folge:** Die Seiten-8 ist eine Verdrehung der ganzen Spule (wie ein verdrillter Gummiring), die das Feld braucht. Nachbearbeitung hilft nicht. Erst klären, was genau unbaubar ist (Verdrehung, Biegeradius, Selbstabstand, Länge), dann gezielt in die Optimierung.
+- Skript stellarator/spulen_schlaufe.py, Bild docs/recherche/spulen_suche/glaettung/schlaufe.png.
+
 ## B-068 Glätten mit fünf Verfahren entlang der Bogenlänge (darunter der CAD-Weg des Nutzers): Feldfehler hängt nur an der Verschiebung, die „8“ bleibt immer (2026-11-08, Opus) ⚠
 - **Herkunft:** DATJ5FC, DATENSATZ-Form unverändert, EIGENE Spulen d100_n5_lr_s56 (Original 1,05e-3).
 - **Verfahren:** CAD-Weg (N Punkte + geschlossener Spline, N 64…8), Glättungsspline splprep, Taubin, Fourier entlang der Bogenlänge, Savitzky-Golay. Alle glätten entlang der Kurve, nicht über räumliche Nähe.
