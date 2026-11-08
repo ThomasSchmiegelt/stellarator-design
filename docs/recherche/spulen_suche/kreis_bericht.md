@@ -6,6 +6,17 @@
 
 **Kurzantwort.** Zwei Durchläufe sind gerechnet. Unser Plasma hat jetzt Spulen, die in den angenommenen Bauraum passen, und verliert dadurch nur etwa 7 % QI. Die Kräfte bleiben der offene Punkt. Die flachere Form hat die größte Spulenkraft um 19 % gesenkt, kostet aber das 2,3-Fache an QI, und wir können nicht belegen, dass die Abflachung der Grund ist. Geschlossen ist der Kreis noch nicht: Tragwerk-FEM, Kühlung und Plasmadruck fehlen. Die Aufgaben 2 und 3 der Challenge erfüllt keine dieser Formen.
 
+## Woher die Plasmen kommen
+
+| Name | Herkunft | nfp |
+|---|---|---|
+| Kandidat 3 halb (K3 halb) | **eigene Form**: aus der besten Datensatzform Do3QyJbtRhtGhrTiBSBbyKM, halber Schritt unserer Suche (B-050); QI 4,7e-5, kommt im Datensatz nicht vor | 2 |
+| flachere Form (misch91, Durchlauf 2) | **eigene Mischung**: 75 % K3 halb, 25 % Datensatzform D7oUXRqC9 | 2 |
+| DjLe3eL6 | **Datensatzform, unverändert** (ConStellaration; auch Proximas Ausgangsform) | 4 |
+| DATJ5FC | **Datensatzform, unverändert** (ConStellaration) | 4 |
+
+Die Spulen sind getrennt davon zu sehen: A085 und d100_… sind eigene Spulensätze, „Proxima-Spulen“ sind fremd.
+
 ## Was ist ein Durchlauf?
 
 | Schritt | Werkzeug | Stand |
@@ -134,3 +145,5 @@ Bei DjLe3eL6 mit Proxima-Spulen hält die Stromtrimmung auch im fertigen Lauf: B
 Two passes of the loop plasma → coils → tube → free-boundary plasma → forces are computed. With 48,000 solver steps the loss factor is finally reliable: Proxima coils 1.53, our A085 coils 1.29 (both on DjLe3eL6), our coils on candidate 3 half 1.07. Values after 3,000 steps mislead in both directions. **Pass 1** gives a coil set that fits the assumed space (a = 1.80 m, 1.3 m plasma–coil clearance, 1.0 m coil package): field error 2.10e-4, no tube intersection, QI with coils 5.14e-5, largest net force 1261 MN. **Pass 2** uses a flatter shape (elongation 6.33 instead of 7.15): largest net force 1021 MN (−19 %), but QI rises 2.3 times to 1.17e-4 (preliminary) and the sum of net forces stays the same. Two coil sets of the same plasma differ more than that, so the flattening is not shown to be the cause. The loop is not closed yet: FEM structure, cooling and plasma pressure are missing, and no shape meets challenge tasks 2 or 3. Next step: make force an objective of the coil search before giving up more QI.
 
 Coil cross-sections (schnitt_spulen.png): the coils of candidate 3 half reach far out (up to 1.2 major radii high, with kinks and small loops). DjLe3eL6 with our A085 coils stays compact. The dataset shape DATJ5FC (not ours) has the smoothest coils, but its old set has a 25 times larger field error and was not made under this loop's space limits, so a fair comparison needs a pass with the same limits.
+
+Origin of the plasmas: candidate 3 half and the flatter blend are our own shapes (derived from dataset shape Do3Qy, blend with D7oUXRqC9); DjLe3eL6 and DATJ5FC are unmodified ConStellaration dataset shapes.

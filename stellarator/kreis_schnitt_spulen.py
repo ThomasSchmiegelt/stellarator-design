@@ -13,9 +13,9 @@ from stellarator.spulen_satz import lade_satz
 
 R = Path(__file__).resolve().parents[1]
 K = R / "sim" / "kette_k3"
-SAETZE = [("Kandidat 3 halb, Durchlauf 1\n(Feldfehler 2,1e-4, im Bauraum)", K / "stage2" / "satz_d100_n10_lr_s56", "#2a78d6"),
-          ("DjLe3eL6, eigene Spulen A085\n(Feldfehler 6,6e-4)", K / "satz_A085", "#1baf7a"),
-          ("DATJ5FC, alter Satz Plan B\n(Feldfehler 5,1e-3, zu enge Längenregel)", K / "planb" / "stage2" / "satz_d085_n5", "#eb6834")]
+SAETZE = [("Kandidat 3 halb: EIGENE Form\n(aus Datensatzform Do3Qy, halber Schritt)\nSpulen Durchlauf 1, Feldfehler 2,1e-4", K / "stage2" / "satz_d100_n10_lr_s56", "#2a78d6"),
+          ("DjLe3eL6: DATENSATZ-Form, unverändert\n(ConStellaration, auch von Proxima genutzt)\neigene Spulen A085, Feldfehler 6,6e-4", K / "satz_A085", "#1baf7a"),
+          ("DATJ5FC: DATENSATZ-Form, unverändert\n(ConStellaration)\nalter Satz Plan B, Feldfehler 5,1e-3", K / "planb" / "stage2" / "satz_d085_n5", "#eb6834")]
 A_M, ROHR_M = 1.80, 0.852
 
 
@@ -68,7 +68,7 @@ def main():
             A.axhline(0, color="#52514e", lw=0.5, ls=":"); A.axvline(1, color="#52514e", lw=0.5, ls=":")
             A.text(0.33, 1.3, f"Spule {b + 1}, um {np.degrees(phi):.1f}°", fontsize=8, color="#52514e")
             if k == 0:
-                A.set_ylabel(name + f"\nnfp {nfp}", fontsize=8.5)
+                A.set_ylabel(name + f"\nnfp {nfp}", fontsize=8)
     fig.suptitle("Spulen (grau, Breite = Rohr 0,85 m bei a = 1,80 m) um den Plasmaquerschnitt an ihrer Lage; Spule seitlich auf (R, z) projiziert. Maßstab: Hauptradius = 1",
                  fontsize=11, x=0.01, ha="left")
     fig.tight_layout(); fig.savefig(R / "docs/recherche/spulen_suche/kreis/schnitt_spulen.png", dpi=115)

@@ -9,9 +9,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 R = Path(__file__).resolve().parents[1]
-FORMEN = [("Kandidat 3 halb (Durchlauf 1)", R / "sim/qi_flaeche/gegenrechnung_klein/form_k3_f0.5.json", "#2a78d6"),
-          ("flachere Form (Durchlauf 2)", R / "sim/kette_k3/kreis2/form_misch91.json", "#eb6834"),
-          ("DjLe3eL6 (Proxima, mit Spulen)", R / "sim/kette_k3/satz_A085/boundary.json", "#1baf7a")]
+FORMEN = [("Kandidat 3 halb: EIGENE Form\n(aus Datensatzform Do3Qy, halber Schritt)", R / "sim/qi_flaeche/gegenrechnung_klein/form_k3_f0.5.json", "#2a78d6"),
+          ("flachere Form: EIGENE Mischung\n(75 % K3 halb, 25 % Datensatzform D7oUXRqC9)", R / "sim/kette_k3/kreis2/form_misch91.json", "#eb6834"),
+          ("DjLe3eL6: DATENSATZ-Form, unverändert\n(ConStellaration)", R / "sim/kette_k3/satz_A085/boundary.json", "#1baf7a")]
 
 
 def rz(f, phi, th):
