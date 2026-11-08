@@ -5,6 +5,14 @@
 
 ---
 
+## B-064 Vergleich K3 halb (eigen) gegen DATJ5FC (Datensatz): DATJ5FC −26 % Kraft, −19 % Spannung, aber 6-mal schlechteres Plasma und zu wenig Platz (2026-11-08, Opus + Sonnet) ⚠
+
+Bericht docs/recherche/spulen_suche/vergleich/vergleich_bericht.md, Protokoll F-281 bis F-290. Skripte `sim/kette_k3/lauf_datj.sh`, `lauf_vergleich_fem.sh`, `stellarator/satz_nach_kopplung.py`, `vergleich_kuehlung.py`, `vergleich_bilder.py`; `kopplung.py` Option `strom_je_spule` (vorher ein Strom für alle Spulen, bei ungleichen Strömen falsche Kräfte).
+Gleiche Grenzen (a = 1,80 m, d100, _lr, _s56). DATJ5FC n5: Feldfehler 1,05e-3 (K3 2,1e-4), Abstand 0,99 a (bindend; K3 1,18 a), QI frei 48000 3,02e-4, Verlust 1,065 (K3 1,07), knapp unter Task-3-Grenze; n6: Verlust 1,14, QI 3,24e-4 darüber. Nettokraft max 934 gegen 1261 MN. FEM Wände wie 0012, Runde 0: 1160 gegen 1427 MPa; wand_adapt schwingt bei beiden (nicht konvergiert). Hülle 1,28 m (unter 1,5) gegen 1,50 m. Kühlung: Wandlast 1,32 gegen 1,44 MW/m²; Bleidruckverlust entscheidet Isolierung und Kanalrichtung, nicht die Form.
+Erwartungen verfehlt: Verlust (erwartet 1,2 bis 1,6) und Spannung (erwartet deutlich niedriger). Elmer braucht bis 20 GB; FEM n6 OOM bei 24 GB.
+
+---
+
 ## B-063 Spulen im Schnitt: Kandidat 3 holt weit aus, DATJ5FC wirkt am einfachsten, Vergleich aber unfair (2026-11-08, Opus) ⚠
 
 Bild docs/recherche/spulen_suche/kreis/schnitt_spulen.png, Skript `stellarator/kreis_schnitt_spulen.py`, Bericht kreis_bericht.md Abschnitt „Spulen im Schnitt“. Fünf Basisspulen je Satz, seitlich auf (R, z) projiziert, um den Plasmaschnitt am mittleren φ der Spule.
