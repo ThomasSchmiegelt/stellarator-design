@@ -5,6 +5,13 @@
 
 ---
 
+## B-067 Baubare Spulen für DATJ5FC: Torsionsstrafe macht ruhiger, aber nicht eben; ebene Spulen sind eben, aber 30–45-mal ungenauer (2026-11-08, Opus) ⚠
+- **Herkunft:** DATJ5FC, DATENSATZ-Form unverändert. Spulen EIGEN (Stage 2 k3_spulen, Bauraum d = 1,0 a).
+- **Torsionsstrafe** (_t3/_t30/_t300): Torsionssumme 2400 → 1330/740/590, Feldfehler 1,26e-3/1,58e-3/1,87e-3. Höhe aus der Ebene bleibt 4,8–8,0 m, Seiten-Achter bleiben 1–4 je Spule. Geringe Torsion heißt nicht eben.
+- **Ebene Spulen** (_p, CurvePlanarFourier): Höhe 0, keine Achter, Biegeradius 0,8–2,6 m. Feldfehler n5 4,6e-2, n6 4,7e-2, n8 3,3e-2 (verdreht n5: 1,05e-3). Nach 2 Runden sind Spule–Plasma und Krümmung noch verletzt.
+- **Folge:** Ein Mittelweg fehlt, nämlich eine Strafe auf die Höhe aus der Ebene, oder eine Plasmaform, die zu ebenen Spulen passt (Spulen zuerst). Baubarkeitsmaß in spulen_glaetten.py; bei ebenen Spulen zählt die Seitenansicht jetzt 0.
+- Bilder docs/recherche/spulen_suche/glaettung/torsion.png und eben.png.
+
 ## B-066 Spulen glätten (Fourier-Ordnung kappen) entfernt die „8er“ nicht und kostet Faktor 10 im Feldfehler (2026-11-08, Opus) ⚠
 - **Herkunft:** DATJ5FC, DATENSATZ-Form unverändert, mit EIGENEN Spulen d100_n5_lr_s56 (5 Grundspulen, Ordnung 7).
 - Feldfehler nach Ordnung: 7: 1,05e-3; 6: 1,01e-2; 5: 1,55e-2; 4: 1,75e-2; 3: 3,7e-2; 2: 7,4e-2.

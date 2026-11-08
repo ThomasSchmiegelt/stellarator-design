@@ -56,7 +56,8 @@ def baubarkeit(c, m_je_e):
     D = np.linalg.norm(g[:, None] - g[None], axis=2)
     db = np.abs(bogen[:, None] - bogen[None]); db = np.minimum(db, L - db)
     selbst = float(D[db > 0.15 * L].min())
-    seite = [kreuzungen_2d(((g - mitte) @ vt[[i, 2]].T)[::2]) for i in (0, 1)]
+    eben = (hoehe.max() - hoehe.min()) < 0.01 * np.ptp(p2[:, 0])         # ebene Spule: Seitenansicht ist eine Linie, keine Kreuzung
+    seite = [0, 0] if eben else [kreuzungen_2d(((g - mitte) @ vt[[i, 2]].T)[::2]) for i in (0, 1)]
     return {"laenge_m": float(L), "biegeradius_min_m": float(1 / k.max()), "torsion_max_1_m": float(t.max()),
             "achter": kreuzungen_2d(p2[::2]), "achter_seite": max(seite), "aus_ebene_m": float(hoehe.max() - hoehe.min()), "selbstabstand_min_m": selbst}
 

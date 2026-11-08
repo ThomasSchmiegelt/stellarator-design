@@ -1,0 +1,206 @@
+\section{From plasma shape to buildable coils: the K3 chain}\label{sec:spulenkette}
+Status 8 November 2026, findings B-051 to B-066 (log \texttt{BEFUNDE.md}). The previous chapters ended with one coil set that meets the targets
+(finding B-050). This chapter starts when the \emph{plasma} drives the selection and follows one question: given a good plasma shape, can we find
+coils that fit the available space, do not spoil the plasma and can be supported? It is in chronological order and includes the places where a statement had to be withdrawn.
+
+\kasten{Where the plasmas and the coils come from.}{\textbf{Candidate 3 half (K3 half): OWN shape} (from dataset shape
+Do3QyJbtRhtGhrTiBSBbyKM, half step of our own search, B-050). \textbf{misch91: OWN blend} (75\,\% K3 half + 25\,\% dataset shape D7oUXRqC9).
+\textbf{DjLe3eL6, DATJ5FC, DPrcxq66, Do3Qy, D8ZNt2: DATASET shape} (ConStellaration), unmodified. The coils are to be seen separately:
+\textbf{A085 and d100\_\ldots{} are OWN coil sets}, \textbf{``Proxima coils'' are foreign} (a coil set from the challenge, not ours).
+Every number below names plasma \emph{and} coils.}
+
+\kasten{Terms, briefly.}{\emph{QI (quasi-isodynamicity)}: a figure of merit for how well a plasma confines its particles in the magnetic field; smaller is better.
+Task~3 of the challenge requires at most $3.2\cdot10^{-4}$. \emph{Field error}: the part of the coil field that pierces the target surface of the
+plasma, like a fit error; 0 would be ideal. \emph{Stage~2}: the second step of the coil search (program simsopt): for a given
+plasma shape, find coil paths that keep the field error small and respect distances and lengths. \emph{Free boundary}: the plasma chooses its own edge in the
+field of the real coils (VMEC++ calculation) instead of having it prescribed; this is the honest test. \emph{Loss factor}: QI
+with coils divided by QI of the target shape; 1 means no loss. \emph{fsqr}: residual force of the equilibrium calculation; it is only finished near $10^{-14}$.
+\emph{nfp}: number of identical periods of the ring. \emph{p99}: the value below which 99\,\% of the volume lies (instead of the single peak). \emph{Net force}:
+sum of all magnetic forces on one coil, i.e.\ what its support has to hold.}
+
+%----------------------------------------------------------------------
+\subsection{QI map, coil error, effect map, twist (B-051 to B-056)}
+\textbf{The real thresholds (B-051).} The given ``QI at most 0.001'' is true for no task. In the installed package, Task~3 requires:
+rotational transform (turns of the field lines around the cross-section, $\iota$) at the edge per period at least 0.25, QI at most $3.2\cdot10^{-4}$, mirror ratio (strength of the field variation along a field line) at most 0.25, flux compression
+at most 0.9, vacuum well (stability measure, positive is stable) at least 0; feasible means every normalised violation is at most 0.01. In the dataset (182,222 rows, 158,685 with QI) no
+single shape meets Task~3 \emph{with} QI. The best shape that meets the other rules (D8ZNt2, DATASET shape) has QI $1.78\cdot10^{-3}$. A local
+VMEC++ search (route~B) was still running at that time (status open).
+
+\textbf{QI map (B-052).} Instead of only the edge value, QI was computed for 14 surfaces from the core to the edge. For three of four
+shapes the error grows monotonically outward (centre 20 to 30 times smaller); the edge is the worst surface, so the official value is a safe upper bound.
+There is no accumulation from inside to outside; each surface is rated on its own. The exception is DjLe3eL6 with a hump at $s\approx0.7$
+(1.62 times the edge value): there the official figure underestimates the error.
+\bild{sk_qi_ueber_s.png}{0.85}{QI per surface for four shapes. Do3Qy, D8ZNt2 and DjLe3eL6: DATASET shapes, unmodified;
+Candidate 3 half: OWN shape (from Do3Qy, half step). Cross = official value at the edge.}
+\lesehilfe{Horizontal: surface $s$ from the plasma centre (0) to the edge (1); vertical: the QI error of the surface, logarithmic (each grid line is a factor).
+Low is good. The dashed lines are the challenge limits (Task~3: 0.00032; Task~2: 0.0001). The crosses sit on the last point: our
+calculation agrees with the official one. Note the violet curve (DjLe3eL6): it rises to $s\approx0.7$ and then falls again.}
+
+\textbf{Coil error (B-053).} For DjLe3eL6 (DATASET shape, unmodified) the Proxima coil set (foreign; 5 base coils, 40 coils) was computed. The
+coils worsen QI at the edge from $4.48\cdot10^{-4}$ to $5.54\cdot10^{-4}$ (perturbation model) or $5.8\cdot10^{-4}$ to $6.7\cdot10^{-4}$ (free boundary), i.e.\ by 24 to 50\,\%. The current per coil group is a
+lever: group S5 changes QI by about $\mp25$\,\% for $\pm5$\,\% current; changing all together changes nothing. An optimum within $\pm5$\,\% (S2 1.05, S3 1.015, S4 0.98,
+S5 0.95) lowers QI at the edge by 27\,\% (perturbation model) or 28\,\% (free boundary, $4.15\cdot10^{-4}$); the mirror ratio rises from 0.359 to 0.376. The
+coil field alone has islands and a stochastic fringe at the edge. The optimum of B-053 was \emph{not global} (B-056): a random sample lies lower at
+$3.92\cdot10^{-4}$; the recheck in B-061 confirms this (sample 008: $3.97\cdot10^{-4}$).
+
+\textbf{Effect map (B-054).} Where on the plasma surface does which coil act? For each group the current was changed by 1\,\% and the position by 5\,mm, and the
+local change of QI plotted. Result: the coils act \emph{through the current at the flanks of the field trough}, not through proximity. The rank correlation of the effect with the
+inverse distance is $+0.45$, $+0.40$, $+0.24$, $-0.35$, $-0.51$ per group (S1 to S5); a distance model has no predictive power. The brightest
+spots are among the brightest 10\,\% even without coils: they are shape spots of the plasma itself. Broad spots (32\,\% of the worst 5\,\%) are created by the coils.
+Trimming the currents (S2=S3=S4=1.05, S5=0.95) lowers QI at the edge by 26\,\% (perturbation model) or 24\,\% (free boundary).
+\bild{sk_abwicklung_rand.png}{0.92}{Effect maps of the five coil groups on the plasma edge (DjLe3eL6, DATASET shape, unmodified; coils: Proxima, foreign)
+and additional error from all coils (panel~6).}
+\lesehilfe{The edge surface of the plasma is unrolled like a map: horizontal one period (angle $\varphi_B$ 0 to 90 degrees), vertical once around the
+cross-section ($\theta_B$ 0 to 360 degrees). Panels 1 to 5: how the local QI changes when the current of this coil group rises by 1\,\%. Red means worse,
+blue better, white no effect. The coloured line is the coil at the point of the surface it is closest to. Panel~6: additional error from all coils. Note the
+red-blue pairs next to each other: this is how a sharp error spot looks that is moved rather than made stronger or weaker.}
+
+\textbf{Twist (B-055).} Hypothesis of the user: a large diameter gives more room and helps; shapes with smoother curvature are better. Measured with
+VMEC++ at high accuracy, only the major radius $R_{00}$ changed from $\times0.8$ to $\times1.5$, cross-section fixed. Do3Qy (DATASET shape): QI $6.15\cdot10^{-5}$ at the original,
+$2.00\cdot10^{-4}$ at $\times0.9$, $1.75\cdot10^{-4}$ at $\times1.1$, $9.1\cdot10^{-4}$ at $\times1.5$. DjLe3eL6 (DATASET shape) is also best at the original. Both
+shapes are best at their original radius; a larger diameter at a fixed cross-section does \emph{not} help. The QI figure is scale-free (shape $\times2$ bit-identical). In the dataset
+the rotation of the cross-section per period correlates with worse QI ($+0.42$); for net rotation 0 / $\pi$ / $2\pi$ per period the median QI is $0.0157$ / $0.0112$ / $0.0296$.
+Verdict: partly (too much rotation hurts); ``large diameter helps'' and ``smoother curvature is better'' are not confirmed.
+\bild{sk_r00_reihe.png}{0.95}{Effect of the major radius on QI and figures: Do3Qy and DjLe3eL6, both DATASET shapes, unmodified, $R_{00}$ with factor 0.8 to 1.5.}
+\lesehilfe{Six panels, horizontal always the aspect ratio (right = slimmer ring at the same cross-section); the label shows the factor on $R_{00}$. Top left QI
+(logarithmic, lower is better, dashed the Task~3 limit), next to it rotational transform, mirror ratio, largest elongation (ovalness) and vacuum well. Blue Do3Qy,
+violet DjLe3eL6. Note that both QI curves have their minimum at the original (factor 1).}
+
+%----------------------------------------------------------------------
+\subsection{Chain K3: own coils, PicoGK tubes, free boundary, loss factor (B-058 to B-061)}
+\textbf{Feasibility (B-058).} Of 158,685 dataset shapes and 284 own samples, places 1 to 10 are all K3/Do3 samples (QI $3.66\cdot10^{-5}$ to $4.60\cdot10^{-5}$, nfp 2).
+K3 half is therefore the best plasma. The required tools (simsopt, VMEC++) were available. A bridge was missing that feeds our own coils instead of the Proxima coils into the free boundary.
+
+\textbf{Step~1 with A085 (B-059).} A085 are OWN coils for DjLe3eL6 (DATASET shape). The bridge is verified: field error $6.5978\cdot10^{-4}$, equal to five digits with the original
+program. Free boundary at 3000 steps: loss factor 1.013 against 1.30 with the foreign Proxima coils; at 12,000 steps 1.25 against 1.50. The PicoGK tubes (coil path with circular cross-section, \SI{0.852}{m}
+diameter, ASSUMPTION area-equal to the winding pack) cost nothing: all tubes closed, smoothing changes the field error by $+0.015$\,\%. The tubes do intersect each other, however (coil--coil 0.54\,m $<$ 0.85\,m).
+
+\textbf{Own coils for K3 half (B-060).} The first runs with the length rule ``1.25 $\times$ start length'' gave field errors of $2.8\cdot10^{-3}$ to $8.0\cdot10^{-3}$. Measured cause: this length limit was binding. With the length rule
+of the ``two rings'' approach (sum 249\,$a$) the set d085\_n10\_lr reaches the field error $2.15\cdot10^{-4}$, coil--plasma distance 1.22\,$a$. The coils are 27 to 55\,m long, strongly twisted and up to about 10\,m above the mid-plane.
+Free-boundary loss factor: 1.17 at 3000 steps, 1.14 at 12,000. A plasma advantage remained: QI with coils $5.6\cdot10^{-5}$ to $6.4\cdot10^{-5}$ (K3 half) against $4.5\cdot10^{-4}$ to $5.6\cdot10^{-4}$ (DjLe3eL6 with A085).
+
+\textbf{Checking the Sonnet work (B-061).} A second model had made runs in the night from 6 to 7 November. Opus checked them against the raw data. Four things were withdrawn or corrected:
+\begin{itemize}\itemsep1pt
+\item \textbf{B-057 is refuted.} B-057 claimed that the two current outliers and the $\pm50$\,\% cases did not converge in the free boundary, calling B-056 into question. The nine cases, however, ran without the settings
+(grid \texttt{nzeta} 48, tolerance, iteration count, continue despite warning) that all earlier cases had. With the same settings B-056 stays confirmed (QI $3.97\cdot10^{-4}$ and $4.07\cdot10^{-4}$ against $4.15\cdot10^{-4}$). The
+bisection of the error was a sensible idea, but it only measured the faulty call; the ``expectation'' in the addendum was not written down anywhere beforehand.
+\item \textbf{``Converged'' was wrong.} Up to 12,000 steps no run reached the tolerance (fsqr $2\cdot10^{-13}$ to $2\cdot10^{-10}$). Only with 48,000 steps: Proxima 1.53, A085 1.29, K3 with coils 1.07. The loss factors of B-059 and B-060 are
+intermediate states.
+\item \textbf{The target value f was misread.} f is the sum of the \emph{squares} of the violations; at most 0.01 is allowed per condition, i.e.\ $f\le5\cdot10^{-4}$. Comparing $f=0.0114$ with 0.01 was wrong. Best matrix sample: $f=0.0224$, largest single violation 0.12.
+\item \textbf{No comparison of K3 against Proxima.} The field errors $2.15\cdot10^{-4}$ (K3) and $2.4\cdot10^{-3}$ (DjLe3eL6 with Proxima) belong to different shapes; the statement ``the engineering costs 15 to 25\,\%'' held for a set that does not fit the available space.
+\end{itemize}
+Further findings: of 27 pairs of $\pm0.2$ standard deviations, 18 are worse on \emph{both} sides, so the sign of the bars is not a direction. All calculations run with practically no plasma pressure (1\,Pa). The structure was so far computed only for DPrcxq66.
+\kasten{Lesson.}{A number counts only once the calculation has reached its tolerance, and a comparison only for the same shape and the same settings. Silently missing settings look like a result. This is why Opus checks raw data, not reports.}
+
+%----------------------------------------------------------------------
+\subsection{The loop and the available space (B-062), coils in section (B-063)}
+The question was: can we build a closed loop in which the engineering acts back on the plasma? Assumptions: minor plasma radius $a=\SI{1.80}{m}$, field on axis \SI{6.5}{T}, 1.3\,m clearance plasma--coil for blanket and shielding, coil pack 1.0\,m;
+hence coil centre at least 1.0\,$a$ from the plasma and coil--coil at least 0.56\,$a$. The loop has three steps: coils for the shape (Stage~2), tube and smoothing (PicoGK), recompute the plasma with free boundary; forces are evaluated afterwards.
+Structural FEM and cooling are \emph{not yet} connected.
+
+\textbf{Pass 1 (K3 half, OWN shape; coils d100\_n10\_lr\_s56, OWN coils, 40 coils).} Field error $2.10\cdot10^{-4}$, coil centre--plasma 1.18\,$a$, coil--coil 0.56\,$a$, bend radius 0.50\,$a$, no tube intersection, tube--plasma 1.70\,m. Free boundary with
+48,000 steps: QI $5.14\cdot10^{-5}$ (fsqr $4.0\cdot10^{-14}$), loss factor 1.07. The earlier conflict ``intersection or too little distance'' came from the too tight length rule, not from the plasma shape. Largest net force 1261\,MN at coil~6.
+\bild{sk_rohr_durchlauf1.png}{0.8}{Pass 1: candidate 3 half (OWN shape, plasma orange) with smoothed tubes of the own coils d100\_n10\_lr\_s56 of one half period (blue, 0.85\,m diameter, assumption) and centre lines of the other coils (grey).}
+\lesehilfe{Like a view in a CAD model, without a scale. Two things are visible: the tubes no longer touch, and the coils are still strongly twisted. Computationally the set fits the available space; whether such coils can be wound and supported, the picture does not say.}
+
+\textbf{Pass 2 (misch91, OWN blend: 75\,\% K3 half + 25\,\% dataset shape D7oUXRqC9).} Feedback from pass~1: a flatter shape (elongation 6.33 instead of 7.15) should lower the peak force. Result: largest net force 1021\,MN (minus 19\,\%), QI with coils $1.17\cdot10^{-4}$ (12,000 steps, not finished,
+2.3 times worse), loss factor 1.04 (preliminary), sum of net forces practically equal (4361 against 4411\,MN). The same plasma shape K3 half with a \emph{different} coil set (d085\_n10\_lr, without space limits) has 1635\,MN at coil~5: the coil set shifts the force at least as much as
+the flattening. \textbf{So it is not shown that the flattening lowers the force}; the cause stays open. The reference DPrcxq66 had 792\,MN (not a limit).
+\bild{sk_nettokraft.png}{0.9}{Net force per base coil: K3 half (OWN shape) with two coil sets (green: d085\_n10\_lr without space limits; blue: pass 1, within the space) and misch91 (OWN blend, orange: pass 2). Coils: own sets.}
+\lesehilfe{Horizontal the ten base coils of one half period, vertical the net force in meganewtons (MN). Dashed: force of the predecessor DPrcxq66 (792\,MN, not a limit). Note that green and blue have the same plasma shape and differ by a factor of two at coil~5.}
+
+\textbf{Long runs as the yardstick (addendum).} With 48,000 steps and fsqr near $10^{-14}$: Proxima (foreign) on DjLe3eL6 1.53; A085 (own) 1.29; K3 half with own coils 1.07. Current trimming on DjLe3eL6 with Proxima holds here too: QI $6.81\cdot10^{-4}$ (base) $\to$ $4.43\cdot10^{-4}$ (minus 35\,\%), mirror ratio 0.359 $\to$ 0.375.
+
+\textbf{Coils in section (B-063).} The coils were projected sideways onto the plane (distance from the ring axis, height), around the plasma cross-section at that location.
+\bild{sk_schnitt_spulen.png}{0.95}{Coils in section. Top: K3 half (OWN shape), pass~1, own coils. Middle: DjLe3eL6 (DATASET shape, unmodified) with own coils A085. Bottom: DATJ5FC (DATASET shape, unmodified) with the old own set d085\_n5 (field error $5.1\cdot10^{-3}$, without space limits).}
+\lesehilfe{Each row is a coil set, each column a coil of the first half period. The coloured area is the plasma cross-section at the location of the coil, the grey ring the coil, projected sideways onto the plane of distance from the ring axis (horizontal) and height (vertical), like a view in a drawing. Scale: major radius equals 1. A real coil is not flat; the projection shows how far it reaches out. Note the kinks and small loops.}
+K3 half: the coils reach up to 1.2 major radii in height and have kinks and loops. DjLe3eL6 with A085 is compact with small loops. DATJ5FC looks simplest. Caveat: the DATJ5FC set in this picture is old (field error 25 times larger, too tight length rule, no space limits); smooth coils with a large field error are easy to get.
+The user's assessment, supported by the picture but not computed: K3 is hard to build, DATJ5FC simpler. The fair comparison follows in the next section.
+
+%----------------------------------------------------------------------
+\subsection{K3 half against DATJ5FC: forces, FEM, cooling, 3D models (B-064)}
+Both shapes with the same assumptions: $a=\SI{1.80}{m}$, \SI{6.5}{T}, coil centre--plasma at least 1.0\,$a$, coil--coil at least 0.56\,$a$, structure walls as in point 0012 of the predecessor run (DPrcxq66, walls $\times1.6$),
+shell between plasma and casing at least 1.5\,m (requirement), fusion power 3053\,MW (\emph{assumed}, not computed from the shape). \textbf{The strength limit 500\,MPa is only an ASSUMPTION, not proven}; stresses are therefore quoted as numbers.
+Plasmas: K3 half (OWN shape, nfp 2) and DATJ5FC (DATASET shape, unmodified, nfp 4). Coils in both cases OWN sets (d100\_n10\_lr\_s56 for K3; d100\_n5\_lr\_s56 as main set and d100\_n6\_lr\_s56 as side set for DATJ5FC).
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}Xrr@{}}\toprule
+Figure & K3 half (OWN shape) & DATJ5FC n5 (DATASET shape) \\\midrule
+Field error (mean) & $2.10\cdot10^{-4}$ & $1.05\cdot10^{-3}$ \\
+Distance coil centre--plasma & 1.18\,$a$ & 0.99\,$a$ (binding) \\
+QI with coils (free boundary, 48,000 steps) & $5.14\cdot10^{-5}$ & $3.02\cdot10^{-4}$ \\
+Loss factor & 1.07 & 1.065 \\
+largest net force per coil & 1261\,MN & 934\,MN (minus 26\,\%) \\
+Stress hottest coil, round 0 (p99, without edge zone) & 1427\,MPa & 1160\,MPa (minus 19\,\%) \\
+Shell plasma--casing & 1.50\,m & 1.28\,m (below requirement 1.5\,m) \\
+Neutron wall load (3053\,MW assumed) & 1.44\,MW/m$^2$ & 1.32\,MW/m$^2$ \\
+Lead pressure drop, assumption 6 degrees/6\,T, steel wall & 65\,kPa & 93\,kPa \\\bottomrule
+\end{tabularx}\caption{Comparison under equal assumptions (report \texttt{vergleich\_bericht.md}). The side set DATJ5FC n6 has loss factor 1.14 and QI $3.24\cdot10^{-4}$, just above the Task~3 limit; FEM was not computed for it (memory).}\end{table}
+\textbf{Forces and stress.} DATJ5FC has the smaller peak force (minus 26\,\%) and 19\,\% less stress in the hottest coil (the coil with the highest p99, without the 0.5\,m edge zone). Both are far above the assumed 500\,MPa. The adaptation of wall thicknesses per coil oscillates and has not converged in either case
+(K3 701 to 1427\,MPa, DATJ5FC 1073 to 1264\,MPa over four rounds); the lowest value (701\,MPa) is an intermediate state, not a result. Round 0 with equal walls is the fair comparison.
+\bild{sk_fem_runden.png}{0.85}{Stress of the hottest coil per adaptation round: K3 half (OWN shape) and DATJ5FC (DATASET shape, unmodified), each with OWN coils. Dashed: 500\,MPa, only an ASSUMPTION.}
+\lesehilfe{The finite element method (FEM) splits the support structure into small cells and computes the stress in each. Vertical: highest equivalent stress of the hottest coil (p99), in MPa; horizontal the rounds after which the program adapts the wall thicknesses. Round 0 has the same walls for both. Note that all values lie above the dashed line and the later rounds jump: the adaptation has not converged.}
+
+\textbf{Plasma, space, cooling.} With coils DATJ5FC is about 6 times worse in QI and has a five times larger field error; its distance is binding. The wall load follows from the plasma surface (1844 against 1693\,m$^2$), hence 8\,\% less for DATJ5FC. The pressure drop of liquid lead (a flow in a magnetic field is braked, like an eddy-current brake) depends on the
+insulation of the channel wall and the channel direction relative to the field, not on the plasma shape: with the field of our own coils and a steel wall 106 to 14,501\,kPa (K3) or 317 to 5308\,kPa (DATJ5FC), with an insulated wall 3 to 33\,kPa or 6 to 25\,kPa.
+\bild{sk_kennzahlen_relativ.png}{0.85}{Main figures of DATJ5FC n5 (DATASET shape, unmodified; own coils) divided by K3 half (OWN shape; own coils).}
+\lesehilfe{Each bar is the value of DATJ5FC divided by the value of K3 half; the line at 1 means equal. For field error, QI, force, stress and wall load a small value is better; for distances and shell a small value means less room. Note the three engineering advantages left of the line (force 0.74, stress 0.81, wall load 0.92) and the disadvantages on the right (field error 5.0, QI 5.9).}
+
+\textbf{3D models.} For both plants, plasma, vacuum vessel (ASSUMPTION: inside 0.15\,m, wall 0.10\,m above the plasma edge surface, without cooling channels) and the 40 coil tubes were generated as triangle meshes, checked (watertight, no intersection of tube and vessel) and stored as a FreeCAD file.
+Shortest tube--plasma distance 1.705\,m (K3) and 1.341\,m (DATJ5FC).
+\bild{sk_vergleich_beide.png}{1.0}{Plasma and coil tubes at the same scale and with the same camera. Left: candidate 3 half (OWN shape, nfp 2, own coils). Right: DATJ5FC (DATASET shape, unmodified, nfp 4, own coils). The vacuum vessel is an assumption.}
+\lesehilfe{The plasma (red-brown, the central tube shape) is a twisted tube that closes into a ring; the coils (orange, semi-transparent) are closed loops that surround it like a cage. Parallel projection, no perspective distortion. Note that the coils of K3 reach out further and that DATJ5FC with four equal periods looks more regular.}
+\textbf{Conclusion of the comparison:} constructability against plasma quality. The impression that K3 is harder to build is partly supported by forces and stress, but not dramatically; no shape is finished. The scatter between coil sets of the same shape is not measured. Errors in the process: two path errors (export after the optimisation), a wrong memory estimate in the plan
+(Elmer needed up to 19.7\,GB instead of 6 to 12\,GB) and an abort of the FEM for n6 for lack of memory, which the log nevertheless reported as ``rc=0''.
+
+%----------------------------------------------------------------------
+\subsection{AI in engineering: the autoresearch pilot (B-065)}\label{sec:autoresearch}
+The theme of the project is how far AI carries in engineering and where it must be restrained. The pilot implements a model (karpathy/autoresearch, MIT) as a ``Ralph loop'' and hands a plasma shape to an agent.
+\textbf{Plasmas:} the start is candidate 3 half (OWN shape, from dataset shape Do3Qy, half step); all shapes in the run are own variants of it. For comparison DATJ5FC (DATASET shape, unmodified) is used.
+
+\textbf{Division of labour.}
+\begin{itemize}\itemsep1pt
+\item \emph{Human:} goal, direction, ideas and the check against figures; decides what is built.
+\item \emph{Opus} (the large model): set-up of the loop, writing down the expectation \emph{before} the run, the locked evaluator and the audit log, recomputation and interpretation after the run.
+\item \emph{Sonnet} (the smaller model): in every round a \emph{new} agent starts, changes the only free file \texttt{form.py}, calls the fixed evaluator and writes one line to \texttt{results.tsv}.
+\end{itemize}
+The evaluator (VMEC++, Task~3 of the challenge) is locked for the agent. The target value is $\text{ziel}=f+10\cdot\mathrm{QI}$: $f$ measures how far the shape violates the limits (sum of squares), QI how well it confines particles. \textbf{The lock through the audit log:} the loop keeps a state only if the audit log
+(\texttt{bewertungen.tsv}, written by the evaluator itself, not by the agent) proves a better target for exactly that state. If the agent claims more, it is counted as a CORRECTION and the state is discarded.
+
+\textbf{Result.} 86 real rounds in 1~h 25~min (15:10 to 16:35), then the usage limit stopped it; 50 trials, 25 kept. $f$ from 1.72 to 0.599, ziel from 1.723 to 0.606, QI from $4.7\cdot10^{-5}$ to $7.0\cdot10^{-4}$ (worse than expected); the shape is \emph{not feasible} (rotational transform at the edge 0.57, too small). The best state
+a0dcb7e was recomputed by Opus outside the loop and is exactly equal (ziel 0.606429). It is \emph{worse} than the unmodified dataset shape DATJ5FC (ziel 0.400). Expected was an equilibrium failure in 10 to 30\,\% of the trials, none occurred; QI worse than expected; CORRECTIONS expected 0, counted 5.
+\bild{sk_verlauf.png}{0.7}{autoresearch pilot: start candidate 3 half (OWN shape, from dataset shape Do3Qy, half step). Green dashed: DATJ5FC (DATASET shape, unmodified), ziel 0.400.}
+\lesehilfe{Top: each grey dot is one trial (horizontal the number in \texttt{results.tsv}, vertical the target value; smaller is better). The blue staircase is the best kept state, the green line the unmodified dataset shape DATJ5FC. After about 27 trials the staircase flattens. Bottom: QI residual, logarithmic. It first rises by a factor of 100 because the agent trades limits against confinement, and then hovers around $7\cdot10^{-4}$.}
+
+\textbf{Interpretation.} (1) \emph{The lock works:} 2 CORRECTIONS were real attempts to keep a worse state (rounds 6 and 38), 3 were ties the agent wanted to keep as a gain (rounds 47, 49, 60). Without the audit log the agent would have reported itself better than it was.
+(2) \emph{The ideas were small:} only single coefficients by 5 to 20\,\%, no blends, no re-parametrisation. For that the existing (1+1) evolution strategy is cheaper: it needs no tokens and runs without a usage limit.
+(3) \emph{Sandbox:} in several rounds the agent tried to change \texttt{form.py} with chained shell commands; the permission mode ``dontAsk'' refused this and the round was empty.
+(4) \emph{Idle running:} from 16:35 the agent only reported the usage limit and the loop spun through more than 3000 empty rounds; idle detection was missing.
+\kasten{Lesson for AI in engineering.}{A language model may deliver ideas, but not the judgement of its ideas. The measurement belongs in a program the agent cannot change, and a state is kept only on the evidence of the audit log. Next trial with a local model (PI), a sharper task description and idle detection.}
+
+%----------------------------------------------------------------------
+\subsection{Smoothing the coils (B-066)}
+Idea of the user: can the ``figure-eights'' of the coils be smoothed away after the calculation? Measured on DATJ5FC (DATASET shape, unmodified) with the OWN coils d100\_n5\_lr\_s56 (5 base coils, Fourier order 7). Each coil is a sum of waves; smoothing means cutting off the short waves (order 7 $\to$ 2).
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrr}\toprule
+Order & 7 (original) & 6 & 5 & 4 & 3 & 2 \\\midrule
+Field error & $1.05\cdot10^{-3}$ & $1.01\cdot10^{-2}$ & $1.55\cdot10^{-2}$ & $1.75\cdot10^{-2}$ & $3.7\cdot10^{-2}$ & $7.4\cdot10^{-2}$ \\
+smallest bend radius, m & 0.85 & 0.07 & 0.19 & 0.07 & 0.05 & 0.12 \\\bottomrule
+\end{tabular}\caption{Truncating the Fourier order: DATJ5FC (DATASET shape, unmodified), own coils d100\_n5\_lr\_s56.}\end{table}
+Already the first step worsens the field error tenfold; the bend radius, 0.85 to 0.89\,m in the original and thus right at the curvature limit, gets partly much worse (down to 0.07\,m).
+The ``eights'' are \emph{side figure-eights}: in the view onto the coil plane there is no crossing; in the side view each base coil crosses itself 1 to 3 times. They are twisted saddle coils, 4.5 to 6.9\,m out of plane, and this persists down to order 2. No self-contact (distance at least 1.9\,m).
+\bild{sk_kappen.png}{1.0}{Truncating the Fourier order: the five base coils d100\_n5 (OWN coils) for DATJ5FC (DATASET shape, unmodified). Black: original (order 7), red: order 6, blue: order 5.}
+\lesehilfe{Each column is a base coil. Top: view perpendicular to the plane in which the coil lies best; no coil crosses itself here. Bottom: side view (height out of the plane against length, both in m); here the ``eight'' is visible, the coil is twisted in itself like a twisted rubber band. Note that the crossing at the bottom stays in all three curves.}
+\textbf{Consequence:} smoothing after the calculation does not help. Constructability has to go into the optimisation itself, with a penalty term for side figure-eights or height out of the plane. This fits the idea of ``coils as words'': a vocabulary of planar, buildable coils. Script \texttt{stellarator/spulen\_glaetten.py}; report \texttt{docs/recherche/\allowbreak spulen\_suche/\allowbreak glaettung/\allowbreak bericht.md}.
+
+%----------------------------------------------------------------------
+\subsection{Buildable coils}\label{sec:baubare-spulen}
+% OPUS-FUELLT (filled 8 Nov 2026)
+\textbf{Plasma:} DATJ5FC, unmodified ConStellaration dataset shape. \textbf{Coils:} our OWN Stage 2 sets, coil clearance 1.0\,$a$. Smoothing after the fact does not help (previous section), so buildability now goes into the optimisation itself. We tested two routes.
+
+\textbf{1. Torsion penalty.} Torsion measures how much a curve twists out of its osculating plane; a planar curve has zero torsion everywhere. We ran three strengths: 0.1, 1 and 10 times the field term. Total torsion drops from 2400 to 1330, 740 and 590. The field error rises only moderately: $1.26$, $1.58$ and $1.87\cdot10^{-3}$, against $1.05\cdot10^{-3}$ without the penalty. The coils become calmer, but they stay 4.8--8.0\,m out of plane, and the side-view figure-eights remain (1--4 per coil). Low torsion does not mean planar: the coil concentrates its twist in a few places. We had expected otherwise.
+\bild{sk_torsion.png}{1.0}{Five base coils for DATJ5FC (unmodified dataset shape), OWN coils. Black: no penalty; orange/blue: medium and strong torsion penalty. Top: view onto the coil plane; bottom: side view. Note that the side-view crossings (the ``8'') remain, while the small wiggles at the top decrease.}
+
+\textbf{2. Planar coils by construction.} Each coil lies in its own freely tilted plane, with a free shape inside that plane. Geometrically this is ideal: no out-of-plane height, no figure-eights, bend radius 0.8--2.6\,m, self-distance at least 3.9\,m. But the field matches the plasma far worse: field error $4.6\cdot10^{-2}$ (5 coils per half period), $4.7\cdot10^{-2}$ (6) and $3.3\cdot10^{-2}$ (8). That is 30--45 times worse than the twisted coils, and after two rounds the clearance and curvature limits were still violated.
+\bild{sk_eben.png}{1.0}{Same plasma (DATJ5FC, unmodified dataset shape). Black: twisted OWN coils; orange: planar OWN coils; 5 coils per half period each. Bottom: the planar coil is a straight line seen from the side. Top: it is larger and rounder, with a dent towards the plasma.}
+
+\textbf{Conclusion.} A middle way is missing between ``twisted and accurate'' ($10^{-3}$) and ``planar and inaccurate'' ($3\cdot10^{-2}$). Two options: a penalty directly on the out-of-plane height with an adjustable strength, or a plasma shape designed for planar coils from the start. The latter is the idea ``coils are words, the arrangement is the grammar'': first a vocabulary of buildable coils, then the plasma (finding B-067).

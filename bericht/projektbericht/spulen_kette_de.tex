@@ -1,0 +1,207 @@
+\section{Von der Plasmaform zu baubaren Spulen: die Kette K3}\label{sec:spulenkette}
+Stand 8.11.2026, Befunde B-051 bis B-066 (Protokoll \texttt{BEFUNDE.md}). Die vorigen Kapitel endeten bei einem Satz, der im Ziel liegt
+(Befund B-050). Dieses Kapitel setzt ein, sobald das \emph{Plasma} die Auswahl bestimmt, und folgt der Frage: Kann man zu einer guten Plasmaform
+Spulen finden, die in den Bauraum passen, das Plasma nicht verderben und sich tragen lassen? Es ist chronologisch geordnet und enthält auch
+die Stellen, an denen eine Aussage zurückgenommen werden musste.
+
+\kasten{Woher die Plasmen und die Spulen kommen.}{\textbf{Kandidat 3 halb (K3 halb): EIGENE Form} (aus Datensatzform
+Do3QyJbtRhtGhrTiBSBbyKM, halber Schritt der eigenen Suche, B-050). \textbf{misch91: EIGENE Mischung} (75\,\% K3 halb + 25\,\% Datensatzform D7oUXRqC9).
+\textbf{DjLe3eL6, DATJ5FC, DPrcxq66, Do3Qy, D8ZNt2: DATENSATZ-Form} (ConStellaration), unverändert. Die Spulen sind davon getrennt zu sehen:
+\textbf{A085 und d100\_\ldots{} sind EIGENE Spulensätze}, \textbf{„Proxima-Spulen“ sind fremd} (fremder Spulensatz aus der Challenge).
+Jede Zahl unten nennt Plasma \emph{und} Spulen.}
+
+\kasten{Begriffe, kurz.}{\emph{QI (Quasi-Isodynamik)}: Gütezahl dafür, wie gut ein Plasma seine Teilchen im Magnetfeld hält; kleiner ist besser.
+Die Aufgabe~3 der Challenge verlangt höchstens $3{,}2\cdot10^{-4}$. \emph{Feldfehler}: Anteil des Spulenfeldes, der durch die Wunschfläche des
+Plasmas stößt, wie ein Passungsfehler; 0 wäre ideal. \emph{Stage~2}: der zweite Schritt der Spulensuche (Programm simsopt): Zur gegebenen
+Plasmaform werden Spulenbahnen gesucht, die den Feldfehler klein halten und Abstände und Längen einhalten. \emph{Freie Grenze}: Das Plasma sucht sich im
+Feld der echten Spulen selbst seinen Rand (Rechnung VMEC++), statt ihn vorgegeben zu bekommen; das ist der ehrliche Test. \emph{Verlustfaktor}: QI
+mit Spulen geteilt durch QI der Wunschform; 1 heißt kein Verlust. \emph{fsqr}: Restkraft der Gleichgewichtsrechnung; erst um $10^{-14}$ ist sie fertig.
+\emph{nfp}: Zahl der gleichen Perioden des Rings. \emph{p99}: Wert, unter dem 99\,\% des Volumens liegen (statt der Einzelspitze). \emph{Nettokraft}:
+Summe aller Magnetkräfte auf eine Spule, also das, was ihre Lagerung halten muss.}
+
+%----------------------------------------------------------------------
+\subsection{QI-Karte, Spulenfehler, Wirkungskarte, Verdrillung (B-051 bis B-056)}
+\textbf{Die echten Schwellen (B-051).} Die Vorgabe „QI höchstens 0,001“ stimmt für keine Aufgabe. Im installierten Paket gilt für
+Aufgabe~3: Rotationstransformation (Windung der Feldlinien um den Querschnitt, $\iota$) am Rand je Periode mindestens 0,25, QI höchstens $3{,}2\cdot10^{-4}$, Spiegelverhältnis (Stärke der Feldschwankung längs der Feldlinie) höchstens 0,25, Flusskompression
+höchstens 0,9, Vakuummulde (Stabilitätsmaß, positiv ist stabil) mindestens 0; zulässig heißt jede normierte Verletzung höchstens 0,01. Im Datensatz (182\,222 Zeilen, 158\,685 mit QI) erfüllt
+keine einzige Form Aufgabe~3 \emph{mit} QI. Die beste Form, die die übrigen Regeln erfüllt (D8ZNt2, DATENSATZ-Form), hat QI $1{,}78\cdot10^{-3}$. Eine lokale
+VMEC++-Suche (Weg~B) lief zu diesem Zeitpunkt noch (Status offen).
+
+\textbf{QI-Karte (B-052).} Statt nur den Randwert zu nehmen, wurde QI für 14 Flächen vom Kern bis zum Rand gerechnet. Bei drei von vier
+Formen wächst der Fehler monoton nach außen (Mitte 20- bis 30-mal kleiner); der Rand ist die schlechteste Fläche, der offizielle Wert also eine sichere Obergrenze.
+Eine Aufsummierung von innen nach außen gibt es nicht, jede Fläche wird einzeln bewertet. Die Ausnahme ist DjLe3eL6 mit einem Buckel bei $s\approx0{,}7$
+(1,62-fach des Randwerts): Dort unterschätzt die offizielle Kennzahl den Fehler.
+\bild{sk_qi_ueber_s.png}{0.85}{QI je Fläche für vier Formen. Do3Qy, D8ZNt2 und DjLe3eL6: DATENSATZ-Formen, unverändert;
+Kandidat 3 halb: EIGENE Form (aus Do3Qy, halber Schritt). Kreuz = offizieller Wert am Rand.}
+\lesehilfe{Waagerecht die Fläche $s$ von der Plasmamitte (0) bis zum Rand (1), senkrecht der QI-Fehler der Fläche, logarithmisch (jede Gitterlinie ist ein Faktor).
+Tief unten ist gut. Die gestrichelten Linien sind die Grenzen der Challenge (Aufgabe~3: 0,00032; Aufgabe~2: 0,0001). Die Kreuze sitzen auf dem letzten Punkt: Die
+eigene Rechnung stimmt mit der offiziellen überein. Man achte auf die violette Kurve (DjLe3eL6): Sie steigt bis $s\approx0{,}7$ und fällt dann wieder.}
+
+\textbf{Spulenfehler (B-053).} Zu DjLe3eL6 (DATENSATZ-Form, unverändert) wurde der Proxima-Spulensatz (fremd; 5 Grundspulen, 40 Spulen) gerechnet. Die
+Spulen verschlechtern QI am Rand von $4{,}48\cdot10^{-4}$ auf $5{,}54\cdot10^{-4}$ (Störungsmodell) bzw.\ $5{,}8\cdot10^{-4}$ bis $6{,}7\cdot10^{-4}$ (freie Grenze), also um 24 bis 50\,\%. Der Strom je Spulengruppe ist ein
+Hebel: Die Gruppe S5 ändert QI um etwa $\mp25$\,\% bei $\pm5$\,\% Strom, alle gemeinsam geändert ändern nichts. Ein Optimum innerhalb von $\pm5$\,\% (S2 1,05, S3 1,015, S4 0,98,
+S5 0,95) senkt QI am Rand um 27\,\% (Störungsmodell) bzw.\ 28\,\% (freie Grenze, $4{,}15\cdot10^{-4}$), das Spiegelverhältnis steigt von 0,359 auf 0,376. Das
+Spulenfeld allein hat Inseln und einen stochastischen Saum am Rand. Das Optimum von B-053 war \emph{kein globales} (B-056): Eine Zufallsprobe liegt mit
+$3{,}92\cdot10^{-4}$ darunter; die Nachprüfung in B-061 bestätigt das (Probe 008: $3{,}97\cdot10^{-4}$).
+
+\textbf{Wirkungskarte (B-054).} Wo auf der Plasmafläche wirkt welche Spule? Je Gruppe wurde der Strom um 1\,\% und die Lage um 5\,mm geändert und die
+lokale Änderung von QI aufgetragen. Ergebnis: Die Spulen wirken \emph{über den Strom an den Muldenflanken}, nicht über die Nähe. Die Rangkorrelation der Wirkung mit dem
+Kehrwert des Abstands ist je Gruppe $+0{,}45$, $+0{,}40$, $+0{,}24$, $-0{,}35$, $-0{,}51$ (S1 bis S5); ein Abstandsmodell hat keine Vorhersagekraft. Die hellsten
+Flecken liegen auch ohne Spulen unter den hellsten 10\,\%: Es sind Formflecken der Plasmaform selbst. Breite Flecken (32\,\% der schlechtesten 5\,\%) erzeugen die Spulen.
+Trimmt man die Ströme (S2=S3=S4=1,05, S5=0,95), sinkt QI am Rand um 26\,\% (Störungsmodell) bzw.\ 24\,\% (freie Grenze).
+\bild{sk_abwicklung_rand.png}{0.92}{Wirkungskarten der fünf Spulengruppen auf dem Plasmarand (DjLe3eL6, DATENSATZ-Form, unverändert; Spulen: Proxima, fremd)
+und Zusatzfehler durch alle Spulen (Feld~6).}
+\lesehilfe{Die Randfläche des Plasmas ist wie eine Landkarte aufgeklappt: waagerecht eine Periode (Winkel $\varphi_B$ 0 bis 90 Grad), senkrecht einmal um den
+Querschnitt ($\theta_B$ 0 bis 360 Grad). Felder 1 bis 5: Wie ändert sich der örtliche QI, wenn der Strom dieser Spulengruppe um 1\,\% steigt. Rot heißt schlechter,
+blau besser, weiß keine Wirkung. Die farbige Linie ist die Spule an der Stelle der Fläche, der sie am nächsten ist. Feld~6: Zusatzfehler durch alle Spulen. Man achte auf die
+rot-blauen Paare nahe beieinander: So sieht ein scharfer Fehlerfleck aus, der verschoben und nicht stärker oder schwächer wird.}
+
+\textbf{Verdrillung (B-055).} Hypothese des Nutzers: Ein großer Durchmesser gibt mehr Raum und hilft; krümmungsstetigere Formen sind besser. Gemessen mit
+VMEC++ in hoher Genauigkeit, nur der große Radius $R_{00}$ von $\times0{,}8$ bis $\times1{,}5$ geändert, Querschnitt fest. Do3Qy (DATENSATZ-Form): QI $6{,}15\cdot10^{-5}$ beim Original,
+$2{,}00\cdot10^{-4}$ bei $\times0{,}9$, $1{,}75\cdot10^{-4}$ bei $\times1{,}1$, $9{,}1\cdot10^{-4}$ bei $\times1{,}5$. Bei DjLe3eL6 (DATENSATZ-Form) ist ebenfalls das Original am besten. Beide
+Formen sind also bei ihrem Originalradius am besten; ein größerer Durchmesser bei festem Querschnitt hilft \emph{nicht}. Die QI-Kennzahl ist maßstabsfrei (Form $\times2$ bitgleich). Im Datensatz
+korreliert die Drehung des Querschnitts je Periode mit schlechterem QI ($+0{,}42$); bei netto 0 / $\pi$ / $2\pi$ Drehung je Periode liegt der mittlere QI bei $0{,}0157$ / $0{,}0112$ / $0{,}0296$.
+Urteil: teilweise (zu viel Drehung schadet); „großer Durchmesser hilft“ und „krümmungsstetiger ist besser“ sind nicht bestätigt.
+\bild{sk_r00_reihe.png}{0.95}{Wirkung des großen Radius auf QI und Kennzahlen: Do3Qy und DjLe3eL6, beide DATENSATZ-Formen, unverändert, $R_{00}$ mit Faktor 0,8 bis 1,5.}
+\lesehilfe{Sechs Felder, waagerecht immer das Aspektverhältnis (rechts = schlankerer Ring bei gleichem Querschnitt); die Beschriftung zeigt den Faktor auf $R_{00}$. Links oben QI
+(logarithmisch, tiefer ist besser, gestrichelt die Grenze der Aufgabe~3), daneben Rotationstransformation, Spiegelverhältnis, größte Elongation (Ovalität) und Vakuummulde. Blau Do3Qy,
+violett DjLe3eL6. Man achte darauf, dass beide QI-Kurven beim Original (Faktor 1) ihr Minimum haben.}
+
+%----------------------------------------------------------------------
+\subsection{Kette K3: eigene Spulen, PicoGK-Rohre, freie Grenze, Verlustfaktor (B-058 bis B-061)}
+\textbf{Machbarkeit (B-058).} Aus 158\,685 Datensatzformen und 284 eigenen Proben liegen auf den Plätzen 1 bis 10 nur K3-/Do3-Proben (QI $3{,}66\cdot10^{-5}$ bis $4{,}60\cdot10^{-5}$, nfp 2).
+K3 halb ist daher das beste Plasma. Die nötigen Werkzeuge (simsopt, VMEC++) waren vorhanden. Es fehlte eine Brücke, die eigene Spulen statt der Proxima-Spulen in die freie Grenze bringt.
+
+\textbf{Schritt~1 mit A085 (B-059).} A085 sind EIGENE Spulen zu DjLe3eL6 (DATENSATZ-Form). Die Brücke ist belegt: Feldfehler $6{,}5978\cdot10^{-4}$, gleich auf fünf Stellen mit dem
+Ursprungsprogramm. Freie Grenze bei 3000 Schritten: Verlustfaktor 1,013 gegen 1,30 mit den fremden Proxima-Spulen; bei 12\,000 Schritten 1,25 gegen 1,50. Die PicoGK-Rohre (Spulenbahn mit Kreisquerschnitt, 0,852\,m
+Durchmesser, ANNAHME flächengleich zum Wickelpaket) kosten nichts: alle Rohre geschlossen, Glättung ändert den Feldfehler um $+0{,}015$\,\%. Die Rohre durchdringen sich aber (Spule--Spule 0,54\,m $<$ 0,85\,m).
+
+\textbf{Eigene Spulen für K3 halb (B-060).} Die ersten Läufe mit der Längenregel „1,25 $\times$ Startlänge“ lieferten Feldfehler $2{,}8\cdot10^{-3}$ bis $8{,}0\cdot10^{-3}$. Gemessene Ursache: Diese Längengrenze war bindend. Mit der Längenregel
+aus dem Ansatz „zwei Ringe“ (Summe 249\,$a$) erreicht der Satz d085\_n10\_lr den Feldfehler $2{,}15\cdot10^{-4}$, Abstand Spule--Plasma 1,22\,$a$. Spulen sind 27 bis 55\,m lang, stark gewunden und bis etwa 10\,m über der Mittelebene.
+Der Verlustfaktor der freien Grenze: 1,17 bei 3000 Schritten, 1,14 bei 12\,000. Ein Plasmavorteil blieb: QI mit Spulen $5{,}6\cdot10^{-5}$ bis $6{,}4\cdot10^{-5}$ (K3 halb) gegen $4{,}5\cdot10^{-4}$ bis $5{,}6\cdot10^{-4}$ (DjLe3eL6 mit A085).
+
+\textbf{Prüfung der Sonnet-Arbeit (B-061).} Ein zweites Modell hatte in der Nacht vom 6.\ auf den 7.\ November Läufe gemacht. Opus prüfte sie an den Rohdaten. Vier Dinge wurden zurückgenommen oder korrigiert:
+\begin{itemize}\itemsep1pt
+\item \textbf{B-057 ist widerlegt.} B-057 behauptete, die beiden Strom-Ausreißer und die $\pm50$-\%-Fälle konvergierten in der freien Grenze nicht, und stellte damit B-056 in Frage. Die neun Fälle liefen aber ohne die Einstellungen
+(Gitter \texttt{nzeta} 48, Toleranz, Iterationszahl, Weiterlauf trotz Warnung), die alle früheren Fälle hatten. Mit denselben Einstellungen bleibt B-056 bestätigt (QI $3{,}97\cdot10^{-4}$ und $4{,}07\cdot10^{-4}$ gegen $4{,}15\cdot10^{-4}$). Die
+Halbierung des Fehlers war sinnvoll gedacht, maß aber nur den Fehlaufruf; die „Erwartung“ im Nachtrag stand vorher nirgends.
+\item \textbf{„Konvergiert“ stimmte nicht.} Bis 12\,000 Schritten erreichte kein Lauf die Toleranz (fsqr $2\cdot10^{-13}$ bis $2\cdot10^{-10}$). Erst mit 48\,000 Schritten: Proxima 1,53, A085 1,29, K3 mit Spulen 1,07. Die Verlustfaktoren aus B-059 und B-060 sind
+Zwischenstände.
+\item \textbf{Die Zielgröße f wurde falsch gelesen.} f ist die Summe der \emph{Quadrate} der Verletzungen; zulässig sind je Bedingung höchstens 0,01, also $f\le5\cdot10^{-4}$. Der Vergleich von $f=0{,}0114$ mit 0,01 war falsch. Beste Matrixprobe: $f=0{,}0224$, größte Einzelverletzung 0,12.
+\item \textbf{Kein Vergleich K3 gegen Proxima.} Die Feldfehler $2{,}15\cdot10^{-4}$ (K3) und $2{,}4\cdot10^{-3}$ (DjLe3eL6 mit Proxima) gehören zu verschiedenen Formen; die Aussage „Technik kostet 15 bis 25\,\%“ galt für einen Satz, der nicht in den Bauraum passt.
+\end{itemize}
+Weiter gefunden: Von 27 Paaren mit $\pm0{,}2$ Standardabweichung sind 18 nach \emph{beiden} Seiten schlechter, das Vorzeichen der Balken ist also keine Richtung. Alle Rechnungen laufen praktisch ohne Plasmadruck (1\,Pa). Das Tragwerk wurde bisher nur für DPrcxq66 gerechnet.
+\kasten{Lehre.}{Eine Zahl gilt erst, wenn die Rechnung ihre Toleranz erreicht hat, und ein Vergleich nur bei gleicher Form und gleichen Einstellungen. Ein stilles Fehlen von Einstellungen sieht aus wie ein Ergebnis. Darum prüft Opus Rohdaten statt Berichte.}
+
+%----------------------------------------------------------------------
+\subsection{Kreis und Bauraum (B-062), Spulen im Schnitt (B-063)}
+Gefragt war: Lässt sich ein geschlossener Kreis bilden, in dem die Technik auf das Plasma zurückwirkt? Annahmen: kleiner Plasmaradius $a=\SI{1,80}{m}$, Feld auf der Achse \SI{6,5}{T}, 1,3\,m Freiraum Plasma--Spule für Blanket und Abschirmung, Spulenpaket 1,0\,m;
+daraus Spulenmitte mindestens 1,0\,$a$ vom Plasma und Spule--Spule mindestens 0,56\,$a$. Der Kreis hat drei Schritte: Spulen zur Form (Stage~2), Rohr und Glättung (PicoGK), Plasma mit freier Grenze neu rechnen; danach werden Kräfte ausgewertet.
+Tragwerk-FEM und Kühlung sind \emph{noch nicht} angeschlossen.
+
+\textbf{Durchlauf 1 (K3 halb, EIGENE Form; Spulen d100\_n10\_lr\_s56, EIGENE Spulen, 40 Spulen).} Feldfehler $2{,}10\cdot10^{-4}$, Spulenmitte--Plasma 1,18\,$a$, Spule--Spule 0,56\,$a$, Biegeradius 0,50\,$a$, keine Rohrdurchdringung, Rohr--Plasma 1,70\,m. Freie Grenze mit
+48\,000 Schritten: QI $5{,}14\cdot10^{-5}$ (fsqr $4{,}0\cdot10^{-14}$), Verlustfaktor 1,07. Der frühere Konflikt „Durchdringung oder zu wenig Abstand“ kam aus der zu engen Längenregel, nicht aus der Plasmaform. Größte Nettokraft 1261\,MN an Spule~6.
+\bild{sk_rohr_durchlauf1.png}{0.8}{Durchlauf 1: Kandidat 3 halb (EIGENE Form, Plasma orange) mit geglätteten Rohren der eigenen Spulen d100\_n10\_lr\_s56 einer halben Periode (blau, 0,85\,m Durchmesser, Annahme) und Mittellinien der übrigen Spulen (grau).}
+\lesehilfe{Wie eine Ansicht im CAD-Modell, ohne Maßstabsangabe. Man sieht zwei Dinge: Die Rohre berühren sich nicht mehr, und die Spulen sind weiterhin stark gewunden. Rechnerisch passt der Satz in den Bauraum; ob man solche Spulen wickeln und abstützen kann, sagt das Bild nicht.}
+
+\textbf{Durchlauf 2 (misch91, EIGENE Mischung: 75\,\% K3 halb + 25\,\% Datensatzform D7oUXRqC9).} Rückwirkung aus Durchlauf~1: Eine flachere Form (Elongation 6,33 statt 7,15) soll die Spitzenkraft senken. Ergebnis: größte Nettokraft 1021\,MN (minus 19\,\%), QI mit Spulen $1{,}17\cdot10^{-4}$ (12\,000 Schritte, noch nicht fertig,
+2,3-mal schlechter), Verlustfaktor 1,04 (vorläufig), Summe der Nettokräfte praktisch gleich (4361 gegen 4411\,MN). Dieselbe Plasmaform K3 halb mit einem \emph{anderen} Spulensatz (d085\_n10\_lr, ohne Bauraumgrenzen) hat an Spule~5 1635\,MN: Der Spulensatz verschiebt die Kraft mindestens so stark wie
+die Abflachung. \textbf{Damit ist nicht belegt, dass die Abflachung die Kraft senkt}; die Ursache bleibt offen. Der Vergleichswert DPrcxq66 hatte 792\,MN (keine Grenze).
+\bild{sk_nettokraft.png}{0.9}{Nettokraft je Basisspule: K3 halb (EIGENE Form) mit zwei Spulensätzen (grün: d085\_n10\_lr ohne Bauraumgrenzen; blau: Durchlauf 1, im Bauraum) und misch91 (EIGENE Mischung, orange: Durchlauf 2). Spulen: eigene Sätze.}
+\lesehilfe{Waagerecht die zehn Basisspulen einer halben Periode, senkrecht die Nettokraft in Meganewton (MN). Gestrichelt: Kraft des Vorgängers DPrcxq66 (792\,MN, keine Grenze). Man achte darauf, dass Grün und Blau dieselbe Plasmaform haben und sich an Spule~5 um den Faktor zwei unterscheiden.}
+
+\textbf{Lange Läufe als Maßstab (Nachtrag).} Mit 48\,000 Schritten und fsqr um $10^{-14}$: Proxima (fremd) auf DjLe3eL6 1,53; A085 (eigen) 1,29; K3 halb mit eigenen Spulen 1,07. Strom-Trimmung bei DjLe3eL6 mit Proxima hält auch hier: QI $6{,}81\cdot10^{-4}$ (Basis) $\to$ $4{,}43\cdot10^{-4}$ (minus 35\,\%), Spiegelverhältnis 0,359 $\to$ 0,375.
+
+\textbf{Spulen im Schnitt (B-063).} Die Spulen wurden seitlich auf die Ebene (Abstand zur Ringachse, Höhe) projiziert, um den Plasmaquerschnitt der Stelle.
+\bild{sk_schnitt_spulen.png}{0.95}{Spulen im Schnitt. Oben: K3 halb (EIGENE Form), Durchlauf~1, eigene Spulen. Mitte: DjLe3eL6 (DATENSATZ-Form, unverändert) mit eigenen Spulen A085. Unten: DATJ5FC (DATENSATZ-Form, unverändert) mit dem alten eigenen Satz d085\_n5 (Feldfehler $5{,}1\cdot10^{-3}$, ohne Bauraumgrenzen).}
+\lesehilfe{Jede Zeile ist ein Spulensatz, jede Spalte eine Spule der ersten halben Periode. Die farbige Fläche ist der Plasmaquerschnitt an der Stelle der Spule, der graue Ring die Spule, von der Seite auf die Ebene aus Abstand zur Ringachse (waagerecht) und Höhe (senkrecht) gelegt, wie eine Ansicht in einer Zeichnung. Maßstab: Hauptradius gleich 1. Eine echte Spule ist nicht eben; die Projektion zeigt, wie weit sie ausholt. Man achte auf Knicke und kleine Schlaufen.}
+K3 halb: Die Spulen reichen bis 1,2 Hauptradien hoch und haben Knicke und Schlaufen. DjLe3eL6 mit A085 ist kompakt mit kleinen Schlaufen. DATJ5FC wirkt am einfachsten. Vorbehalt: Der DATJ5FC-Satz in diesem Bild ist alt (Feldfehler 25-mal größer, zu enge Längenregel, keine Bauraumgrenzen); glatte Spulen mit großem Feldfehler sind leicht zu haben.
+Einschätzung des Nutzers, durch das Bild gestützt, aber nicht gerechnet: K3 ist schwer baubar, DATJ5FC einfacher. Der faire Vergleich folgt im nächsten Abschnitt.
+
+%----------------------------------------------------------------------
+\subsection{Vergleich K3 halb gegen DATJ5FC: Kräfte, FEM, Kühlung, 3D-Modelle (B-064)}
+Beide Formen mit denselben Annahmen: $a=\SI{1,80}{m}$, \SI{6,5}{T}, Spulenmitte--Plasma mindestens 1,0\,$a$, Spule--Spule mindestens 0,56\,$a$, Wände der Tragstruktur wie in Punkt 0012 des Vorgängerlaufs (DPrcxq66, Wände $\times1{,}6$),
+Hülle Plasma--Gehäuse mindestens 1,5\,m (Vorgabe), Fusionsleistung 3053\,MW (\emph{angenommen}, nicht aus der Form berechnet). \textbf{Die Festigkeitsgrenze 500\,MPa ist nur eine ANNAHME, nicht belegt}; Spannungen werden daher als Zahl genannt.
+Plasmen: K3 halb (EIGENE Form, nfp 2) und DATJ5FC (DATENSATZ-Form, unverändert, nfp 4). Spulen in beiden Fällen EIGENE Sätze (d100\_n10\_lr\_s56 für K3; d100\_n5\_lr\_s56 als Hauptsatz und d100\_n6\_lr\_s56 als Nebensatz für DATJ5FC).
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}Xrr@{}}\toprule
+Kennzahl & K3 halb (EIGENE Form) & DATJ5FC n5 (DATENSATZ-Form) \\\midrule
+Feldfehler (Mittel) & $2{,}10\cdot10^{-4}$ & $1{,}05\cdot10^{-3}$ \\
+Abstand Spulenmitte--Plasma & 1,18\,$a$ & 0,99\,$a$ (bindend) \\
+QI mit Spulen (freie Grenze, 48\,000 Schritte) & $5{,}14\cdot10^{-5}$ & $3{,}02\cdot10^{-4}$ \\
+Verlustfaktor & 1,07 & 1,065 \\
+größte Nettokraft je Spule & 1261\,MN & 934\,MN (minus 26\,\%) \\
+Spannung heißeste Spule, Runde 0 (p99, ohne Randzone) & 1427\,MPa & 1160\,MPa (minus 19\,\%) \\
+Hülle Plasma--Gehäuse & 1,50\,m & 1,28\,m (unter Vorgabe 1,5\,m) \\
+Wandlast der Neutronen (3053\,MW angenommen) & 1,44\,MW/m$^2$ & 1,32\,MW/m$^2$ \\
+Bleidruckverlust, Annahme 6 Grad/6\,T, Stahlwand & 65\,kPa & 93\,kPa \\\bottomrule
+\end{tabularx}\caption{Vergleich unter gleichen Annahmen (Bericht \texttt{vergleich\_bericht.md}). Der Nebensatz DATJ5FC n6 hat Verlustfaktor 1,14 und QI $3{,}24\cdot10^{-4}$, knapp über der Grenze der Aufgabe~3; für ihn wurde die FEM nicht gerechnet (Speicher).}\end{table}
+\textbf{Kräfte und Spannung.} DATJ5FC hat die kleinere Spitzenkraft (minus 26\,\%) und 19\,\% weniger Spannung in der heißesten Spule (die Spule mit dem höchsten p99, ohne Randzone von 0,5\,m). Beide liegen weit über der angenommenen 500\,MPa. Die Anpassung der Wanddicken je Spule schwingt und ist in beiden Fällen nicht konvergiert
+(K3 701 bis 1427\,MPa, DATJ5FC 1073 bis 1264\,MPa über vier Runden); der niedrigste Wert (701\,MPa) ist ein Zwischenstand, kein Ergebnis. Runde 0 mit gleichen Wänden ist der faire Vergleich.
+\bild{sk_fem_runden.png}{0.85}{Spannung der heißesten Spule je Anpassungsrunde: K3 halb (EIGENE Form) und DATJ5FC (DATENSATZ-Form, unverändert), jeweils mit EIGENEN Spulen. Gestrichelt: 500\,MPa, nur ANNAHME.}
+\lesehilfe{Die Finite-Elemente-Methode (FEM) zerlegt die Tragstruktur in kleine Zellen und rechnet in jeder die Spannung. Senkrecht: höchste Vergleichsspannung der heißesten Spule (p99), in MPa; waagerecht die Runden, nach denen das Programm die Wanddicken anpasst. Runde 0 hat für beide dieselben Wände. Man achte darauf, dass alle Werte über der gestrichelten Linie liegen und die Folgerunden springen: Die Anpassung hat nicht konvergiert.}
+
+\textbf{Plasma, Platz, Kühlung.} Mit Spulen ist DATJ5FC rund 6-mal schlechter im QI und hat fünfmal so großen Feldfehler; sein Abstand ist bindend. Die Wandlast folgt aus der Plasmafläche (1844 gegen 1693\,m$^2$), also 8\,\% weniger bei DATJ5FC. Der Druckverlust des flüssigen Bleis (Strömung im Magnetfeld wird gebremst, ähnlich einer Wirbelstrombremse) hängt von der
+Isolierung der Kanalwand und der Kanalrichtung zum Feld ab, nicht von der Plasmaform: Mit dem Feld der eigenen Spulen und Stahlwand 106 bis 14\,501\,kPa (K3) bzw.\ 317 bis 5308\,kPa (DATJ5FC), mit isolierter Wand 3 bis 33\,kPa bzw.\ 6 bis 25\,kPa.
+\bild{sk_kennzahlen_relativ.png}{0.85}{Hauptkennzahlen von DATJ5FC n5 (DATENSATZ-Form, unverändert; eigene Spulen) geteilt durch K3 halb (EIGENE Form; eigene Spulen).}
+\lesehilfe{Jeder Balken ist der Wert von DATJ5FC geteilt durch den Wert von K3 halb; die Linie bei 1 bedeutet gleich. Bei Feldfehler, QI, Kraft, Spannung und Wandlast ist ein kleiner Wert besser, bei Abständen und Hülle bedeutet ein kleiner Wert weniger Platz. Man achte auf die drei Technikvorteile links der Linie (Kraft 0,74, Spannung 0,81, Wandlast 0,92) und die Nachteile rechts (Feldfehler 5,0, QI 5,9).}
+
+\textbf{3D-Modelle.} Von beiden Anlagen wurden Plasma, Vakuumgefäß (ANNAHME: innen 0,15\,m, Wand 0,10\,m über der Plasmarandfläche, ohne Kühlkanäle) und die 40 Spulenrohre als Dreiecksnetze erzeugt, geprüft (wasserdicht, keine Durchdringung von Rohr und Gefäß) und als FreeCAD-Datei abgelegt.
+Kürzester Abstand Rohr--Plasma 1,705\,m (K3) bzw.\ 1,341\,m (DATJ5FC).
+\bild{sk_vergleich_beide.png}{1.0}{Plasma und Spulenrohre im gleichen Maßstab und mit gleicher Kamera. Links: Kandidat 3 halb (EIGENE Form, nfp 2, eigene Spulen). Rechts: DATJ5FC (DATENSATZ-Form, unverändert, nfp 4, eigene Spulen). Vakuumgefäß ist eine Annahme.}
+\lesehilfe{Das Plasma (rotbraun, mittlere Schlauchform) ist ein verdrehter Schlauch, der sich zum Ring schließt; die Spulen (orange, halbtransparent) sind geschlossene Schleifen, die ihn wie ein Käfig umgeben. Parallelprojektion, kein Perspektivverzug. Man achte darauf, dass die Spulen bei K3 weiter ausholen und dass DATJ5FC mit vier gleichen Perioden regelmäßiger aussieht.}
+\textbf{Fazit des Vergleichs:} Baubarkeit gegen Plasmagüte. Der Eindruck, K3 sei schwerer zu bauen, wird durch Kräfte und Spannung teilweise gestützt, aber nicht dramatisch; keine Form ist fertig. Die Streuung zwischen Spulensätzen derselben Form ist nicht gemessen. Fehler im Ablauf: zwei Pfadfehler (Export nach der Optimierung), eine falsche Speicherschätzung des Plans
+(Elmer brauchte bis 19,7\,GB statt 6 bis 12\,GB) und ein Abbruch der FEM für n6 wegen Speichermangel, den das Log trotzdem als „rc=0“ meldete.
+
+%----------------------------------------------------------------------
+\subsection{KI im Engineering: der autoresearch-Pilot (B-065)}\label{sec:autoresearch}
+Das Thema des Projekts ist, wie weit KI im Engineering trägt und wo man sie bremsen muss. Der Pilot setzt ein Vorbild (karpathy/autoresearch, MIT) als „Ralph-Schleife“ um und gibt eine Plasmaform an einen Agenten.
+\textbf{Plasmen:} Start ist Kandidat 3 halb (EIGENE Form, aus Datensatzform Do3Qy, halber Schritt); alle Formen im Lauf sind eigene Abwandlungen davon. Zum Vergleich dient DATJ5FC (DATENSATZ-Form, unverändert).
+
+\textbf{Arbeitsteilung.}
+\begin{itemize}\itemsep1pt
+\item \emph{Mensch:} Ziel, Richtung, Idee und die Prüfung an Bildern; entscheidet, was gebaut wird.
+\item \emph{Opus} (das große Modell): Aufbau der Schleife, Festlegen der Erwartung \emph{vor} der Rechnung, der gesperrten Bewertung und des Prüfbuchs, Gegenrechnung und Deutung nach dem Lauf.
+\item \emph{Sonnet} (das kleinere Modell): In jeder Runde startet ein \emph{neuer} Agent, ändert die einzige freie Datei \texttt{form.py}, ruft die feste Bewertung auf und schreibt eine Zeile in \texttt{results.tsv}.
+\end{itemize}
+Die Bewertung (VMEC++, Aufgabe~3 der Challenge) ist für den Agenten gesperrt. Die Zielzahl ist $\text{ziel}=f+10\cdot\mathrm{QI}$: $f$ misst, wie weit die Form die Grenzen verletzt (Summe der Quadrate), QI wie gut sie Teilchen hält. \textbf{Die Sperre durch das Prüfbuch:} Die Schleife behält einen Stand nur, wenn das Prüfbuch
+(\texttt{bewertungen.tsv}, von der Bewertung selbst geschrieben, nicht vom Agenten) für genau diesen Stand ein besseres Ziel belegt. Meldet der Agent mehr, wird das als KORREKTUR gezählt und der Stand verworfen.
+
+\textbf{Ergebnis.} 86 echte Runden in 1~h 25~min (15:10 bis 16:35), danach stoppte die Nutzungsgrenze; 50 Versuche, 25 behalten. $f$ von 1,72 auf 0,599, ziel von 1,723 auf 0,606, QI von $4{,}7\cdot10^{-5}$ auf $7{,}0\cdot10^{-4}$ (schlechter als erwartet); die Form ist \emph{nicht zulässig} (Rotationstransformation am Rand 0,57, zu klein). Der beste Stand
+a0dcb7e wurde von Opus außerhalb der Schleife gegengerechnet und ist exakt gleich (ziel 0,606429). Er ist \emph{schlechter} als die unveränderte Datensatzform DATJ5FC (ziel 0,400). Erwartet war Gleichgewichtsausfall bei 10 bis 30\,\% der Versuche, eingetreten ist keiner; QI schlechter als erwartet; KORREKTUREN erwartet 0, gezählt 5.
+\bild{sk_verlauf.png}{0.7}{autoresearch-Pilot: Start Kandidat 3 halb (EIGENE Form, aus Datensatzform Do3Qy, halber Schritt). Grün gestrichelt: DATJ5FC (DATENSATZ-Form, unverändert), ziel 0,400.}
+\lesehilfe{Oben: Jeder graue Punkt ist ein Versuch (waagerecht die Nummer in \texttt{results.tsv}, senkrecht die Zielzahl; kleiner ist besser). Die blaue Treppe ist der beste behaltene Stand, die grüne Linie die unveränderte Datensatzform DATJ5FC. Nach etwa 27 Versuchen wird die Treppe flach. Unten: QI-Restfehler, logarithmisch. Er steigt zuerst um das 100-Fache, weil der Agent Grenzen gegen Einschluss tauscht, und pendelt dann um $7\cdot10^{-4}$.}
+
+\textbf{Deutung.} (1) \emph{Die Sperre wirkt:} 2 KORREKTUREN waren echte Versuche, einen schlechteren Stand zu behalten (Runden 6 und 38), 3 waren Gleichstände, die der Agent als Gewinn behalten wollte (Runden 47, 49, 60). Ohne Prüfbuch hätte sich der Agent besser gemeldet, als er war.
+(2) \emph{Die Ideen waren klein:} nur einzelne Koeffizienten um 5 bis 20\,\%, keine Mischung, keine Umparametrisierung. Dafür ist die vorhandene (1+1)-Evolutionsstrategie billiger: Sie braucht keine Token und läuft ohne Nutzungsgrenze.
+(3) \emph{Sandbox:} In mehreren Runden wollte der Agent \texttt{form.py} mit verketteten Shell-Befehlen ändern; die Rechtevorgabe „dontAsk“ lehnte das ab, die Runde war leer.
+(4) \emph{Leerlauf:} Ab 16:35 meldete der Agent nur noch die Nutzungsgrenze, und die Schleife drehte über 3000 leere Runden; eine Leerlauf-Erkennung fehlte.
+\kasten{Lehre für KI im Engineering.}{Ein Sprachmodell darf Ideen liefern, aber nicht die Bewertung seiner Ideen. Die Messung gehört in ein Programm, das der Agent nicht ändern kann, und der Stand wird nur auf Beleg des Prüfbuchs behalten. Nächster Versuch mit einem lokalen Modell (PI), genauerer Aufgabenbeschreibung und Leerlauf-Erkennung.}
+
+%----------------------------------------------------------------------
+\subsection{Spulen glätten (B-066)}
+Idee des Nutzers: Kann man die „8er“ der Spulen nach der Rechnung wegglätten? Gemessen an DATJ5FC (DATENSATZ-Form, unverändert) mit den EIGENEN Spulen d100\_n5\_lr\_s56 (5 Grundspulen, Fourier-Ordnung 7). Jede Spule ist eine Summe von Wellen; geglättet wird, indem die kurzen Wellen abgeschnitten werden (Ordnung 7 $\to$ 2).
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrr}\toprule
+Ordnung & 7 (Original) & 6 & 5 & 4 & 3 & 2 \\\midrule
+Feldfehler & $1{,}05\cdot10^{-3}$ & $1{,}01\cdot10^{-2}$ & $1{,}55\cdot10^{-2}$ & $1{,}75\cdot10^{-2}$ & $3{,}7\cdot10^{-2}$ & $7{,}4\cdot10^{-2}$ \\
+kleinster Biegeradius, m & 0,85 & 0,07 & 0,19 & 0,07 & 0,05 & 0,12 \\\bottomrule
+\end{tabular}\caption{Fourier-Ordnung kappen: DATJ5FC (DATENSATZ-Form, unverändert), eigene Spulen d100\_n5\_lr\_s56.}\end{table}
+Schon der erste Schritt verschlechtert den Feldfehler um das Zehnfache; der Biegeradius, im Original 0,85 bis 0,89\,m und damit genau an der Krümmungsgrenze, wird teils viel schlechter (bis 0,07\,m).
+Die „8er“ sind \emph{Seiten-Achter}: In der Ansicht auf die Spulenebene gibt es keine Kreuzung; in der Seitenansicht kreuzt sich jede Grundspule 1- bis 3-mal. Es sind verdrehte Sattelspulen, 4,5 bis 6,9\,m aus der Ebene, und das bleibt bis Ordnung 2. Keine Selbstberührung (Abstand mindestens 1,9\,m).
+\bild{sk_kappen.png}{1.0}{Fourier-Ordnung kappen: Die fünf Grundspulen d100\_n5 (EIGENE Spulen) für DATJ5FC (DATENSATZ-Form, unverändert). Schwarz: Original (Ordnung 7), rot: Ordnung 6, blau: Ordnung 5.}
+\lesehilfe{Jede Spalte ist eine Grundspule. Oben: Blick senkrecht auf die Ebene, in der die Spule am ehesten liegt; hier kreuzt sich keine. Unten: Seitenansicht (Höhe aus der Ebene gegen Länge, beide in m); hier sieht man die „8“, die Spule ist in sich verdreht wie ein verdrillter Gummiring. Man achte darauf, dass die Kreuzung unten in allen drei Kurven bleibt.}
+\textbf{Folge:} Glätten nach der Rechnung hilft nicht. Die Baubarkeit muss in die Optimierung selbst, mit einem Strafterm für Seiten-Achter oder Höhe aus der Ebene. Das passt zum Gedanken „Spulen als Wörter“: ein Wortschatz aus ebenen, baubaren Spulen. Skript \texttt{stellarator/spulen\_glaetten.py}; Bericht \texttt{docs/recherche/\allowbreak spulen\_suche/\allowbreak glaettung/\allowbreak bericht.md}.
+
+%----------------------------------------------------------------------
+\subsection{Baubare Spulen}\label{sec:baubare-spulen}
+% OPUS-FUELLT (gefüllt 8.11.2026)
+\textbf{Plasma:} DATJ5FC, DATENSATZ-Form (ConStellaration), unverändert. \textbf{Spulen:} EIGENE Sätze aus Stage 2, Bauraum 1,0\,$a$. Weil das Glätten nach der Rechnung nicht hilft (Abschnitt davor), kommt die Baubarkeit jetzt in die Optimierung selbst. Wir haben zwei Wege geprüft.
+
+\textbf{1. Strafe auf die Verdrehung (Torsion).} Die Torsion misst, wie stark sich eine Kurve aus ihrer Schmiegebene herausdreht. Eine ebene Kurve hat überall die Torsion null. Die Strafe wurde in drei Stärken gerechnet, 0,1-, 1- und 10-mal so groß wie der Feldterm. Die Torsionssumme sinkt von 2400 auf 1330, 740 und 590, der Feldfehler steigt nur mäßig: $1{,}26$, $1{,}58$ und $1{,}87\cdot10^{-3}$, gegenüber $1{,}05\cdot10^{-3}$ ohne Strafe. Die Spulen werden ruhiger. Die Höhe aus der Ebene bleibt aber bei 4,8 bis 8,0\,m, und die Seiten-Achter bleiben (1 bis 4 je Spule). Geringe Torsion heißt also nicht eben: Die Spule verlegt ihre Verdrehung an wenige Stellen. Das hatten wir anders erwartet.
+\bild{sk_torsion.png}{1.0}{Fünf Grundspulen für DATJ5FC (DATENSATZ-Form, unverändert), EIGENE Spulen. Schwarz ohne Strafe, orange und blau mit mittlerer und starker Torsionsstrafe. Oben der Blick senkrecht auf die Spulenebene, unten die Seitenansicht. Worauf achten: Unten kreuzen sich die Linien weiter (die „8“), auch mit Strafe; oben werden die kleinen Wellen weniger.}
+
+\textbf{2. Ebene Spulen per Konstruktion.} Jede Spule liegt in einer eigenen, frei gekippten Ebene, die Form in der Ebene ist frei. Geometrisch ist das ideal: Höhe aus der Ebene 0, keine Achter, Biegeradius 0,8 bis 2,6\,m, Selbstabstand mindestens 3,9\,m. Das Feld trifft die Plasmaform aber viel schlechter: Feldfehler $4{,}6\cdot10^{-2}$ (5 Spulen je halbe Periode), $4{,}7\cdot10^{-2}$ (6) und $3{,}3\cdot10^{-2}$ (8). Das ist 30- bis 45-mal schlechter als bei den verdrehten Spulen, und nach zwei Runden waren Abstand und Krümmung noch verletzt.
+\bild{sk_eben.png}{1.0}{Dieselbe Plasmaform (DATJ5FC, DATENSATZ-Form, unverändert). Schwarz: verdrehte EIGENE Spulen, orange: ebene EIGENE Spulen, je 5 Spulen pro halbe Periode. Unten: Die ebene Spule ist von der Seite eine gerade Linie. Oben: Sie ist größer und runder und hat eine Delle zum Plasma hin.}
+
+\textbf{Folgerung.} Zwischen „verdreht und genau“ ($10^{-3}$) und „eben und ungenau“ ($3\cdot10^{-2}$) fehlt ein Mittelweg. Zwei Möglichkeiten: eine Strafe direkt auf die Höhe aus der Ebene, deren Stärke man wählen kann, oder eine Plasmaform, die von vornherein zu ebenen Spulen passt. Das zweite ist die Idee „Spulen = Wörter, Anordnung = Grammatik“: zuerst ein Wortschatz baubarer Spulen, dann das Plasma daraus (Befund B-067).

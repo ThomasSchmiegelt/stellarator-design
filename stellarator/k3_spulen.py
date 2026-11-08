@@ -49,19 +49,46 @@ def flaechen():
     return s_h, s_v, s_d, R0, a
 
 
+def ebene_startkurve(kurve, nq=128):
+    """Ebene Spule (simsopt CurvePlanarFourier, Ordnung ORD) aus einer Startkurve: beste Ebene, Radius r(phi) um den Mittelpunkt."""
+    from simsopt.geo import CurvePlanarFourier
+    g = kurve.gamma(); m = g.mean(0); _, _, vt = np.linalg.svd(g - m)
+    e1, e3 = vt[0], vt[2]; e2 = np.cross(e3, e1); R = np.column_stack([e1, e2, e3])
+    w = np.sqrt(max(1e-12, 1 + R[0, 0] + R[1, 1] + R[2, 2])) / 2   # Drehmatrix -> Quaternion (q0 > 0)
+    q = [w, (R[2, 1] - R[1, 2]) / (4 * w), (R[0, 2] - R[2, 0]) / (4 * w), (R[1, 0] - R[0, 1]) / (4 * w)]
+    lok = (g - m) @ R; ph = np.arctan2(lok[:, 1], lok[:, 0]); r = np.hypot(lok[:, 0], lok[:, 1])
+    M = np.column_stack([np.ones_like(ph)] + [np.cos(k * ph) for k in range(1, ORD + 1)] + [np.sin(k * ph) for k in range(1, ORD + 1)])
+    koef = np.linalg.lstsq(M, r, rcond=None)[0]
+    c = CurvePlanarFourier(np.linspace(0, 1, nq, endpoint=False), ORD)
+    c.x = np.concatenate([koef, q, m])
+    return c
+
+
+def eben_nach_xyz(c, nq=128):
+    """Ebene Kurve exakt als CurveXYZFourier (Ordnung ORD + 1: r(phi)·cos(phi) hat Ordnung ORD + 1) für Export/Prüfung."""
+    from simsopt.geo import CurveXYZFourier
+    o = ORD + 1; t = np.linspace(0, 1, nq, endpoint=False); g = c.gamma()
+    M = [np.ones_like(t)]
+    for k in range(1, o + 1):
+        M += [np.sin(2 * np.pi * k * t), np.cos(2 * np.pi * k * t)]
+    M = np.array(M).T
+    x = CurveXYZFourier(nq, o); x.x = np.concatenate([np.linalg.lstsq(M, g[:, j], rcond=None)[0] for j in range(3)])
+    return x
+
+
 def lauf(fall, maxiter=2000, runden=2):
     """fall '<name>_w': setzt den fertigen Lauf <name> (biot_savart_<name>.json) mit weiteren Runden fort."""
     from scipy.optimize import minimize
     from simsopt.field import BiotSavart, Current, coils_via_symmetries
     from simsopt.field.coil import ScaledCurrent
-    from simsopt.geo import CurveLength, CurveCurveDistance, CurveSurfaceDistance, LpCurveCurvature, MeanSquaredCurvature
+    from simsopt.geo import CurveLength, CurveCurveDistance, CurveSurfaceDistance, LpCurveCurvature, MeanSquaredCurvature, LpCurveTorsion
     from simsopt.objectives import SquaredFlux, QuadraticPenalty, Weight
     from stellarator import zwei_ringe as zr
     AUS.mkdir(parents=True, exist_ok=True)
     if (AUS / f"{fall}.fertig").exists():
         print("fertig, uebersprungen:", fall); return
     weiter = fall.endswith("_w"); kern = fall[:-2] if weiter else fall
-    teile = kern.split("_"); kern = "_".join(teile[:2]); rb = 0.5; ss = 0.3   # Varianten: _o<Ordnung>, _k<Biegeradius in 1/100 a>, _s<Spule-Spule in 1/100 a>, _lr
+    teile = kern.split("_"); kern = "_".join(teile[:2]); rb = 0.5; ss = 0.3; wt = 0.0; eben = False   # _p: ebene Spulen (CurvePlanarFourier); Varianten: _o<Ordnung>, _k<Biegeradius in 1/100 a>, _s<Spule-Spule in 1/100 a>, _lr, _t<Gewicht Verdrehung in 1e-11>
     laenge_ref = False                                            # _lr: Laengengrenze wie zwei_ringe (24,9 a je Spule, Proxima-Satz)
     for t in teile[2:]:
         if t == "lr":
@@ -72,6 +99,10 @@ def lauf(fall, maxiter=2000, runden=2):
             rb = int(t[1:]) / 100
         elif t.startswith("s"):
             ss = int(t[1:]) / 100
+        elif t == "p":
+            eben = True
+        elif t.startswith("t"):                                   # Baubarkeit (B-066): Strafe auf Torsion, eben = Torsion 0
+            wt = int(t[1:]) * 1e-11
     d, n = FAELLE[kern]
     s_h, s_v, s_d, R0, a = flaechen(); nfp = s_v.nfp
     ref = json.loads((ROOT / "sim" / "qi_zwei_ringe" / "C.json").read_text())
@@ -80,7 +111,8 @@ def lauf(fall, maxiter=2000, runden=2):
     basis, I0 = [], []
     for i in range(n):
         phi = (i + 0.5) * 2 * np.pi / (2 * nfp * n)
-        basis.append(zr.startkurve(s_v, phi, 1.08 * d * a)); I0.append(1e5)
+        k0 = zr.startkurve(s_v, phi, 1.08 * d * a)
+        basis.append(ebene_startkurve(k0) if eben else k0); I0.append(1e5)
     l_start = float(sum(CurveLength(c).J() for c in basis)); l_max = 1.25 * l_start
     if laenge_ref:                                                # wie zwei_ringe.optimieren: n * (Mittel Proxima-Satz + Umfangszuwachs)
         l_max = float(n * (np.mean(ref["ringe"]["ring0"]["laenge_basis_a"]) + 2 * np.pi * max(d - 0.85, 0)) * a)
@@ -101,11 +133,14 @@ def lauf(fall, maxiter=2000, runden=2):
     Jl = QuadraticPenalty(sum(CurveLength(c) for c in basis), l_max, "max")
     Jk = [LpCurveCurvature(c, 2, k_max) for c in basis]
     Jm = [QuadraticPenalty(MeanSquaredCurvature(c), msk_max, "max") for c in basis]
+    Jt = [LpCurveTorsion(c, 2, 0.0) for c in basis]               # nur mit _t aktiv (fest, ohne Steigerung)
     w = {"ss": 1e2, "sp": 1e2, "l": 1e-4, "k": 1e-5, "m": 1e-8}
     verlauf = []; t0 = time.time(); ringe_idx = [list(range(n))]
     for runde in range(runden):
         JF = (Jf + Weight(w["ss"]) * Jss + Weight(w["sp"]) * Jsp + Weight(w["l"]) * Jl
               + Weight(w["k"]) * sum(Jk) + Weight(w["m"]) * sum(Jm))
+        if wt > 0:
+            JF = JF + Weight(wt) * sum(Jt)
 
         def fun(x):
             JF.x = x
@@ -128,12 +163,16 @@ def lauf(fall, maxiter=2000, runden=2):
             if v:
                 w[k] *= 10
     e.update(fall=fall, abstand_soll_a=d, spulen_je_halbperiode=n, form=str(FORM.relative_to(ROOT)),
-             grenzen={"spule_spule_min_a": ss, "biegeradius_min_a": rb, "fourier_ordnung": zr.ORD, "laengenregel": "zwei_ringe" if laenge_ref else "1,25 x Start", "msk_max": msk_max, "laenge_max": l_max, "laenge_start": l_start},
+             grenzen={"spule_spule_min_a": ss, "biegeradius_min_a": rb, "fourier_ordnung": zr.ORD, "laengenregel": "zwei_ringe" if laenge_ref else "1,25 x Start", "msk_max": msk_max, "gewicht_torsion": wt, "eben": eben, "torsion_L2_je_spule": [float(j.J()) for j in Jt], "laenge_max": l_max, "laenge_start": l_start},
              konvergenz={"runden": len(verlauf), "letzte_meldung": verlauf[-1]["meldung"], "grenzen_verletzt": verlauf[-1]["verletzt"],
                          "iter_letzte": verlauf[-1]["iter"]}, laufzeit_s=time.time() - t0,
              laenge_summe=float(sum(CurveLength(c).J() for c in basis)))
     (AUS / f"{fall}.json").write_text(json.dumps(e, indent=1))
     from stellarator.spulen_satz import export
+    if eben:                                                      # Export erwartet CurveXYZFourier: ebene Kurven exakt umrechnen
+        xyz = [eben_nach_xyz(c) for c in basis]
+        print("eben: Umrechnungsfehler max", max(float(np.abs(x.gamma() - c.gamma()).max()) for x, c in zip(xyz, basis)), flush=True)
+        BiotSavart(coils_via_symmetries(xyz, cur, nfp, True)).save(str(AUS / f"biot_savart_{fall}.json"))
     export(AUS / f"biot_savart_{fall}.json", FORM, AUS / f"satz_{fall}", 1.0, nb=n)
     (AUS / f"{fall}.fertig").write_text(time.strftime("%F %T"))
     print("FERTIG", fall, json.dumps({k: v for k, v in e.items() if not isinstance(v, (list, dict))}), flush=True)
