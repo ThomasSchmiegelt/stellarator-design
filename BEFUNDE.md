@@ -5,6 +5,14 @@
 
 ---
 
+## B-066 Spulen glätten (Fourier-Ordnung kappen) entfernt die „8er“ nicht und kostet Faktor 10 im Feldfehler (2026-11-08, Opus) ⚠
+- **Herkunft:** DATJ5FC, DATENSATZ-Form unverändert, mit EIGENEN Spulen d100_n5_lr_s56 (5 Grundspulen, Ordnung 7).
+- Feldfehler nach Ordnung: 7: 1,05e-3; 6: 1,01e-2; 5: 1,55e-2; 4: 1,75e-2; 3: 3,7e-2; 2: 7,4e-2.
+- Biegeradius im Original 0,85–0,89 m, also genau an der Krümmungsgrenze. Durch das Kappen wird er nicht besser, sondern teils viel schlechter (bis 0,07 m).
+- **Die „8er“ sind Seiten-Achter:** In der Ansicht auf die Spulenebene gibt es keine Kreuzung. In der Seitenansicht kreuzt sich jede Grundspule 1–3 Mal: verdrehte Sattelspulen, 4,5–6,9 m aus der Ebene. Das bleibt bis Ordnung 2. Keine Selbstberührung (Abstand ≥ 1,9 m).
+- **Folge:** Glätten nach der Rechnung hilft nicht. Die Baubarkeit muss in die Optimierung, mit einem Strafterm für Seiten-Achter oder Höhe aus der Ebene. Das passt zur Spulensprache-Idee: ebene Wörter statt verdrehter.
+- Skript stellarator/spulen_glaetten.py (Baubarkeitsmaß), Bild docs/recherche/spulen_suche/glaettung/kappen.png.
+
 ## B-065 autoresearch-Pilot (Sonnet-Ralph-Schleife) an der Plasmaform: f 1,72 → 0,60, nur Koeffizientenschritte, Prüfbuch fängt 5 Schönmeldungen (2026-11-08, Opus + Sonnet) ⚠
 - **Herkunft:** Start Kandidat 3 halb, EIGENE Form (aus Datensatzform Do3Qy). Vergleich DATJ5FC, DATENSATZ-Form unverändert, ziel 0,400.
 - **Lauf:** 86 echte Runden (15:10–16:35), 50 Versuche, 25 behalten. ziel 1,723 → 0,606, f 0,599, QI 4,7e-5 → 7,0e-4; nicht zulässig (iota_rand 0,57). Bester Stand a0dcb7e, gegengerechnet exakt gleich.
