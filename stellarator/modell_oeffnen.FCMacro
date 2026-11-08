@@ -1,0 +1,16 @@
+# Öffnet beide Stellarator-Modelle, setzt Farben und passt die Ansicht ein (2026-11-08)
+import FreeCAD, FreeCADGui
+M = "/home/cae/hermes/fusion/sim/kette_k3/vergleich/modell"
+for n in ("k3_halb", "datj5fc"):
+    d = FreeCAD.openDocument(f"{M}/{n}/{n}.FCStd")
+    FreeCADGui.activateWorkbench("MeshWorkbench")
+    for o in d.Objects:
+        v = o.ViewObject
+        if v is None: continue
+        v.Visibility = True
+        t = o.Label.lower()
+        if "plasma" in t: v.ShapeColor = (0.92, 0.40, 0.20); v.Transparency = 0
+        elif "gef" in t: v.ShapeColor = (0.65, 0.65, 0.68); v.Transparency = 65
+        else: v.ShapeColor = (0.78, 0.47, 0.25); v.Transparency = 0
+    FreeCADGui.activeDocument().activeView().viewIsometric()
+    FreeCADGui.activeDocument().activeView().fitAll()

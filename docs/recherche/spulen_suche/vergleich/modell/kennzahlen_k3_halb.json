@@ -1,0 +1,65 @@
+{
+ "name": "k3_halb",
+ "satz": "/home/cae/hermes/fusion/sim/kette_k3/stage2/satz_d100_n10_lr_s56",
+ "nfp": 2,
+ "massstab_m_je_einheit": 13.608431536775372,
+ "a_m": 1.8101063713783063,
+ "ANNAHME_gefaess": {
+  "innen_ueber_plasma_m": 0.15,
+  "wand_m": 0.1,
+  "aussen_ueber_plasma_m": 0.25
+ },
+ "rohr_durchmesser_m": 0.8521519469905311,
+ "symmetrie_pruefung": {
+  "n_rohre": 40,
+  "n_spulen_bs": 40,
+  "eineindeutig": true,
+  "abw_schwerpunkt_max_cm": 0.16704545517110844,
+  "abw_schwerpunkt_mittel_cm": 0.09933986645234717,
+  "stl_box_max_roh": 17701.75390625,
+  "stl_faktor_nach_m": 0.001
+ },
+ "offset_pruefung": {
+  "abstand_innen_min_m": 0.14999999999999863,
+  "abstand_innen_max_m": 0.15000000000000133,
+  "abstand_aussen_min_m": 0.24999999999999858,
+  "abstand_aussen_max_m": 0.25000000000000144,
+  "soll_innen_m": 0.15,
+  "soll_aussen_m": 0.25
+ },
+ "abstaende_und_durchdringung": {
+  "min_abstand_gefaess_aussen_zu_rohroberflaeche_m": 1.455280087270751,
+  "min_abstand_gefaess_alle_zu_rohroberflaeche_m": 1.455280087270751,
+  "min_abstand_plasma_zu_rohroberflaeche_m": 1.7052716385653384,
+  "rohrpunkte_in_gefaesswand": 0,
+  "rohrpunkte_innerhalb_aussenflaeche": 0,
+  "stichprobe_rohrpunkte": 1704948,
+  "durchdringung": false
+ },
+ "wasserdicht": {
+  "plasma": {
+   "offene_oder_nichtmannigfaltige_kanten": 0,
+   "wasserdicht": true,
+   "volumen_m3": 868.699317774044,
+   "dreiecke": 276480
+  },
+  "gefaess": {
+   "offene_oder_nichtmannigfaltige_kanten": 0,
+   "wasserdicht": true,
+   "volumen_m3": 185.32406003227874,
+   "dreiecke": 552960
+  },
+  "rohre_je_rohr": 40,
+  "rohre_gesamt": 40
+ },
+ "spulen_stl_reduziert_dreiecke_je_rohr": 30000,
+ "reduktion_max_abw_m_erste4": 0.018448117428641875,
+ "bbox_gefaess_m": [
+  -14.505306777470045,
+  14.505306777470047,
+  -15.881421084397282,
+  15.881421084397282,
+  -13.078099900449748,
+  13.078099900449748
+ ]
+}
