@@ -85,6 +85,16 @@ Die Verletzungen stammen aus den fest gerechneten Formen. Der Plasmaradius a ist
 
 **Was man sieht.** Kandidat 3 halb steigt innerhalb einer halben Periode von der Mittelebene bis auf etwa 0,9 Hauptradien nach oben und wieder zurück; in der Mitte ist der Querschnitt eine schmale Sichel. Das „hohe Band“ ist also vor allem ein Auf und Ab des ganzen Rohrs, dazu ein sehr schmaler Querschnitt (daher Elongation über 7). Die flachere Form steigt nur bis etwa 0,8 und ist kaum dicker; Abflachen hat die Grundform wenig verändert. DjLe3eL6 bleibt dagegen in der Mittelebene (Höhe höchstens 0,25) und dreht ein dreieckiges Profil. Für die Spulen heißt das: Bei Kandidat 3 müssen sie einem Rohr folgen, das sich weit aus der Ebene hebt; das erklärt die langen, weit ausladenden Spulen (Folgerung, nicht gerechnet).
 
+## Spulen im Schnitt: wie baubar sieht es aus?
+
+![Spulen um die Querschnitte](kreis/schnitt_spulen.png)
+
+**Lesehilfe.** Jede Zeile zeigt einen Spulensatz, jede Spalte eine Spule aus der ersten halben Periode. Die farbige Fläche ist der Plasmaquerschnitt an der Stelle der Spule. Der graue Ring ist die Spule selbst, von der Seite auf die Ebene aus Abstand zur Ringachse und Höhe gelegt (wie eine Ansicht in einer Zeichnung). Die Strichbreite entspricht etwa dem Rohr von 0,85 m bei a = 1,80 m. Maßstab: Hauptradius = 1, überall gleich. Eine echte Spule ist nicht eben; die Projektion zeigt, wie weit sie ausholt, nicht ihre genaue Lage im Raum.
+
+**Was man sieht.** Bei Kandidat 3 halb (oben) holen die Spulen weit aus. Sie reichen bis 1,2 Hauptradien hoch, sind bis zu 1,2 breit und haben Knicke und kleine Schlaufen (Spule 5, 8, 10). Die Spule muss dem Plasmaband folgen, das sich hebt und senkt. DjLe3eL6 mit den eigenen Spulen A085 (Mitte) bleibt kompakt um die Mittelebene, hat aber kleine Schlaufen (Spule 3). DATJ5FC (unten) hat die ruhigsten, rundesten Spulen dicht am flachen, sichelförmigen Querschnitt. Augenschein: DATJ5FC wirkt am leichtesten zu wickeln, Kandidat 3 am schwersten (Einschätzung des Nutzers, durch das Bild gestützt, nicht gerechnet).
+
+**Vorbehalt.** Der DATJ5FC-Satz ist alt (Plan B, d085_n5): Feldfehler 5,1e-3, also etwa 25-mal schlechter als Kandidat 3, mit der zu engen Längenregel und ohne die Bauraumgrenzen dieses Kreises. Glatte Spulen mit großem Feldfehler sind leicht zu haben. Der faire Vergleich braucht einen Durchlauf mit denselben Grenzen. DATJ5FC ist außerdem keine eigene Form, sondern unverändert aus dem ConStellaration-Datensatz.
+
 ## Erwartung gegen Ergebnis
 
 | Erwartung | gemessen | Urteil |
@@ -122,3 +132,5 @@ Bei DjLe3eL6 mit Proxima-Spulen hält die Stromtrimmung auch im fertigen Lauf: B
 ## English summary
 
 Two passes of the loop plasma → coils → tube → free-boundary plasma → forces are computed. With 48,000 solver steps the loss factor is finally reliable: Proxima coils 1.53, our A085 coils 1.29 (both on DjLe3eL6), our coils on candidate 3 half 1.07. Values after 3,000 steps mislead in both directions. **Pass 1** gives a coil set that fits the assumed space (a = 1.80 m, 1.3 m plasma–coil clearance, 1.0 m coil package): field error 2.10e-4, no tube intersection, QI with coils 5.14e-5, largest net force 1261 MN. **Pass 2** uses a flatter shape (elongation 6.33 instead of 7.15): largest net force 1021 MN (−19 %), but QI rises 2.3 times to 1.17e-4 (preliminary) and the sum of net forces stays the same. Two coil sets of the same plasma differ more than that, so the flattening is not shown to be the cause. The loop is not closed yet: FEM structure, cooling and plasma pressure are missing, and no shape meets challenge tasks 2 or 3. Next step: make force an objective of the coil search before giving up more QI.
+
+Coil cross-sections (schnitt_spulen.png): the coils of candidate 3 half reach far out (up to 1.2 major radii high, with kinks and small loops). DjLe3eL6 with our A085 coils stays compact. The dataset shape DATJ5FC (not ours) has the smoothest coils, but its old set has a 25 times larger field error and was not made under this loop's space limits, so a fair comparison needs a pass with the same limits.

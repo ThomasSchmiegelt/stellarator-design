@@ -5,6 +5,14 @@
 
 ---
 
+## B-063 Spulen im Schnitt: Kandidat 3 holt weit aus, DATJ5FC wirkt am einfachsten, Vergleich aber unfair (2026-11-08, Opus) ⚠
+
+Bild docs/recherche/spulen_suche/kreis/schnitt_spulen.png, Skript `stellarator/kreis_schnitt_spulen.py`, Bericht kreis_bericht.md Abschnitt „Spulen im Schnitt“. Fünf Basisspulen je Satz, seitlich auf (R, z) projiziert, um den Plasmaschnitt am mittleren φ der Spule.
+K3 halb, Durchlauf 1 (Feldfehler 2,1e-4): Spulen bis z ≈ 1,2 R0, Knicke und Schlaufen. DjLe3eL6 + A085 (6,6e-4): kompakt, kleine Schlaufen. DATJ5FC Plan B d085_n5 (5,1e-3): glatt und kompakt.
+Nutzer hält K3 für schwer baubar, DATJ5F für einfacher; das Bild stützt das. Vorbehalt: DATJ5FC ist eine unveränderte Datensatzform (nicht unsere), und ihr Satz hat einen 25-mal größeren Feldfehler, die alte Längenregel und keine Bauraumgrenzen. Fairer Vergleich: Stage 2 d100_n5_lr_s56 auf DATJ5FC, freie Grenze 48000, Kräfte (kraft_analyse für nfp 4 verallgemeinern). Noch nicht gerechnet.
+
+---
+
 ## B-062 Kreis, Durchläufe 1 und 2: Spulen im Bauraum, Verlust 1,07; Abflachung senkt die Spitzenkraft 19 %, Ursache nicht belegt (2026-11-07, Opus) ⚠
 
 Bericht docs/recherche/spulen_suche/kreis_bericht.md, Protokoll F-273 bis F-278. Skripte `sim/kette_k3/lauf_kreis1.sh`, `lauf_kreis2.sh`, `stellarator/kreis_kraft.py`, `stellarator/kreis_bilder.py`; `k3_spulen.py` Variante `_s<NN>`. Annahmen a = 1,80 m, B0 6,5 T, 1,3 m Freiraum, Paket 1,0 m.
