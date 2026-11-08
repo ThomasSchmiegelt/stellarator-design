@@ -5,6 +5,17 @@
 
 ---
 
+## B-070 Nutzerregeln in der Spulenrechnung: Biegeradius ≥ 2·d und kein Rücklauf (Montage) für DATJ5FC fast ohne Feldverlust erreicht (2026-11-08, Opus) ⚠
+- **Herkunft:** DATJ5FC, DATENSATZ-Form unverändert. EIGENE Spulen, 5 je halbe Periode, Bauraum 1,0 a.
+- **Regeln (Nutzer):** Biegeradius ≥ 2·d (d = Rohr 0,85 m, also 1,7 m; Stage 2 _k95). Bahnen dürfen sich nicht überlappen, geprüft in der Abwicklung φ über θ (stellarator/spulen_montage.py): kein Rücklauf, keine Nachbarkreuzung.
+- **Ergebnisse:**
+  - bisher: 1,05e-3, R 0,85 m, Rücklauf 24/40.
+  - _k95: 1,30e-3, R 1,65–1,68 m, Rücklauf 24/40.
+  - _k95_r10 mit Montagestrafe (stellarator/montage_strafe.py, jax-Ableitung geprüft): **1,36e-3, R 1,64–1,69 m, Rücklauf 0/40**.
+- **Offen:** Nachbarkreuzungen 12/40 (min −1,4°), Abstand 0,975 a (Grenze 0,98 a), Seiten-Achter der PCA-Ansicht bleiben. Freie Grenze und QI dieses Satzes noch nicht gerechnet.
+- **„Perfekte Bahn zuerst“** (Höhenlinien einer Stromschicht, stellarator/spulen_potential.py): montagegerecht per Konstruktion, aber diskret 5,2e-2. Der Warmstart daraus ohne Montagestrafe verliert die Lage (Rücklauf 24/40). Bei Ordnung 16 reichen 128 Kurvenpunkte für die Krümmungsgrenze nicht (Knick zwischen den Punkten).
+- Bilder docs/recherche/spulen_suche/baubar/ (abwicklung_vorher_nachher.png, grundspulen.png); 3D-HTML nur lokal.
+
 ## B-069 „8“ durch Weglassen, Ausdünnen oder Stauchen entfernen: Die Schlaufe ist die halbe Spule, jede Variante zerstört das Feld (2026-11-08, Opus) ⚠
 - **Herkunft:** DATJ5FC, DATENSATZ-Form unverändert, EIGENE Spulen d100_n5_lr_s56 (Original 1,05e-3).
 - **Weglassen und Ausdünnen** (Nutzeridee, CAD-Weg mit 64 Stützpunkten): Die kürzere Schlaufe der Seiten-8 ist 43–48 % der Spule. Weglassen schneidet die halbe Spule ab (Verschiebung 1,5–3,8 m), Feldfehler 1,35e-1. Ausdünnen ergibt 1,37e-1. An den Schnittstellen entstehen neue Ösen, keine Spule wird frei.

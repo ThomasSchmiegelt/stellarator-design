@@ -36,7 +36,7 @@ ORD = 7
 FAELLE = {"d085_n8": (0.85, 8), "d085_n10": (0.85, 10), "d100_n8": (1.00, 8), "d072_n10": (0.72, 10),
           "d100_n10": (1.00, 10), "d085_n6": (0.85, 6),
           "d085_n5": (0.85, 5),                                           # Plan B DATJ5FC… (nfp 4) wie A085 bei DjLe3eL6
-          "d100_n5": (1.00, 5), "d100_n6": (1.00, 6)}                     # Vergleich DATJ5FC im Bauraum (2026-11-08)
+          "d100_n5": (1.00, 5), "d100_n6": (1.00, 6), "d100_n4": (1.00, 4)}                     # Vergleich DATJ5FC im Bauraum (2026-11-08)
 
 
 def flaechen():
@@ -76,7 +76,7 @@ def eben_nach_xyz(c, nq=128):
     return x
 
 
-def lauf(fall, maxiter=2000, runden=2):
+def lauf(fall, maxiter=2000, runden=int(os.environ.get("K3_RUNDEN", "2"))):
     """fall '<name>_w': setzt den fertigen Lauf <name> (biot_savart_<name>.json) mit weiteren Runden fort."""
     from scipy.optimize import minimize
     from simsopt.field import BiotSavart, Current, coils_via_symmetries
@@ -88,7 +88,7 @@ def lauf(fall, maxiter=2000, runden=2):
     if (AUS / f"{fall}.fertig").exists():
         print("fertig, uebersprungen:", fall); return
     weiter = fall.endswith("_w"); kern = fall[:-2] if weiter else fall
-    teile = kern.split("_"); kern = "_".join(teile[:2]); rb = 0.5; ss = 0.3; wt = 0.0; eben = False   # _p: ebene Spulen (CurvePlanarFourier); Varianten: _o<Ordnung>, _k<Biegeradius in 1/100 a>, _s<Spule-Spule in 1/100 a>, _lr, _t<Gewicht Verdrehung in 1e-11>
+    teile = kern.split("_"); kern = "_".join(teile[:2]); rb = 0.5; ss = 0.3; wt = 0.0; eben = False; vorlage = None; wr = 0.0   # _p: ebene Spulen (CurvePlanarFourier); Varianten: _o<Ordnung>, _k<Biegeradius in 1/100 a>, _s<Spule-Spule in 1/100 a>, _lr, _t<Gewicht Verdrehung in 1e-11>
     laenge_ref = False                                            # _lr: Laengengrenze wie zwei_ringe (24,9 a je Spule, Proxima-Satz)
     for t in teile[2:]:
         if t == "lr":
@@ -101,6 +101,10 @@ def lauf(fall, maxiter=2000, runden=2):
             ss = int(t[1:]) / 100
         elif t == "p":
             eben = True
+        elif t == "v":                                            # Warmstart aus Vorlage (K3_VORLAGE = satz-Ordner, z. B. Höhenlinien aus spulen_potential)
+            vorlage = Path(os.environ["K3_VORLAGE"]).resolve()
+        elif t.startswith("r") and t[1:].isdigit():               # Montage (Nutzerregel): Strafe gegen Rücklauf, Gewicht k·1e-5, steigt bei Verletzung
+            wr = int(t[1:]) * 1e-5
         elif t.startswith("t"):                                   # Baubarkeit (B-066): Strafe auf Torsion, eben = Torsion 0
             wt = int(t[1:]) * 1e-11
     d, n = FAELLE[kern]
@@ -113,6 +117,12 @@ def lauf(fall, maxiter=2000, runden=2):
         phi = (i + 0.5) * 2 * np.pi / (2 * nfp * n)
         k0 = zr.startkurve(s_v, phi, 1.08 * d * a)
         basis.append(ebene_startkurve(k0) if eben else k0); I0.append(1e5)
+    if vorlage is not None:
+        vd = json.loads((vorlage / "spulen.json").read_text())
+        assert vd["order"] == zr.ORD and len(vd["basis_x"]) == n, "Vorlage passt nicht (Ordnung/Spulenzahl)"
+        for i in range(n):
+            basis[i].x = np.asarray(vd["basis_x"][i]); I0[i] = float(vd["currents"][i])
+        print("Vorlage geladen:", vorlage, flush=True)
     l_start = float(sum(CurveLength(c).J() for c in basis)); l_max = 1.25 * l_start
     if laenge_ref:                                                # wie zwei_ringe.optimieren: n * (Mittel Proxima-Satz + Umfangszuwachs)
         l_max = float(n * (np.mean(ref["ringe"]["ring0"]["laenge_basis_a"]) + 2 * np.pi * max(d - 0.85, 0)) * a)
@@ -134,13 +144,17 @@ def lauf(fall, maxiter=2000, runden=2):
     Jk = [LpCurveCurvature(c, 2, k_max) for c in basis]
     Jm = [QuadraticPenalty(MeanSquaredCurvature(c), msk_max, "max") for c in basis]
     Jt = [LpCurveTorsion(c, 2, 0.0) for c in basis]               # nur mit _t aktiv (fest, ohne Steigerung)
-    w = {"ss": 1e2, "sp": 1e2, "l": 1e-4, "k": 1e-5, "m": 1e-8}
+    from stellarator.montage_strafe import RuecklaufStrafe, ruecklauf_zahl
+    Jr = [RuecklaufStrafe(c, str(FORM)) for c in basis]             # nur mit _r aktiv
+    w = {"ss": 1e2, "sp": 1e2, "l": 1e-4, "k": 1e-5, "m": 1e-8, "r": wr}
     verlauf = []; t0 = time.time(); ringe_idx = [list(range(n))]
     for runde in range(runden):
         JF = (Jf + Weight(w["ss"]) * Jss + Weight(w["sp"]) * Jsp + Weight(w["l"]) * Jl
               + Weight(w["k"]) * sum(Jk) + Weight(w["m"]) * sum(Jm))
         if wt > 0:
             JF = JF + Weight(wt) * sum(Jt)
+        if wr > 0:
+            JF = JF + Weight(w["r"]) * sum(Jr)
 
         def fun(x):
             JF.x = x
@@ -151,10 +165,13 @@ def lauf(fall, maxiter=2000, runden=2):
         verl = {"ss": e["spule_spule_min_a"] < 0.98 * ss, "sp": e["ringe"]["ring0"]["abstand_plasma_a"] < 0.98 * d,
                 "k": e["biegeradius_min_a"] < 0.98 * rb, "l": float(sum(CurveLength(c).J() for c in basis)) > 1.02 * l_max,
                 "m": e["msk_max"] > 1.02 * msk_max}
+        rl = [ruecklauf_zahl(c.gamma(), str(FORM)) for c in basis]
+        if wr > 0:
+            verl["r"] = sum(rl) > 0
         zeile = {"runde": runde, "iter": int(res.nit), "meldung": str(res.message), "Jf": float(Jf.J()), "gewichte": dict(w),
                  "verletzt": [k for k, v in verl.items() if v], "zeit_s": time.time() - t0, "Bn_mittel": e["Bn_mittel"],
                  "Bn_max": e["Bn_max"], "spule_spule_min_a": e["spule_spule_min_a"], "biegeradius_min_a": e["biegeradius_min_a"],
-                 "abstand_a": e["ringe"]["ring0"]["abstand_plasma_a"]}
+                 "abstand_a": e["ringe"]["ring0"]["abstand_plasma_a"], "ruecklauf_je_spule": rl}
         verlauf.append(zeile); (AUS / f"verlauf_{fall}.json").write_text(json.dumps(verlauf, indent=1)); print(json.dumps(zeile), flush=True)
         bs.save(str(AUS / f"biot_savart_{fall}.json"))                 # Zwischenstand je Runde
         if not any(verl.values()) and res.nit < maxiter:            # weiter, solange Grenzen verletzt oder Schrittgrenze erreicht
@@ -163,7 +180,7 @@ def lauf(fall, maxiter=2000, runden=2):
             if v:
                 w[k] *= 10
     e.update(fall=fall, abstand_soll_a=d, spulen_je_halbperiode=n, form=str(FORM.relative_to(ROOT)),
-             grenzen={"spule_spule_min_a": ss, "biegeradius_min_a": rb, "fourier_ordnung": zr.ORD, "laengenregel": "zwei_ringe" if laenge_ref else "1,25 x Start", "msk_max": msk_max, "gewicht_torsion": wt, "eben": eben, "torsion_L2_je_spule": [float(j.J()) for j in Jt], "laenge_max": l_max, "laenge_start": l_start},
+             grenzen={"spule_spule_min_a": ss, "biegeradius_min_a": rb, "fourier_ordnung": zr.ORD, "laengenregel": "zwei_ringe" if laenge_ref else "1,25 x Start", "msk_max": msk_max, "gewicht_torsion": wt, "eben": eben, "vorlage": str(vorlage) if vorlage else None, "torsion_L2_je_spule": [float(j.J()) for j in Jt], "laenge_max": l_max, "laenge_start": l_start},
              konvergenz={"runden": len(verlauf), "letzte_meldung": verlauf[-1]["meldung"], "grenzen_verletzt": verlauf[-1]["verletzt"],
                          "iter_letzte": verlauf[-1]["iter"]}, laufzeit_s=time.time() - t0,
              laenge_summe=float(sum(CurveLength(c).J() for c in basis)))
