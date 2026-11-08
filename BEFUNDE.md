@@ -5,6 +5,13 @@
 
 ---
 
+## B-071 Weniger Fourier-Ordnung von Anfang an (7 → 5 → 4) macht die Spulen für DATJ5FC kaum ruhiger: Die Unruhe kommt aus dem Plasma (2026-11-08, Opus) ⚠
+- **Herkunft:** DATJ5FC, DATENSATZ-Form unverändert. EIGENE Spulen n5, alle mit R ≥ 2·d und Montagestrafe.
+- **Feldfehler:** Ordnung 7: 1,36e-3; Ordnung 5: 1,71e-3; Ordnung 4: 2,51e-3. Grenzen eingehalten, Rücklauf 0, Nachbarkreuzungen 12/16/20.
+- **Nahansicht:** Bei Ordnung 4 gibt es weniger kleine Beulen, die großen Bögen und Schlaufen bleiben. Nutzerurteil vorher: „In 3D sieht es immer noch schlecht aus.“
+- **Folge:** Für ruhige Spulen braucht es eine spulenfreundliche Plasmaform. Entweder Datensatzformen mit der Kette durchsuchen, oder Spulen zuerst (Spulensprache).
+- Bild docs/recherche/spulen_suche/baubar/nah_ordnung.png, Skript stellarator/spulen_3d_nah.py.
+
 ## B-070 Nutzerregeln in der Spulenrechnung: Biegeradius ≥ 2·d und kein Rücklauf (Montage) für DATJ5FC fast ohne Feldverlust erreicht (2026-11-08, Opus) ⚠
 - **Herkunft:** DATJ5FC, DATENSATZ-Form unverändert. EIGENE Spulen, 5 je halbe Periode, Bauraum 1,0 a.
 - **Regeln (Nutzer):** Biegeradius ≥ 2·d (d = Rohr 0,85 m, also 1,7 m; Stage 2 _k95). Bahnen dürfen sich nicht überlappen, geprüft in der Abwicklung φ über θ (stellarator/spulen_montage.py): kein Rücklauf, keine Nachbarkreuzung.
