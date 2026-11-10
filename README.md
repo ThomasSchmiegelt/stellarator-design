@@ -17,6 +17,14 @@ FreeCAD casings to structural analysis in ElmerFEM.*
 > results are not peer-reviewed, contain simplifying assumptions and may contain errors. They are **not** the
 > design of a real device. Feedback and corrections are welcome.*
 
+> 🤖 **KI-generiert.** Text, Programmcode und Abbildungen dieses Projekts (README, Berichte, Skripte) wurden von
+> KI-Agenten erzeugt (Claude Code, Hermes, lokal PI mit qwen). Gerechnet haben die genannten Löser (VMEC++, simsopt,
+> DESC, ElmerFEM, FluidX3D …). Der Mensch (Thomas Schmiegelt) gab Ziel und Richtung vor, entschied an den Gabelungen
+> und prüfte Bilder und Ergebnisse auf Plausibilität.
+>
+> *AI-generated. Text, code and figures (README, reports, scripts) were produced by AI agents; the named solvers did the
+> computing. The human set goal and direction, decided at the forks and checked figures and results for plausibility.*
+
 ![W7-X-ähnliches Spulensystem mit Gehäusen und Feldlinien (Blender)](docs/bilder/w7x_torus3d_blender.png)
 
 ### Vorstellung (Deutsch)
@@ -71,6 +79,13 @@ Netzerzeugung, parametrisches FreeCAD-Modell, paralleler Rechenweg, 3D-Modell). 
 - **Deutsch, für Maschinenbauer:** [Spulengehäuse eines Stellarators (PDF)](bericht/projektbericht/projektbericht.pdf)
 - **Für KI-interessierte Maschinenbauer (wenig Zahlen, was alles geht):** [Was KI-Agenten im Maschinenbau heute schon können (PDF)](bericht/projektbericht/ki_im_maschinenbau.pdf)
 - **English, for IT folks:** [Two AI Agents, One Stellarator (PDF)](bericht/projektbericht/project_report_en.pdf)
+- **Variantenbericht** (alle Tragwerksvarianten mit Steckbriefen): [deutsch](bericht/variantenbericht/variantenbericht.pdf) · [English](bericht/variantenbericht/variant_report_en.pdf)
+- **Surrogat-Bericht** (Ersatzmodell für die Festigkeit, Gegenprobe mit Elmer): [deutsch](bericht/surrogat/surrogat_bericht.pdf)
+- **Review-Paket Festigkeit:** [deutsch](bericht/review/review_festigkeit.pdf) · [English](bericht/review/review_strength_en.pdf)
+
+Alle Berichte tragen auf der Titelseite und in der Fußzeile jeder Seite den Hinweis „KI-generiert“.
+*All reports carry an “AI-generated” notice on the title page and in every page footer.*
+
 - Ältere Fachauslegung (1 GW, v0.3): [bericht/v0.3/bericht_v0.3.pdf](bericht/v0.3/bericht_v0.3.pdf)
 
 ---
@@ -727,6 +742,106 @@ Aus den Vorschlägen oben: Die Plasmaseite bekommt eigene feine Kanäle (innen, 
 
 ---
 
+## Neuere Ergebnisse (4.–10. November 2026): QI-Plasmen, eigene Spulen, baubare Spulen
+
+Bis hierher war das Plasma eine quasi-axisymmetrische Form (QA). Seit dem 4. November arbeitet das Projekt mit
+**quasi-isodynamischen** Formen (QI, die Bauart von Wendelstein 7-X) aus dem offenen Datensatz
+[ConStellaration](https://github.com/proximafusion/constellaration) von Proxima Fusion. QI ist ein Maß dafür, wie gut
+das Feld die Teilchen hält: kleiner ist besser. Gerechnet wird mit [VMEC++](https://github.com/proximafusion/vmecpp),
+die Spulen mit simsopt. Bei jedem Plasma steht dabei, woher es kommt: **Datensatzform unverändert** oder
+**eigene Form** (woraus abgeleitet). Alle Befunde stehen in `BEFUNDE.md` (B-040 bis B-071).
+
+**Was die Grenzen bedeuten:** Die Spannungsgrenze 500 MPa für den Stahl, 0,3 % Dehnung im Wickelpaket und die übrigen
+Grenzen der Kette sind **Annahmen**, keine belegten Werte. Spannungen werden deshalb immer als Zahl genannt.
+
+### QI-Plasma durch die ganze Kette (B-040 bis B-051)
+
+- **Erster Satz mit allen Grenzen:** Die Datensatzform DPrcxq66 (unverändert, nfp 2, QI 0,00079) mit den
+  Proxima-Spulen erfüllt im Gesamtmodell alle angenommenen Grenzen (Spannung, Dehnung, Hülle, Fluenz; B-040).
+- **Maßstab heißeste Spule:** Gewertet wird der p99-Wert der am stärksten belasteten Spule ohne Randzone, nicht das
+  Mittel. Mit angepassten Wänden je Spule: 446 MPa (B-046, B-049).
+- **Was ein gutes QI-Plasma ausmacht:** Ein Lernmodell sagt QI aus den Formkoeffizienten mit R² = 0,91 voraus
+  (B-047, B-048). Die echten Schwellen der ConStellaration-Aufgaben sind strenger als zuerst angenommen
+  (QI ≤ 0,00032 bzw. 0,0001; B-051). Die offizielle Wertung unserer Kandidaten ist bisher **0**.
+- **QI-Karte und Spulenwirkung:** Der QI-Fehler wächst nach außen. Die Spulen wirken über den Strom an den
+  Muldenflanken, nicht über die Nähe (B-052 bis B-055).
+
+### Eigene Spulen für das beste Plasma (B-058 bis B-062)
+
+Bestes Plasma ist **Kandidat 3 halb (K3)**, eine **eigene Form** aus der Datensatzform Do3Qy (halber Schritt):
+QI etwa zehnmal besser als die Vergleichsform DjLe3eL6. Dafür hat die Kette erstmals **eigene Spulen** gerechnet,
+als Rohre in PicoGK gebaut und mit freier Plasmagrenze nachgerechnet (VMEC++ free-boundary).
+
+![K3 halb mit eigenen Spulen als Rohre (PicoGK)](docs/recherche/spulen_suche/kette_k3/rohr_K3_d085_n10_lr.png)
+
+**Lesehilfe.** Orange ist das Plasma K3 halb, ein gestrecktes, verdrilltes Band, das sich zweimal im Ring wiederholt.
+Blau sind die Spulen einer halben Periode als Rohre (0,85 m Durchmesser), grau die Mittellinien aller übrigen Spulen.
+Rechnerisch sind die Spulen gut (Feldfehler 2,1·10⁻⁴), gebaut würde man sie so nicht: Sie laufen in weiten,
+gewellten Bügeln und durchdringen sich dort, wo sie sich fast berühren.
+
+- **Spulen kosten wenig:** Mit eigenen Spulen wird QI am Rand nur um den Faktor 1,07 bis 1,17 schlechter
+  (Proxima-Spulen an DjLe3eL6: 1,29 bis 1,53). Der Formvorteil (Faktor 8) bleibt (B-060, B-062).
+- **Gegenprüfung:** Opus hat die Arbeit von Sonnet an den Rohdaten nachgerechnet. Ein Befund war falsch
+  aufgerufen und ist widerlegt, eine Zielgröße falsch gelesen (B-061). Das Projekt dokumentiert beides offen.
+
+### Vergleich: eigene Form gegen Datensatzform (B-064)
+
+![DATJ5FC im Verhältnis zu K3 halb](docs/recherche/spulen_suche/vergleich/kennzahlen_relativ.png)
+
+**Lesehilfe.** Jeder Balken ist der Wert der Datensatzform DATJ5FC (unverändert) geteilt durch den Wert von K3 halb
+(blaue Linie bei 1). Bei Feldfehler, QI, Kraft, Spannung und Wandlast ist kleiner besser. Bei den drei Abständen unten
+heißt kleiner weniger Platz. DATJ5FC hat 26 % weniger Kraft und 19 % weniger Spannung, aber ein rund sechsmal
+schlechteres Plasma und zu wenig Platz für die Hülle (1,28 m statt 1,5 m).
+
+Bericht: [docs/recherche/spulen_suche/vergleich/vergleich_bericht.md](docs/recherche/spulen_suche/vergleich/vergleich_bericht.md).
+
+### Baubare Spulen nach Regeln aus der Praxis (B-066 bis B-071)
+
+Rechnerisch gute Spulen haben Schlaufen und „Achter“. Der Nutzer brachte Regeln aus der Konstruktion ein: Biegeradius
+mindestens doppelter Rohrdurchmesser, und die Spulen müssen sich montieren lassen, also ohne Überlappung in der
+Abwicklung.
+
+![Abwicklung der Spulenbahnen vorher und nachher](docs/recherche/spulen_suche/baubar/abwicklung_vorher_nachher.png)
+
+**Lesehilfe.** Die Plasmaoberfläche ist wie eine Landkarte abgewickelt. Waagerecht der Winkel um die Torusachse,
+senkrecht der Winkel um das Plasma, gezeigt ist ein Viertel des Rings. Jede Linie ist eine Spulenbahn. Rot heißt:
+Die Spule läuft zurück und ließe sich nicht der Reihe nach einsetzen. Links die bisherigen Spulen (24 von 40 laufen
+zurück), Mitte mit Biegeradiusgrenze und Montagestrafe in der Optimierung (keine läuft zurück, Feldfehler 1,36·10⁻³
+statt 1,05·10⁻³), rechts die Höhenlinien einer Stromschicht: montagegerecht, aber rund 40-mal ungenauer.
+
+- **Nachbearbeiten hilft nicht:** Fourier-Ordnung kappen, fünf Glättungsverfahren (darunter der CAD-Weg des
+  Nutzers), Schlaufen weglassen oder stauchen kosten alle viel Feld, die Achter bleiben (B-066, B-068, B-069).
+- **Regeln in die Optimierung:** Biegeradius ≥ 2·d und Montagestrafe gelingen fast ohne Feldverlust (B-070).
+- **Ursache liegt im Plasma:** Weniger Fourier-Ordnung macht die Spulen kaum ruhiger (B-071). Für einfache Spulen
+  braucht es eine **spulenfreundliche Plasmaform**. Darum durchsucht das Projekt jetzt die Datensatzformen danach.
+
+### KI-Schleifen: autoresearch-Pilot und Ralph-Loop mit lokalem Modell (B-065, 9.–10.11.)
+
+- **autoresearch-Pilot (Sonnet):** In 86 Runden verbessert der Agent die Plasmaform-Zielgröße von 1,72 auf 0,60. Er
+  macht aber nur Einzelschritte an Koeffizienten, und ein Prüfbuch fängt fünf geschönte Meldungen ab (B-065).
+  Bericht: [docs/recherche/autoresearch_pilot/bericht.md](docs/recherche/autoresearch_pilot/bericht.md).
+- **Ralph-Loop mit PI (lokal, qwen über ollama):** Jede Runde startet mit frischem Kontext, das Gedächtnis liegt in
+  Dateien. PI wählt aus einem Pool von 361 Datensatzformen (unverändert, QI ≤ 5·10⁻⁴), eine feste Bewertung rechnet
+  dazu eigene Spulen mit allen Bauregeln (Skripte `stellarator/spulenfreundlich_pool.py`, `stellarator/k3_spulen.py`,
+  `stellarator/loop_evolution.py`).
+
+![Ralph-Loop: 100 von PI gewählte Formen](docs/recherche/spulen_suche/loop_evolution.png)
+
+**Lesehilfe.** (a) Jeder Punkt ist eine gewählte Form, nach oben der Feldfehler ihrer Spulen (kleiner = einfachere
+Spulen). Die schwarze Treppe ist der beste Wert bis dahin, er fällt von 2,5·10⁻³ auf 2,4·10⁻⁴. Das grüne Band
+≤ 2,5·10⁻³ ist ein angenommener Zielbereich (Bezug DATJ5FC). (b) Der Median der Wahlen wird kaum besser: PI findet die
+guten Formen durch Breite, nicht dadurch, dass jede Wahl besser wird. (c) PI verschiebt seine Wahl nach den
+Ergebnissen, etwa zu kleinerer Gradientenlänge. Die kleinste Gradientenlänge des Feldes erklärt nach Kappel,
+Landreman & Malhotra (2024), warum manche Plasmen nahe Spulen brauchen. (d) PI greift über die ersten 150 Ränge des
+nach QI sortierten Pools zu, nicht der Reihe nach (gestrichelt). Begleittext und Video:
+[docs/recherche/spulen_suche/loop_evolution.md](docs/recherche/spulen_suche/loop_evolution.md).
+
+**Ehrliche Einordnung:** Ob PI besser wählt als der Zufall, zeigt das noch nicht. Seit dem 10.11. rechnet die feste
+Bewertung die restlichen Poolformen in zufälliger Reihenfolge durch (Laufzeit etwa 32 h). Danach folgt der Vergleich
+mit zufälliger Wahl.
+
+---
+
 ## Aufbau
 
 ```
@@ -756,6 +871,13 @@ invers/                      Inverser Entwurf (.venv-opt)
   stufe1_desc.py             Stufe 1: Plasmaform mit DESC (GPU)
   stufe2_spulen.py           Stufe 2: Spulenoptimierung mit simsopt
   beispiele/                 precise QA (Referenz) und qa_nfp2 (eigene Form: wout, Spulen, 1-GW-Bilanz)
+  k3_spulen.py               Stage 2 für beliebige QI-Formen (Varianten: Bauraum, Biegeradius, Längenregel, Montagestrafe)
+  qi_spulen.py, spulen_satz.py  freie Plasmagrenze (VMEC++) mit eigenen oder Proxima-Spulen, QI-Verlustfaktor
+  k3_rohr.py                 Spulen als Rohre über PicoGK (picogk/SpulenRohr), Durchdringung, Abstände
+  spulen_montage.py, montage_strafe.py  Montageprüfung in der Abwicklung (Rücklauf, Kreuzung) und Strafterm
+  spulen_glaetten.py, spulen_spline.py  Baubarkeitsmaß, Glätten (Fourier, Splines, CAD-Weg)
+  spulenfreundlich_pool.py   Pool QI-tauglicher Datensatzformen für die Suche nach einfachen Spulen
+  loop_evolution.py          Bild und Video zum Ralph-Loop
 picogk/StellaratorVoxel/     PicoGK-Headless-App (C#/.NET 9): Voxelkörper, Gehäuse, SDF
 picogk/SegmentKuehlung/      PicoGK: Kühlsegment (Gyroid-Kern, Kammern, Rohre), Belegung der Gitterzellen für FluidX3D
 picogk/StlSchnitt/           PicoGK: Bauteil aufschneiden, Innenhaut abnehmen (für die Filme)
@@ -872,11 +994,20 @@ Reihenfolge und Begründung: [docs/plan_offene_punkte.md](docs/plan_offene_punkt
 - [ ] Verbinder und Tragring im Rechenweg statt eingespannter Bereiche; Keil und Gehäuse aus einem Stück
 - [ ] Stufe 0 genauer: Divertor-Wärmelast, Zyklotronstrahlung, Blanket-Dicke aus Neutronik
 - [ ] Studien-Runner (Agent wählt Ziele, numerischer Optimierer rechnet)
+- [x] QI-Plasma (ConStellaration) durch die Kette: erster Satz in allen angenommenen Grenzen (DPrcxq66)
+- [x] Eigene Spulen für das eigene Plasma K3 halb, Rohre in PicoGK, freie Grenze (Verlustfaktor 1,07–1,17)
+- [x] Vergleich eigene Form K3 halb gegen Datensatzform DATJ5FC (Kraft, Spannung, Platz, Kühlung)
+- [x] Baubarkeit: Glätten geprüft (hilft nicht), Biegeradius und Montageregel in der Optimierung
+- [x] autoresearch-Pilot (Sonnet) und Ralph-Loop mit lokalem Modell PI (100 Formen)
+- [ ] Restliche Poolformen fest bewerten, dann Vergleich PI gegen Zufall
+- [ ] Spulenfreundliche Plasmaform mit Tragwerk und Festigkeit durch die ganze Kette
 
 ## Quellen und Danksagung
 
 - W7-X-Spulenfilamente und Referenzachse: [simsopt](https://github.com/hiddenSymmetries/simsopt) (MIT), Spulensatz `w7x_v001` (IPP).
 - Plasmaform-Optimierung: [DESC](https://github.com/PlasmaControl/DESC). Spulenoptimierung: simsopt.
+- QI-Plasmaformen: Datensatz und Bewertung [ConStellaration](https://github.com/proximafusion/constellaration) (Proxima Fusion), Gleichgewichte mit [VMEC++](https://github.com/proximafusion/vmecpp).
+- Gradientenlänge und Spulenabstand: R. Kappel, M. Landreman, D. Malhotra: The magnetic gradient scale length explains why certain plasmas require close external magnetic coils. Plasma Phys. Control. Fusion 66, 025018 (2024).
 - FEM: [ElmerFEM](https://www.elmerfem.org). Netze: [gmsh](https://gmsh.info). CAD: [FreeCAD](https://www.freecad.org).
 - Visualisierung: [PyVista](https://pyvista.org), [ParaView](https://www.paraview.org), [Blender](https://www.blender.org).
 - KI-Agenten: [Hermes Agent](https://github.com/NousResearch/hermes-agent) (Nous Research, MIT), [Claude Code](https://www.anthropic.com/claude-code) (Anthropic).

@@ -832,3 +832,4 @@ sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht 
 - 2026-11-10 12:48: Vortrag: Abschnitt Berichte mit 7 PDFs (verkleinert, web/berichte/), Artefakt V7. Nicht committet.
 - 2026-11-10 14:09: Regel: alle Dokumente als KI-generiert kennzeichnen. 7 Berichte (bericht/*/…tex + PDF neu gebaut) und Vortragsseiten gekennzeichnet, Artefakt V8. Nicht committet.
 - 2026-11-10 15:14 Nutzer: alles nach GitHub. Gepusht 4612ba4 (34 Commits seit e491aa6, Berichte mit KI-Kennzeichnung). Lokal gelassen: recherche_ablage (fremde Webseitentexte), plotly-3D-HTML (groß, wie ab4c08e).
+- 2026-11-10 15:18 Nutzer: README ergänzen. Neu: KI-generiert-Hinweis oben (DE/EN), Berichtsliste (Varianten, Surrogat, Review), Abschnitt 'Neuere Ergebnisse 4.–10.11.' (B-040 bis B-071, 4 Bilder mit Lesehilfe, Loop/REST ehrlich eingeordnet), Aufbau, Checkliste, Quellen (ConStellaration, VMEC++, Kappel et al. 2024).
