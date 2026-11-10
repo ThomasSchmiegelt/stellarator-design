@@ -46,6 +46,8 @@ def main():
         a = ax[z, 0]
         for n, t in KURVEN:
             a.plot(xs, [k[n] for k in ks], "o-", ms=3, label=t)
+        a.axhspan(0, 500, color="#2ca02c", alpha=.12, zorder=0, label="Zielbereich Stahl ≤ 500 MPa (Annahme)")   # Nutzer 2026-11-10
+        a.set_ylim(bottom=0)
         a.set_xlabel(lname); a.set_ylabel("von Mises [MPa]"); a.grid(alpha=.3); a.legend(fontsize=8)
         kurz = "W7-X-aehnlich (70 Spulen)" if anlage == "w7x" else "1 GW qa_nfp2_A45 HTS (16 Spulen)"
         a.set_title(f"{kurz}\nSpannung ueber Last", fontsize=10)

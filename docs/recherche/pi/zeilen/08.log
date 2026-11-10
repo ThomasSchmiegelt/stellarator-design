@@ -1,0 +1,12 @@
+Fertig. Ergebnis `zeilen/08.md`:
+
+| EU-DEMO WCLL-Blanket (Wasser) | Wasser | nicht gefunden | nicht gefunden | nicht gefunden | Beleg: „Water-cooled lithium lead (WCLL)" |
+
+**Ablauf** (4/4 Abrufe verbraucht):
+1. OpenAlex-Suche → vielversprechende Open-Access-PDFs gefunden
+2. `abruf.py` iris.uniroma1.it (DelNevo WCLL-Postprint) → **HTTP 403**
+3. `abruf.py` HAL-Dissertation WCLL-DEMO → nur **Anubis-Botblockade-Seite**, kein Inhalt
+4. `abruf.py` MDPI Energies (WCLL-Kühlkreis) → **HTTP 403**
+(OSTI-Suche war beide Male fehlerhaft; die einzigen erfolgreichen WCLL-Texte sind die bereits gecachten Wikipedia-Seiten, die keine Wassertemperaturen/Drücke enthalten.)
+
+Da ich mich streng an die Regeln halte (nur abrufbare Quellen, nichts aus dem Gedächtnis), stehen für Eintritt, Austritt und Druck **„nicht gefunden"** — das Kühlmittel Wasser ist belegt. `pruefe.py`: **1 Beleg bestätigt, 0 Fehler**.

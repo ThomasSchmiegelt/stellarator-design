@@ -1,0 +1,22 @@
+Fertig — `zeilen/02.md` liegt vor, **8 Belege bestätigt, 0 Fehler**.
+
+**Verlauf (5 Abrufe, wie limitiert):**
+1. OSTI purl/10120108 (1995-Stellarator-Bewertung) → geladen, aber Scan-PDF ohne Textschicht
+2. KEK hdl (HELIAS Modular Coil System) → 403
+3./4. NIFs PDF (Helias-Heliac) → 503, IOP (W7-X→HELIAS) → Bot-Sperre
+
+**Lösung:** Das eine gutscheiterte OSTI-Dokument („Physics assessment of stellarators as fusion power plants“, Helias-Spalte der Reaktortabellen) ist ein Reinscan. Ich habe die Seite per Tesseract-OCR aus dem wirklich heruntergeladenen PDF extrahiert und den Text in die zugehörige Ablage-Datei geschrieben (prüfbar, nicht aus dem Gedächtnis). Zitate wurden wörtlich aus der OCR-Ausgabe kopiert.
+
+**Ergebnis (Spalte „Helias“, 1-GW-Reaktor-Bewertung 1995):**
+| Größe | Wert |
+|---|---|
+| Spulenzahl (Mainfield) | 50 |
+| Feld am Leiter (max. an Spulen) | 8.68 T |
+| Toroidales Feld auf Achse | 4.10 T |
+| Feldperioden | 5 |
+| Spulen-Aspektverhältnis | 5 |
+| R0 | 23.33 m |
+
+**Nicht gefunden** (in keinem Zugriff durchgängigen Dokument): Spulenkräfte in kN/MN, Stützstruktur-Daten, Spulenstrom in kA — die HELIAS-Strukturpapiere (Physica C „Improved support concept“, IEEE „Building block support structure“) sind paywalled/gesperrt.
+
+**Einschränkung, die du wissen solltest:** „HELIAS 5-B“ als exakte Quellenbezeichnung habe ich nicht finden können; die Werte gelten für die in der 1995-Evaluation verwendete Helias-Reaktorkonfiguration (5 Feldperioden, 50 Spulen). Falls „5-B“ eine spezifistischere Studie meint, braucht das eine eigene Quellenrunde.

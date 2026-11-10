@@ -1,0 +1,16 @@
+Fertig – `zeilen/01.md` liegt im Arbeitsordner, pruefe.py: **18 Belege bestätigt, 0 Fehler**.
+
+**Vorgehen:** 2× suche.py (ost+openalex, osti fehlerte), dann 5 Abrufe:
+- pure.mpg.de (Rummel, Magnet-System): 403
+- hdl.handle.net (LSE-Fatigue-Thesis): 403
+- IOP Science (Status of W7-X construction, PDF): Bot-Sperre
+- Wikipedia Wendelstein_7-X: OK → Spulengeometrie, Strom, Feld, Kältemasse
+- Fracturae ed Integrità 26 (2013), Citarella/Bykov et al., W7-X LSE-Rissanalyse: OK → Strukturdetails Stützring/LSE, EM-Ladezyklus, Risse, KIC, Ermüdungszyklen
+
+**Gefunden (mit wörtlichem Beleg):**
+- Spulen: 50 modular + 20 planar, 3,5 m hoch, 12,8 kA, bis 3 T, ~425 t Kältemasse
+- Zentraler Stützring: Stahl, Spulenhäuser (Guss ES EN 1.3960) verschraubt
+- LSE: 5 pro halbem Modul, Hohlrohre 100–150 mm lang, 30–35 mm Wand, geschmiedet ES EN 1.4429, Outboard-Seite
+- EM-Ladezyklus: Kühlung auf 4 K + Magnetfeld 0→3 T; kritische Risse a=7 mm; KIC = 106 MPa√m; Zyklenzahl bis Rissdurchbruch ~7·10⁴ (mit Nachbarrissen 4,5·10⁴)
+
+**Nicht gefunden (als „nicht gefunden" in der Tabelle):** die eigentlichen Kräfte auf Spulen/Stützring in kN/MN, numerische Spannungspegel in MPa im Ring/LSE und Verformungen in mm – diese Zahlen stehen in den zugänglichen Texten nur in (nicht mitabrufbaren) Diagrammen; die Quellen mit konkreten Kraftwerten (Rummel-Paper, FE-DBEM-Thesis) waren 403/sperrig.

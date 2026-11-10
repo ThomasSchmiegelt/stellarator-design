@@ -1,0 +1,9 @@
+Fertig. WWER-1000 (VVER-1000), alle Werte aus der Wikipedia-VVER-Spezifikationstabelle (aus dem Abruf-Cache, daher 0 neue Abrufe):
+
+| Anlage | Kühlmittel | Eintritt °C | Austritt °C | Druck MPa |
+|---|---|---|---|---|
+| WWER-1000 | Wasser (PWR) | 289 | 319 | 16,0 |
+
+- Druck: Tabelle „in 100 kPa", Wert 160,0 → 16,0 MPa
+- Zeile + 5 wörtliche Belege in `zeilen/02.md`
+- `pruefe.py`: **5 Belege bestätigt, 0 Fehler** (letzte Ausgabe in die Datei übernommen)

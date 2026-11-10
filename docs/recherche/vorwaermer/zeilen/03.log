@@ -1,0 +1,7 @@
+Fertig – Ergebnis liegt in `zeilen/03.md`, Prüfung: **0 Fehler**.
+
+Zusammenfassung:
+- **5/5 Abrufe** verbraucht; nur die Wikipedia-Seite war erfolgreich abrufbar, enthält aber keine Kühlwasser-Parameter des Divertors.
+- Die tatsächlich relevanten Quellen (W7-X Wasser-Kühlkreis-Paper auf hdl.handle.net, iopscience-PDF, AIP-RSI-PDF, OSTI-Scraper-PDF) waren alle blockiert (403/CAPTCHA) oder nicht erreichbar (Timeout).
+- Gemäß Regel 1/4 (keine Zahlen aus dem Gedächtnis, nicht Gefundenes = „nicht gefunden“) sind daher **alle vier Größen – Eintritt, Austritt, Druck, Durchfluss – mit „nicht gefunden“** vermerkt, ohne Belege.
+- `pruefe.py` läuft auf 0 Fehler, Ausgabe am Ende der Datei vermerkt.

@@ -1,0 +1,13 @@
+Erledigt. Zusammenfassung der Recherche (5/5 Abrufe genutzt):
+
+**Gefunden (1 von 4 Größen):**
+- **Gehäusestahl: 316LN** — belegt über das J-Stage-Paper „Cryogenic Structures of Superconducting Coils for Fusion Experimental Reactor 'ITER'" (JCSJ 48(10) 508): 316LN wird im Großteil des Spulensystems verwendet; im hochbelasteten Gehäusebereich kommen stattdessen die Kryowerkstoffe JJ1/JK2LB zum Einsatz.
+
+**Nicht gefunden (belegt als Lücke):**
+- zulässige Spannung — das J-Stage-PDF enthielt zwar Spannungswerte (u. a. 1000 MPa, 0,2%-Dehngrenze-Bezug), war aber im Volltext korrumpiert/ungängig und nicht zitierfähig
+- Kräfte je Spule — die Abruf-Quellen (iter.org/mach/Magnets) nennen Kräfte nur für die Zentraler-Solenoid-Tragstruktur (60 MN), nicht pro TF-Spule
+- Verformung — keine Werte in den abgerufenen Quellen
+
+**Quellenlage:** OSTI-Suche war mehrfach fehlgeschlagen (Serverfehler, nicht wiederholt); J-Stage-PDF nur im Abstract lesbar; iter.org und en-Wikipedia lieferten nur Allgemeine Daten (11,8 T, 41 GJ, 330 t/Spule).
+
+`pruefe.py`-Ergebnis: **1 Beleg bestätigt, 0 Fehler** — Ausgabe wurde ans Dateiende von `zeilen/04.md` angehängt.

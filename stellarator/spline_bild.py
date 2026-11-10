@@ -14,6 +14,9 @@ for j, art in enumerate(namen):
     for m in ms:
         a1.annotate(m["methode"].split("_")[1], (m["abweichung_max_m"], m["Bn_mittel"]), fontsize=7, xytext=(3, 3), textcoords="offset points")
 a1.axhline(e["original"]["Bn_mittel"], color="k", ls=":", label="Original 1,05e-3")
+a1.axhspan(1e-4, 2.512e-3, color="#2ca02c", alpha=.10, zorder=0, label="Zielbereich ≤ 2,5e-3 (Annahme: Bezug DATJ5FC)")   # Nutzer 2026-11-10
+a1.axhline(2.512e-3, color="#2ca02c", lw=1, ls="--")
+a1.set_ylim(8e-4, 7e-2)
 a1.set_xscale("log"); a1.set_yscale("log"); a1.set_xlabel("größte Verschiebung der Spule durch das Glätten, m")
 a1.set_ylabel("Feldfehler (kleiner ist besser)"); a1.legend(fontsize=7); a1.grid(alpha=.3, which="both")
 a1.set_title("Alle Methoden liegen auf einer Linie:\nwie weit die Spule wandert, bestimmt den Feldfehler", fontsize=9)

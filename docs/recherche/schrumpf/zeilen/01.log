@@ -1,0 +1,13 @@
+Fertig — `pruefe.py` meldet **3 Belege bestätigt, 0 Fehler**.
+
+**Ergebnis** (`zeilen/01.md`, 3 von 5 Abrufen verbraucht):
+
+| Thema | Größe | Wert | Einheit |
+|---|---|---|---|
+| Austenitischer Stahl (316LN/316) | ΔL/L 293 K → 4.2 K (AISI 316) | ≈ 0,30 % | % |
+
+Befund im Detail:
+- **Quelle:** NBS Monographie 29 *„Thermal expansion of technical solids at low temperatures"* (über Openalex gefunden, DOI-Abruf erfolgreich) — Tabelle 2.2, Spalte „Steel, AISI 316" (Daten: Beenakker & Swenson 1955). Tabellenzeilen (Kopfgrenze ×10⁻⁵) zeigen für AISI 316: 240 K → 0,080 %, 100 K → 0,259 %, 20 K → 0,297 %, 4.2 K → 0,297 %.
+- **Einordnung:** Die Kontraktion von 293 auf 4,2 K ist also ~**0,3 %** (297 × 10⁻⁵). Die Skala ×10⁻⁵ habe ich über die Aluminium-Zeile derselben Monografie (415 bei 20 K ≈ 0,42 %, physikalisch plausibel) verifiziert.
+- **Einschränkung:** Ein *316LN*-spezifischer Wert wurde nicht gefunden; der Tabellenwert gilt für AISI 316/316L und ist für 316LN eine gute Näherung (gleiche Legierungsfamilie).
+- Unbrauchbare Pfade, die ich aussortiert habe: OSTI-Suche fiel dreimal mit JSON-Fehler aus; J-STAGE-Paper zu FER-Kryostählen (316LN) enthielt keine Kontraktionszahl; CERN-316LN-Paper (arXiv) behandelt nur Werkstoffkundliches.

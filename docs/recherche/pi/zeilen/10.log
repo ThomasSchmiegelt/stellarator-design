@@ -1,0 +1,13 @@
+Fertig. Ergebnis in `zeilen/10.md`:
+
+| Anlage | Kühlmittel | Eintritt °C | Austritt °C | Druck MPa | Belege |
+|---|---|---|---|---|---|
+| Wendelstein 7-X Divertor-Kühlwasser | Wasser | nicht gefunden | nicht gefunden | nicht gefunden | Beleg: "auf wassergekühlten CuCr1Zr-Fingern sind für eine lokale Wärmelast von 10 MW/m² im Langzeitbetrieb ausgelegt" (https://de.wikipedia.org/wiki/Wendelstein_7-X) |
+
+Gang der Recherche:
+- **4/4 Abrufe** verbraucht: IOP-PDF (Cloudflare-Block), pure.mpg.de (403), en-wiki W7-X (keine Kühlkreis-Zahlen), TU-Wien-Dissertation (falsches Thema) – die ersten beiden URLs dürfen daher nicht zitiert werden.
+- Trefferreichste Quelle war die **bereits abgelegte** de-wiki-Seite W7-X: belegt, dass der Divertor wassergekühlt ist (CFC auf wassergekühlten CuCr1Zr-Fingern) – keine Temperaturen/Drücke.
+- Der ebenfalls abgelegte OSTI-Artikel zur W7-X-Scraper-Entwicklung enthält nur **GLADIS-Testbedingungen** (15 °C Eintritt, 1 MPa statisch), keine Primärkreis-Betriebswerte der Anlage → gemäß Regel 4 nicht als Anlagenwert übernommen, sondern `nicht gefunden`.
+- `pruefe.py`: **1 Beleg bestätigt, 0 Fehler** (letzte Ausgabe unten in die Datei geschrieben).
+
+Hinweis für die Gesamtauswertung: Die echten Primärkreis-Parameter (typisch 25 °C Ein / 40 °C Aus, ~MPa-Bereich) stehen z. B. in „Water-cooled target modules for steady-state operation of the W7-X divertor" (Nucl. Fusion 43 (2003) 1771) – diese Quelle ist hier aber durch Cloudflare/403 nicht abrufbar gewesen und damit nicht zitierbar.

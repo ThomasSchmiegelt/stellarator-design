@@ -1,0 +1,16 @@
+Fertig – Recherche abgeschlossen mit **0 Fehlern**. Zusammenfassung:
+
+**EPR (Druckwasserreaktor, Framatome/EDF)** — Werte aus dem Wikipedia-Artikel „EPR (nuclear reactor)", Tabelle „Technical specifications comparison":
+
+| Größe | Wert |
+|---|---|
+| Kühlmittel | Wasser (pressurized water reactor) |
+| Eintritt (Core inlet) | 295,2 °C |
+| Austritt (Core outlet) | 320 °C |
+| Primärkreis-Druck | 155 bar = 15,5 MPa |
+
+- **1 abruf.py-Aufruf**, komplett aus dem Cache (`recherche_ablage/`) — 0 neue Netzabrufe.
+- Ergebnis in `zeilen/01.md` als genau eine Tabellenzeile, jeder Wert mit wörtlichem Beleg + URL.
+- `pruefe.py`: **4 Belege bestätigt, 0 Fehler** (Ausgabe unten in die Datei übernommen).
+
+Einzige Hürde: Zitate mit Markdown-Trennstrich `|` aus der Quelltabelle wurden von pruefe.py nicht wörtlich gefunden; die Zitatstellen wurden entsprechend als kurze exakte Substrings („295.2 °C (563.4 °F)" etc.) kopiert.

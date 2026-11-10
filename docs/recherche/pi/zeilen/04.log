@@ -1,0 +1,14 @@
+Fertig — ALFRED-Recherche abgeschlossen, **3 Belege bestätigt, 0 Fehler**.
+
+**Vorgehen (Skill-Regeln strikt eingehalten):**
+- Gespeicherte Seite `en.wikipedia.org/wiki/ALFRED_(nuclear_reactor)` lag bereits in `recherche_ablage/` → Kühlmittel + Temperaturen wörtlich belegt
+- 4 Abrufe: LFR-Wikipedia-Artikel (erfolgreich), MDPI-ENEA-Paper (403), Ansaldo-PDF (DNS-Fehler→ verworfen), EPJ-Plus-Paper (nur Paywall-Vorschau), World-Nuclear-News-Artikel (erfolgreich, aber kein Primärkreisd)
+- Primärkreisd in keiner abgerufen Seite als Zahl genannt → gemäß Regel 4 „nicht gefunden“, als Unterstützung: Zitat „the coolant is not pressurized“ aus dem abgerufen LFR-Artikel
+
+**Zeile in `zeilen/04.md`:**
+
+| Anlage | Kühlmittel | Eintritt °C | Austritt °C | Druck MPa | Belege |
+|---|---|---|---|---|---|
+| ALFRED (LFR, Italien/Rumänien) | Blei | 520 | 390 | nicht gefunden | Beleg: „Coolant: Lead“ (en.wikipedia ALFRED) | Beleg: „520 °C (968 °F) on entry in the steam generator“ (ebd.) | Beleg: „390 °C (734 °F) on exit of the steam generator“ (ebd.) | Hinweis: „the coolant is not pressurized“ (LFR-Artikel) |
+
+Temperatursemantik wie in `zeilen/03.md` (BREST): Eintritt = an der Dampferzeuger-Zufuhr, Austritt = an der Dampferzeuger-Ausfahrt.

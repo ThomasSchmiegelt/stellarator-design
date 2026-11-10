@@ -1,0 +1,16 @@
+Fertig. Recherche für **HTR-PM (Shidao Bay, China)** abgeschlossen — `pruefe.py`: **0 Fehler**.
+
+**Zeile in `zeilen/06.md`:**
+
+| Anlage | Kühlmittel | Eintritt °C | Austritt °C | Druck MPa | Belege |
+|---|---|---|---|---|---|
+| HTR-PM (Shidao Bay, China) | Helium | 250 | 750 | 7.0 | 4 Belege (OSTI-Bericht purl/3371688) |
+
+**Quellenlage (max. 4 Abrufe eingehalten):**
+- ScienceDirect (Zhang 2016): 403 → verworfen
+- en-Wiki „List of SMR designs" & de-Wiki „Kernkraftwerk Shidaowan": Helium-Kühlmittel, max. Betriebstemperatur 750 °C — aber keine sauberen Zu-/Abluftwerte
+- **OSTI purl/3371688** (HTR-PM, equilibrium core): „Core inlet temperature C 250.0", „Core outlet temperature C 750.0", „Core outlet pressure MPa 7.0" → liefert alle drei Werte als wörtlich zitierte Belege
+
+Alle Zahlenwerte haben je einen wörtlichen Beleg; keine Werte aus dem Gedächtnis.
+
+Hinweis: Die Werte stammen aus dem sicherheitstechnischen Auslegungsfall (equilibrium core, Inlet 250 °C am Kern, Max.-Betriebstemperatur 750 °C), nicht aus einem separaten „Nennbetriebspunkt" — das ist in den Quellen die verfügbare Konsistenz (750 °C = de-Wiki „maximale Betriebstemperatur").

@@ -1,0 +1,16 @@
+Fertig — `0 Fehler`. Zusammenfassung der Recherche (5 Abrufe genutzt):
+
+**Gefunden (mit Belegen in `zeilen/03.md`):**
+
+| Material | CTE (zitiert) | ΔL/L 293 K→77 K | ΔL/L 293 K→4 K |
+|---|---|---|---|
+| Stycast 2651/Catalyst 11 (Epoxy, TDS) | 40 ppm/°C (unter Tg) — OSTI purl/1409726 | **≈ 0,58 %** | **≈ 1,16 %** |
+| Ungefülltes Epoxy (Referenzwert) | 46,7 ppm/K bei 40 °C — Sci. Rep. (Nature) | **≈ 1,01 %** | **≈ 1,35 %** |
+
+Die integrale Schrumpfung ist aus dem zitierten CTE linear abgeleitet (ΔL/L = α·ΔT), jeweils mit dem zugehörigen Beleg belegt.
+
+**Nicht gefunden:** Ein konkreter CTE-Wert und damit die integrale Schrumpfung für **G10 / glasfasergefülltes Epoxy** — die IOP-PDF (ZrW2O8/Epoxy kryogen) gab 0 Treffer, die AIP-PDF sperrte (403), die Wikipedia-Artikel enthielten keine Zahlen. Das ist in der Tabelle als „nicht gefunden" vermerkt.
+
+Hinweis: Die Werte sind Linear-Näherung mit dem Raumtemperatur-CTE; Epoxy-CTE steigt bei Tieftemperaturen typischerweise an (Tg-Effekt), d. h. die reale Schrumpfung bis 4 K ist etwas größer — aber dafür findet sich in den abgerufenen Quellen kein zitierbarer Wert.
+
+Prüfergebnis (stehen auch in der Datei): `6 Belege bestaetigt, 0 Fehler`.

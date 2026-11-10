@@ -1,0 +1,19 @@
+Fertig. Recherche zu **NCSX Spulen-Stützstruktur (forces, allowable stress)** mit 5 Abrufen:
+
+**Quellen (alle OSTI, erfolgreich abgerufen):**
+- `820121` — *Engineering Analyses of NCSX Modular Coil and Its Supporting Structure for EM Loads* (Hauptquelle)
+- `750332` — *Progress in the engineering design of the NCSX*
+- `899582` — *NCSX Toroidal Field Coil Design*
+- `836096` — *Component Manufacturing Development for NCSX*
+- (ein zweiter Abruf-Dialog auf 820121 für Lesebereich)
+
+**Ergebnis in `zeilen/03.md` (10 Zeilen, 0 Fehler):**
+- Netzkraft radial an M2: **895 472** (Tabelle I, Quelle gibt Einheit als „Pa" im Tabellenschriftzug an)
+- Netzkraft radial an M1: **576 474**, Vertikalkraft M2: **417 849**
+- Stützshell: **18 verschraubte Segmente**, Bauart = „Tee"-Winding-Form casted in stainless-steel shell
+- Max. Auslenkung unter EM-Last: **0.97 mm**
+- Peak-Von-Mises in der Shell: **181 MPa (26.2 ksi)**; Winding Pack: **67.8 MPa**; Winding Form: **167 MPa**
+- Elastizitätsmodul Coil/Shell/Equivalenz: **38.3 / 207.0 / 50.0 GPa** (80 K)
+- **Zulässige Spannung: nicht gefunden** — die TF-Coil-Studie spricht von „design allowables" deren Überschreitung durch Designänderung vermieden wurde, benennt aber keinen Wert
+
+**pruefe.py: `10 Belege bestaetigt, 0 Fehler`** (Ausgabe unten in der Datei vermerkt).

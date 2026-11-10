@@ -1,0 +1,13 @@
+Fertig. Ergebnis in `zeilen/09.md`, **3 Belege bestätigt, 0 Fehler**.
+
+**Vorgehen:**
+- SKILL.md gelesen, bereits gesammelte Seiten in `recherche_ablage/` geprüft (Wikipedia-Artikel ohne konkrete Zahlen)
+- Suche via `suche.py`: ScienceDirect-/MDPI-Volltexte (403, nicht verwendet), dann offenes KIT Scientific Report 7642 gefunden und abgerufen (2× Abruf erfolgreich, insgesamt 4 Abrufe, im Limit)
+
+**Ergebnis (laut Table 2-1, „Main Features of HCPB Blanket", KIT Scientific Reports 7642 – Bezug: DEMO-2003-HCPB-Referenzkonfiguration):**
+
+| Anlage | Kühlmittel | Eintritt °C | Austritt °C | Druck MPa |
+|---|---|---|---|---|
+| EU-DEMO HCPB-Blanket (Helium) | Helium | 300 | 500 | 8 |
+
+Hinweis: Die Zahlen gelten für die im Bericht referenzierte DEMO-2003-Konfiguration; neuere HCPB-Revisionen (2016/2017) sind nur hinter Paywall (ScienceDirect 403) verfügbar und wurden daher nicht zitiert.

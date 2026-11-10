@@ -1,0 +1,14 @@
+Fertig. Ergebnis von `zeilen/02.md`:
+
+| Thema | Größe | Wert | Einheit | Belege |
+|---|---|---|---|---|
+| ITER Divertor | Kühlwasser – Eintrittstemperatur | nicht gefunden | – | – |
+| ITER Divertor | Kühlwasser – Austrittstemperatur | nicht gefunden | – | – |
+| ITER Divertor | Kühlwasser – Druck | nicht gefunden | – | – |
+
+**Begründung (strenge Einhaltung der Skill-Regeln):**
+- 5/5 zulässige Abrufe via abruf.py: Wikipedia „ITER“ (führte zu iter.org-Seiten), iter.org/mach/coolingwater, iter.org-newsline „From River to Droplets and Mist“, Nucl.-Fusion-Review-PDF (Block, kein Text), arXiv 2509.17616 (FEDORA – betrifft W7-X, nicht ITER).
+- In keiner abgerufenen Quelle stehen konkrete Ein-/Austrittstemperatur oder Druck des **Divertor**-Kühlwassers. Die 43 °C/27 °C-Werte auf der iter.org-Seite beziehen sich eindeutig auf das Heat-Rejection-System (Kühlzellen), nicht auf den Divertor-Kühlkreis → nach Regel 1 (kein Wert aus dem Gedächtnis) und der Belegerfordernis nicht verwendet.
+- OSTI war bei den Suche-Versuchen wiederholt per Timeout unzugänglich; eine wiederholte identische Suche wurde gem. Regel 8 unterlassen.
+
+`pruefe.py`-Prüfung: **`0 Belege bestätigt, 0 Fehler`** (EXIT=0) – letzte Ausgabe ist in zeilen/02.md dokumentiert.

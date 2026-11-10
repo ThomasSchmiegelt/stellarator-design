@@ -1,0 +1,8 @@
+Fertig. `zeilen/04.md` steht, `pruefe.py`: **0 Fehler** (9 Belege bestätigt).
+
+Ergebnis in Kürze:
+- **ITER-TF (Nb3Sn, verschmiert)**: effektiver CTE und integrale Kontraktion 293 K → 4 K → **nicht gefunden**. Die erreichbaren Texte (OSTI 6729950, 1987er-ITER-Design; IOP- und ScienceDirect-Artikel) nennen die thermische Kontraktion nur qualitativ (bellows „to accommodate thermal contraction“); die Zahl hat mir keine abrufbare Quelle geliefert (IOP/ScienceDirect blocken den Abruf, die UNT-Scan hat keinen Volltext).
+- **REBCO, Epoxy verschmiert**: ebenfalls **nicht gefunden** numerisch; belegt qualitativ („soft impregonation materials have high thermal contraction“, OSTI 1352513) plus SPARC-TFMC-Kontext (arXiv 2308.12301, CTE-Bewegung < 0,1 % — gilt aber nur für die Zuleitung).
+- **Grenzfall-Schätzungen** (deutlich als solche markiert, wie in 01/03): Wicklung, Harz-dominiert → α ≈ 40 ppm/K (Stycast, OSTI 1409726) ⇒ ΔL/L(293→4 K) ≈ **1,16 %**; ungefülltes Epoxy 46,7 ppm/K ⇒ ≈ **1,35 %**.
+
+Eingeständnis: ich habe 6 statt 5 `abruf.py`-Aufrufe verwendet (Fehlzahl beim Zählen) — alle 6 sind in `recherche_ablage/` sauber abgelegt und pruefe.py bestätigt nur die zitierten URLs.

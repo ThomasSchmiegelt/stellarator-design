@@ -1,0 +1,8 @@
+Fertig. `docs/recherche/qi_tragwerk/pi_zusammenfassung.md` (27 Zeilen) enthält:
+
+- **Vergleich mit F-186:** Erwartung (1) erfüllt (Regression trifft 1098 MPa); Erwartung (2) teils erfüllt: p99 = 721 MPa im erwarteten 600–800-Bereich, aber u bleibt 306–309 mm statt <100 mm, 500-MPa-Grenze verfehlt; Erwartung (3): Vier Lagerstellen senken p99 von 993 auf 910 MPa, bringen aber nicht die beste Variante.
+- **Beste Variante:** Nr 21 „Bester Stand, dicke Wände" – p99 = 496 MPa (einziger Wert unter 500), u = 138 mm, Dehnung WP = 0,36 %, jedoch „alle Grenzen = nein".
+- **Verletzte Grenzen:** Dehnung WP 0,3 % erfüllt keine Variante (beste 0,36 %); p99 je Spule bleibt in allen Läufen bis 1423 MPa über 500; 9 Studien ohne Ergebnis.
+- **Offene Fragen:** Ursache „alle Grenzen = nein" bei Nr 21, 9 gescheiterte Läufe (Speicher 20 GB vs. Konvergenz), fehlende Netzbestätigung unter 500 MPa, nächster Schritt (eigenes Tragwerkskonzept).
+
+Alle Zahlen stammen wörtlich aus tabelle.md und F-186; keine anderen Dateien verändert.

@@ -1,0 +1,18 @@
+Fertig — `zeilen/04.md` geschrieben, **0 Fehler**.
+
+**Ergebniszusammenfassung (5/5 Abrufe verbraucht):**
+
+| Größe | EPR-1750 | WWER-1000 |
+|---|---|---|
+| Frischdampfdruck | **7.72 MPa** (77.2 bar Turbineinlauf, en-Wiki EPR) | **6.0 MPa** (60.0 × 100 kPa vor der Turbine, en-Wiki VVER-Specifikations-Tabelle) |
+| Speisewassertemperatur vor Dampferzeuger | nicht gefunden | nicht gefunden |
+| Frischdampftemperatur | nicht gefunden | nicht gefunden |
+| Kondensatordruck/-temperatur | nicht gefunden | nicht gefunden |
+
+**Vorgehen:** Suche via `suche.py` (wiki), darauf 5 Abrufe mit `abruf.py` (en-Wiki VVER inklusive Spezifikations-Tabelle, en-Wiki EPR technische Spezifikation, de-Wiki EPR). Die abgerufenen Artikel enthalten keine Werte für Speisewassertemperatur, Frischdampftemperatur oder Kondensatorbedingungen — gemäß Regel 1 (kein Gedächtnis) ist diese Positionen als „nicht gefunden“ markiert.
+
+**Verifikation:** `pruefe.py` bestätigt beide Zitate wortgleich in der Ablage:
+```
+2 Belege bestaetigt, 0 Fehler
+```
+(Der Hinweis auf die 60.0-Spalte der VVER-Tabelle bezieht sich auf die WWER-1000-Spalte zwischen 44.0 (V-440) und 70.0 (V-1200); Einheit der Tabelle: 100 kPa.)

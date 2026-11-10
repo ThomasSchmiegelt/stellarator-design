@@ -1,0 +1,15 @@
+Fertig. Ergebnis in `zeilen/03.md`:
+
+| Anlage | Kühlmittel | Eintritt °C | Austritt °C | Druck MPa |
+|---|---|---|---|---|
+| BREST-OD-300 (LFR, Russland) | Blei | 540 | 340 | nicht gefunden |
+
+**Quellenlage (4/4 Abrufe):**
+- ✅ en.wikipedia.org/wiki/BREST_(reactor) — „Average lead coolant temperature: 540 °C … on entry in the steam generator; 340 °C … on exit of the steam generator", Kühlmittel Blei
+- ❌ IAEA-BREST-Folie (Wayback: HTML statt PDF; Direktabruf: 404)
+- ❌ uxc.com „Design Features of BREST"-Paper (404)
+- (1. Abruf war der Wikip-Artikel; alle 4 Abrufe verbraucht)
+
+**Druck:** In keiner erfolgreich geholten Quelle steht ein MPa-Wert; Wikipedia sagt nur „at atmospheric pressure" → laut Regeln „nicht gefunden".
+
+**Prüfung:** `pruefe.py zeilen/03.md` → `3 Belege bestaetigt, 0 Fehler` (Ausgabe in die Datei übernommen).

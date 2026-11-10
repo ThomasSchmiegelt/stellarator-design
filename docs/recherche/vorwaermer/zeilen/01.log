@@ -1,0 +1,13 @@
+Fertig. Ergebnis in `zeilen/01.md`: **0 Fehler**.
+
+**Zusammenfassung:**
+- Suche (wiki/openalex/arxiv/osti) fand die richtigen Quellen: u. a. *„Thermal-hydraulic behaviour of the DEMO divertor plasma facing components cooling circuit“* (FusEngDes 2017), *„Thermofluid-dynamic assessment of the EU-DEMO divertor single-circuit cooling option“* (IRIS Palermo), ADRANOS (FusEngDes 2023), IOP-NF *„New designs of target and cooling scheme for water cooled divertor in DEMO“*.
+- Alle 5 zulässigen `abruf.py`-Abrufe schlugen fehl:
+  - 2× iris.unipa.it → HTTP 403
+  - 1× arts.units.it → HTTP 403
+  - 1× sciencedirect.com → HTTP 403
+  - 1× iopscience.org → CAPTCHA-Block
+  - OSTI (Suche) → Timeout
+- Nach Regel 1 (niemals aus dem Gedächtnis) und Regel 4 wurden **alle Werte als „nicht gefunden“** eingetragen – ein ehrliches, gültiges Ergebnis. Die gefundenen (aber unzugänglichen) Quellen stehen zur Orientierung im Hinweis unter der Tabelle.
+
+Falls gewünscht, kann ich später erneut abrufen, wenn die Quellen wieder erreichbar sind (z. B. über einen anderen Weg/den Browser), um die konkreten Werte zu belegen.

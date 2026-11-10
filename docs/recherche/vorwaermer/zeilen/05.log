@@ -1,0 +1,12 @@
+Fertig – **6 Belege bestätigt, 0 Fehler**. Ergebnis in `zeilen/05.md`:
+
+| Größe | Wert | Quelle |
+|---|---|---|
+| Anzahl Niederdruck-Vorwärmer | **nicht gefunden** (keine explizite Stückzahl in den geholten Texten) | – |
+| Anzahl Hochdruck-Vorwärmer | **nicht gefunden** (es wird nur bestätigt, dass LP- und HP-Vorwärmer-Systeme ABP & AHP existieren) | ICONE15-10411 (Daya Bay PWR, J-STAGE PDF) |
+| Gesamtzahl der Vorwärmerstufen | **7** (Daya Bay: „Seven-stage heaters“; EPR: „sieben Stufen“) | J-STAGE + de-Wiki EPR |
+| Temperatur nach ND-Vorwärmstufen | **nicht gefunden** (nur Endtemperatur überliefert) | – |
+| Temperatur nach HD-Vorwärmstufen (Endstufe zum Dampferzeuger) | **≈ 230 °C** (EPR) | de-Wiki EPR: „In jeweils sieben Stufen wird das Wasser dort auf etwa 230 °C erhitzt“ |
+| Bauart | **geschlossener Schalen-Rohr-Wärmetauscher** (Speisewasser in den Rohren, Erhitzung durch Turbinen-Entnahmedampf) | en-Wiki Feedwater heater |
+
+Methodik: 4 erfolgreiche Abrufe (en-Wiki Feedwater heater, en-Wiki PWR, J-STAGE/ICONE15-PDF, de-Wiki EPR), 1 fehlgeschlagen (MDPI, HTTP 403 – nicht verwendet), 3 Suchläufe über `suche.py` (wiki/openalex, OSTI einmal Timeout). Die Zitate mussten wegen des zweispaltigen PDF-Layouts exakt in Lesereihenfolge kopiert werden (2 Zitatkorrekturen). Nicht gefunden: die konkrete LP/HP-Aufteilung (z. B. 4+2/3) und die Zwischenstufentemperaturen – das ist ehrlich als „nicht gefunden“ markiert.
