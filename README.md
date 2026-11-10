@@ -8,7 +8,7 @@ FreeCAD casings to structural analysis in ElmerFEM.*
 
 > 🛠️ **Ein Hobbyprojekt, aus Neugier entstanden.**
 > Ich bin kein Fusionsforscher. Dieses Projekt ist privat und aus reiner Neugier entstanden: Wie funktioniert
-> ein Stellarator, und wie weit kommt man mit offenen Werkzeugen und KI-Unterstützung (Claude Code, Hermes Agent)?
+> ein Stellarator, und wie weit kommt man mit offenen Werkzeugen und KI-Agenten (Claude Code, Hermes, PI)?
 > Es gibt keine Verbindung zu einem Forschungsinstitut oder Unternehmen. Die Ergebnisse sind nicht
 > begutachtet, enthalten vereinfachende Annahmen und können Fehler haben. Sie sind **keine**
 > Auslegung einer realen Anlage. Hinweise und Korrekturen sind willkommen.
@@ -36,6 +36,8 @@ freier Software auf:
 
 - **Physik:** Plasmaform (DESC) und Spulen (simsopt) entwerfen oder die öffentlichen Spulenbahnen von
   Wendelstein 7-X übernehmen; Feldlinien, Flussflächen, Kräfte und Abstände unabhängig prüfen.
+- **QI-Plasmen und eigene Spulen:** Formen aus dem offenen Datensatz ConStellaration (VMEC++), eigene Spulen dazu,
+  freie Plasmagrenze, Bauregeln aus der Konstruktion (Biegeradius, Montage).
 - **Konstruktion:** Spulengehäuse als voll parametrisches FreeCAD-Modell (Variable Section Sweep, Parametertabelle,
   Symmetrie-Klone, Verbinder, kollisionsfrei per Nachbarschnitt).
 - **Berechnung:** Magnetfeld → Lorentzkraft → Spannung in einem gekoppelten ElmerFEM-Lauf, mit einem robusten
@@ -43,9 +45,19 @@ freier Software auf:
 - **Anschauung:** 3D-Schnittmodell mit Verguss, Isolierung und Supraleitern, Leiterdetail, ParaView und Blender.
 - **Kühlung:** Plasmagefäß mit Gyroid-Kühlkern (PicoGK), Strömung in einem Segment mit FluidX3D, Filme in Blender.
 
-Gebaut wurde das in wenigen Tagen mit zwei KI-Agenten: [Hermes Agent](https://github.com/NousResearch/hermes-agent)
-(lokal; Recherche, Projektpflege, lange Läufe) und [Claude Code](https://www.anthropic.com/claude-code)
-(Programmierung). Die Irrwege sind offen dokumentiert, in `BEFUNDE.md` und in den Berichten unten.
+Entstanden ist das Projekt Ende Oktober 2026 als Erweiterungstest der E-Maschinen-Toolkette
+[ema-motor-analysis](https://github.com/ThomasSchmiegelt/ema-motor-analysis): Wie weit trägt dieselbe Arbeitsweise
+in einem fremden Fachgebiet? Seitdem wächst es in Schritten von Tagen. Gearbeitet haben mehrere KI-Agenten mit
+verteilten Rollen:
+
+- [Claude Code](https://www.anthropic.com/claude-code) mit **Opus** (Deutung, Annahmen, Gegenprüfung, Fehlersuche)
+  und **Sonnet** (Routinearbeit, lange Rechenketten),
+- [Hermes Agent](https://github.com/NousResearch/hermes-agent) (lokal; Recherche, Projektpflege, lange Läufe),
+- **PI** mit einem lokalen Modell (qwen über ollama): Teilaufträge, Recherche mit Belegprüfung und die Auswahl im
+  Ralph-Loop.
+
+Der Mensch gibt Ziel und Richtung vor, entscheidet an den Gabelungen und prüft die Bilder. Die Irrwege sind offen
+dokumentiert, in `BEFUNDE.md` und in den Berichten unten.
 
 ### About (English)
 
@@ -56,6 +68,8 @@ software:
 
 - **Physics:** design a plasma shape (DESC) and coils (simsopt), or use the public Wendelstein 7-X coil paths;
   independently check field lines, flux surfaces, forces and clearances.
+- **QI plasmas and own coils:** shapes from the open ConStellaration dataset (VMEC++), own coils for them, free
+  plasma boundary, buildability rules from mechanical design (bending radius, assembly).
 - **Design:** coil casings as a fully parametric FreeCAD model (variable section sweep, spreadsheet parameters,
   symmetry clones, connectors, collision-free via neighbour subtraction).
 - **Analysis:** magnetic field → Lorentz force → stress in one coupled ElmerFEM run, using a robust path that
@@ -65,9 +79,13 @@ software:
 - **Cooling:** plasma vessel with a gyroid cooling core (PicoGK), flow through one segment with FluidX3D, films in
   Blender.
 
-It was built in a few days with two AI agents: [Hermes Agent](https://github.com/NousResearch/hermes-agent)
-(local; research, bookkeeping, long runs) and [Claude Code](https://www.anthropic.com/claude-code) (coding).
-Dead ends are documented openly in `BEFUNDE.md` (German) and in the reports below. Code and most documentation are
+The project started in late October 2026 as a stretch test of the e-motor toolchain
+[ema-motor-analysis](https://github.com/ThomasSchmiegelt/ema-motor-analysis): how far does the same way of working
+carry into an unfamiliar field? Several AI agents share the work: [Claude Code](https://www.anthropic.com/claude-code)
+with **Opus** (interpretation, assumptions, cross-checks, debugging) and **Sonnet** (routine work, long chains),
+[Hermes Agent](https://github.com/NousResearch/hermes-agent) (local; research, bookkeeping, long runs) and **PI**
+with a local model (qwen via ollama; sub-tasks, research with source checks, choices in the Ralph loop). The human
+sets goal and direction, decides at the forks and checks the figures. Dead ends are documented openly in `BEFUNDE.md` (German) and in the reports below. Code and most documentation are
 in German; the English report gives the full story.
 
 ## Projektbericht / Project report
