@@ -18,14 +18,14 @@ Skript: `stellarator/loop_evolution.py bild|video`.
   sondern über die ersten 150 Ränge verteilt. Das ist erkunden und ausnutzen zugleich. Die drei Kreuze sind der Prüfstein
   und die zwei Ersatzwahlen.
 
-## Video `loop_evolution.mp4` (23 s, 4 Bilder/s), Lesehilfe
+## Video `loop_evolution.mp4` (50 s, 4 Bilder/s, erweitert 12.11.2026), Lesehilfe
 Grau sind alle 361 Formen im Pool (ConStellaration, unverändert, QI ≤ 5e-4, nfp 2–5), nach Elongation (größte Abplattung des Querschnitts, rechts) und kleinster Gradientenlänge (oben; groß = glattes Feld, nach Kappel, Landreman & Malhotra 2024 der Grund, warum manche Plasmen nahe Spulen brauchen). Beide Werte stammen aus dem Datensatz. Nacheinander erscheinen die von PI
 gewählten Formen, die Farbe zeigt den Feldfehler der Spulen (gelb = einfache Spulen, dunkel = schwierige). Der rote Ring
 markiert die bisher beste Form, die Zahl oben links ist die Nummer der Wahl. Man sieht, wie sich die Wahl nach anfänglicher
 Streuung in der Wolke bei Elongation um 7 und Gradientenlänge um 4 sammelt, und dort liegen die gelben Punkte.
+Teil 2 (ab „PI 100 · Zufall …“): Die 261 übrigen Formen erscheinen als Quadrate, drei je Bild, in der Reihenfolge der Zufallsrechnung (Startwert 20261110), gleiche Bewertung. Der rote Ring gilt über beide Teile: Er springt zu DZrUR4dA (1,56e-4, Elongation 6,1), knapp neben der Häufung. Die Gegend stimmte: 30 der 36 Formen mit Feldfehler unter 4e-4 liegen bei Elongation 6,5–7,6. Innerhalb dieser Gegend wählte PI nicht besser als der Zufall (B-075). Am Ende 3 s Standbild.
 Im Bild steht nur der Name des Autors, die Erklärung steht hier.
 
 ## Ehrliche Einordnung
-Ob PI besser wählt als der Zufall, zeigt das nicht. Dafür fehlt ein Vergleichslauf mit zufälliger Wahl oder fester
-QI-Reihenfolge. Belegt ist: Die Breite der Suche hat den Bestwert gegenüber dem Bezug um den Faktor 10 verbessert, und
+Nachtrag 12.11.2026: Der Vergleichslauf liegt vor (B-075, `stellarator/zufall_gegen_pi.py`). PI schlägt im Median 94 % zufälliger Gruppen, aber nur wegen der Vorliebe für nfp 2; innerhalb nfp 2 wie Zufall, der PI-Bestwert schlägt nur 14 %. Die fünf besten Formen stammen aus der Zufallsreihe. Belegt ist: Die Breite der Suche hat den Bestwert gegenüber dem Bezug um den Faktor 10 verbessert, und
 PI hat seine Wahl sichtbar nach den Ergebnissen verschoben.

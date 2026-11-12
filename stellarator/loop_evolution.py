@@ -80,30 +80,52 @@ def bild():
           (d.nfp[:15] == 2).mean(), (d.nfp[-15:] == 2).mean())
 
 
-def video():
+def zufallsreihe(pool):
+    """Formen der REST-Rechnung in Rechenreihenfolge (Zufall, Startwert 20261110), Ergebnis aus results.tsv."""
+    res = pd.read_csv(S / "results.tsv", sep="\t").drop_duplicates("id", keep="last")
+    ids = []
+    for l in (S / "verlauf.log").read_text(errors="replace").splitlines():
+        m = re.search(r"REST fertig (\w+)", l)
+        if m and m.group(1) not in ids:
+            ids.append(m.group(1))
+    z = pd.DataFrame({"id": ids}).merge(pool, on="id").merge(res[["id", "ziel_Bn_mittel"]], on="id", how="left")
+    return z[np.isfinite(z.ziel_Bn_mittel)].reset_index(drop=True)
+
+
+def video(je_bild=3):
+    """Teil 1: die 100 Wahlen von PI (Kreise, eine je Bild). Teil 2: die 261 Zufallsformen (Quadrate, je_bild je Bild).
+    Roter Ring = beste Form bis hierher über beide Teile. Zähler oben links: „PI n“ bzw. „Zufall n“."""
     import matplotlib.animation as an
-    pool, d = daten()
+    pool, d = daten(); z = zufallsreihe(pool)
     fig, ax = plt.subplots(figsize=(9.6, 5.4))
     ax.scatter(pool.elong, pool.LgradB, s=10, c="#cccccc")
     ax.set_xlabel("Elongation: größte Abplattung des Plasmaquerschnitts"); ax.set_ylabel("kleinste Gradientenlänge (groß = glattes Feld)")
-    norm = LogNorm(vmin=2e-4, vmax=5e-3); cmap = plt.get_cmap("viridis_r")
-    sc = ax.scatter([], [], s=55, c=[], cmap=cmap, norm=norm, edgecolors="k", linewidths=.4)
-    best = ax.scatter([], [], s=260, facecolors="none", edgecolors="red", linewidths=2)
+    norm = LogNorm(vmin=1.5e-4, vmax=5e-3); cmap = plt.get_cmap("viridis_r")
+    sc = ax.scatter([], [], s=55, c=[], cmap=cmap, norm=norm, edgecolors="k", linewidths=.4, marker="o", zorder=3)
+    sz = ax.scatter([], [], s=42, c=[], cmap=cmap, norm=norm, edgecolors="k", linewidths=.4, marker="s", zorder=2)
+    best = ax.scatter([], [], s=260, facecolors="none", edgecolors="red", linewidths=2, zorder=4)
     cb = fig.colorbar(sc, ax=ax); cb.set_label("Feldfehler der Spulen")
-    cb.ax.axhspan(2e-4, ZIEL, xmin=0, xmax=.25, color="black", alpha=.85)   # schwarzer Streifen = Zielbereich (Annahme), Erklaerung im Begleittext
+    cb.ax.axhspan(1.5e-4, ZIEL, xmin=0, xmax=.25, color="black", alpha=.85)   # schwarzer Streifen = Zielbereich (Annahme), Erklaerung im Begleittext
     txt = ax.text(0.02, 0.95, "", transform=ax.transAxes, fontsize=13)
     fig.text(0.5, 0.01, "Thomas Schmiegelt", ha="center", fontsize=10)
     fig.tight_layout(rect=(0, 0.03, 1, 1))
+    n1 = len(d); n2 = int(np.ceil(len(z) / je_bild)); halt = 12   # Standbild am Ende (3 s)
 
     def f(i):
-        k = d.iloc[:i + 1]
+        k = d.iloc[:min(i + 1, n1)]
         sc.set_offsets(np.c_[k.elong, k.LgradB]); sc.set_array(k.ziel_Bn_mittel.values)
-        j = k.ziel_Bn_mittel.idxmin(); best.set_offsets([[k.elong[j], k.LgradB[j]]])
-        txt.set_text(f"{i + 1}")
-        return sc, best, txt
-    a = an.FuncAnimation(fig, f, frames=len(d), interval=250, blit=False)
+        m = 0 if i < n1 else min((i - n1 + 1) * je_bild, len(z))
+        q = z.iloc[:m]
+        if m:
+            sz.set_offsets(np.c_[q.elong, q.LgradB]); sz.set_array(q.ziel_Bn_mittel.values)
+        alle = pd.concat([k[["elong", "LgradB", "ziel_Bn_mittel"]], q[["elong", "LgradB", "ziel_Bn_mittel"]]], ignore_index=True)
+        j = alle.ziel_Bn_mittel.idxmin(); best.set_offsets([[alle.elong[j], alle.LgradB[j]]])
+        txt.set_text(f"PI {len(k)}" if i < n1 else f"PI {n1} · Zufall {m}")
+        return sc, sz, best, txt
+    a = an.FuncAnimation(fig, f, frames=n1 + n2 + halt, interval=250, blit=False)
     a.save(O / "loop_evolution.mp4", writer=an.FFMpegWriter(fps=4, bitrate=1800), dpi=110)
-    print("Video", O / "loop_evolution.mp4", len(d), "Bilder")
+    f(n1 + n2 - 1); fig.savefig(O / "loop_evolution_poster.png", dpi=110)
+    print("Video", O / "loop_evolution.mp4", n1, "PI +", len(z), "Zufall,", n1 + n2 + halt, "Bilder")
 
 
 if __name__ == "__main__":

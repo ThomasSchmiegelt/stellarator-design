@@ -767,7 +767,7 @@ Bis hierher war das Plasma eine quasi-axisymmetrische Form (QA). Seit dem 4. Nov
 [ConStellaration](https://github.com/proximafusion/constellaration) von Proxima Fusion. QI ist ein Maß dafür, wie gut
 das Feld die Teilchen hält: kleiner ist besser. Gerechnet wird mit [VMEC++](https://github.com/proximafusion/vmecpp),
 die Spulen mit simsopt. Bei jedem Plasma steht dabei, woher es kommt: **Datensatzform unverändert** oder
-**eigene Form** (woraus abgeleitet). Alle Befunde stehen in `BEFUNDE.md` (B-040 bis B-071).
+**eigene Form** (woraus abgeleitet). Alle Befunde stehen in `BEFUNDE.md` (B-040 bis B-071; neuere bis B-076 im nächsten Abschnitt).
 
 **Was die Grenzen bedeuten:** Die Spannungsgrenze 500 MPa für den Stahl, 0,3 % Dehnung im Wickelpaket und die übrigen
 Grenzen der Kette sind **Annahmen**, keine belegten Werte. Spannungen werden deshalb immer als Zahl genannt.
@@ -854,9 +854,58 @@ Landreman & Malhotra (2024), warum manche Plasmen nahe Spulen brauchen. (d) PI g
 nach QI sortierten Pools zu, nicht der Reihe nach (gestrichelt). Begleittext und Video:
 [docs/recherche/spulen_suche/loop_evolution.md](docs/recherche/spulen_suche/loop_evolution.md).
 
-**Ehrliche Einordnung:** Ob PI besser wählt als der Zufall, zeigt das noch nicht. Seit dem 10.11. rechnet die feste
-Bewertung die restlichen Poolformen in zufälliger Reihenfolge durch (Laufzeit etwa 32 h). Danach folgt der Vergleich
-mit zufälliger Wahl.
+**Ehrliche Einordnung:** Der Vergleich mit zufälliger Wahl liegt inzwischen vor (12.11., B-075, nächster Abschnitt).
+PI wählte die richtige Periodenzahl, darüber hinaus nicht besser als der Zufall.
+
+## Neuere Ergebnisse (11.–12. November 2026): Turbulenz, Paarvergleich, Zufall gegen PI
+
+### Turbulenz mit Gyrokinetik auf der eigenen Grafikkarte (B-073, B-074)
+
+Turbulenz trägt den größten Teil der Wärme aus dem Plasma und bestimmt damit, wie groß eine Anlage für 1 GW sein muss.
+Bisher wurden die Formen nur nach dem Einschluss einzelner Teilchen (QI) gewählt. Mit dem quelloffenen Gyrokinetik-Code
+[GX](https://bitbucket.org/gyrokinetics/gx) (Mandell et al., J. Plasma Phys. 90, 905900402, 2024; MIT) rechnet das
+Projekt den turbulenten Wärmefluss je Form in 15–20 min auf einer RTX 3090.
+
+- **Prüfung an W7-X:** 5,95 gegen ≈ 7 in der Veröffentlichung (−15 %, Zielband ±30 %).
+- **16 Datensatzformen (unverändert):** Wärmefluss Q<sub>i</sub>/Q<sub>GB</sub> 3,9 bis 11,6, also Faktor 3 Spanne (W7-X 6,0).
+- **Billiges Ersatzmaß** aus dem Datensatz gegen GX: Rangkorrelation 0,59. Vorher erwartet ≥ 0,6, also verfehlt. Das
+  Ersatzmaß sortiert nur grob. GX ersetzt es im Paarvergleich.
+- **Grenzen:** eine Feldlinie, eine Fläche, vereinfachte Elektronen, gleiche Gradienten für alle. Das ist ein Vergleich
+  zwischen Formen, kein Einschlusswert.
+
+![GX-Wärmefluss der 16 Formen](bericht/projektbericht/bilder/gx_alle_formen.png)
+
+Ausführlich im Projektbericht, Kapitel 19.
+
+### Paarvergleich: sechs Kriterien, Gewichte vom Menschen (B-076)
+
+Die zehn Formen mit dem kleinsten Feldfehler der eigenen Spulen werden nach sechs Kriterien verglichen: Feldfehler,
+Teilcheneinschluss (QI), Seiten-Achter (Biegung der Spulen), kreuzende Nachbarspulen (Montage), Bauhöhe und Wärmeverlust
+durch Turbulenz (GX). Jedes Kriterium hat eine andere beste Form, keine der zehn ist überall schlechter als eine andere.
+Die Gewichte stammen aus 15 Paarurteilen des Autors (Widerspruchszahl 0,06): Montage 0,30, Seiten-Achter 0,25,
+Feldfehler 0,18, QI 0,12, Turbulenz 0,10, Bauhöhe 0,06. Vorn liegt **DK8s6qwo** (0,69), die einzige Form ohne kreuzende
+Spulen, vor DfXvrph2 (0,62) und DZrUR4dA (0,59). Mit gleichen Gewichten gewinnt dieselbe Form.
+Skript: `stellarator/formen_vergleich.py`. Die Wahl bleibt beim Menschen.
+
+![Paarvergleich der zehn besten Formen](bericht/projektbericht/bilder/gx_paarvergleich_kriterien.png)
+
+### Zufall gegen PI: Wählt der lokale Agent besser? (B-075)
+
+Alle 361 Poolformen sind jetzt mit derselben festen Bewertung gerechnet: 100 aus der Wahl von PI, 261 in zufälliger
+Reihenfolge. Die Schwelle war vorher festgelegt: PI muss besser sein als 80 % zufälliger Gruppen gleicher Größe.
+
+- **Median:** PI schlägt 94 % der Zufallsgruppen, aber nur, weil 91 % seiner Wahlen zwei Feldperioden haben (Pool 73 %).
+  Vergleicht man nur Formen mit zwei Feldperioden, ist PI gleich gut wie der Zufall (9,05·10⁻⁴ gegen 8,99·10⁻⁴).
+- **Bestwert:** Die beste PI-Form schlägt nur 14 % der Zufallsgruppen. Die fünf besten Formen des Pools hat PI nie gewählt.
+- **Deutung:** PI hat eine einfache Regel gelernt. Für die Suche nach der besten Form war es darüber hinaus nicht besser
+  als Würfeln. Eine Schleife, ein Pool: Das ist ein Befund, kein allgemeines Urteil über lokale Modelle.
+
+![Zufall gegen PI: Bestwert und Median gegen 10 000 Zufallsziehungen](docs/recherche/spulen_suche/zufall_gegen_pi.png)
+
+**Lesehilfe.** Grau sind 10 000 zufällige Gruppen von je 100 Formen. Links der beste Feldfehler jeder Gruppe, rechts der
+typische (Median); weiter links ist besser. Rot sind die 100 Formen von PI. Grün ist der vorher festgelegte Zielbereich
+„besser als 80 % der Zufallsgruppen“. Skript: `stellarator/zufall_gegen_pi.py`. Das Video zur Wahl im Merkmalsraum
+zeigt jetzt beide Teile, PI und Zufall ([Begleittext](docs/recherche/spulen_suche/loop_evolution.md)).
 
 ---
 
@@ -998,6 +1047,10 @@ Reihenfolge und Begründung: [docs/plan_offene_punkte.md](docs/plan_offene_punkt
 - [x] Alphas: Ursache getrennt – Spulen (16,6 %) gegen Form allein (0,3 %)
 - [ ] Alphas: Spulen mit Alpha-Ziel nachoptimieren und Vergleich wiederholen, Stöße
 - [ ] Erstwand-Kühlung: dünne Innenhaut, schnelle Kanäle, Wärme gekoppelt rechnen
+- [x] Turbulenz: Gyrokinetik (GX) für 16 QI-Formen, an W7-X geprüft
+- [x] Paarvergleich der zehn besten Formen mit Gewichten des Autors
+- [x] Zufall gegen PI: Wahl des lokalen Agenten gegen Zufall geprüft
+- [ ] Ein Satz, der alle Grenzen zugleich hält (Plasma, Spulen, Tragwerk, Kühlung)
 - [x] Festigkeit: Ursache verstanden (Biegung der geraden Innenschenkel, Lagerung außen), Kraftziel in Stufe 2
 - [x] Gekoppelte Kette Plasma–Spulen–Package–Festigkeit–Temperatur, erste Entwürfe unter 500 MPa
 - [x] Entwurfsstudie ausgewertet: 7 zulässige Entwürfe, 0169 robust gegen feineres Netz, Werkstoff 1.4429 hergeleitet
@@ -1025,6 +1078,7 @@ Reihenfolge und Begründung: [docs/plan_offene_punkte.md](docs/plan_offene_punkt
 - W7-X-Spulenfilamente und Referenzachse: [simsopt](https://github.com/hiddenSymmetries/simsopt) (MIT), Spulensatz `w7x_v001` (IPP).
 - Plasmaform-Optimierung: [DESC](https://github.com/PlasmaControl/DESC). Spulenoptimierung: simsopt.
 - QI-Plasmaformen: Datensatz und Bewertung [ConStellaration](https://github.com/proximafusion/constellaration) (Proxima Fusion), Gleichgewichte mit [VMEC++](https://github.com/proximafusion/vmecpp).
+- Gyrokinetik: [GX](https://bitbucket.org/gyrokinetics/gx) (MIT). N. R. Mandell et al.: GX: a GPU-native gyrokinetic turbulence code for tokamak and stellarator design. J. Plasma Phys. 90, 905900402 (2024). [doi:10.1017/S0022377824000631](https://doi.org/10.1017/S0022377824000631)
 - Gradientenlänge und Spulenabstand: R. Kappel, M. Landreman, D. Malhotra: The magnetic gradient scale length explains why certain plasmas require close external magnetic coils. Plasma Phys. Control. Fusion 66, 025018 (2024).
 - FEM: [ElmerFEM](https://www.elmerfem.org). Netze: [gmsh](https://gmsh.info). CAD: [FreeCAD](https://www.freecad.org).
 - Visualisierung: [PyVista](https://pyvista.org), [ParaView](https://www.paraview.org), [Blender](https://www.blender.org).
