@@ -5,6 +5,14 @@
 
 ---
 
+## B-076 Paarvergleich mit den Gewichten des Nutzers: DK8s6qwo bleibt vorn, Montage und Fertigung zählen am meisten (2026-11-12, Opus) ✅
+- **Eingabe:** 15 Paarurteile des Nutzers (Abfrage im Dialog, „wichtiger“ = Faktor 3), gespeichert in sim/spulenfreundlich/vergleich/gewichte_nutzer_2026-11-12.txt. Widerspruchszahl CR = 0,06 (< 0,1, brauchbar).
+- **Gewichte:** kreuzend 0,30, achter 0,25, feldfehler 0,18, qi 0,12, turbulenz 0,10, bauhoehe 0,06.
+- **Rang (Top 10, GX):** DK8s6qwo 0,69, DfXvrph2 0,62, DZrUR4dA 0,59, DGMtrTL2 0,55, DGozX5fj 0,52 … DHTy2o9U 0,17. DZrUR4dA steigt von Platz 7 auf 3 (Bauhöhe zählt wenig), DmC2qkhi fällt von 4 auf 7 (Seiten-Achter 23).
+- **Erwartung vorher** (ERINNERUNGEN 19:30): kreuzend höchstes, bauhoehe kleinstes Gewicht, DK8s6qwo vorn, CR < 0,1: alles getroffen.
+- **Hinweis:** QI wiegt hier nur 0,12; die Projektregel „Plasma zuerst“ (Auswahl nach QI-Güte) gilt für die Vorauswahl der Formen (Pool QI ≤ 5e-4), dieser Vergleich ordnet nur innerhalb der Top 10.
+- Dateien: sim/spulenfreundlich/vergleich/formen_vergleich.json/.png (mit Nutzergewichten), Kap. 19 Vorbehalt, Vortrag Abschnitt 8.
+
 ## B-075 Zufall gegen PI (voller Pool, 361 Formen): PI wählt nur die richtige Periodenzahl, innerhalb nfp 2 nicht besser als der Zufall; die 5 besten Formen hat PI nie gewählt (2026-11-12, Opus) ⚠
 - **Anlass:** REST fertig 16:38 (361/361, verlauf.log). Auswertung nach Erwartung F-313 (10.11., vorher festgelegt).
 - **Herkunft:** alle 361 ConStellaration-Poolformen unverändert, feste Bewertung (bewerte.sh, Prüfsumme gleich). PI-Wahl = 100 Formen aus dem Ralph-Loop 9.11., Zufall = 261 Formen REST in Zufallsreihenfolge (Startwert 20261110).
