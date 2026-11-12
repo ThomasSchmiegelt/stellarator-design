@@ -1,0 +1,2 @@
+KI-generiert. Vergangenheit: 13 Phasen (rekonstruiert). Zukunft: 14.75 Arbeitstage (Annahme), Start 2026-11-13.
+Kritischer Pfad: D1 -> K0 -> K1 -> K2 -> K5 -> K6 -> K7 -> K10 -> K11 -> V2 -> V3 -> B2

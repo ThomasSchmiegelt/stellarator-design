@@ -48,3 +48,6 @@ bericht/**/*.toc
 /.venv-constellaration/
 bericht/variantenbericht/*.zip
 !/start_berechnungsmatrix.sh
+
+# Projektmanagement (2026-11-12): Skripte, Netzplan, Wissensnetz; Obsidian-Notizen wissen/ werden erzeugt und bleiben lokal
+!/pm/

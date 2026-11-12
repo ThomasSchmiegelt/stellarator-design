@@ -1,0 +1,602 @@
+{
+ "hinweis": "KI-generiert (Claude Sonnet im Auftrag von Opus, 2026-11-12). Rekonstruktion aus BEFUNDE.md, ERINNERUNGEN.md und Git; Projekt lief seit 2026-10-22 ohne Netzplan. Phasen überlappen zeitlich. Nicht vom Autor freigegeben.",
+ "phasen": [
+  {
+   "id": "H01",
+   "name": "Werkzeuge und W7-X-Validierung",
+   "von": "2026-10-22",
+   "bis": "2026-10-24",
+   "befunde": "B-001…B-016",
+   "commits": [
+    "5ceeb3d"
+   ],
+   "dateien": [
+    "stellarator/spulen.py",
+    "stellarator/voxelsolver.py",
+    "stellarator/feldlinien.py",
+    "stellarator/lauf.py",
+    "stellarator/elmer.py",
+    "stellarator/bewerte.py",
+    "geo/parametrische_generierung.py",
+    "sim/pipeline/gerader_draht/run_validierung.sh",
+    "bericht/bericht.pdf",
+    "picogk"
+   ],
+   "req": [
+    "REQ-D01"
+   ],
+   "wer": [
+    "Mensch",
+    "Hermes",
+    "Maschine"
+   ],
+   "ergebnis": "Elmer, gmsh, FreeCAD und PicoGK installiert bzw. geprüft; 2D-Validierung Elmer gegen Biot-Savart (Abweichung außen +2,09 %); reale W7-X-Spulen: 12,18 kA/Wdg für 2,5 T, Voxelsolver gegen Biot-Savart Achse max 1,3 %; Elmer-Lauf mit 70 Spulen Achse 0,24 % gegen Biot-Savart.",
+   "beleg": "BEFUNDE B-008 (+2,09 %), B-012 (12,18 kA, 1,3 %); ERINNERUNGEN Abschnitt UEBERGABE 2026-10-24 (0,24 %, B-016). Erster Commit 5ceeb3d trägt den Stand bis 24.10.; Git hat vorher keine Commits."
+  },
+  {
+   "id": "H02",
+   "name": "Inverse Kette, Stufe 0 (1 GW), eigene QA-Form",
+   "von": "2026-10-24",
+   "bis": "2026-10-24",
+   "befunde": "B-017, B-018",
+   "commits": [
+    "1f893c7"
+   ],
+   "dateien": [
+    "invers/stufe0_bilanz.py",
+    "invers/stufe1_desc.py",
+    "invers/stufe2_spulen.py",
+    "invers/beispiele",
+    "stellarator/faelle/qa_nfp2.json",
+    "stellarator/faelle/qa_nfp2_1GW_HTS.json"
+   ],
+   "req": [
+    "REQ-F01",
+    "REQ-F04"
+   ],
+   "wer": [
+    "Mensch",
+    "Maschine"
+   ],
+   "ergebnis": "Inverse Kette Plasmaform (DESC) -> Spulen (simsopt) -> Prüfung läuft; eigene Form qa_nfp2 mit qs-Fehler 1,3e-5; Stufe 0 legt für 1 GW netto HTS R0 12,1 m / B0 7,5 T fest.",
+   "beleg": "BEFUNDE B-017, B-018 (Tabelle HTS R0 12,1 m, B0 7,5 T); ERINNERUNGEN Abschnitt 'Neue Richtung (User, 2026-10-24): INVERS entwerfen'"
+  },
+  {
+   "id": "H03",
+   "name": "Gehäuse, Stützschale, FEM",
+   "von": "2026-10-24",
+   "bis": "2026-10-25",
+   "befunde": "B-019…B-026",
+   "commits": [
+    "e8c9d80",
+    "8cc9908",
+    "e398718",
+    "68f39ff",
+    "1933111",
+    "beb7d68",
+    "f6b224c",
+    "b497eb1"
+   ],
+   "dateien": [
+    "stellarator/gehaeuse.py",
+    "stellarator/freecad_vss.py",
+    "stellarator/gehaeuse_fem.py",
+    "stellarator/gehaeuse_netz.py",
+    "stellarator/aufbau.py",
+    "stellarator/leiter3d.py",
+    "stellarator/blender_thorus.py",
+    "stellarator/faelle/qa_nfp2_A45_1GW_HTS.json"
+   ],
+   "req": [
+    "REQ-F06"
+   ],
+   "wer": [
+    "Mensch",
+    "Hermes",
+    "Maschine"
+   ],
+   "ergebnis": "Form A=4,5 verkleinert die Anlage (HTS R0 10,4 m); Stützschale und Spulengehäuse (Variable Section Sweep, Idee des Nutzers) in Elmer gekoppelt gerechnet; erstes Gehäuse viel zu dünn (Stahl 99 % unter 5130 MPa); W7-X-Gehäuse kollisionsfrei, 99 % unter 43 MPa.",
+   "beleg": "BEFUNDE B-019 (R0 10,4 m), B-021 (5130 MPa), B-025 (0 Kollisionen; Übergabe 2026-10-24 '99 % < 43 MPa')"
+  },
+  {
+   "id": "H04",
+   "name": "Plasmagefäß Gyroid und Kühlsegment",
+   "von": "2026-10-25",
+   "bis": "2026-11-01",
+   "befunde": "",
+   "commits": [
+    "7622ac3",
+    "7d18a78",
+    "aa7b536",
+    "d77c1cc",
+    "cba31cd",
+    "2daa5f8",
+    "8801f4e",
+    "b75ead6"
+   ],
+   "dateien": [
+    "stellarator/kuehlsegment.py",
+    "stellarator/gyroid_gefaess.py",
+    "stellarator/kuehlung_segment.py",
+    "stellarator/erstwand_kanal.py",
+    "stellarator/blei_kanal.py",
+    "stellarator/gradient_waerme.py",
+    "stellarator/vorwaermer.py",
+    "stellarator/tauscher_cfd.py",
+    "stellarator/tauscher_surrogat.py",
+    "stellarator/rohr_durchfuehrung.py",
+    "stellarator/haut_festigkeit.py",
+    "fluidx3d",
+    "docs/kuehlsegment_prozess.md",
+    "docs/recherche/wcll",
+    "docs/recherche/pi/ergebnis.md"
+   ],
+   "req": [
+    "REQ-F10"
+   ],
+   "wer": [
+    "Mensch",
+    "Hermes",
+    "PI",
+    "Sonnet",
+    "Maschine"
+   ],
+   "ergebnis": "Gyroid-Kühlkern im Plasmagefäß (PicoGK) und Kühlsegment mit FluidX3D durchströmt; doppeltes Filament (Erstwandkanäle plus trockener Gyroid); Wärmetest der abgestuften Wand: Stahl gibt 95 % in 5 mm ab; Divertor-Vorwärmer: Stufung lohnt sich nicht. Keine eigene B-Nummer, Ergebnisse stehen in ERINNERUNGEN und Commits.",
+   "beleg": "Commits cba31cd (95 % in 5 mm), b75ead6 (Stufung lohnt sich nicht), 7d18a78, aa7b536; ERINNERUNGEN Abschnitte 2026-10-26, 2026-10-27, 2026-10-28, 2026-11-01"
+  },
+  {
+   "id": "H05",
+   "name": "Wärmebilanz, Plasma 0-D, MHD, Alphateilchen",
+   "von": "2026-10-28",
+   "bis": "2026-11-01",
+   "befunde": "",
+   "commits": [
+    "e43c1ab",
+    "ed5b6f2",
+    "0b5fa18",
+    "37368a6",
+    "fef7895"
+   ],
+   "dateien": [
+    "stellarator/plasma_waerme.py",
+    "stellarator/mhd_kanal.py",
+    "stellarator/mhd_hartmann.py",
+    "stellarator/alpha_bahnen.py",
+    "stellarator/alpha_auswertung.py",
+    "stellarator/alpha_form.py",
+    "stellarator/einflussgraph.py",
+    "sim/waermebilanz/bilanz.json",
+    "sim/alpha",
+    "sim/mhd",
+    "docs/bauteile.md"
+   ],
+   "req": [
+    "REQ-F01",
+    "REQ-F09",
+    "REQ-F10",
+    "REQ-D02"
+   ],
+   "wer": [
+    "Mensch",
+    "Maschine"
+   ],
+   "ergebnis": "Wärmebilanz bis zur Turbine (Druckwasser, bestehende DWR-Turbine; Entscheidung des Nutzers 2026-10-28); Plasma 0-D; MHD-Prüfung Shercliff/Hunt gegen eigenen 2D-Löser unter 1 %; Alphateilchen im Spulenfeld: 16,6 % Verlust, 71 MW. Keine eigene B-Nummer.",
+   "beleg": "Commits 37368a6 (16,6 %, 71 MW), 0b5fa18 (<1 %), e43c1ab; ERINNERUNGEN 2026-10-28 ENTSCHEIDUNG User Turbine; Erwartung vor Rechnung 'gelebt seit 2026-10-29' laut Lastenheft REQ-D02"
+  },
+  {
+   "id": "H06",
+   "name": "Festigkeit, Varianten, Surrogat, Review-Paket",
+   "von": "2026-10-25",
+   "bis": "2026-11-03",
+   "befunde": "B-027, B-029",
+   "commits": [
+    "27c4c20",
+    "83125cd",
+    "e7c302b",
+    "8a2a884",
+    "d05dacd",
+    "bf834f2",
+    "6aa609f",
+    "b70c9a4"
+   ],
+   "dateien": [
+    "stellarator/hexmodell.py",
+    "stellarator/surrogat.py",
+    "stellarator/surrogat_auswertung.py",
+    "stellarator/kopplung.py",
+    "stellarator/doe_auswertung.py",
+    "stellarator/festigkeit_bilder.py",
+    "bericht/surrogat",
+    "bericht/review",
+    "bericht/variantenbericht",
+    "docs/review_festigkeit_entwurf.md",
+    "docs/filme/varianten.mp4",
+    "sim/surrogat"
+   ],
+   "req": [
+    "REQ-F06",
+    "REQ-F07",
+    "REQ-F12"
+   ],
+   "wer": [
+    "Mensch",
+    "PI",
+    "Maschine"
+   ],
+   "ergebnis": "Surrogat-Rechenmodell (Hex-Netz, Referenzprobe W7-X p99 470 MPa); Entwurfsstudie doe1 mit 7 zulässigen Entwürfen; Ziel geändert auf robustesten statt leichtesten Entwurf (2026-11-02); Review-Paket Festigkeit und Variantenfilm 84 s fertig.",
+   "beleg": "BEFUNDE B-027 (470 MPa), B-029; Commit 8a2a884 (7 zulässige Entwürfe), b70c9a4; ERINNERUNGEN 2026-11-02 abends 'Ziel geändert: robustester statt leichtester Entwurf'"
+  },
+  {
+   "id": "H07",
+   "name": "Wechsel zu QI (ConStellaration), Tragwerk QI, Plasma zuerst",
+   "von": "2026-11-03",
+   "bis": "2026-11-04",
+   "befunde": "B-028, B-030…B-051",
+   "commits": [
+    "02194f9",
+    "b872b5c",
+    "3d98f31",
+    "a68f3ff",
+    "e210db3",
+    "a99c013",
+    "7ff139a",
+    "1ede705"
+   ],
+   "dateien": [
+    "stellarator/constellaration_bruecke.py",
+    "stellarator/proxima_spulen.py",
+    "stellarator/qi_kraft_scan.py",
+    "stellarator/qi_feld_auswertung.py",
+    "stellarator/qi_guete.py",
+    "stellarator/qi_filter_suche.py",
+    "stellarator/qi_korridor.py",
+    "stellarator/qi_gegenrechnung.py",
+    "stellarator/submodell.py",
+    "stellarator/heisse_spule.py",
+    "sim/qi_feld/tabelle.md",
+    "docs/recherche/qi_tragwerk"
+   ],
+   "req": [
+    "REQ-F02",
+    "REQ-F03",
+    "REQ-F06",
+    "REQ-F07",
+    "REQ-F08",
+    "REQ-F13"
+   ],
+   "wer": [
+    "Mensch",
+    "Opus",
+    "Sonnet",
+    "Haiku",
+    "PI",
+    "Maschine"
+   ],
+   "ergebnis": "Proximas QI-Spulensätze an die Kette angebunden (B-028); Rangfolge 'Plasma zuerst' (B-031); erster Satz DPrcxq66 erfüllt alle Grenzen im Gesamtmodell (B-040), hält die Absicherung aber nicht (B-041); Maßstab heißeste Spule (B-043), 500 MPa nur Richtwert (B-045).",
+   "beleg": "BEFUNDE B-028, B-031, B-040, B-041, B-043, B-045; ERINNERUNGEN 2026-11-04 13:14 (Rangfolge Nutzer), 13:35 (Sonnet führt, Opus-Unteragent, Haiku mechanisch)"
+  },
+  {
+   "id": "H08",
+   "name": "QI und Spulen, Wirkungskarte",
+   "von": "2026-11-05",
+   "bis": "2026-11-07",
+   "befunde": "B-052…B-057",
+   "commits": [
+    "5f5f5cc",
+    "9316374",
+    "96be7f2",
+    "a5bfc4e",
+    "5f2595f",
+    "b15700f",
+    "d10ea4d",
+    "ca98e41"
+   ],
+   "dateien": [
+    "stellarator/qi_karte.py",
+    "stellarator/qi_spulen.py",
+    "stellarator/qi_wirkung.py",
+    "stellarator/qi_verdrillung.py",
+    "stellarator/qi_experiment.py",
+    "stellarator/qi_profil_serie.py",
+    "docs/recherche/qi_tragwerk/qi_experiment_bericht.md",
+    "sim/qi_wirkung",
+    "sim/berechnungsmatrix",
+    "start_berechnungsmatrix.sh"
+   ],
+   "req": [
+    "REQ-F02",
+    "REQ-F04"
+   ],
+   "wer": [
+    "Mensch",
+    "Opus",
+    "Sonnet",
+    "PI",
+    "Maschine"
+   ],
+   "ergebnis": "QI-Karte über 14 Flächen (B-052); Spulenfehler kostet am Rand +24 % (B-053); Wirkungskarte Spulen zu lokalem QI (B-054); Experimentmatrix gelaufen; B-057 (Strom-Ausreißer nicht konvergiert) später widerlegt durch B-061.",
+   "beleg": "BEFUNDE B-052…B-054, B-057 (Kopfzeile: widerlegt durch B-061); ERINNERUNGEN 2026-11-06 20:50, 2026-11-07 08:26"
+  },
+  {
+   "id": "H09",
+   "name": "Eigene Spulen K3, Kreis",
+   "von": "2026-11-07",
+   "bis": "2026-11-08",
+   "befunde": "B-058…B-064",
+   "commits": [
+    "94215ef",
+    "ba0bdc5",
+    "78d256e",
+    "d538bd8",
+    "c48f6c3",
+    "fc38d60",
+    "5ade7a7",
+    "7ccabc0"
+   ],
+   "dateien": [
+    "stellarator/k3_spulen.py",
+    "stellarator/k3_rohr.py",
+    "stellarator/kreis_kraft.py",
+    "stellarator/kreis_bilder.py",
+    "stellarator/plasma_galerie.py",
+    "docs/recherche/spulen_suche/kreis_bericht.md",
+    "docs/recherche/spulen_suche/kette_k3.md",
+    "docs/recherche/spulen_suche/spulen_machbarkeit.md",
+    "docs/recherche/spulen_suche/vergleich",
+    "sim/kette_k3"
+   ],
+   "req": [
+    "REQ-F04",
+    "REQ-D03"
+   ],
+   "wer": [
+    "Mensch",
+    "Opus",
+    "Sonnet",
+    "Maschine"
+   ],
+   "ergebnis": "Eigene Spulen für K3 halb (Feldfehler 2,1e-4, B-060); Prüfung B-061 widerlegt B-057 (Fehlaufruf); Kreis Durchlauf 1 und 2 (B-062); Vergleich K3 halb gegen DATJ5FC (B-064): DATJ5FC -26 % Kraft, 6-mal schlechteres Plasma.",
+   "beleg": "BEFUNDE B-060, B-061, B-062, B-064 (Titel)"
+  },
+  {
+   "id": "H10",
+   "name": "Baubare Spulen, Glätten",
+   "von": "2026-11-08",
+   "bis": "2026-11-11",
+   "befunde": "B-066…B-072",
+   "commits": [
+    "f34737d",
+    "2cf2cd0",
+    "1fe76da",
+    "b9e5f17",
+    "64a653a",
+    "ce68936",
+    "ab4c08e"
+   ],
+   "dateien": [
+    "stellarator/spulen_glaetten.py",
+    "stellarator/spulen_montage.py",
+    "stellarator/montage_strafe.py",
+    "stellarator/spulen_schlaufe.py",
+    "stellarator/zeiger_spule.py",
+    "stellarator/spulen_3d_html.py",
+    "docs/recherche/spulen_suche/baubar",
+    "docs/recherche/spulen_suche/glaettung",
+    "sim/satteldach",
+    "sim/zeiger"
+   ],
+   "req": [
+    "REQ-F05",
+    "REQ-F04"
+   ],
+   "wer": [
+    "Mensch",
+    "Opus",
+    "Maschine"
+   ],
+   "ergebnis": "Glätten und Weglassen entfernen die '8' nicht ohne das Feld zu zerstören (B-066, B-068, B-069); Nutzerregeln Biegeradius >= 2·d und kein Rücklauf für DATJ5FC fast ohne Feldverlust erreicht (B-070); Satteldach: ebene Spulen 330-mal ungenauer (B-072).",
+   "beleg": "BEFUNDE B-066, B-068, B-069, B-070, B-072 (Titel)"
+  },
+  {
+   "id": "H11",
+   "name": "KI-Schleifen (autoresearch, Ralph-Loop PI, Zufallslauf)",
+   "von": "2026-11-08",
+   "bis": "2026-11-12",
+   "befunde": "B-065",
+   "commits": [
+    "dd37fc5",
+    "bf495c6"
+   ],
+   "dateien": [
+    "autoresearch/lauf.sh",
+    "autoresearch/program.md",
+    "docs/recherche/autoresearch_pilot",
+    "stellarator/spulenfreundlich_pool.py",
+    "stellarator/loop_evolution.py",
+    "sim/spulenfreundlich/lauf.sh",
+    "sim/spulenfreundlich/rest.sh",
+    "docs/recherche/spulen_suche/loop_evolution.md"
+   ],
+   "req": [
+    "REQ-D05",
+    "REQ-D06",
+    "REQ-F05"
+   ],
+   "wer": [
+    "Mensch",
+    "Opus",
+    "Sonnet",
+    "PI",
+    "Maschine"
+   ],
+   "ergebnis": "autoresearch-Pilot: f 1,72 -> 0,60, Prüfbuch fängt 5 Schönmeldungen (B-065). Ralph-Loop spulenfreundlich 2026-11-09: 100 Formen, bester Feldfehler 2,40e-4 (Form DmC2qkhi); Restlauf der 361 Poolformen 2026-11-10 bis 2026-11-12 (361/361 fertig 16:38).",
+   "beleg": "BEFUNDE B-065 (Titel); ERINNERUNGEN 2026-11-09 21:40 (100 Formen, 2,40e-4), 2026-11-12 18:30 (361/361)"
+  },
+  {
+   "id": "H12",
+   "name": "Turbulenz GX, Paarvergleich, Zufall gegen PI",
+   "von": "2026-11-11",
+   "bis": "2026-11-12",
+   "befunde": "B-073…B-076",
+   "commits": [
+    "c036704",
+    "37ac8c9",
+    "d81a10f"
+   ],
+   "dateien": [
+    "stellarator/gx_vergleich.py",
+    "stellarator/gx_formen.py",
+    "stellarator/formen_vergleich.py",
+    "stellarator/paarvergleich_bild.py",
+    "stellarator/zufall_gegen_pi.py",
+    "sim/gx_pilot/ERGEBNIS.md",
+    "sim/spulenfreundlich/vergleich",
+    "docs/recherche/spulen_suche/zufall_gegen_pi.png"
+   ],
+   "req": [
+    "REQ-F11",
+    "REQ-F13",
+    "REQ-F02"
+   ],
+   "wer": [
+    "Mensch",
+    "Opus",
+    "Sonnet",
+    "PI",
+    "Maschine"
+   ],
+   "ergebnis": "Turbulenz-Ersatzmaß (B-073) und Gyrokinetik GX auf der RTX 3090 (B-074) mit gleicher Reihenfolge; Zufall gegen PI (B-075): PI nur nfp-2-Filter, innerhalb nfp 2 wie Zufall; Paarvergleich mit Gewichten des Autors (B-076): DK8s6qwo bleibt vorn.",
+   "beleg": "BEFUNDE B-073…B-076 (Titel); ERINNERUNGEN 2026-11-12 19:40 (Gewichte des Nutzers)"
+  },
+  {
+   "id": "H13",
+   "name": "Berichte, Vortrag, Videos (laufend)",
+   "von": "2026-10-25",
+   "bis": "2026-11-12",
+   "befunde": "",
+   "commits": [
+    "7324937",
+    "9cf46ba",
+    "bc478e1",
+    "cc264b9",
+    "4612ba4",
+    "96d9d8a",
+    "2b9586b"
+   ],
+   "dateien": [
+    "bericht/projektbericht",
+    "bericht/surrogat",
+    "docs/filme",
+    "docs/recherche/spulen_suche/loop_evolution.mp4",
+    "README.md",
+    "docs/projekt/08_ki_einsatz_protokoll.md"
+   ],
+   "req": [
+    "REQ-D01",
+    "REQ-D04",
+    "REQ-D07",
+    "REQ-D10"
+   ],
+   "wer": [
+    "Mensch",
+    "Opus",
+    "Sonnet",
+    "Maschine"
+   ],
+   "ergebnis": "Projektbericht DE/EN seit 2026-10-25, Plasmafilm, Variantenfilm, Berichte als KI-generiert gekennzeichnet (2026-11-10), README nachgeführt, Vortragsseite als Artefakt (Versionen V4 bis V22 nach ERINNERUNGEN). Nachträgliche Phase, Datumsbereich ergibt sich aus den Commits. Keine eigene B-Nummer.",
+   "beleg": "Commits 7324937, cc264b9, 4612ba4, 96d9d8a; ERINNERUNGEN 2026-11-10 14:09 (KI-generiert), 2026-11-10 15:14 (alles nach GitHub)"
+  }
+ ],
+ "entscheidungen": [
+  {
+   "datum": "2026-10-24",
+   "text": "Nicht W7-X nachbauen, sondern inverser Entwurf eines kompakten Stellarators (Nutzerwahl)",
+   "beleg": "ERINNERUNGEN, Abschnitt 'Neue Richtung (User, 2026-10-24): INVERS entwerfen'; B-017",
+   "phase": "H02"
+  },
+  {
+   "datum": "2026-10-24",
+   "text": "PicoGK nur Option; Standardweg gmsh/OCC -> STEP -> Elmer",
+   "beleg": "ERINNERUNGEN Entscheidungen (2026-10-24 PicoGK nur Option); B-015",
+   "phase": "H02"
+  },
+  {
+   "datum": "2026-10-24",
+   "text": "Spulengehäuse als Variable Section Sweep in FreeCAD (Idee des Nutzers)",
+   "beleg": "BEFUNDE B-020; ERINNERUNGEN UEBERGABE 2026-10-24",
+   "phase": "H03"
+  },
+  {
+   "datum": "2026-10-28",
+   "text": "Bestehende AKW-Turbine verwenden, Rest möglichst einfach (Druckwasser, kein Blei, kein Helium)",
+   "beleg": "ERINNERUNGEN Abschnitt '2026-10-28 ENTSCHEIDUNG User: bestehende AKW-Turbine'",
+   "phase": "H05"
+  },
+  {
+   "datum": "2026-10-28",
+   "text": "Idee Nutzer: gestufte Struktur statt Gyroid mit Linienauflage; Gyroid als Zwei-Fluid-Tauscher",
+   "beleg": "ERINNERUNGEN '2026-10-28 IDEE User: gestufte Struktur', Zeile '2026-10-28 Nutzer-Idee: Gyroid besser als Zwei-Fluid-Waermetauscher'",
+   "phase": "H04"
+  },
+  {
+   "datum": "2026-10-28",
+   "text": "Fahrplan Forschung: der Reihe nach, Versuch teuer, Gelder",
+   "beleg": "ERINNERUNGEN, Zeile '2026-10-28 Fahrplan Richtung Forschung'",
+   "phase": "H13"
+  },
+  {
+   "datum": "2026-11-02",
+   "text": "Ziel geändert: robustester statt leichtester Entwurf (Gewicht egal)",
+   "beleg": "ERINNERUNGEN '2026-11-02 abends: Auswertung doe1 auf morgen verschoben'",
+   "phase": "H06"
+  },
+  {
+   "datum": "2026-11-03",
+   "text": "Wechsel von QA auf QI: ConStellaration-Brücke, Proximas Spulensätze an die Kette",
+   "beleg": "BEFUNDE B-028; ERINNERUNGEN 'Übergabe 2026-11-03 abends'",
+   "phase": "H07"
+  },
+  {
+   "datum": "2026-11-03",
+   "text": "Allgemeiner Weg STL -> STEP zurückgestellt (Nutzer)",
+   "beleg": "ERINNERUNGEN Nächste Schritte Punkt 0c; docs/plan_offene_punkte.md",
+   "phase": "H06"
+  },
+  {
+   "datum": "2026-11-04",
+   "text": "Plasma zuerst: Satzauswahl nach QI-Güte, Kollision und Spannung schließen nur Unrealistisches aus",
+   "beleg": "BEFUNDE B-031; ERINNERUNGEN 2026-11-04 13:14",
+   "phase": "H07"
+  },
+  {
+   "datum": "2026-11-04",
+   "text": "Spannungsmaßstab: p99 der heißesten Spule entscheidet (Nutzerentscheidung)",
+   "beleg": "BEFUNDE B-043; ERINNERUNGEN 2026-11-04 18:00",
+   "phase": "H07"
+  },
+  {
+   "datum": "2026-11-04",
+   "text": "500 MPa ist Richtwert, keine feste Grenze (Nutzer)",
+   "beleg": "BEFUNDE B-045",
+   "phase": "H07"
+  },
+  {
+   "datum": "2026-11-08",
+   "text": "Pilot autoresearch für die Plasmaform nach dem Vergleich K3/DATJ5FC",
+   "beleg": "ERINNERUNGEN 2026-11-08 14:05; B-065",
+   "phase": "H11"
+  },
+  {
+   "datum": "2026-11-10",
+   "text": "Alle Dokumente als KI-generiert kennzeichnen",
+   "beleg": "ERINNERUNGEN 2026-11-10 14:09",
+   "phase": "H13"
+  },
+  {
+   "datum": "2026-11-12",
+   "text": "Paarvergleich mit Gewichten des Autors (kreuzend 0,30, achter 0,25, Feldfehler 0,18 ...)",
+   "beleg": "BEFUNDE B-076; ERINNERUNGEN 2026-11-12 19:40",
+   "phase": "H12"
+  }
+ ]
+}
