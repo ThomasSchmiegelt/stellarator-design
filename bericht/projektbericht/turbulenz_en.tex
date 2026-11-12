@@ -1,0 +1,94 @@
+\section{Turbulence and shape choice: gyrokinetics (GX) and pairwise comparison}\label{sec:turbulenz}
+AI-generated (Claude Sonnet, specified by Opus), status 12 November 2026, 9:00. Finding B-074 (log \texttt{BEFUNDE.md}); expectations written before the runs are in \texttt{sim/gx\_pilot/ERWARTUNG.md}.
+
+\kasten{Where the plasmas and the coils come from.}{All plasma shapes shown here are \textbf{DATASET shapes} (ConStellaration), unmodified; they come from the pool \texttt{sim/spulenfreundlich}. VMEC++ computes the equilibrium of each shape.
+The coils in the pairwise comparison are \textbf{OWN coils} (Stage~2) with the fixed evaluation from \texttt{sim/spulenfreundlich}. This chapter contains no plasma shape of our own.}
+
+\kasten{Terms, briefly.}{\emph{Turbulence}: small eddies in the plasma carry heat outwards, much as stirring hot tea cools it faster than leaving it still. They decide how much heat is lost and how large the plant must be.
+\emph{Gyrokinetics}: a computing method that derives these eddies from the equations of motion of the particles; expensive, but needs no rule of thumb. \emph{GX}: one such program, running on the graphics card.
+\emph{Flux tube}: a thin tube around a single field line, computed as a sample for the whole plasma. \emph{Q$_i$/Q$_{\mathrm{GB}}$}: ion heat flux divided by a reference value that depends on size and field (gyro-Bohm normalisation).
+It serves only to compare shapes, not as a confinement value; smaller is better. \emph{Adiabatic electrons}: the electrons follow the eddies instantly instead of being computed themselves; this saves computing time.
+\emph{Proxy}: a purely geometric number derived from the plasma shape (``flux compression in regions of bad curvature''), supplied by the dataset for every shape. \emph{Spearman}: rank correlation; 1 means the same order, 0 no relation.
+\emph{Pareto front}: the shapes that no other shape beats in all criteria at once.}
+
+%----------------------------------------------------------------------
+\subsection{Why turbulence?}
+So far the project chose plasma shapes only by QI (quality of particle confinement) and by the coils: field error, installation space, assembly. Turbulence was left out, although it carries most of the heat out of the plasma and so sets the size of the plant.
+As a stand-in the dataset supplies a geometric number (B-073); the challenge limit is at most 0.9. The open question was whether this number puts the shapes in the right order. Only a real turbulence computation can settle that.
+
+\subsection{Method: GX on the graphics card}
+GX (Mandell et al., \emph{J. Plasma Phys.} 90, 905900402, 2024; MIT licence) was built without administrator rights. The earlier statement ``gyrokinetics is not feasible on this machine'' (B-073) is therefore \textbf{refuted}:
+one shape takes 12 to 25 minutes on the RTX~3090. The computation is nonlinear with adiabatic electrons, one flux tube on the surface $s=0.64$ (normalised magnetic flux, about 80\,\% of the plasma radius) at the field line $\alpha=0$,
+temperature gradient $a/L_T=3$, density gradient $a/L_n=1$ (gradient = relative change per minor plasma radius $a$), boundary condition ``linked'', averaged from $t=100$.
+All shapes get the same gradients; the result is a comparison value, not a confinement value.
+
+\subsection{Validation: re-running W7-X}
+Before any shape, the program's benchmark with the W7-X equilibrium (stellarator in Greifswald) was re-run. Expectation beforehand: within $\pm30\,\%$ of the paper value (Mandell et al., Fig.~7). The paper shows it only as a curve;
+it was read off at about 7, giving the band 4.9 to 9.1. Result: $5.95\pm0.03$ with the boundary condition ``fix aspect'' from the input, $5.99\pm0.05$ with ``linked''; that is $-15\,\%$ against the value read off, inside the band.
+The repository input is coarser than in the paper (48 instead of 128 points along the field line; $96\times96$ instead of $64\times192$ wavenumbers); whether that explains the $-15\,\%$ was not checked.
+The error given is the spread of four block means and underestimates the uncertainty of a single flux tube.
+\bild{gx_w7x_benchmark.png}{0.85}{GX re-run of W7-X: ion heat flux over time, two runs (short to $t=200$, long to $t=1000$). The grey band is the target band $\pm30\,\%$ around the value read from Fig.~7 of the paper (about 7). Labels in German.}
+\lesehilfe{Horizontal: computing time in program units; vertical: heat flux, normalised as in the text. The peak at the left is the eddies starting up and does not count; averaging starts right of the vertical line ($t=100$),
+the dashed line is the mean. Note that the curve fluctuates around the mean and stays inside the grey band.}
+
+\subsection{What went wrong}
+\begin{itemize}\itemsep1pt
+\item \textbf{NaN for one shape.} With the boundary condition ``fix aspect'' from the benchmark, DWzEhBMG gave NaN (not a number) from the first step. The magnetic shear (``shat'', how fast neighbouring field lines diverge) is 1.31 there, and the flux tube is cut to 0.8 turns;
+a smaller time step did not help. All shapes were then re-run with ``linked''. The boundary condition thus matters: with ``fix aspect'' DZrUR4dA gives 8.07 instead of 8.81 ($-8\,\%$).
+\item \textbf{B-073 refuted.} See above: the claim ``not feasible'' stood in the finding without a trial.
+\item \textbf{Crash on 11 November at 16:16.} The session ended while round~2 was running; the runs were restarted detached, 6 of 11 shapes had been saved, one started shape (at $t=25$) was lost and re-run (\texttt{sim/gx\_pilot/runde2.log}).
+\item \textbf{First 3D version wrong.} The flux tube was drawn in real space (\texttt{sim/gx\_pilot/turbulenz\_3d.html}). The first version, using raw gradient magnitudes, showed a tube 1.6 to 6.8\,m wide instead of about 0.5\,m (shear factor forgotten). The agent found the error itself in its own preview; the version was discarded. The width of 0.47 by 0.42\,m holds only under the ASSUMPTION of an ion gyroradius of 3.2\,mm (10\,keV, 5\,T).
+\end{itemize}
+
+\subsection{Result: GX against the proxy}
+\textbf{Round~1 (three shapes).} Expectation beforehand: same order as the proxy; differences below a factor of 1.5 count as not separated. Result: DZrUR4dA 8.81, DmC2qkhi 6.94, DWzEhBMG 5.25. The order agrees. The outer shapes differ by a factor of 1.68 (the highest shape has 68\,\% more heat flux than the best proxy shape),
+the neighbours only by 1.27 and 1.32, so by the rule set beforehand they are not separated. Three shapes give no rank correlation; hence round~2.
+
+\textbf{Round~2 (eleven more shapes, plus two latecomers).} Chosen were the ten best shapes by coil field error and three shapes with proxy below 0.9 that meet the construction rules. Expectation beforehand: Spearman over all shapes at least 0.6, and the shapes with proxy at most 0.9 have GX values below \emph{all} shapes with proxy at least 1.6.
+After round~2 (14 shapes, no NaN) the Spearman value was 0.56. With the latecomer DK8s6qwo, which moved into the top~10 through new results of the shape search, there are 15 shapes (0.59). With the second latecomer DfXvrph2 (12 Nov) there are 16 shapes and \textbf{Spearman 0.59} ($p=0.016$, own re-computation with \texttt{scipy}). \textbf{Both parts of the expectation are missed.}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrr}\toprule
+Shape (dataset, unmodified) & Proxy & GX $Q_i/Q_{\mathrm{GB}}$ & Error\\\midrule
+DEntRKGT & 0.77 & 3.91 & 0.07\\
+DGMtrTL2 & 1.35 & 4.54 & 0.05\\
+DWzEhBMG & 0.81 & 5.25 & 0.04\\
+DK8s6qwo & 1.56 & 5.89 & 0.08\\
+D799qKH8 & 2.48 & 6.36 & 0.03\\
+DmC2qkhi & 1.62 & 6.94 & 0.04\\
+DNghq7U6 & 0.86 & 6.97 & 0.25\\
+D2ua5xMD & 1.61 & 7.10 & 0.25\\
+DBszvkku & 1.44 & 7.20 & 0.05\\
+DE7p5RR4 & 0.82 & 7.67 & 0.12\\
+DHTy2o9U & 1.78 & 7.99 & 0.23\\
+DGozX5fj & 1.83 & 8.00 & 0.16\\
+DZrUR4dA & 1.91 & 8.81 & 0.04\\
+DfXvrph2 & 1.74 & 8.86 & 0.04\\
+DDWJg4NB & 1.72 & 9.11 & 0.04\\
+DD7wTXH9 & 1.75 & 11.60 & 0.26\\\midrule
+W7-X (reference) & -- & 5.99 & 0.05\\\bottomrule
+\end{tabular}
+\caption{GX heat flux per shape, sorted by GX value (smaller is better), with the geometric proxy (limit 0.9). Error: spread of four block means. W7-X is the re-run of the benchmark and not part of the rank correlation.}
+\end{table}
+
+Two of the four shapes with proxy at most 0.9 are indeed low (3.91 and 5.25; places 1 and 3 among all 16). DE7p5RR4 (proxy 0.82), however, has 7.67 and lies above three shapes with proxy at least 1.6 (D799qKH8, DmC2qkhi, D2ua5xMD); DNghq7U6 (0.86) with 6.97 lies above two.
+D799qKH8 has the worst proxy of the group (2.48) and only 6.36. The GX values span a factor of 3.0 (3.9 to 11.6).
+\bild{gx_alle_formen.png}{0.9}{GX heat flux against proxy for all 16 shapes (DATASET shapes, unmodified). Bars: error (spread of four block means), green: target band proxy $\le 0.9$ (ConStellaration), dotted: W7-X with GX. Labels in German.}
+\lesehilfe{Horizontal: the geometric proxy; vertical: the heat flux computed with GX; bottom left is good in both. If the proxy gave the correct order, the points would lie along a line from bottom left to top right. Note the points
+in the green band: two are low, two (DE7p5RR4, DNghq7U6) are above, and D799qKH8 far right lies only slightly above W7-X.}
+
+\textbf{Conclusion (fixed beforehand).} The proxy is not suited for screening out shapes. In the pairwise comparison only the GX value counts; the two are never mixed. If a shape lacks a GX value, the program names the shape and the command to compute it.
+Limits: one field line, one surface, adiabatic electrons, the same gradients for all shapes.
+
+\subsection{Pairwise comparison of the top 10 with six criteria}
+At the user's request GX entered the pairwise comparison (AHP, pairwise comparison of criteria) as the sixth criterion: coil field error, QI, side figure-eights (coils that look like an 8 from the side), crossing neighbour coils, build height and turbulence (GX).
+The ten best shapes by field error are rated (coils: own, fixed evaluation). \textbf{All ten lie on the Pareto front}, and each of the six criteria has a different best shape: field error DZrUR4dA, QI DDWJg4NB, side figure-eights DGozX5fj, crossing coils DK8s6qwo,
+build height DmC2qkhi, turbulence DGMtrTL2. With equal weights DK8s6qwo wins with 0.64, and in 6 of 7 weightings (each criterion once at triple weight, plus equal); only with triple QI does DDWJg4NB win. DK8s6qwo ranks 10th in QI and still wins.
+The earlier favourite DZrUR4dA falls to place 7 (0.44).
+\bild{gx_paarvergleich_kriterien.png}{1.0}{Pairwise comparison of the top 10 (DATASET shapes, unmodified; coils: own sets). Rows: shapes, ordered by score at equal weights (in brackets); columns: six criteria (column labels and table in the picture are German).}
+\lesehilfe{Each row is a shape, each column a criterion; each cell shows the value and the rank (1 = best shape in that column; smaller is better everywhere). Dark green is rank 1, dark red the worst rank. On the right: which shape alone
+leads in a criterion and who wins when that criterion counts triple. Note that no row is green throughout, and that the top row is deep red in the QI column.}
+\kasten{Key statement.}{A good plant needs many parameters. No shape leads in every column; the winner depends on the weighting.}
+
+\textbf{Caveat.} Equal weights are a placeholder; the user's judgement on the weights is still pending. The top~10 is final: all 361 shapes are scored (12 Nov 2026). DfXvrph2 (GX 8.86) entered in the morning while D2ua5xMD dropped out; the best of the last 58 shapes ranks 20th and needs no GX run.
+The ranking above therefore holds only for the status of this chapter.

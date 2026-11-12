@@ -1,4 +1,4 @@
-# Plan für die offenen Punkte (Stand 2026-11-03)
+# Plan für die offenen Punkte (Stand 2026-11-03, Ergänzungen 2026-11-11)
 
 Grundlage: Checkliste im README, ERINNERUNGEN, Ergebnisse der Entwurfsstudie doe1 und der Fahrplan für die Forschung
 (Frage → Literatur → Validierung → Unsicherheit → Review-Paket → Fachleute/Gelder → Versuch).
@@ -84,6 +84,11 @@ belastbar.
 - Tragring/Stützzylinder als eigenes FE-Bauteil zwischen den Lagerflecken (statt starrer Einspannung), Keil und
   Gehäuse als ein Körper (gemeinsame Knoten statt Verbinder) – Vergleich der Spannungen am Lager.
 - Verguss: in der Rechnung schon enthalten (2 cm, E 10 GPa); im 3D-Modell → Punkt 12.
+- **Kräfte aus der Spulenebene (2026-11-11):** Spulen erfahren Kräfte aus ihrer Ebene heraus, die nur durch gegenseitiges
+  Abstützen der Spulen aufgenommen werden (Zohm, Video Nr. 10, 9:51–10:04, mündlich; docs/recherche/urknall_playlist.md). Prüfen, welcher Anteil der
+  Lorentzkraft im Projekt aus der Ebene wirkt und ob die Verbinder ihn tragen. Einordnung: W7-X-Struktur 100–150 MPa bei 3 T
+  auf der Achse (Video Nr. 04, 43:41–43:52); Kräfte wachsen mit B² (Nr. 08, 44, 45). Projekt B₀ = 6,5 T: Die 500-MPa-Grenze
+  bleibt Annahme. W7-X-Rückblick: Kryostat zu knapp, Stützstruktur mit Zentralring „kein gutes Konzept“ (Nr. 04, 16:33–17:02).
 
 ## 5 Review-Paket Festigkeit
 
@@ -101,11 +106,28 @@ Ersatzmaß wie die Abweichung von der Quasisymmetrie im Spulenfeld), Vergleich w
 1-D-Transport (Profile), Linien- und Zyklotronstrahlung, Divertorlast mit Randstrahlung; Blanket-Dicke aus einer
 einfachen Neutronik (z. B. OpenMC, 1-D-Kugel-/Zylinderschalen) statt angenommen – bestimmt Package und Abstand
 Spule–Plasma, also auch die Festigkeit.
+Divertor (2026-11-11): Stellarator ohne Divertorspule, W7-X mit Insel-Divertor, wassergekühlt für 10 MW/m² ausgelegt
+(Quelle 22 Endler et al. in docs/bauteile.md; Messwerte Nachtrag B-039). Für die eigenen Plasmaformen offen: Lage der Randinseln.
+Divertorlast schärfen (2026-11-11, docs/recherche/urknall_playlist.md): 10 MW/m² sind nur mit Strahlungskühlung (Stickstoff) bzw. abgelöstem Plasma
+erreichbar, ohne über 60 MW/m² (Nr. 08, 11:53–12:05; ungemindert über 30 MW/m², Nr. 31, unsicher). Die Breite der
+Wärmeabfuhrschicht wächst nicht mit der Maschinengröße (Nr. 49, 27:16). Projekt: 305 MW auf ≥ 31 m² setzt voraus, dass
+die Last gleichmäßig auf 31 m² trifft. Zu rechnen: Anteil, der abgestrahlt werden muss, und benetzte Fläche aus Abfuhrbreite
+× Länge der Auftrefflinien (W7-X gemessen 2–4 cm, Nachtrag B-039).
+Tritiumbedarf (2026-11-11, eigene Rechnung, Claude Opus): Verbrauch = P_fus · t / 17,59 MeV × Masse Tritium.
+1 GW Fusionsleistung über ein Volllastjahr: 56,1 kg. Projekt P_fus = 3053 MW (kopplung.py, Stufe 0): **171 kg/a, 469 g/Tag**
+bei Volllast. Passt zu den Video-Angaben, wenn man den Bezug beachtet: 54 kg je GW (Fusionsleistung) [Nr. 01, 4:37],
+500 g/Tag (Nr. 56, 3:36) für ein Kraftwerk dieser Größe. Weltweit zivil verfügbar laut Video etwa 35–40 kg (unsicher):
+Das Projekt muss vom ersten Jahr an brüten (Brutrate > 1). Literaturwert für Verbrauch und Inventar vor Verwendung belegen.
 
 ## 12 Verguss im 3D-Modell
 Nur ein Ausschnitt (eine Spule, ein Segment) mit Voxeln ≤ 8 mm, damit die 2-cm-Schicht sichtbar wird.
 
 ## 7, 8, 10, 11 Weitere Themen
+
+**Blanket-Kühlmittel Helium als Variante (2026-11-11):** Gas (Helium) erlaubt eine höhere Kühltemperatur als Wasser und damit
+einen besseren Wirkungsgrad (Zohm, Video Nr. 01, 13:29; docs/recherche/urknall_playlist.md). Projekt bleibt bei WCLL (Wasser, 300 °C). Notiert als Variante für
+die Wärmebilanz: höhere Austrittstemperatur gegen Pumpleistung (Gas) und Wärmeübergang. EU-DEMO führt mit HCPB ein Helium-Konzept;
+vor Verwendung belegen.
 
 Reihenfolge wie in der Tabelle; jedes Thema beginnt mit Frage und Literatur. Details stehen in ERINNERUNGEN und in den
 Plänen zum Gyroid-Tauscher und zur Blei-Kühlung.

@@ -1,0 +1,94 @@
+\section{Turbulenz und Formenwahl: Gyrokinetik (GX) und Paarvergleich}\label{sec:turbulenz}
+KI-generiert (Claude Sonnet nach Vorgabe von Opus), Stand 12.11.2026 9 Uhr. Befund B-074 (Protokoll \texttt{BEFUNDE.md}), Erwartung vor den Rechnungen in \texttt{sim/gx\_pilot/ERWARTUNG.md}.
+
+\kasten{Woher die Plasmen und die Spulen kommen.}{Alle hier gezeigten Plasmaformen sind \textbf{DATENSATZ-Formen} (ConStellaration), unverändert; sie stammen aus dem Pool \texttt{sim/spulenfreundlich}. Das
+Gleichgewicht zu jeder Form rechnet VMEC++. Die Spulen im Paarvergleich sind \textbf{EIGENE Spulen} (Stage~2) mit der festen Bewertung aus \texttt{sim/spulenfreundlich}. Es gibt in diesem Kapitel keine eigene Plasmaform.}
+
+\kasten{Begriffe, kurz.}{\emph{Turbulenz}: Kleine Wirbel im Plasma tragen Wärme nach außen, ähnlich wie Quirlen in einer Tasse heißen Tee schneller kühlt als Stehenlassen. Sie bestimmen,
+wie viel Wärme verloren geht und wie groß die Anlage sein muss. \emph{Gyrokinetik}: Rechenverfahren, das diese Wirbel aus den Bewegungsgleichungen der Teilchen berechnet; teuer, aber ohne Faustformel.
+\emph{GX}: ein solches Programm, läuft auf der Grafikkarte. \emph{Flussröhre}: ein dünner Schlauch um eine einzige Feldlinie, der als Stichprobe für das ganze Plasma gerechnet wird.
+\emph{Q$_i$/Q$_{\mathrm{GB}}$}: Wärmefluss der Ionen, geteilt durch einen Bezugswert, der von Größe und Feld abhängt (gyro-Bohm-Normierung). Er taugt nur zum Vergleich
+von Formen, nicht als Einschlusswert; kleiner ist besser. \emph{Adiabatische Elektronen}: Die Elektronen folgen den Wirbeln sofort, statt selbst gerechnet zu werden; das spart Rechenzeit. 
+\emph{Ersatzmaß}: ein rein geometrischer Wert aus der Plasmaform („Flusskompression in Gebieten schlechter Krümmung“), den der Datensatz für jede Form mitliefert. \emph{Spearman}: Rangkorrelation; 1 heißt gleiche Reihenfolge,
+0 keine Beziehung. \emph{Pareto-Front}: Menge der Formen, die keine andere in allen Kriterien zugleich schlägt.}
+
+%----------------------------------------------------------------------
+\subsection{Wozu Turbulenz?}
+Bisher wählte das Projekt Plasmaformen nur nach QI (Güte des Teilcheneinschlusses) und nach den Spulen: Feldfehler, Bauraum, Montierbarkeit. Turbulenz blieb außen vor, obwohl sie den
+größten Teil der Wärme aus dem Plasma trägt und damit die Baugröße bestimmt. Als Ersatz lieferte der Datensatz ein geometrisches Maß (B-073); die Grenze der Challenge liegt bei höchstens 0,9.
+Offen war, ob dieses Maß die Formen in die richtige Reihenfolge bringt. Das lässt sich nur mit einer echten Turbulenzrechnung prüfen.
+
+\subsection{Methode: GX auf der Grafikkarte}
+GX (Mandell et al., \emph{J. Plasma Phys.} 90, 905900402, 2024; Lizenz MIT) wurde ohne Administratorrechte gebaut. Die frühere Aussage „Gyrokinetik ist auf diesem Rechner nicht machbar“ (B-073) ist damit \textbf{widerlegt}:
+eine Form braucht 12 bis 25 Minuten auf der RTX~3090. Gerechnet wird nichtlinear mit adiabatischen Elektronen, eine Flussröhre auf der Fläche $s=0{,}64$ (normierter Magnetfluss, etwa 80\,\% des Plasmaradius) an der Feldlinie $\alpha=0$,
+Temperaturgradient $a/L_T=3$, Dichtegradient $a/L_n=1$ (Gradient = relative Änderung je kleinem Plasmaradius $a$), Randbedingung „linked“, Mittelung ab $t=100$.
+Alle Formen erhalten dieselben Gradienten; das Ergebnis ist ein Vergleichswert, kein Einschlusswert.
+
+\subsection{Validierung: Nachrechnung von W7-X}
+Vor jeder Form wurde der Benchmark des Programms mit dem Gleichgewicht von W7-X (Stellarator in Greifswald) nachgerechnet. Erwartung vorher: innerhalb $\pm30\,\%$ des Papierwerts (Mandell et al., Abb.~7). Der Wert steht dort nur als Kurve und
+wurde bei etwa 7 abgelesen, daraus das Band 4,9 bis 9,1. Ergebnis: $5{,}95\pm0{,}03$ mit der Randbedingung „fix aspect“ aus der Eingabe, $5{,}99\pm0{,}05$ mit „linked“; das sind $-15\,\%$ gegen den abgelesenen Wert, im Band. Die Eingabe aus dem Repo ist gröber als im Paper (48 statt 128 Punkte entlang der Feldlinie; $96\times96$ statt $64\times192$ Wellenzahlen); ob das die $-15\,\%$ erklärt, wurde nicht geprüft.
+Die Fehlerangabe ist die Streuung von vier Blockmitteln und unterschätzt die Unsicherheit einer einzelnen Flussröhre.
+\bild{gx_w7x_benchmark.png}{0.85}{GX-Nachrechnung W7-X: Ionen-Wärmefluss über der Zeit, zwei Läufe (kurz bis $t=200$, lang bis $t=1000$). Das graue Band ist das Zielband $\pm30\,\%$ um den aus Abb.~7 des Papers abgelesenen Wert (etwa 7).}
+\lesehilfe{Waagerecht die Rechenzeit in Programmeinheiten, senkrecht der Wärmefluss, normiert wie im Text. Der Peak links ist das Anlaufen der Wirbel und zählt nicht; gemittelt wird erst rechts der senkrechten Linie (ab $t=100$),
+die gestrichelte Linie ist das Mittel. Man achte darauf, dass die Kurve um das Mittel schwankt und innerhalb des grauen Bandes bleibt.}
+
+\subsection{Was schiefging}
+\begin{itemize}\itemsep1pt
+\item \textbf{NaN bei einer Form.} Mit der Randbedingung „fix aspect“ aus dem Benchmark lieferte DWzEhBMG vom ersten Schritt an NaN (keine Zahl). Die Magnetfeldverscherung („shat“, Maß für das Auseinanderlaufen benachbarter Feldlinien) beträgt dort 1,31, und die Flussröhre wird auf 0,8 Umläufe gekürzt;
+auch ein kleinerer Zeitschritt half nicht. Alle Formen wurden danach mit „linked“ neu gerechnet. Die Randbedingung ist also nicht gleichgültig: DZrUR4dA liefert mit „fix aspect“ 8,07 statt 8,81 ($-8\,\%$).
+\item \textbf{B-073 widerlegt.} Siehe oben: Die Behauptung „nicht machbar“ stand ohne Versuch im Befund.
+\item \textbf{Absturz am 11.11.\ um 16:16.} Die Sitzung brach ab, während Runde~2 lief; die Läufe wurden losgelöst neu gestartet, 6 von 11 Formen waren gerettet, eine angefangene Form (bei $t=25$) ging verloren und wurde neu gerechnet (\texttt{sim/gx\_pilot/runde2.log}).
+\item \textbf{Erste 3D-Fassung falsch.} Die Flussröhre wurde im echten Raum dargestellt (\texttt{sim/gx\_pilot/turbulenz\_3d.html}). Die erste Fassung mit rohen Gradientenbeträgen zeigte eine Röhre von 1,6 bis 6,8\,m Breite statt etwa 0,5\,m (Verscherungsfaktor vergessen). Den Fehler fand der Agent selbst in der Vorschau; die Fassung wurde verworfen. Die Breite von 0,47 mal 0,42\,m gilt nur mit der ANNAHME eines Ionen-Gyroradius von 3,2\,mm (10\,keV, 5\,T).
+\end{itemize}
+
+\subsection{Ergebnis: GX gegen Ersatzmaß}
+\textbf{Runde~1 (drei Formen).} Erwartung vorher: gleiche Reihenfolge wie das Ersatzmaß; Unterschiede unter Faktor 1,5 gelten als nicht getrennt. Ergebnis: DZrUR4dA 8,81, DmC2qkhi 6,94, DWzEhBMG 5,25. Die Reihenfolge stimmt. Die äußeren Formen unterscheiden sich um den Faktor 1,68 (die höchste Form hat 68\,\% mehr Wärmefluss als die beste Ersatzmaß-Form),
+die Nachbarn nur um 1,27 und 1,32, nach der Vorab-Regel also nicht getrennt. Aus drei Formen folgt keine Rangkorrelation; deshalb Runde~2.
+
+\textbf{Runde~2 (elf weitere Formen, dazu zwei Nachzügler).} Gewählt wurden die zehn besten Formen nach Feldfehler der Spulen und drei Formen mit Ersatzmaß unter 0,9, die die Bauregeln erfüllen. Erwartung vorher: Spearman über alle Formen mindestens 0,6, und die Formen mit Ersatzmaß höchstens 0,9 haben GX-Werte unter \emph{allen} Formen mit Ersatzmaß mindestens 1,6.
+Nach Runde~2 (14 Formen, kein NaN) lag der Spearman bei 0,56. Mit dem Nachzügler DK8s6qwo, der durch neue Ergebnisse der Formensuche in die Top~10 rückte, sind es 15 Formen (0,59). Mit dem zweiten Nachzügler DfXvrph2 (12.11.) sind es 16 Formen und \textbf{Spearman 0,59} ($p=0{,}016$, eigene Nachrechnung mit \texttt{scipy}). \textbf{Beide Teile der Erwartung sind verfehlt.}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrr}\toprule
+Form (Datensatz, unverändert) & Ersatzmaß & GX $Q_i/Q_{\mathrm{GB}}$ & Fehler\\\midrule
+DEntRKGT & 0,77 & 3,91 & 0,07\\
+DGMtrTL2 & 1,35 & 4,54 & 0,05\\
+DWzEhBMG & 0,81 & 5,25 & 0,04\\
+DK8s6qwo & 1,56 & 5,89 & 0,08\\
+D799qKH8 & 2,48 & 6,36 & 0,03\\
+DmC2qkhi & 1,62 & 6,94 & 0,04\\
+DNghq7U6 & 0,86 & 6,97 & 0,25\\
+D2ua5xMD & 1,61 & 7,10 & 0,25\\
+DBszvkku & 1,44 & 7,20 & 0,05\\
+DE7p5RR4 & 0,82 & 7,67 & 0,12\\
+DHTy2o9U & 1,78 & 7,99 & 0,23\\
+DGozX5fj & 1,83 & 8,00 & 0,16\\
+DZrUR4dA & 1,91 & 8,81 & 0,04\\
+DfXvrph2 & 1,74 & 8,86 & 0,04\\
+DDWJg4NB & 1,72 & 9,11 & 0,04\\
+DD7wTXH9 & 1,75 & 11,60 & 0,26\\\midrule
+W7-X (Bezug) & -- & 5,99 & 0,05\\\bottomrule
+\end{tabular}
+\caption{GX-Wärmefluss je Form, nach GX-Wert sortiert (kleiner ist besser), mit dem geometrischen Ersatzmaß (Grenze 0,9). Fehler: Streuung von vier Blockmitteln. W7-X ist die Nachrechnung des Benchmarks, kein Teil der Rangkorrelation.}
+\end{table}
+
+Zwei der vier Formen mit Ersatzmaß höchstens 0,9 liegen tatsächlich unten (3,91 und 5,25; Platz 1 und 3 unter allen 16). DE7p5RR4 (Ersatzmaß 0,82) hat aber 7,67 und liegt über drei Formen mit Ersatzmaß mindestens 1,6 (D799qKH8, DmC2qkhi, D2ua5xMD); DNghq7U6 (0,86) mit 6,97 liegt über zwei. D799qKH8 hat das schlechteste Ersatzmaß der Gruppe (2,48) und nur 6,36.
+Die Spanne der GX-Werte ist ein Faktor 3,0 (3,9 bis 11,6). \bild{gx_alle_formen.png}{0.9}{GX-Wärmefluss gegen Ersatzmaß für alle 16 Formen (DATENSATZ-Formen, unverändert). Balken: Fehler (Streuung von vier Blockmitteln), grün: Zielband Ersatzmaß $\le 0{,}9$ (ConStellaration), gepunktet: W7-X mit GX.}
+\lesehilfe{Waagerecht das geometrische Ersatzmaß, senkrecht der mit GX gerechnete Wärmefluss; links unten ist beides gut. Gäbe das Ersatzmaß die Reihenfolge richtig wieder, lägen die Punkte von links unten nach rechts oben auf einer Linie. Man achte auf die Punkte
+im grünen Band: Zwei liegen unten, zwei (DE7p5RR4, DNghq7U6) darüber, und D799qKH8 ganz rechts liegt nur wenig über W7-X.}
+
+\textbf{Folgerung (vorher festgelegt).} Das Ersatzmaß taugt nicht zum Aussieben von Formen. Im Paarvergleich zählt nur der GX-Wert; beide werden nicht gemischt. Fehlt für eine Form der GX-Wert, nennt das Programm die Form und den Rechenbefehl.
+Grenzen: eine Feldlinie, eine Fläche, adiabatische Elektronen, gleiche Gradienten für alle Formen.
+
+\subsection{Paarvergleich der Top 10 mit sechs Kriterien}
+Auf Wunsch des Nutzers ging GX als sechstes Kriterium in den Paarvergleich (AHP, paarweiser Vergleich der Kriterien) ein: Feldfehler der Spulen, QI, Seiten-Achter (Spulen, die von der Seite wie eine 8 aussehen), kreuzende Nachbarspulen, Bauhöhe und Turbulenz (GX).
+Bewertet werden die zehn besten Formen nach Feldfehler (Spulen: eigene, feste Bewertung). \textbf{Alle zehn liegen auf der Pareto-Front}, und jedes der sechs Kriterien hat eine andere beste Form: Feldfehler DZrUR4dA, QI DDWJg4NB, Seiten-Achter DGozX5fj, kreuzende Spulen DK8s6qwo,
+Bauhöhe DmC2qkhi, Turbulenz DGMtrTL2. Bei gleichen Gewichten gewinnt DK8s6qwo mit 0,64, in 6 von 7 Gewichtungen (jedes Kriterium einmal dreifach gewichtet, dazu gleich); nur bei dreifachem QI gewinnt DDWJg4NB. DK8s6qwo hat beim QI den Rang 10 und gewinnt trotzdem.
+Die frühere Favoritin DZrUR4dA fällt auf Platz 7 (0,44).
+\bild{gx_paarvergleich_kriterien.png}{1.0}{Paarvergleich der Top 10 (DATENSATZ-Formen, unverändert; Spulen: eigene Sätze). Zeilen: Formen, nach Punktzahl bei gleichen Gewichten geordnet (in Klammern); Spalten: sechs Kriterien (Beschriftung der Spalten und Tabelle im Bild deutsch).}
+\lesehilfe{Jede Zeile ist eine Form, jede Spalte ein Kriterium; in jedem Feld stehen der Wert und der Rang (1 = beste Form in dieser Spalte, kleiner ist überall besser). Dunkelgrün ist Rang 1, dunkelrot der schlechteste Rang. Rechts: welche Form allein
+in einem Kriterium vorn liegt und wer gewinnt, wenn dieses Kriterium dreifach zählt. Man achte darauf, dass keine Zeile durchgehend grün ist, und dass die oberste Zeile in der QI-Spalte tiefrot ist.}
+\kasten{Kernaussage.}{Eine gute Anlage braucht viele Parameter. Keine Form ist in allen Spalten vorn; der Sieger hängt von der Gewichtung ab.}
+
+\textbf{Vorbehalt.} Gleiche Gewichte sind ein Platzhalter; das Urteil des Nutzers über die Gewichte steht aus. Die Top~10 ist endgültig: Alle 361 Formen sind bewertet (12.11.2026). DfXvrph2 (GX 8,86) kam am Vormittag neu hinzu, D2ua5xMD fiel heraus; die beste der zuletzt bewerteten 58 Formen steht auf Rang 20 und braucht keine GX-Rechnung.
+Die Rangfolge oben gilt daher nur für den Stand dieses Kapitels.

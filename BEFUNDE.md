@@ -5,6 +5,50 @@
 
 ---
 
+## B-075 Zufall gegen PI (voller Pool, 361 Formen): PI wählt nur die richtige Periodenzahl, innerhalb nfp 2 nicht besser als der Zufall; die 5 besten Formen hat PI nie gewählt (2026-11-12, Opus) ⚠
+- **Anlass:** REST fertig 16:38 (361/361, verlauf.log). Auswertung nach Erwartung F-313 (10.11., vorher festgelegt).
+- **Herkunft:** alle 361 ConStellaration-Poolformen unverändert, feste Bewertung (bewerte.sh, Prüfsumme gleich). PI-Wahl = 100 Formen aus dem Ralph-Loop 9.11., Zufall = 261 Formen REST in Zufallsreihenfolge (Startwert 20261110).
+- **Werte:** PI best 2,40e-4 / Median 9,38e-4 / Bauregeln 61 % / nfp 2 91 %. Zufall best 1,56e-4 / Median 1,155e-3 / Bauregeln 51 % / nfp 2 67 %. Nur nfp 2: Median PI 9,05e-4, Zufall 8,99e-4 (gleich).
+- **Bootstrap** (10 000 Ziehungen à 100 aus 361, ohne Zurücklegen): PI-Bestwert besser als 14 % der Ziehungen (Median der Zufalls-Bestwerte 2,14e-4); PI-Median besser als 94 %.
+- **Vergleich mit F-313:** Zufallsmedian 8e-4–1,2e-3 ✓ (1,16e-3, höher als PI wie erwartet); Bauregeln 50–65 % ✓ (51 %); „0–3 Formen besser als 2,40e-4“ ✗: es sind 5 (DZrUR4dA, DK8s6qwo, DfXvrph2, DBszvkku, D799qKH8, alle nfp 2, alle regelkonform), PI-Bestwert Rang 6 von 361. Kriterium „PI-Bestwert über dem 80. Perzentil“ verfehlt.
+- **Deutung:** Der Vorteil im Median kommt ganz aus der Vorliebe für nfp 2 (eine einfache Regel, die PI aus den ersten Runden lernte). Innerhalb nfp 2 wählt PI wie der Zufall, beim Bestwert schlechter als eine typische Zufallsziehung. Für die Suche nach der besten Form war PI ein teurer Zufallsgenerator mit nfp-2-Filter. Die Top 10 (formen_vergleich) bleibt unverändert; die beste der 58 zuletzt bewerteten Formen steht auf Rang 20 → keine GX-Nachzügler.
+- **Grenzen:** eine PI-Schleife, ein Pool; PI sah nur Merkmale aus pool.tsv, nicht die Spulen. Bestwert ist eine Extremstatistik (wenige Formen entscheiden).
+- Dateien: stellarator/zufall_gegen_pi.py → sim/spulenfreundlich/vergleich/zufall_gegen_pi.json, .png (Zielbereich = Schwelle aus F-313).
+
+## B-074 Gyrokinetik (GX) auf der RTX 3090: gleiche Reihenfolge wie das Turbulenz-Ersatzmaß; die höchste Form hat 68 % mehr Wärmefluss als die beste Ersatzmaß-Form (2026-11-11, Opus) ⚠
+- **Anlass:** B-073; Nutzer „ja“ zum GX-Pilot. GX (Mandell et al., J. Plasma Phys. 90, 905900402, 2024; MIT) ohne sudo gebaut, Abhängigkeiten in ~/cae_projekte/gx/deps. B-073 „Gyrokinetik auf diesem Rechner nicht machbar“ ist damit überholt: 12–25 min je Flussröhre (nichtlinear, adiabatische Elektronen, t = 1000).
+- **Herkunft:** DZrUR4dA, DmC2qkhi, DWzEhBMG: Datensatzformen unverändert (Pool sim/spulenfreundlich), Gleichgewicht VMEC++ (default_high_fidelity). Ersatzwerte reproduziert: 1,91 / 1,62 / 0,81.
+- **Erwartung vorher:** sim/gx_pilot/ERWARTUNG.md (Benchmark ±30 %, Reihenfolge wie Ersatzmaß, Unterschiede < Faktor 1,5 gelten als nicht getrennt).
+- **Benchmark W7-X** (Repo-Eingabe, a/L_T = 3, a/L_n = 1, s = 0,64): Q_i/Q_GB = 5,95 ± 0,03 („fix aspect“), 5,99 ± 0,05 („linked“); Paper Abb. 7 ≈ 7 (abgelesen) → −15 %, im Band. Repo-Gitter gröber als im Paper.
+- **Formen (Lauf 2, „linked“, Mittel ab t = 100):** DZrUR4dA 8,81 ± 0,04; DmC2qkhi 6,94 ± 0,04; DWzEhBMG 5,25 ± 0,04 (W7-X 5,99). Ab t = 200 gemittelt < 1 % anders.
+- **Deutung:** Reihenfolge gleich wie Ersatzmaß. Äußere Formen um Faktor 1,68 getrennt; Nachbarn nur 1,27 bzw. 1,32 (nach Vorab-Regel nicht getrennt). DWzEhBMG liegt unter W7-X, die hohen nfp-2-Formen darüber. Ersatzmaß taugt als Vorfilter; GX für die Endauswahl.
+- **Randbedingung:** Lauf 1 („fix aspect“, Benchmark-Vorgabe) gibt für DWzEhBMG ab Schritt 1 NaN (shat 1,31, Röhre auf 0,8 Umläufe gekürzt), DZrUR4dA 8,07 statt 8,81 (−8 %). Für Formvergleiche „linked“ verwenden.
+- **Grenzen:** eine Feldlinie (alpha = 0), eine Fläche, adiabatische Elektronen, gleiche Gradienten für alle; Q_GB hängt von Größe und Feld ab, daher nur Vergleich, kein Einschlusswert.
+- Dateien: sim/gx_pilot/ (ERWARTUNG.md, ERGEBNIS.md, formen_vergleich.png, w7x_benchmark.png, kette2.sh), stellarator/gx_formen.py, gx_auswerten.py, gx_vergleich.py.
+- **Nachtrag (Nutzer „GX bitte in den Paarvergleich“):** formen_vergleich.py Kriterium turbulenz = GX (Vorgabe `--turbulenz gx`, Werte sim/gx_pilot/gx_werte.json); fehlt GX, nennt das Programm die Formen und `bash sim/gx_pilot/gx_rechnen.sh <ids>`; nie mit dem Ersatzmaß gemischt. Runde 2 (11 Formen) läuft, Erwartung in ERWARTUNG.md.
+- **Nachtrag 3D:** sim/gx_pilot/turbulenz_3d.html (stellarator/gx_3d.py): Flussröhre DZrUR4dA am echten Ort, animiert. Querschnitt 0,47 × 0,42 m nur mit ANNAHME ρ_i = 3,2 mm. 60 % der Feldenergie zonal.
+
+Nachtrag 2026-11-11 18:40 (Runde 2, 11 weitere Formen, KI-generiert): 14 Formen gültig, GX Q_i/Q_GB 3,9–11,6. Rangkorrelation zum Ersatzwert nur 0,56 (Erwartung ≥ 0,6 verfehlt); DE7p5RR4 (Ersatz 0,82) hat 7,67, D799qKH8 (Ersatz 2,48) nur 6,36. Folgerung (vorher festgelegt): Ersatzwert nicht zum Aussieben, im Paarvergleich nur GX. Details sim/gx_pilot/ERWARTUNG.md.
+
+Nachtrag 2026-11-12 (KI-generiert): Nachzügler DK8s6qwo 5,89 und DfXvrph2 8,86 → 16 Formen, Spearman 0,59 (Erwartung ≥ 0,6 weiter verfehlt). Paarvergleich Top 10 (sechs Kriterien): alle auf der Pareto-Front, jedes Kriterium andere beste Form; bei gleichen Gewichten DK8s6qwo vorn (0,64) trotz QI-Rang 10. Bericht Kap. 19.
+
+## B-073 Turbulenz-Ersatzmaß: Die besten Spulenformen liegen alle über der ConStellaration-Grenze; je höher das Plasma, desto schlechter (2026-11-11, Opus) ⚠
+- **Anlass:** Nutzerfrage „gyrokinetik im plasma was bedeutet das für uns“ (Zohm im ITER-Video: „ich würde mein Geld auf die Gyrokinetik setzen“).
+- **Lage im Projekt:** Stufe 0 bestimmt die Größe über die empirische Einschlussskalierung ISS04 mit H-Faktor; die Plasmaformen sind auf QI (Einschluss einzelner Teilchen) gewählt. Turbulenz ist nicht gerechnet. Gyrokinetik (Wochen bis Monate Rechenzeit je Fall laut Video Nr. 21) ist auf diesem Rechner nicht machbar.
+- **Ersatzmaß:** Der ConStellaration-Datensatz enthält „flux compression in regions of bad curvature“, laut Code „a geometrical proxy for turbulent transport“, Benchmark-Grenze ≤ 0,9 (constellaration/problems.py). Für alle 361 Poolformen vorhanden (sim/spulenfreundlich/vergleich/turbulenz_ersatz.json).
+- **Werte:** Pool Median 1,44 (0,58–3,65); nur 20/361 ≤ 0,9, davon 11 bewertet. Median nach Perioden: nfp 2: 1,47; 3: 1,43; 4: 1,20; 5: 1,10. Top 10 nach Feldfehler alle 1,35–2,48; DZrUR4dA 1,91, DmC2qkhi 1,62, DATJ5FC 1,01.
+- **Zusammenhang:** In den Top 10 Plasmahöhe gegen Ersatzmaß r = 0,87 (nur 10 Formen). Über 217 bewertete Formen r(log Feldfehler, Ersatzmaß) = −0,34: Formen mit kleinem Spulen-Feldfehler haben eher schlechtere Turbulenzwerte (Zielkonflikt).
+- **Unter ≤ 0,9 mit Bauregeln erfüllt:** DWzEhBMG 6,67e-4, DE7p5RR4 9,05e-4, DNghq7U6 1,47e-3, DEntRKGT 2,50e-3.
+- **Folge:** Ersatzmaß als 6. Kriterium in formen_vergleich.py. Die hohen nfp-2-Formen verlieren damit an Vorsprung. Das Maß ist geometrisch und grob; es ersetzt keine Turbulenzrechnung. Größe und Leistung aus Stufe 0 tragen die Unsicherheit von ISS04/H-Faktor.
+
+## B-072 Satteldach: ebene, frei geneigte Spulen an der hohen Zufallsform DZrUR4dA sind 330-mal ungenauer als freie Spulen (2026-11-11, Opus) ⚠
+- **Herkunft:** DZrUR4dAT8H3EQvsN4XPRnL (beste Form der REST-Zufallsreihe), DATENSATZ-Form aus dem Pool unverändert. Spulen EIGEN.
+- **Idee (Nutzer, 11.11. 09:20):** „das sind alles diese hohen formen. kann man dann fast wie ein satteldach stellen“. Form nfp 2: Plasma 28,6 m hoch, 34,6 m Außendurchmesser; Querschnitt bei 1/4 Periode eine um ca. 45° geneigte Platte 12 m über der Mitte (docs/recherche/spulen_suche/zufall_beste/querschnitte.png).
+- **Rechnung:** feste Bewertung (d100_n10_lr_s56_k95_r10_o4) + _p (CurvePlanarFourier, Ebene frei geneigt), sim/satteldach/. Erwartung vorher (ERWARTUNG.md): 5e-3 bis 3e-2.
+- **Ergebnis:** Feldfehler 5,16e-2 (frei: 1,56e-4), Bn_max 0,58. Grenzen verletzt: Krümmung und Montage (R/d 1,7, Rücklauf 4/40, 24 Nachbarpaare kreuzend). Achter an der Seite 0 (eben).
+- **Deutung:** Schlechter als erwartet, Größenordnung wie B-067 (DATJ5FC, nfp 4: 3,3e-2 bis 4,7e-2). Ebene Spulen reichen auch für die hohen nfp-2-Formen nicht. Offen bleibt der Mittelweg (Strafe auf Höhe aus der Ebene) oder Spulen zuerst.
+- **Nebenbefund zu prüfen:** F_max_MN im Ergebnis (1598 frei, 6756 eben) passt nicht zu 2,4 MN je Spule aus dem Elmer-Vergleich (B-0xx, NPC3). Skalierung prüfen, bevor die Zahl verwendet wird.
+
 ## B-071 Weniger Fourier-Ordnung von Anfang an (7 → 5 → 4) macht die Spulen für DATJ5FC kaum ruhiger: Die Unruhe kommt aus dem Plasma (2026-11-08, Opus) ⚠
 - **Herkunft:** DATJ5FC, DATENSATZ-Form unverändert. EIGENE Spulen n5, alle mit R ≥ 2·d und Montagestrafe.
 - **Feldfehler:** Ordnung 7: 1,36e-3; Ordnung 5: 1,71e-3; Ordnung 4: 2,51e-3. Grenzen eingehalten, Rücklauf 0, Nachbarkreuzungen 12/16/20.

@@ -20,6 +20,7 @@ Dieser Abschnitt erklärt die Bauteile vom Plasma bis ins Netz in einfachen Wort
 
 ### 5. Divertor.
  Der Divertor lenkt Teilchen und Wärme, die aus dem Plasma entweichen, entlang offener Feldlinien auf gesonderte Platten [11]. Er führt Asche und Verunreinigungen ab und hält das Plasma sauber [12]. Die Asche besteht vor allem aus Helium, das die D-T-Fusion erzeugt [4]; Vakuumpumpen saugen es ab. Beim ITER-Divertor liegt die Flächenlast stetig bei etwa 10 MW/m², in langsamen Spitzen bis 20 MW/m² [12]. Projekt: 305 MW auf mindestens 31 m² bei 10 MW/m². Er wird kalt gekühlt (Wasser 130 °C rein, 136 °C raus, 5 MPa), wie beim EU-DEMO [13]. Das Projekt setzt dafür eine Kupferlegierung an. Offen: die Lebensdauer unter dieser Last.
+ Beim Stellarator gibt es keine eigene Divertorspule wie beim Tokamak. Wendelstein 7-X nutzt einen Insel-Divertor: Magnetische Inseln, die von selbst an Flächen mit rationaler Verdrillung entstehen, werden von Divertorplatten geschnitten. Die Feldlinien laufen in einer Insel 150 bis 400 m weit, bevor sie auf eine Platte treffen [22]. W7-X hat 10 gleiche Divertoreinheiten (fünffache Symmetrie, je Modul oben und unten) [22]. Die wassergekühlten Platten sind so geformt, dass die Wärmelast örtlich 10 MW/m² nicht überschreitet, die technische Grenze [22]. Geplant sind Entladungen bis 30 min mit 10 MW Dauerheizleistung [22,3]. Gemessen bei W7-X: Auftrefflinie 2 bis 4 cm breit, höchste Divertorlast 3 bis 4 MW/m² (Nachtrag B-039). Offen im Projekt: Lage der Inseln für die eigenen Plasmaformen und die Divertorlast mit Randstrahlung (plan_offene_punkte.md, Punkt 9).
 
 ### 6. Primärkühlkreise.
  Die Kühlkreise von Blanket und Wand führen die Wärme heraus. Sie arbeiten mit Druckwasser wie im Druckwasserreaktor. Der hohe Druck hält das Wasser flüssig, obwohl es weit über 100 °C heiß ist [14]. Projekt: etwa 300 °C, $\Delta T = 30 K$, 17400 kg/s durch das Blanket und 1890 kg/s durch die Wand. Der Druck von rund 16 MPa ist eine Annahme. Auch die Wahl dieser Bedingungen ist eine Projekt-Entscheidung: Sie erlaubt eine Turbine aus einem Druckwasserreaktor. Offen: Die Leitungen müssen durch die engen Spulenspalte. Die Rechnung zeigt, dass sie dort reichlich Platz haben (mehr als Faktor 10 Reserve).
@@ -46,6 +47,10 @@ Dieser Abschnitt erklärt die Bauteile vom Plasma bis ins Netz in einfachen Wort
  Ein Transformator hebt die Generatorspannung an, denn bei hoher Spannung fließt für dieselbe Leistung weniger Strom, und die Leitungen verlieren weniger Wärme [21]. Das Hochspannungsnetz nimmt den Strom dann auf. Projekt: Ins Netz gehen netto 1000 MW. Das ist die Vorgabe, aus der die ganze Kette rückwärts gerechnet wurde. Verluste im Transformator sind in der Bilanz nicht angesetzt. Offen: Netzanschlusspunkt und Auslegung.
 
 
+### Betrieb: Dauer statt Puls.
+ Ein Stellarator braucht keinen großen Plasmastrom, das Magnetfeld kommt allein aus den Spulen [2]. Er kann deshalb dauerhaft laufen. Ein Tokamak wie der europäische Demonstrationsreaktor wäre gepulst: geplant waren 2 h Betrieb und 15 min Pause zum Abpumpen des Gefäßes. Die thermische Trägheit überbrückt die Pause nicht, deshalb braucht er einen Wärmespeicher (etwa 80 % der Leistung ins Netz, 20 % in den Speicher) [23]. Beim Tokamak gibt es außerdem Disruptionen: Bei ITER würde der Plasmastrom von 15 MA in 10 bis 100 ms zusammenbrechen. Das induziert Ströme in den Bauteilen im Gefäß, die mit dem Magnetfeld große Kräfte erzeugen. Beim Stellarator gibt es diese Disruptionen nicht [23]. Regelbar ist die Leistung vor allem durch die Turbine (8 bis 10 min Regelzeit), das Plasma selbst ist in 3 s aus [23]. Projekt: Dauerbetrieb, kein Wärmespeicher für Pulspausen, kein Lastfall Disruption.
+
+
 ## Quellen
 
 1. ITER Organization: What is fusion? \url{https://www.iter.org/sci/whatisfusion}, abgerufen 2026-10-31.
@@ -70,6 +75,8 @@ Dieser Abschnitt erklärt die Bauteile vom Plasma bis ins Netz in einfachen Wort
 19. Wikipedia: Cooling tower. <https://en.wikipedia.org/wiki/Cooling_tower>
 20. Wikipedia: Electric generator. <https://en.wikipedia.org/wiki/Electric_generator>
 21. Wikipedia: Transformer. <https://en.wikipedia.org/wiki/Transformer>
+22. Endler, M. et al.: Managing leading edges during assembly of the Wendelstein 7-X divertor. EUROfusion-Vorabdruck WPS1-PR(18) 20457 (2018), eingereicht bei Plasma Physics and Controlled Fusion. <https://scipub.euro-fusion.org/wp-content/uploads/eurofusion/WPS1PR18_20457_submitted.pdf>, abgerufen 2026-11-11.
+23. Videowissen: Interview auf dem ITER-Gelände mit einem Fusionsforscher aus Garching (Zuschauerfragen). Mündliche Aussage, maschinelles Transkript vom Nutzer bereitgestellt; Auswertung docs/recherche/video_iter_interview.md.
 
 ## Rechte und Zitierweise
 
