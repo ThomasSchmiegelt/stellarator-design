@@ -888,7 +888,23 @@ sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht 
 - 2026-11-12 19:30 ERWARTUNG vor Paarvergleich mit Nutzergewichten: kreuzend höchstes Gewicht, dann achter/feldfehler, bauhoehe kleinstes; DK8s6qwo bleibt vorn (einzige mit 0 kreuzend); CR < 0,1.
 - 2026-11-12 19:40 Gewichtung des Nutzers (15 Paare) → B-076/F-315: kreuzend 0,30, achter 0,25, feldfehler 0,18, qi 0,12, turbulenz 0,10, bauhoehe 0,06, CR 0,06; DK8s6qwo 0,69 vorn. Eingabe: sim/spulenfreundlich/vergleich/gewichte_nutzer_2026-11-12.txt (--kriterien "$(cat …)"). Kap. 19 + Vortrag V21 nachgeführt, gepusht.
 - 2026-11-12 20:40 Video Wahl im Merkmalsraum erweitert (Teil 2: 261 Zufallsformen als Quadrate, 50 s; loop_evolution.py video), Vortrag V22; eigene Bildunterschrift „gelbe Quadrate überall“ an Rohdaten widerlegt (30/36 beste bei Elongation 6,5–7,6) und korrigiert, bevor veröffentlicht. README: Abschnitt 11.–12.11. (GX, Paarvergleich, Zufall gegen PI), GX-Quelle.
-- 2026-11-12 21:00 Nutzer: „erst 1, dann 2, daraus soll ein Präsentationsvideo entstehen (Magnetfeld/Teilchenbahnen, Plasma, Temperatur, Steifigkeit, Vergessenes, komplettes Bauteil)“ + „Dokumentation muss in den Vortrag, für Montag wichtig (KI im Projektmanagement)“.
+- 2026-11-12 20:40 Nutzer: „erst 1, dann 2, daraus soll ein Präsentationsvideo entstehen (Magnetfeld/Teilchenbahnen, Plasma, Temperatur, Steifigkeit, Vergessenes, komplettes Bauteil)“ + „Dokumentation muss in den Vortrag, für Montag wichtig (KI im Projektmanagement)“.
   Schritt 1 (D1) fertig: docs/projekt/01_lastenheft.md (rekonstruiert, 23 REQ), 03_anforderungsverfolgung.md (erzeugt), 08_ki_einsatz_protokoll.md, 14_praesentationsvideo.md (6 Szenen, alles DK8s6qwo); pm/plan/plan_fusion.py (Zukunft K0–K11, V1–V3, B1–B2, 14,75 AT Annahme, krit. Pfad über K5 Plasma-Wand-Abstand), historie.json (Sonnet: 13 Phasen, 76/76 Befunde, 15 Entscheidungen; Opus-Stichprobe ok), wissensnetz.py/.html, zeitleiste.png, Obsidian wissen/ (272 Notizen). .claude/agents/sonnet-umsetzer.md für Fusion.
   D2 fertig: Vortrag V23 Abschnitt „KI im Projektmanagement“ (#pm, DE/EN, Batterie + Fusion, bedienbare Netze unter assets/pm/). Nicht gepusht (pm/ nicht in .gitignore-Whitelist; wissen/ besser lokal).
   Nächster Schritt: K0/K1 DK8s6qwo (ERWARTUNG.md vorher), V1 Storyboard mit Nutzer abstimmen.
+- 2026-11-12 20:47 K1 Stufe 0 DK8s6qwo: HTS R0 21,1 m, B0 10 T, Nb3Sn nicht machbar, Einschluss+Leiterfeld binden (B-077, F-318, sim/kette_dk8/ERGEBNIS_K1.md). Erwartung (Wandlast) falsch. Vor K2 Nutzer fragen: 21 m ok oder DfXvrph2/höheres iota prüfen?
+- 2026-11-12 20:52 Vergleich DfXvrph2 Stufe 0: HTS 21,2 m (Erwartung 20–22 getroffen) → kein Vorteil, DK8s6qwo bleibt. Offen: Nutzer entscheidet, ob 21 m ok (dann K2) oder Suche nach höherem iota. stellarator/dk8_stufe0_eingabe.py nimmt jetzt ID als Argument (Ausgabe sim/kette_<id8>).
+- 2026-11-12 21:10 Nutzer: Wissensnetz im Vortrag soll Stellarator zeigen, nicht Batterie → Bild ersetzt (fusion_wissensnetz.png, Phase H12 gewählt), Batterie nur als Link; Vortrag V24.
+- 2026-11-12 21:19 Nutzer: Netzplan nach REFA/DIN 69900 statt/neben Gantt → pm/plan/netzplan_din.py (Vorgangsknoten FAZ/D/FEZ, SAZ/GP/FP/SEZ, kritischer Pfad rot, lange Pfeile in Zeilenlücken; DE/EN-SVG), Vortrag V25: Umschalter Zeitleiste ↔ Netzplan im Abschnitt Projektmanagement. Nicht gepusht.
+
+### 2026-11-12 21:24 Vortragsseite V26: Batterie komplett raus (Nutzer: „die batterie soll komplett raus“)
+- Abschnitt „KI im Projektmanagement“ nur noch Stellarator: zwei Spalten Vergangenheit (rekonstruiert) / Zukunft (geplant, Netzplan 19 Vorgänge, Erwartung vor jeder Rechnung).
+- „Was schiefging“ jetzt mit Stellarator-Beispielen: falsche Bildunterschrift (F-316), Erwartung Anlagengröße daneben (B-077), Befundlücke 25.10.–3.11.
+- Ausblick-Karte Batterie und Link Wissensnetz Batterie entfernt; Asset assets/pm/batterie_wissensnetz.html gelöscht (lokal auch .png).
+- D2 in pm/plan/plan_fusion.py umbenannt („(Stellarator)“), Netzplan DIN, Zeitleiste, Wissensnetz neu erzeugt; Bildschirmfoto Wissensnetz neu. Sicherung V25-Texte im Scratchpad.
+
+### 2026-11-12 21:32 Offline-Fassung Vortrag (Nutzer: „und bitte jetzt noch eine offline Variante“)
+- Ordner ~/cae_projekte/vortrag_offline (106 MB) + vortrag_offline_2026-11-12.zip (81 MB), alle 61 veröffentlichten Dateien von V26.
+- three.js 0.160.0 mit esbuild zu assets/h2/stack_viewer_offline.js gebündelt (file:// erlaubt keine ES-Module/CDN), Plotly 2.35.2 lokal statt CDN in turbulenz_3d.html.
+- Test: Chromium ohne Netz, Seite + Turbulenz 3D + Stack (three.js-Canvas erzeugt) laufen. Nur GitHub-Links brauchen Internet.
+- Bei Änderung der Online-Seite Offline-Fassung neu bauen (de/en kopieren, Importmap/Modul-Skript ersetzen).

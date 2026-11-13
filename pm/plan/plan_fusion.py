@@ -16,7 +16,7 @@ RES = {"Mensch": "human", "Opus": "software", "Sonnet": "software", "Haiku": "so
 # Zukunft: id, Name, Dauer [AT], Vorgänger, Ressourcen, Notiz.  Jede Rechnung braucht vorher ERWARTUNG.md (REQ-D02).
 A = [
     ("D1", "Dokumentation nachholen: Lastenheft, Netzplan mit Vergangenheit, Wissensnetz, Obsidian", 0.5, [], ["Opus", "Sonnet"], "REQ-D08, läuft 2026-11-12"),
-    ("D2", "Vortragsseite: Abschnitt KI im Projektmanagement (Batterie + Fusion)", 0.5, ["D1"], ["Opus", "Sonnet"], "Termin Mo 16.11."),
+    ("D2", "Vortragsseite: Abschnitt KI im Projektmanagement (Stellarator)", 0.5, ["D1"], ["Opus", "Sonnet"], "Termin Mo 16.11."),
     ("K0", "Kandidat festlegen: DK8s6qwo (B-076), Herkunft und Ausgangsdaten sammeln", 0.25, ["D1"], ["Opus"], "Datensatzform unverändert"),
     ("K1", "Stufe 0 für DK8s6qwo: Größe auf 1 GW netto (R0, B0, Supraleiter), Gleichgewicht VMEC++ in voller Größe", 1, ["K0"], ["Opus", "Maschine"], "REQ-F01, Szene 2"),
     ("K2", "Spulen in voller Größe: Feld, Feldlinien, Poincaré, Kräfte, Bauregeln", 1, ["K1"], ["Sonnet", "Maschine"], "REQ-F04, F05, Szene 1"),

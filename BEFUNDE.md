@@ -5,6 +5,14 @@
 
 ---
 
+## B-077 Stufe 0 für DK8s6qwo: 1 GW braucht R0 21,1 m mit HTS, Nb3Sn nicht machbar; Einschluss und Leiterfeld binden, nicht die Wandlast (2026-11-12, Opus) ⚠
+- **Herkunft:** DK8s6qwo, Datensatzform unverändert (VMEC++-Gleichgewicht aus dem GX-Lauf), eigene Spulen (40, Abstand 1,32 a). Eingaben stellarator/dk8_stufe0_eingabe.py, Rechnung invers/stufe0_bilanz.py (Voreinstellungen = Annahmen).
+- **Werte (HTS):** R0 21,1 m, a 2,39 m, B0 10,0 T (Leiter 20 T), H_ISS04 1,298 (Grenze 1,3), Wandlast 0,79 MW/m², Spule–Plasma 3,15 m (nötig 1,3 m), 26,4 MA je Spule, Wickelpaket 0,81 m, Magnetenergie 507 GJ. Nb3Sn: nicht machbar bis R0 30 m.
+- **Erwartung vorher** (sim/kette_dk8/ERWARTUNG.md): R0 16–20 m, Wandlast bindet → knapp verfehlt und Ursache falsch: Oberfläche 6,9·R0² statt Torus 4,5·R0². Kleines iota (0,20 gegen 0,42 der QA-Form) kostet über ISS04 (iota^0,41) Einschlusszeit.
+- **Deutung:** Einfache Spulen gegen Größe: 21,1 m gegen 12,1 m (QA, A 6) und 10,4 m (A 4,5). Torfrage Spule–Plasma-Abstand vorläufig entschärft. 0-D, ±30 %; Gültigkeit ISS04 für diese QI-Form offen.
+- Dateien: sim/kette_dk8/ (ERWARTUNG.md, ERGEBNIS_K1.md, stufe1/, stufe2/), sim/invers/dk8_1GW/.
+- **Nachtrag Vergleich DfXvrph2** (Platz 2, Erwartung sim/kette_dfxvrph2/ERWARTUNG.md: 20–22 m, getroffen): HTS R0 21,2 m, a 2,54 m, B0 10,0 T, H 1,298, Wandlast 0,67 MW/m², Spule–Plasma 1,08·a = 2,74 m; Nb3Sn nicht machbar. Kein Größenvorteil → DK8s6qwo bleibt Kandidat (Paarvergleich, 0 kreuzende Spulen). Dateien sim/kette_dfxvrph2/, sim/invers/dfxvrph2_1GW/.
+
 ## B-076 Paarvergleich mit den Gewichten des Nutzers: DK8s6qwo bleibt vorn, Montage und Fertigung zählen am meisten (2026-11-12, Opus) ✅
 - **Eingabe:** 15 Paarurteile des Nutzers (Abfrage im Dialog, „wichtiger“ = Faktor 3), gespeichert in sim/spulenfreundlich/vergleich/gewichte_nutzer_2026-11-12.txt. Widerspruchszahl CR = 0,06 (< 0,1, brauchbar).
 - **Gewichte:** kreuzend 0,30, achter 0,25, feldfehler 0,18, qi 0,12, turbulenz 0,10, bauhoehe 0,06.

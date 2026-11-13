@@ -1,0 +1,399 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3910 540" width="3910" height="540" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="p" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#555"/></marker><marker id="pr" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#c0392b"/></marker></defs>
+<rect width="3910" height="540" fill="#fff"/>
+<text x="16" y="28" font-size="18" font-weight="bold">Netzplan nach DIN 69900 (Vorgangsknotennetz) · Stellarator, Zukunft ab 13.11.2026 · KI-generiert</text>
+<text x="16" y="52" font-size="12.5" fill="#333">Zeiten in Arbeitstagen ab 13.11.2026, Dauern = Annahmen · FAZ/FEZ frühester Anfang/Ende · SAZ/SEZ spätester Anfang/Ende · GP Gesamtpuffer · FP freier Puffer · rot = kritischer Pfad (GP = 0)</text>
+<rect x="16" y="96" width="230" height="104" rx="6" fill="#e8f0fa" stroke="#3a78b8" stroke-dasharray="5 3"/>
+<text x="26" y="126" font-size="12.5" fill="#1f4e79">Vorlauf: 13 Phasen</text>
+<text x="26" y="144" font-size="12.5" fill="#1f4e79">22.10.–12.11.2026 (rekonstruiert,…</text>
+<text x="26" y="162" font-size="12.5" fill="#1f4e79"></text>
+<path d="M520,148.0 C555.0,148.0 555.0,148.0 590,148.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M520,148.0 C555.0,148.0 555.0,286.0 590,286.0" fill="none" stroke="#c0392b" stroke-width="2.4" marker-end="url(#pr)"/>
+<path d="M820,286.0 C855.0,286.0 855.0,148.0 890,148.0" fill="none" stroke="#c0392b" stroke-width="2.4" marker-end="url(#pr)"/>
+<path d="M1120,148.0 C1155.0,148.0 1155.0,148.0 1190,148.0" fill="none" stroke="#c0392b" stroke-width="2.4" marker-end="url(#pr)"/>
+<path d="M1420,148.0 C1455.0,148.0 1455.0,148.0 1490,148.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M1120,148.0 C1155.0,148.0 1155.0,286.0 1190,286.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M1420,148.0 C1455.0,148.0 1455.0,286.0 1490,286.0" fill="none" stroke="#c0392b" stroke-width="2.4" marker-end="url(#pr)"/>
+<path d="M1120,148.0 C1155.0,148.0 1120,217.0 1155.0,217.0 L1755.0,217.0 C1790,217.0 1755.0,148.0 1790,148.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M1720,286.0 C1755.0,286.0 1755.0,148.0 1790,148.0" fill="none" stroke="#c0392b" stroke-width="2.4" marker-end="url(#pr)"/>
+<path d="M2020,148.0 C2055.0,148.0 2055.0,148.0 2090,148.0" fill="none" stroke="#c0392b" stroke-width="2.4" marker-end="url(#pr)"/>
+<path d="M1420,148.0 C1455.0,148.0 1420,217.0 1455.0,217.0 L1755.0,217.0 C1790,217.0 1755.0,286.0 1790,286.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M1720,286.0 C1755.0,286.0 1755.0,286.0 1790,286.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M1720,286.0 C1755.0,286.0 1755.0,424.0 1790,424.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M2320,148.0 C2355.0,148.0 2355.0,148.0 2390,148.0" fill="none" stroke="#c0392b" stroke-width="2.4" marker-end="url(#pr)"/>
+<path d="M2020,286.0 C2055.0,286.0 2020,217.0 2055.0,217.0 L2355.0,217.0 C2390,217.0 2355.0,148.0 2390,148.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M2020,424.0 C2055.0,424.0 2020,217.0 2055.0,217.0 L2355.0,217.0 C2390,217.0 2355.0,148.0 2390,148.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M1720,148.0 C1755.0,148.0 1720,217.0 1755.0,217.0 L2655.0,217.0 C2690,217.0 2655.0,148.0 2690,148.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M1420,286.0 C1455.0,286.0 1420,217.0 1455.0,217.0 L2655.0,217.0 C2690,217.0 2655.0,148.0 2690,148.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M2620,148.0 C2655.0,148.0 2655.0,148.0 2690,148.0" fill="none" stroke="#c0392b" stroke-width="2.4" marker-end="url(#pr)"/>
+<path d="M820,286.0 C855.0,286.0 855.0,286.0 890,286.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M1120,286.0 C1155.0,286.0 1120,217.0 1155.0,217.0 L2955.0,217.0 C2990,217.0 2955.0,148.0 2990,148.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M2920,148.0 C2955.0,148.0 2955.0,148.0 2990,148.0" fill="none" stroke="#c0392b" stroke-width="2.4" marker-end="url(#pr)"/>
+<path d="M3220,148.0 C3255.0,148.0 3255.0,148.0 3290,148.0" fill="none" stroke="#c0392b" stroke-width="2.4" marker-end="url(#pr)"/>
+<path d="M2920,148.0 C2955.0,148.0 2955.0,286.0 2990,286.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M3520,148.0 C3555.0,148.0 3555.0,148.0 3590,148.0" fill="none" stroke="#c0392b" stroke-width="2.4" marker-end="url(#pr)"/>
+<path d="M3220,286.0 C3255.0,286.0 3220,217.0 3255.0,217.0 L3555.0,217.0 C3590,217.0 3555.0,148.0 3590,148.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M246,148.0 C270,148.0 270,148.0 290,148.0" fill="none" stroke="#3a78b8" stroke-dasharray="4 3" marker-end="url(#p)"/>
+<g><title>D1: Dokumentation nachholen: Lastenheft, Netzplan mit Vergangenheit, Wissensnetz, Obsidian</title>
+<rect x="290" y="96" width="230" height="104" fill="#fdecea" stroke="#c0392b" stroke-width="2.2"/>
+<line x1="290" y1="126.58823529411765" x2="520" y2="126.58823529411765" stroke="#c0392b"/><line x1="290" y1="169.41176470588235" x2="520" y2="169.41176470588235" stroke="#c0392b"/>
+<line x1="366.6666666666667" y1="96" x2="366.6666666666667" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="443.33333333333337" y1="96" x2="443.33333333333337" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="347.5" y1="169.41176470588235" x2="347.5" y2="200" stroke="#c0392b"/>
+<line x1="405.0" y1="169.41176470588235" x2="405.0" y2="200" stroke="#c0392b"/>
+<line x1="462.5" y1="169.41176470588235" x2="462.5" y2="200" stroke="#c0392b"/>
+<text x="328.3333333333333" y="107" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="328.3333333333333" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">0</text>
+<text x="405.0" y="107" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="405.0" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">0,5</text>
+<text x="481.66666666666663" y="107" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="481.66666666666663" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">0,5</text>
+<text x="318.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="318.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0</text>
+<text x="376.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="376.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#c0392b">0</text>
+<text x="433.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="433.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0</text>
+<text x="491.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="491.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0,5</text>
+<text x="298" y="141.58823529411765" font-size="12.5" font-weight="bold" fill="#c0392b">D1</text>
+<text x="332" y="141.58823529411765" font-size="10.5">Dokumentation nachholen:</text>
+<text x="332" y="154.58823529411765" font-size="10.5">Lastenheft, Netzplan mit…</text>
+</g>
+<g><title>D2: Vortragsseite: Abschnitt KI im Projektmanagement (Stellarator)</title>
+<rect x="590" y="96" width="230" height="104" fill="#fafafa" stroke="#444" stroke-width="1.2"/>
+<line x1="590" y1="126.58823529411765" x2="820" y2="126.58823529411765" stroke="#444"/><line x1="590" y1="169.41176470588235" x2="820" y2="169.41176470588235" stroke="#444"/>
+<line x1="666.6666666666666" y1="96" x2="666.6666666666666" y2="126.58823529411765" stroke="#444"/>
+<line x1="743.3333333333334" y1="96" x2="743.3333333333334" y2="126.58823529411765" stroke="#444"/>
+<line x1="647.5" y1="169.41176470588235" x2="647.5" y2="200" stroke="#444"/>
+<line x1="705.0" y1="169.41176470588235" x2="705.0" y2="200" stroke="#444"/>
+<line x1="762.5" y1="169.41176470588235" x2="762.5" y2="200" stroke="#444"/>
+<text x="628.3333333333334" y="107" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="628.3333333333334" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">0,5</text>
+<text x="705.0" y="107" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="705.0" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">0,5</text>
+<text x="781.6666666666667" y="107" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="781.6666666666667" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">1</text>
+<text x="618.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="618.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">14,25</text>
+<text x="676.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="676.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">13,75</text>
+<text x="733.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="733.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">13,75</text>
+<text x="791.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="791.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">14,75</text>
+<text x="598" y="141.58823529411765" font-size="12.5" font-weight="bold" fill="#444">D2</text>
+<text x="632" y="141.58823529411765" font-size="10.5">Vortragsseite: Abschnitt KI im</text>
+<text x="632" y="154.58823529411765" font-size="10.5">Projektmanagement (Stellarator)</text>
+</g>
+<g><title>K0: Kandidat festlegen: DK8s6qwo (B-076), Herkunft und Ausgangsdaten sammeln</title>
+<rect x="590" y="234" width="230" height="104" fill="#fdecea" stroke="#c0392b" stroke-width="2.2"/>
+<line x1="590" y1="264.5882352941176" x2="820" y2="264.5882352941176" stroke="#c0392b"/><line x1="590" y1="307.4117647058824" x2="820" y2="307.4117647058824" stroke="#c0392b"/>
+<line x1="666.6666666666666" y1="234" x2="666.6666666666666" y2="264.5882352941176" stroke="#c0392b"/>
+<line x1="743.3333333333334" y1="234" x2="743.3333333333334" y2="264.5882352941176" stroke="#c0392b"/>
+<line x1="647.5" y1="307.4117647058824" x2="647.5" y2="338" stroke="#c0392b"/>
+<line x1="705.0" y1="307.4117647058824" x2="705.0" y2="338" stroke="#c0392b"/>
+<line x1="762.5" y1="307.4117647058824" x2="762.5" y2="338" stroke="#c0392b"/>
+<text x="628.3333333333334" y="245" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="628.3333333333334" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">0,5</text>
+<text x="705.0" y="245" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="705.0" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">0,25</text>
+<text x="781.6666666666667" y="245" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="781.6666666666667" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">0,75</text>
+<text x="618.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="618.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0,5</text>
+<text x="676.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="676.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#c0392b">0</text>
+<text x="733.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="733.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0</text>
+<text x="791.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="791.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0,75</text>
+<text x="598" y="279.5882352941176" font-size="12.5" font-weight="bold" fill="#c0392b">K0</text>
+<text x="632" y="279.5882352941176" font-size="10.5">Kandidat festlegen: DK8s6qwo</text>
+<text x="632" y="292.5882352941176" font-size="10.5">(B-076), Herkunft und…</text>
+</g>
+<g><title>K1: Stufe 0 für DK8s6qwo: Größe auf 1 GW netto (R0, B0, Supraleiter), Gleichgewicht VMEC++ in voller Größe</title>
+<rect x="890" y="96" width="230" height="104" fill="#fdecea" stroke="#c0392b" stroke-width="2.2"/>
+<line x1="890" y1="126.58823529411765" x2="1120" y2="126.58823529411765" stroke="#c0392b"/><line x1="890" y1="169.41176470588235" x2="1120" y2="169.41176470588235" stroke="#c0392b"/>
+<line x1="966.6666666666666" y1="96" x2="966.6666666666666" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="1043.3333333333333" y1="96" x2="1043.3333333333333" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="947.5" y1="169.41176470588235" x2="947.5" y2="200" stroke="#c0392b"/>
+<line x1="1005.0" y1="169.41176470588235" x2="1005.0" y2="200" stroke="#c0392b"/>
+<line x1="1062.5" y1="169.41176470588235" x2="1062.5" y2="200" stroke="#c0392b"/>
+<text x="928.3333333333334" y="107" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="928.3333333333334" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">0,75</text>
+<text x="1005.0" y="107" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="1005.0" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">1</text>
+<text x="1081.6666666666667" y="107" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="1081.6666666666667" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">1,75</text>
+<text x="918.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="918.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0,75</text>
+<text x="976.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="976.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#c0392b">0</text>
+<text x="1033.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="1033.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0</text>
+<text x="1091.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="1091.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">1,75</text>
+<text x="898" y="141.58823529411765" font-size="12.5" font-weight="bold" fill="#c0392b">K1</text>
+<text x="932" y="141.58823529411765" font-size="10.5">Stufe 0 für DK8s6qwo: Größe auf</text>
+<text x="932" y="154.58823529411765" font-size="10.5">1 GW netto (R0, B0,…</text>
+</g>
+<g><title>K2: Spulen in voller Größe: Feld, Feldlinien, Poincaré, Kräfte, Bauregeln</title>
+<rect x="1190" y="96" width="230" height="104" fill="#fdecea" stroke="#c0392b" stroke-width="2.2"/>
+<line x1="1190" y1="126.58823529411765" x2="1420" y2="126.58823529411765" stroke="#c0392b"/><line x1="1190" y1="169.41176470588235" x2="1420" y2="169.41176470588235" stroke="#c0392b"/>
+<line x1="1266.6666666666667" y1="96" x2="1266.6666666666667" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="1343.3333333333333" y1="96" x2="1343.3333333333333" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="1247.5" y1="169.41176470588235" x2="1247.5" y2="200" stroke="#c0392b"/>
+<line x1="1305.0" y1="169.41176470588235" x2="1305.0" y2="200" stroke="#c0392b"/>
+<line x1="1362.5" y1="169.41176470588235" x2="1362.5" y2="200" stroke="#c0392b"/>
+<text x="1228.3333333333333" y="107" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="1228.3333333333333" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">1,75</text>
+<text x="1305.0" y="107" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="1305.0" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">1</text>
+<text x="1381.6666666666665" y="107" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="1381.6666666666665" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">2,75</text>
+<text x="1218.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="1218.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">1,75</text>
+<text x="1276.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="1276.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#c0392b">0</text>
+<text x="1333.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="1333.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0</text>
+<text x="1391.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="1391.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">2,75</text>
+<text x="1198" y="141.58823529411765" font-size="12.5" font-weight="bold" fill="#c0392b">K2</text>
+<text x="1232" y="141.58823529411765" font-size="10.5">Spulen in voller Größe: Feld,</text>
+<text x="1232" y="154.58823529411765" font-size="10.5">Feldlinien, Poincaré, Kräfte,…</text>
+</g>
+<g><title>K3: Alphateilchen im Spulenfeld: Verlust, Wandtreffer</title>
+<rect x="1490" y="96" width="230" height="104" fill="#fafafa" stroke="#444" stroke-width="1.2"/>
+<line x1="1490" y1="126.58823529411765" x2="1720" y2="126.58823529411765" stroke="#444"/><line x1="1490" y1="169.41176470588235" x2="1720" y2="169.41176470588235" stroke="#444"/>
+<line x1="1566.6666666666667" y1="96" x2="1566.6666666666667" y2="126.58823529411765" stroke="#444"/>
+<line x1="1643.3333333333333" y1="96" x2="1643.3333333333333" y2="126.58823529411765" stroke="#444"/>
+<line x1="1547.5" y1="169.41176470588235" x2="1547.5" y2="200" stroke="#444"/>
+<line x1="1605.0" y1="169.41176470588235" x2="1605.0" y2="200" stroke="#444"/>
+<line x1="1662.5" y1="169.41176470588235" x2="1662.5" y2="200" stroke="#444"/>
+<text x="1528.3333333333333" y="107" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="1528.3333333333333" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">2,75</text>
+<text x="1605.0" y="107" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="1605.0" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">1</text>
+<text x="1681.6666666666665" y="107" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="1681.6666666666665" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">3,75</text>
+<text x="1518.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="1518.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">8,75</text>
+<text x="1576.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="1576.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">6</text>
+<text x="1633.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="1633.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">6</text>
+<text x="1691.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="1691.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">9,75</text>
+<text x="1498" y="141.58823529411765" font-size="12.5" font-weight="bold" fill="#444">K3</text>
+<text x="1532" y="141.58823529411765" font-size="10.5">Alphateilchen im Spulenfeld:</text>
+<text x="1532" y="154.58823529411765" font-size="10.5">Verlust, Wandtreffer</text>
+</g>
+<g><title>K4: Turbulenz (GX) in voller Größe einordnen</title>
+<rect x="1190" y="234" width="230" height="104" fill="#fafafa" stroke="#444" stroke-width="1.2"/>
+<line x1="1190" y1="264.5882352941176" x2="1420" y2="264.5882352941176" stroke="#444"/><line x1="1190" y1="307.4117647058824" x2="1420" y2="307.4117647058824" stroke="#444"/>
+<line x1="1266.6666666666667" y1="234" x2="1266.6666666666667" y2="264.5882352941176" stroke="#444"/>
+<line x1="1343.3333333333333" y1="234" x2="1343.3333333333333" y2="264.5882352941176" stroke="#444"/>
+<line x1="1247.5" y1="307.4117647058824" x2="1247.5" y2="338" stroke="#444"/>
+<line x1="1305.0" y1="307.4117647058824" x2="1305.0" y2="338" stroke="#444"/>
+<line x1="1362.5" y1="307.4117647058824" x2="1362.5" y2="338" stroke="#444"/>
+<text x="1228.3333333333333" y="245" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="1228.3333333333333" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">1,75</text>
+<text x="1305.0" y="245" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="1305.0" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">0,5</text>
+<text x="1381.6666666666665" y="245" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="1381.6666666666665" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">2,25</text>
+<text x="1218.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="1218.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">9,25</text>
+<text x="1276.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="1276.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">7,5</text>
+<text x="1333.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="1333.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">7,5</text>
+<text x="1391.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="1391.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">9,75</text>
+<text x="1198" y="279.5882352941176" font-size="12.5" font-weight="bold" fill="#444">K4</text>
+<text x="1232" y="279.5882352941176" font-size="10.5">Turbulenz (GX) in voller Größe</text>
+<text x="1232" y="292.5882352941176" font-size="10.5">einordnen</text>
+</g>
+<g><title>K5: Plasma-Wand-Abstand klären: Platz für Wand, Blanket, Abschirmung gegen Spulenabstand</title>
+<rect x="1490" y="234" width="230" height="104" fill="#fdecea" stroke="#c0392b" stroke-width="2.2"/>
+<line x1="1490" y1="264.5882352941176" x2="1720" y2="264.5882352941176" stroke="#c0392b"/><line x1="1490" y1="307.4117647058824" x2="1720" y2="307.4117647058824" stroke="#c0392b"/>
+<line x1="1566.6666666666667" y1="234" x2="1566.6666666666667" y2="264.5882352941176" stroke="#c0392b"/>
+<line x1="1643.3333333333333" y1="234" x2="1643.3333333333333" y2="264.5882352941176" stroke="#c0392b"/>
+<line x1="1547.5" y1="307.4117647058824" x2="1547.5" y2="338" stroke="#c0392b"/>
+<line x1="1605.0" y1="307.4117647058824" x2="1605.0" y2="338" stroke="#c0392b"/>
+<line x1="1662.5" y1="307.4117647058824" x2="1662.5" y2="338" stroke="#c0392b"/>
+<text x="1528.3333333333333" y="245" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="1528.3333333333333" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">2,75</text>
+<text x="1605.0" y="245" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="1605.0" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">1</text>
+<text x="1681.6666666666665" y="245" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="1681.6666666666665" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">3,75</text>
+<text x="1518.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="1518.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">2,75</text>
+<text x="1576.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="1576.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#c0392b">0</text>
+<text x="1633.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="1633.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0</text>
+<text x="1691.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="1691.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">3,75</text>
+<text x="1498" y="279.5882352941176" font-size="12.5" font-weight="bold" fill="#c0392b">K5</text>
+<text x="1532" y="279.5882352941176" font-size="10.5">Plasma-Wand-Abstand klären:</text>
+<text x="1532" y="292.5882352941176" font-size="10.5">Platz für Wand, Blanket,…</text>
+</g>
+<g><title>K6: Wärmebilanz und Wandlast für DK8s6qwo</title>
+<rect x="1790" y="96" width="230" height="104" fill="#fdecea" stroke="#c0392b" stroke-width="2.2"/>
+<line x1="1790" y1="126.58823529411765" x2="2020" y2="126.58823529411765" stroke="#c0392b"/><line x1="1790" y1="169.41176470588235" x2="2020" y2="169.41176470588235" stroke="#c0392b"/>
+<line x1="1866.6666666666667" y1="96" x2="1866.6666666666667" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="1943.3333333333333" y1="96" x2="1943.3333333333333" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="1847.5" y1="169.41176470588235" x2="1847.5" y2="200" stroke="#c0392b"/>
+<line x1="1905.0" y1="169.41176470588235" x2="1905.0" y2="200" stroke="#c0392b"/>
+<line x1="1962.5" y1="169.41176470588235" x2="1962.5" y2="200" stroke="#c0392b"/>
+<text x="1828.3333333333333" y="107" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="1828.3333333333333" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">3,75</text>
+<text x="1905.0" y="107" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="1905.0" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">1</text>
+<text x="1981.6666666666665" y="107" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="1981.6666666666665" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">4,75</text>
+<text x="1818.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="1818.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">3,75</text>
+<text x="1876.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="1876.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#c0392b">0</text>
+<text x="1933.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="1933.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0</text>
+<text x="1991.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="1991.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">4,75</text>
+<text x="1798" y="141.58823529411765" font-size="12.5" font-weight="bold" fill="#c0392b">K6</text>
+<text x="1832" y="141.58823529411765" font-size="10.5">Wärmebilanz und Wandlast für</text>
+<text x="1832" y="154.58823529411765" font-size="10.5">DK8s6qwo</text>
+</g>
+<g><title>K7: Kühlung: Gefäß/Erstwand an die neue Form anschließen (Gyroid-Segment, FluidX3D), Temperaturfeld</title>
+<rect x="2090" y="96" width="230" height="104" fill="#fdecea" stroke="#c0392b" stroke-width="2.2"/>
+<line x1="2090" y1="126.58823529411765" x2="2320" y2="126.58823529411765" stroke="#c0392b"/><line x1="2090" y1="169.41176470588235" x2="2320" y2="169.41176470588235" stroke="#c0392b"/>
+<line x1="2166.6666666666665" y1="96" x2="2166.6666666666665" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="2243.3333333333335" y1="96" x2="2243.3333333333335" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="2147.5" y1="169.41176470588235" x2="2147.5" y2="200" stroke="#c0392b"/>
+<line x1="2205.0" y1="169.41176470588235" x2="2205.0" y2="200" stroke="#c0392b"/>
+<line x1="2262.5" y1="169.41176470588235" x2="2262.5" y2="200" stroke="#c0392b"/>
+<text x="2128.3333333333335" y="107" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="2128.3333333333335" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">4,75</text>
+<text x="2205.0" y="107" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="2205.0" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">3</text>
+<text x="2281.666666666667" y="107" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="2281.666666666667" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">7,75</text>
+<text x="2118.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="2118.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">4,75</text>
+<text x="2176.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="2176.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#c0392b">0</text>
+<text x="2233.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="2233.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0</text>
+<text x="2291.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="2291.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">7,75</text>
+<text x="2098" y="141.58823529411765" font-size="12.5" font-weight="bold" fill="#c0392b">K7</text>
+<text x="2132" y="141.58823529411765" font-size="10.5">Kühlung: Gefäß/Erstwand an die</text>
+<text x="2132" y="154.58823529411765" font-size="10.5">neue Form anschließen…</text>
+</g>
+<g><title>K8: Tragwerk: Gehäuse, Verbinder, Elmer-FEM; Spannung p99 heißeste Spule, Dehnung, Auslenkung</title>
+<rect x="1790" y="234" width="230" height="104" fill="#fafafa" stroke="#444" stroke-width="1.2"/>
+<line x1="1790" y1="264.5882352941176" x2="2020" y2="264.5882352941176" stroke="#444"/><line x1="1790" y1="307.4117647058824" x2="2020" y2="307.4117647058824" stroke="#444"/>
+<line x1="1866.6666666666667" y1="234" x2="1866.6666666666667" y2="264.5882352941176" stroke="#444"/>
+<line x1="1943.3333333333333" y1="234" x2="1943.3333333333333" y2="264.5882352941176" stroke="#444"/>
+<line x1="1847.5" y1="307.4117647058824" x2="1847.5" y2="338" stroke="#444"/>
+<line x1="1905.0" y1="307.4117647058824" x2="1905.0" y2="338" stroke="#444"/>
+<line x1="1962.5" y1="307.4117647058824" x2="1962.5" y2="338" stroke="#444"/>
+<text x="1828.3333333333333" y="245" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="1828.3333333333333" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">3,75</text>
+<text x="1905.0" y="245" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="1905.0" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">3</text>
+<text x="1981.6666666666665" y="245" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="1981.6666666666665" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">6,75</text>
+<text x="1818.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="1818.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">4,75</text>
+<text x="1876.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="1876.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">1</text>
+<text x="1933.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="1933.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">1</text>
+<text x="1991.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="1991.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">7,75</text>
+<text x="1798" y="279.5882352941176" font-size="12.5" font-weight="bold" fill="#444">K8</text>
+<text x="1832" y="279.5882352941176" font-size="10.5">Tragwerk: Gehäuse, Verbinder,</text>
+<text x="1832" y="292.5882352941176" font-size="10.5">Elmer-FEM; Spannung p99…</text>
+</g>
+<g><title>K9: Was fehlt noch? Recherche Bauteilliste (Divertor, Kryostat, Zugänge, Vakuum, Montage), grobe Maße</title>
+<rect x="1790" y="372" width="230" height="104" fill="#fafafa" stroke="#444" stroke-width="1.2"/>
+<line x1="1790" y1="402.5882352941176" x2="2020" y2="402.5882352941176" stroke="#444"/><line x1="1790" y1="445.4117647058824" x2="2020" y2="445.4117647058824" stroke="#444"/>
+<line x1="1866.6666666666667" y1="372" x2="1866.6666666666667" y2="402.5882352941176" stroke="#444"/>
+<line x1="1943.3333333333333" y1="372" x2="1943.3333333333333" y2="402.5882352941176" stroke="#444"/>
+<line x1="1847.5" y1="445.4117647058824" x2="1847.5" y2="476" stroke="#444"/>
+<line x1="1905.0" y1="445.4117647058824" x2="1905.0" y2="476" stroke="#444"/>
+<line x1="1962.5" y1="445.4117647058824" x2="1962.5" y2="476" stroke="#444"/>
+<text x="1828.3333333333333" y="383" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="1828.3333333333333" y="397.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">3,75</text>
+<text x="1905.0" y="383" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="1905.0" y="397.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">1</text>
+<text x="1981.6666666666665" y="383" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="1981.6666666666665" y="397.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">4,75</text>
+<text x="1818.75" y="456.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="1818.75" y="471" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">6,75</text>
+<text x="1876.25" y="456.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="1876.25" y="471" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">3</text>
+<text x="1933.75" y="456.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="1933.75" y="471" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">3</text>
+<text x="1991.25" y="456.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="1991.25" y="471" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">7,75</text>
+<text x="1798" y="417.5882352941176" font-size="12.5" font-weight="bold" fill="#444">K9</text>
+<text x="1832" y="417.5882352941176" font-size="10.5">Was fehlt noch? Recherche</text>
+<text x="1832" y="430.5882352941176" font-size="10.5">Bauteilliste (Divertor,…</text>
+</g>
+<g><title>K10: Gesamtanlage: alle Schichten als Geometrie zusammenführen (CAD/Voxel), Kollisionsprüfung</title>
+<rect x="2390" y="96" width="230" height="104" fill="#fdecea" stroke="#c0392b" stroke-width="2.2"/>
+<line x1="2390" y1="126.58823529411765" x2="2620" y2="126.58823529411765" stroke="#c0392b"/><line x1="2390" y1="169.41176470588235" x2="2620" y2="169.41176470588235" stroke="#c0392b"/>
+<line x1="2466.6666666666665" y1="96" x2="2466.6666666666665" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="2543.3333333333335" y1="96" x2="2543.3333333333335" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="2447.5" y1="169.41176470588235" x2="2447.5" y2="200" stroke="#c0392b"/>
+<line x1="2505.0" y1="169.41176470588235" x2="2505.0" y2="200" stroke="#c0392b"/>
+<line x1="2562.5" y1="169.41176470588235" x2="2562.5" y2="200" stroke="#c0392b"/>
+<text x="2428.3333333333335" y="107" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="2428.3333333333335" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">7,75</text>
+<text x="2505.0" y="107" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="2505.0" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">2</text>
+<text x="2581.666666666667" y="107" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="2581.666666666667" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">9,75</text>
+<text x="2418.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="2418.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">7,75</text>
+<text x="2476.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="2476.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#c0392b">0</text>
+<text x="2533.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="2533.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0</text>
+<text x="2591.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="2591.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">9,75</text>
+<text x="2398" y="141.58823529411765" font-size="12.5" font-weight="bold" fill="#c0392b">K10</text>
+<text x="2432" y="141.58823529411765" font-size="10.5">Gesamtanlage: alle Schichten</text>
+<text x="2432" y="154.58823529411765" font-size="10.5">als Geometrie zusammenführen…</text>
+</g>
+<g><title>K11: Absprungbasis prüfen: alle Grenzen zugleich? Anforderungsverfolgung, Befund</title>
+<rect x="2690" y="96" width="230" height="104" fill="#fdecea" stroke="#c0392b" stroke-width="2.2"/>
+<line x1="2690" y1="126.58823529411765" x2="2920" y2="126.58823529411765" stroke="#c0392b"/><line x1="2690" y1="169.41176470588235" x2="2920" y2="169.41176470588235" stroke="#c0392b"/>
+<line x1="2766.6666666666665" y1="96" x2="2766.6666666666665" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="2843.3333333333335" y1="96" x2="2843.3333333333335" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="2747.5" y1="169.41176470588235" x2="2747.5" y2="200" stroke="#c0392b"/>
+<line x1="2805.0" y1="169.41176470588235" x2="2805.0" y2="200" stroke="#c0392b"/>
+<line x1="2862.5" y1="169.41176470588235" x2="2862.5" y2="200" stroke="#c0392b"/>
+<text x="2728.3333333333335" y="107" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="2728.3333333333335" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">9,75</text>
+<text x="2805.0" y="107" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="2805.0" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">0,5</text>
+<text x="2881.666666666667" y="107" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="2881.666666666667" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">10,25</text>
+<text x="2718.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="2718.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">9,75</text>
+<text x="2776.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="2776.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#c0392b">0</text>
+<text x="2833.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="2833.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0</text>
+<text x="2891.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="2891.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">10,25</text>
+<text x="2698" y="141.58823529411765" font-size="12.5" font-weight="bold" fill="#c0392b">K11</text>
+<text x="2732" y="141.58823529411765" font-size="10.5">Absprungbasis prüfen: alle</text>
+<text x="2732" y="154.58823529411765" font-size="10.5">Grenzen zugleich?…</text>
+</g>
+<g><title>V1: Storyboard Präsentationsvideo festlegen (FUS-DOC-14), mit Autor abstimmen</title>
+<rect x="890" y="234" width="230" height="104" fill="#fafafa" stroke="#444" stroke-width="1.2"/>
+<line x1="890" y1="264.5882352941176" x2="1120" y2="264.5882352941176" stroke="#444"/><line x1="890" y1="307.4117647058824" x2="1120" y2="307.4117647058824" stroke="#444"/>
+<line x1="966.6666666666666" y1="234" x2="966.6666666666666" y2="264.5882352941176" stroke="#444"/>
+<line x1="1043.3333333333333" y1="234" x2="1043.3333333333333" y2="264.5882352941176" stroke="#444"/>
+<line x1="947.5" y1="307.4117647058824" x2="947.5" y2="338" stroke="#444"/>
+<line x1="1005.0" y1="307.4117647058824" x2="1005.0" y2="338" stroke="#444"/>
+<line x1="1062.5" y1="307.4117647058824" x2="1062.5" y2="338" stroke="#444"/>
+<text x="928.3333333333334" y="245" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="928.3333333333334" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">0,75</text>
+<text x="1005.0" y="245" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="1005.0" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">0,5</text>
+<text x="1081.6666666666667" y="245" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="1081.6666666666667" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">1,25</text>
+<text x="918.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="918.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">9,75</text>
+<text x="976.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="976.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">9</text>
+<text x="1033.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="1033.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">9</text>
+<text x="1091.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="1091.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">10,25</text>
+<text x="898" y="279.5882352941176" font-size="12.5" font-weight="bold" fill="#444">V1</text>
+<text x="932" y="279.5882352941176" font-size="10.5">Storyboard Präsentationsvideo</text>
+<text x="932" y="292.5882352941176" font-size="10.5">festlegen (FUS-DOC-14), mit…</text>
+</g>
+<g><title>V2: Szenen rendern (PyVista/ParaView → Blender)</title>
+<rect x="2990" y="96" width="230" height="104" fill="#fdecea" stroke="#c0392b" stroke-width="2.2"/>
+<line x1="2990" y1="126.58823529411765" x2="3220" y2="126.58823529411765" stroke="#c0392b"/><line x1="2990" y1="169.41176470588235" x2="3220" y2="169.41176470588235" stroke="#c0392b"/>
+<line x1="3066.6666666666665" y1="96" x2="3066.6666666666665" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="3143.3333333333335" y1="96" x2="3143.3333333333335" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="3047.5" y1="169.41176470588235" x2="3047.5" y2="200" stroke="#c0392b"/>
+<line x1="3105.0" y1="169.41176470588235" x2="3105.0" y2="200" stroke="#c0392b"/>
+<line x1="3162.5" y1="169.41176470588235" x2="3162.5" y2="200" stroke="#c0392b"/>
+<text x="3028.3333333333335" y="107" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="3028.3333333333335" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">10,25</text>
+<text x="3105.0" y="107" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="3105.0" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">3</text>
+<text x="3181.666666666667" y="107" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="3181.666666666667" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">13,25</text>
+<text x="3018.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="3018.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">10,25</text>
+<text x="3076.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="3076.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#c0392b">0</text>
+<text x="3133.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="3133.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0</text>
+<text x="3191.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="3191.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">13,25</text>
+<text x="2998" y="141.58823529411765" font-size="12.5" font-weight="bold" fill="#c0392b">V2</text>
+<text x="3032" y="141.58823529411765" font-size="10.5">Szenen rendern</text>
+<text x="3032" y="154.58823529411765" font-size="10.5">(PyVista/ParaView → Blender)</text>
+</g>
+<g><title>V3: Schnitt, Begleittext DE/EN aus Ergebnisdateien</title>
+<rect x="3290" y="96" width="230" height="104" fill="#fdecea" stroke="#c0392b" stroke-width="2.2"/>
+<line x1="3290" y1="126.58823529411765" x2="3520" y2="126.58823529411765" stroke="#c0392b"/><line x1="3290" y1="169.41176470588235" x2="3520" y2="169.41176470588235" stroke="#c0392b"/>
+<line x1="3366.6666666666665" y1="96" x2="3366.6666666666665" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="3443.3333333333335" y1="96" x2="3443.3333333333335" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="3347.5" y1="169.41176470588235" x2="3347.5" y2="200" stroke="#c0392b"/>
+<line x1="3405.0" y1="169.41176470588235" x2="3405.0" y2="200" stroke="#c0392b"/>
+<line x1="3462.5" y1="169.41176470588235" x2="3462.5" y2="200" stroke="#c0392b"/>
+<text x="3328.3333333333335" y="107" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="3328.3333333333335" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">13,25</text>
+<text x="3405.0" y="107" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="3405.0" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">1</text>
+<text x="3481.666666666667" y="107" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="3481.666666666667" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">14,25</text>
+<text x="3318.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="3318.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">13,25</text>
+<text x="3376.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="3376.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#c0392b">0</text>
+<text x="3433.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="3433.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0</text>
+<text x="3491.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="3491.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">14,25</text>
+<text x="3298" y="141.58823529411765" font-size="12.5" font-weight="bold" fill="#c0392b">V3</text>
+<text x="3332" y="141.58823529411765" font-size="10.5">Schnitt, Begleittext DE/EN aus</text>
+<text x="3332" y="154.58823529411765" font-size="10.5">Ergebnisdateien</text>
+</g>
+<g><title>B1: Berichtskapitel DE/EN, README, Prozessdoku</title>
+<rect x="2990" y="234" width="230" height="104" fill="#fafafa" stroke="#444" stroke-width="1.2"/>
+<line x1="2990" y1="264.5882352941176" x2="3220" y2="264.5882352941176" stroke="#444"/><line x1="2990" y1="307.4117647058824" x2="3220" y2="307.4117647058824" stroke="#444"/>
+<line x1="3066.6666666666665" y1="234" x2="3066.6666666666665" y2="264.5882352941176" stroke="#444"/>
+<line x1="3143.3333333333335" y1="234" x2="3143.3333333333335" y2="264.5882352941176" stroke="#444"/>
+<line x1="3047.5" y1="307.4117647058824" x2="3047.5" y2="338" stroke="#444"/>
+<line x1="3105.0" y1="307.4117647058824" x2="3105.0" y2="338" stroke="#444"/>
+<line x1="3162.5" y1="307.4117647058824" x2="3162.5" y2="338" stroke="#444"/>
+<text x="3028.3333333333335" y="245" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="3028.3333333333335" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">10,25</text>
+<text x="3105.0" y="245" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="3105.0" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">2</text>
+<text x="3181.666666666667" y="245" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="3181.666666666667" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">12,25</text>
+<text x="3018.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="3018.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">12,25</text>
+<text x="3076.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="3076.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">2</text>
+<text x="3133.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="3133.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">2</text>
+<text x="3191.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="3191.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">14,25</text>
+<text x="2998" y="279.5882352941176" font-size="12.5" font-weight="bold" fill="#444">B1</text>
+<text x="3032" y="279.5882352941176" font-size="10.5">Berichtskapitel DE/EN, README,</text>
+<text x="3032" y="292.5882352941176" font-size="10.5">Prozessdoku</text>
+</g>
+<g><title>B2: Freigabe und Veröffentlichung durch Autor</title>
+<rect x="3590" y="96" width="230" height="104" fill="#fdecea" stroke="#c0392b" stroke-width="2.2"/>
+<line x1="3590" y1="126.58823529411765" x2="3820" y2="126.58823529411765" stroke="#c0392b"/><line x1="3590" y1="169.41176470588235" x2="3820" y2="169.41176470588235" stroke="#c0392b"/>
+<line x1="3666.6666666666665" y1="96" x2="3666.6666666666665" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="3743.3333333333335" y1="96" x2="3743.3333333333335" y2="126.58823529411765" stroke="#c0392b"/>
+<line x1="3647.5" y1="169.41176470588235" x2="3647.5" y2="200" stroke="#c0392b"/>
+<line x1="3705.0" y1="169.41176470588235" x2="3705.0" y2="200" stroke="#c0392b"/>
+<line x1="3762.5" y1="169.41176470588235" x2="3762.5" y2="200" stroke="#c0392b"/>
+<text x="3628.3333333333335" y="107" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="3628.3333333333335" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">14,25</text>
+<text x="3705.0" y="107" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="3705.0" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">0,5</text>
+<text x="3781.666666666667" y="107" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="3781.666666666667" y="121.58823529411765" font-size="13" font-weight="bold" text-anchor="middle">14,75</text>
+<text x="3618.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="3618.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">14,25</text>
+<text x="3676.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="3676.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#c0392b">0</text>
+<text x="3733.75" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="3733.75" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">0</text>
+<text x="3791.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="3791.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">14,75</text>
+<text x="3598" y="141.58823529411765" font-size="12.5" font-weight="bold" fill="#c0392b">B2</text>
+<text x="3632" y="141.58823529411765" font-size="10.5">Freigabe und Veröffentlichung</text>
+<text x="3632" y="154.58823529411765" font-size="10.5">durch Autor</text>
+</g>
+<text x="16" y="530" font-size="11" fill="#666">KI-generiert (Claude Opus, 2026-11-12) aus pm/plan/plan_fusion.py · Projektende Zukunft: 14,75 AT · Thomas Schmiegelt</text>
+</svg>

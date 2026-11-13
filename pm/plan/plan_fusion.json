@@ -1,8 +1,8 @@
 {
   "id": "fusion0001",
   "name": "Stellarator (KI-generiert)",
-  "created_at": 1794512050.963248,
-  "updated_at": 1794512050.963248,
+  "created_at": 1794515005.2438776,
+  "updated_at": 1794515005.243878,
   "tasks": [
     {
       "id": "H01",
@@ -503,7 +503,7 @@
     },
     {
       "id": "D2",
-      "name": "Vortragsseite: Abschnitt KI im Projektmanagement (Batterie + Fusion)",
+      "name": "Vortragsseite: Abschnitt KI im Projektmanagement (Stellarator)",
       "duration": 0.5,
       "predecessors": [
         "D1"
