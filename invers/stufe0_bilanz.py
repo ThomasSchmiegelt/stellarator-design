@@ -90,7 +90,7 @@ def bilanz(a, form) -> dict:
 
 def raster(a, form, P_fus_MW):
     """(R0, B0, T0)-Raster -> Grenzen-Auslastung (1 = Grenze). Dichte folgt aus P_fus."""
-    R0 = np.arange(3.0, 30.01, 0.1)[:, None, None]
+    R0 = np.arange(3.0, a.R0_max + 0.01, 0.1)[:, None, None]
     B0 = np.arange(2.0, 12.01, 0.05)[None, :, None]
     T0 = np.arange(6.0, 40.1, 1.0)[None, None, :]
     rho = np.linspace(0, 1, 201)[1:-1]                       # Volumen ~ rho^2 -> dV = 2 rho drho V
@@ -166,6 +166,57 @@ def auslegung(a, form, gr, ausl, werte, k_B: dict):
     return erg, m
 
 
+J_LISTE = {"HTS": [40, 30, 25, 20, 15], "Nb3Sn": [15, 10]}    # A/mm2, K2c
+
+
+def auslegung_modell(a, form, gr, ausl, werte, mod, N=None, R0_max=None):
+    """K2c: Leiterfeld als Modell im Raster (statt festem k_B). mod = spulenmodell.json (je Basisspule r_i, a_i).
+    I_mittel = I_ref*(B0/B0_ref)*(R0/R0_ref); w_i = sqrt(I_i/j); Leiterfeld = max_i[a_i*B0 + 2e-7*I_i/(w_i/2)];
+    Spalt = d_ss_ref*R0/R0_ref - k_spalt*max w_i >= spalt_min; W = W_ref*(I/I_ref)^2*(R0/R0_ref).
+    N: Spulenzahl (Vorgabe N_ref); Annahme: Strom je Spule ~ N_ref/N, a_i und Abstaende unveraendert."""
+    R0 = gr["R0"][:, None]; B0 = gr["B0"][None, :]
+    r = np.asarray(mod["r_i"], float); ai = np.asarray(mod["a_i"], float)
+    nf = 1.0 if N is None else mod["N_ref"] / N
+    Im = mod["I_mittel_ref_MA"] * 1e6 * (B0 / mod["B0_ref_T"]) * (R0 / mod["R0_ref_m"]) * nf   # (R0, B0), je Spule
+    Ii = r[:, None, None] * Im[None]
+    # Einzelmasken (R0, B0, T)
+    einz = {k: np.asarray(v) <= 1 for k, v in ausl.items()}
+    rm = np.maximum.reduce([np.asarray(v) for v in ausl.values()])
+    erg = {}
+    for name, js in J_LISTE.items():
+        Bmax = LEITER[name]["B_max_T"]
+        erg[name] = {}
+        for jA in js:
+            j = jA * 1e6
+            w = np.sqrt(Ii / j)
+            BL = a.k_kal * np.max(ai[:, None, None] * B0[None] + 2e-7 * Ii / (w / 2), axis=0)
+            spalt = mod["d_ss_ref_m"] * R0 / mod["R0_ref_m"] - a.k_spalt * w.max(0)
+            ok_L = (BL <= Bmax)[..., None]; ok_S = (spalt >= a.spalt_min)[..., None]
+            m = {**einz, "leiterfeld": ok_L, "spalt": ok_S}
+            alle = np.logical_and.reduce([np.broadcast_to(v, rm.shape) for v in m.values()])
+            if R0_max is not None:
+                alle &= (gr["R0"] <= R0_max + 1e-9)[:, None, None]
+            if not alle.any():
+                erg[name][str(jA)] = {"machbar": False}; continue
+            iR = np.argmax(alle.any((1, 2))); iB = np.argmax(alle[iR].any(1))
+            iT = np.argmin(np.where(alle[iR, iB], rm[iR, iB], 9)); i = (iR, iB, iT)
+            bind = []
+            if iR > 0:   # bindend: Grenze c verhindert R0-0,1 m, wenn ohne c dort eine Loesung existiert
+                for c in m:
+                    rest = np.logical_and.reduce([np.broadcast_to(v, rm.shape)[iR - 1] for k, v in m.items() if k != c])
+                    if rest.any():
+                        bind.append(c)
+            Imax = float(Ii[:, iR, iB].max())
+            erg[name][str(jA)] = {"machbar": True, "j_A_mm2": jA, "R0_m": float(gr["R0"][iR]), "B0_T": float(gr["B0"][iB]),
+                "I_mittel_MA": float(Im[iR, iB] / 1e6), "I_max_MA": Imax / 1e6, "wickelpaket_max_m": float(w[:, iR, iB].max()),
+                "leiterfeld_T": float(BL[iR, iB]), "leiterfeld_grenze_T": Bmax, "spalt_m": float(spalt[iR, iB]),
+                "energie_GJ": float(mod["W_ref_GJ"] * (Im[iR, iB] / nf / (mod["I_mittel_ref_MA"] * 1e6)) ** 2 * (gr["R0"][iR] / mod["R0_ref_m"])),
+                "bindend": bind, "auslastung_ueber_0_97": [k for k, v in {**{k: float(np.asarray(v)[i]) for k, v in ausl.items()},
+                    "leiterfeld": float(BL[iR, iB] / Bmax), "spalt": float(a.spalt_min / spalt[iR, iB])}.items() if v > 0.97],
+                "H_ISS04": float(werte["H_ISS04"][i]), "T0_keV": float(werte["T0_keV"][i])}
+    return erg
+
+
 def bild(pfad, gr, ausl, m, erg, k_B, form, a):
     import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
     best = np.min(m, axis=2)                                   # bestes T0 je (R0, B0)
@@ -216,12 +267,18 @@ def main(argv=None):
     ap.add_argument("--spalt_min", type=float, default=0.2, help="m Mindestspalt zwischen Wickelpaketen (Gehaeuse)")
     ap.add_argument("--k_spalt", type=float, default=1.29, help="Spalt = d_ss/R0*R0 - k_spalt*Paketseite (aus Stufe 3)")
     ap.add_argument("--f_I", type=float, default=1.0, help="Spulenstrom / Ampere-Abschaetzung (aus Stufe 3, qa_nfp2: 1,09)")
+    ap.add_argument("--j_HTS", type=float, default=40e6, help="A/m² technische Stromdichte HTS-Wickelpaket (K2b-Variante: 25e6, Annahme)")
+    ap.add_argument("--R0_max", type=float, default=30.0, help="obere Grenze des R0-Rasters in m (Vorgabe 30; K2b-Diagnose bei 'nicht machbar')")
+    ap.add_argument("--spulenmodell", type=Path, help="K2c: spulenmodell.json (Leiterfeld als Modell im Raster, ersetzt festes k_B/f_I fuer diese Fälle)")
+    ap.add_argument("--k_kal", type=float, default=1.0, help="K2d: Kalibrierfaktor c = B_leiter_K2 / B_leiter_Modell auf Eigen- und Fremdfeld im Modell (Vorgabe 1 = unveraendert)")
+    ap.add_argument("--N_spulen", type=int, default=None, help="K2c: Spulenzahl fuer die Grobabschaetzung (Annahme: I ~ N_ref/N)")
     ap.add_argument("--f_DT", type=float, default=0.85, help="Brennstoff-Ionen je Elektron (Rest: He-Asche, Verunreinigung)")
     ap.add_argument("--f_ion", type=float, default=0.9, help="Ionen je Elektron (Druck)")
     ap.add_argument("--Z_eff", type=float, default=1.5)
     ap.add_argument("--alpha_n", type=float, default=0.5, help="Dichteprofil (1-rho²)^alpha")
     ap.add_argument("--alpha_T", type=float, default=1.0, help="Temperaturprofil (1-rho²)^alpha")
     a = ap.parse_args(argv)
+    LEITER["HTS"]["j_A_m2"] = a.j_HTS
 
     a.k_B = ({n: float(a.k_B) for n in LEITER} if "=" not in a.k_B
              else {n: float(v) for n, v in (x.split("=") for x in a.k_B.split(","))})
@@ -248,9 +305,13 @@ def main(argv=None):
         e2, _ = auslegung(a, f2, g2, au2, we2, a.k_B)
         empf[f"A={A:g}"] = {k: ({"R0_m": v["R0_m"], "B0_T": v["B0_T"], "begrenzt_durch": v["begrenzt_durch"]}
                                if v.get("machbar") else "nicht machbar") for k, v in e2.items()}
+    modell_erg = None
+    if a.spulenmodell:
+        modell_erg = auslegung_modell(a, form, gr, ausl, werte, json.loads(a.spulenmodell.read_text()), a.N_spulen, a.R0_max)
     ordner = PROJEKT / "sim" / "invers" / a.name; ordner.mkdir(parents=True, exist_ok=True)
     out = {"name": a.name, "annahmen": {k: (str(v) if isinstance(v, Path) else v) for k, v in vars(a).items()},
            "form": form, "leistung": leistung, "auslegung": erg, "seitenverhaeltnis_empfindlichkeit": empf,
+           **({"auslegung_modell": modell_erg} if modell_erg is not None else {}),
            "hinweis": "0-D-Abschaetzung (+-30 %). k_B und d/R0 nach Stufe 2/3 nachziehen und neu rechnen."}
     (ordner / "bilanz.json").write_text(json.dumps(out, indent=2, default=float))
     bild(ordner / "bilanz_R0_B0.png", gr, ausl, m, erg, a.k_B, form, a)

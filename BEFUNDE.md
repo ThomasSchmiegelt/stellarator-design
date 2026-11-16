@@ -5,6 +5,50 @@
 
 ---
 
+## B-082 K2e kompaktere Spulen: Autor wählt Variante C (48 Spulen, 27,6 m) statt Regelergebnis A (30,4 m); C mit 48 Spulen ist in allen Feldmaßen besser (27,6 m, Feldfehler 2,9e-4) und scheitert nur an einem unscharfen Flächenkriterium um 0,5 % (2026-11-13, Sonnet rechnet, Opus prüft) ⚠
+- **Erwartung vorher** (sim/kandidat/erwartung/K2e.md, 48 statt 50 Spulen vor der Rechnung nachgetragen): Feldfehler 4–8e-4, R0 26–31 m, 50 Spulen 5–10 % kleiner; Übernahme nur bei Feldfehler ≤ 1e-3, Bauregeln, Flächen bis s ≥ 0,8, R0 ≥ 2 m kleiner.
+- **Ergebnis** (sim/kandidat/K2e/lauf/auswertung.json, j 15): A (Länge 0,8, 40 Spulen) Feldfehler 8,08e-4, R0 30,4 m, Flächen bis s 0,8, R_min/d 2,58 → übernommen. B (Länge 0,65) 4,80e-3, 18,0 m, R_min/d 1,67 → abgelehnt. C (Länge 0,8, 48 Spulen) 2,89e-4, 27,6 m, R_min/d 2,64, Flächen bis s 0,7 → abgelehnt. I_max/I_mittel alle ≤ 1,2. Lauf 19:29–20:06.
+- **Vergleich:** Feldfehler A grenzwertig über dem Band, C darunter (= Stand vor K2e 2,57e-4); R0 A und C im Band; C 9 % kleiner als A (Erwartung 5–10 % getroffen).
+- **Prüfung Opus an Rohdaten (A/C k2_end/P2.json):** C scheitert nur an φ = halbe Periode, s 0,8: rms 0,02009 gegen Grenze 0,02 (+0,5 %). Das rms-Maß (Fourier m ≤ 8, „eigene Setzung“) steigt in der halben Periode schon ab s 0,02 (0,005) stetig an und springt (A: s 0,85 φ 0 0,0202 durchgefallen, s 0,9 wieder 0,0089) → misst eher die Anpassung an die Bohnenform als zerfallende Flächen. C verliert keine Linie bis s 1,12 (A verliert s 1,12 halbe Periode). Bei φ 0 hat C 2–3-mal kleinere Abweichung zur VMEC-Fläche (s 0,8: 0,041 gegen 0,108 m) und iota näher an VMEC.
+- **Montage:** R_min/d 1,96 (A) bzw. 1,99 (C) in montage.json gilt mit fester Rohrdicke 0,85 m (spulen_montage.py Z. 2); maßgeblich ist K2 mit Wickelpaket 1,40 m: 2,58/2,64.
+- **Deutung (Opus):** Regel korrekt angewandt, kandidat.json = A (alt: kandidat_2026-11-13.json). C ist physikalisch der bessere Satz; Wechsel auf C wäre eine Abweichung von der vorher festgelegten Regel → Entscheidung beim Autor, als solche dokumentieren. Flächenkriterium für künftige Schritte verbessern (verlorene Linien + Abstand zur VMEC-Fläche statt rms-Fit), als neuer Testvorschlag.
+- **Entscheidung Autor (2026-11-13, nach Prüfung):** „ich nehme auch c“. kandidat.json = C (R0 27,6 m, a 3,58 m, B0 5,9 T, I_mittel 23,7 MA, Wickelpaket 1,26 m; aus C/groesse/j15/runden.json wie K2e-Skript), Fassungen kandidat_2026-11-13.json (K2d) und kandidat_K2e_A.json. Abweichung von der vorher festgelegten Regel, Begründung oben. Nachgezogen: P5-Absturz bei 12 Basisspulen behoben (k2_volle_groesse.py), K4/K6/K7/K8/K10 lesen K2-Pfade jetzt aus kandidat.json statt fest aus sim/kette_dgoz.
+- Dateien: sim/kandidat/K2e/ (ERGEBNIS.md, BERICHT_PI_K2e.md, lauf/auswertung.json, lauf/{A,B,C}/, lauf/bilder/k2e_vergleich_de.png), sim/kandidat/kandidat.json.
+
+## B-081 DGozX5fj: Spulen ohne Kreuzung kosten keinen Feldfehler, aber die Anlage wird kalibriert 34,7 m statt 22,5 m; Ursache weit ausladende Spulen mit ungleichen Strömen (2026-11-13, Sonnet rechnet, Opus prüft) ⚠
+- **Erwartung vorher** (sim/kette_dgoz/ERWARTUNG_K2d.md): 0 Kreuzungen, Feldfehler 3–6e-4, Größe 23–27 m, K2 in Endgröße ohne Befund.
+- **Spulen:** neue Kreuzungsstrafe (stellarator/kreuzung_strafe.py, Option _x in k3_spulen, ε 2° Annahme). Kreuzende Paare 12 → 0, kleinster Nachbarabstand −12,85° → 1,77°, Feldfehler 2,56e-4 → 2,57e-4 (besser als erwartet), Rücklauf 0.
+- **Größe:** Modell an K2 kalibriert (Faktor 1,31). K2 direkt: j 30/25/20 A/mm² Leiterfeld 25,0/23,2/21,1 T bei 24,2/26,6/29,8 m (über 20 T); j 15: 18,7 T bei 34,7 m, B0 5,0 T, 30,3 MA, Energie 2,6 TJ. Wahres Minimum vermutlich zwischen 30 und 34,7 m (Raster grob). Erwartung 23–27 m verfehlt.
+- **K2 in Endgröße:** Flächen geschlossen bis s 1,0 (φ 0) bzw. 0,85, iota ± 0,002, Bauregeln erfüllt (R_min/d 2,92), Linienkraft max 231 MN/m.
+- **Prüfung Opus:** Spulenausdehnung in Rechengröße R 0,21–1,63, z ±1,23 bei a ≈ 0,13 (≈ 10·a), I_max/I_mittel 1,54 (DK8s6qwo 1,34). Weit ausladende Spulen brauchen viel Strom je Tesla → Eigenfeld → Größe.
+- **Deutung:** Die Größe hängt jetzt an der Spulengestalt (Länge, Ausdehnung, Stromverteilung), nicht mehr an der Plasmaform. Hebel: kompaktere Spulen mit gleichmäßigeren Strömen oder mehr Spulen. Bauhöhe hatte im Paarvergleich nur Gewicht 0,06.
+- Dateien: sim/kette_dgoz/ (ERWARTUNG/AUFTRAG/ERGEBNIS_K2d.md, stage2/x10/, k2_end/, bilder/), video/bausteine/K2/ (DGozX5fj).
+
+## B-080 Leiterfeld begrenzt die Anlage: mit 40 Spulen und HTS 20 T braucht DK8s6qwo 34,5 m (j 20 A/mm²), die Formen mit hohem iota 21,5–24,8 m (2026-11-13, Sonnet rechnet, Opus prüft und deutet) ⚠
+- **Weg:** K2b (Schleife Stufe 0 ↔ K2) divergierte; Ursache Opus: festes k_B im ganzen Raster (Verfahrensfehler im Auftrag). K2c: Leiterfeld als Modell im Raster (`invers/stufe0_bilanz.py --spulenmodell`), Fremdfeld je Spule aus K2, Eigenfeld 2e-7·I/(w/2), w = √(I/j), j frei 15–40 A/mm², Spalt zwischen Spulen.
+- **Erwartung vorher** (sim/kette_dk8/ERWARTUNG_K2c.md): DK8s6qwo bei j 40 nicht machbar, 32–40 m bei j ≈ 20; alle Top 10 25–40 m. Erste zwei Punkte getroffen; vier Formen kleiner als erwartet.
+- **Ergebnis HTS (kleinste Anlage):** DBszvkku 21,5 m (j 30), DGozX5fj 22,5 (30), DmC2qkhi 23,8 (30), D799qKH8 24,8 (25), DHTy2o9U 28,0, DGMtrTL2 30,6, DfXvrph2 32,7, DZrUR4dA 34,0, DK8s6qwo 34,5 (20), DDWJg4NB 36,5. Meist bindet der Spalt zwischen den Spulen. Nb3Sn nur DBszvkku 37,6 m, DGozX5fj 44,1 m.
+- **Kontrolle:** Modell 8–15 % unter dem K2-Leiterfeld (DK8s6qwo 19,6 gegen 23,2 T) → Größen eher zu klein, vermutlich Nachbarspulen näher am dickeren Wickelpaket (Opus, nicht geprüft). Kalibrierung für die gewählte Form folgt.
+- **Physik:** Bei fester Leistung R0 ∝ B0^-1,39; Strom je Spule steigt mit der Anlage, das Eigenfeld wächst mit √(I·j). Grenze ist Strom je Spule bzw. Spulenzahl, nicht die Plasmaform allein. Grob (Annahme I ∝ 40/N): DK8s6qwo bräuchte ≈ 120 Spulen für 25 m.
+- **Deutung:** Zielkonflikt verschärft: beste Spulen nach Paarvergleich (DK8s6qwo 0,69) gegen Größe 34,5 m; DGozX5fj 0,52 bei 22,5 m. Entscheidung beim Autor. 0-D ± 30 %, HTS-Grenze 20 T Annahme.
+- Dateien: sim/kette_k2b/, sim/kette_k2c/ (ERGEBNIS.md, bilder/), sim/kette_dk8/AUFTRAG/ERWARTUNG_K2b/K2c.md.
+
+## B-079 K2 Spulen DK8s6qwo in voller Größe: Feld und Bauregeln gut, aber Stufe 0 zu optimistisch: B0 8,6 T statt 10, Leiterfeld 28,4 T statt 20, Energie 1086 statt 507 GJ (2026-11-13, Sonnet rechnet, Opus prüft) ⚠
+- **Erwartung vorher** (sim/kette_dk8/ERWARTUNG_K2.md): B0 10 T ± 5 %, Flächen bis s 0,8, iota ± 0,02, Bauregeln erfüllt, Linienkraft 100–300 MN/m, Energie 507 GJ ± 20 %.
+- **Getroffen:** Feldfehler 2,0e-4 (maßstabsfrei); alle 18 Feldlinien geschlossen, iota ± 0,0006 wie VMEC, keine Inseln; 0 Rückläufe, 0 Kreuzungen, R_min/d 2,73 (≥ 2), Spule–Plasma 3,15 m, Spule–Spule 1,30 m; Nettokraft 0,22–2,57 GN je Spule.
+- **Verfehlt:** B0 8,59 T bei 26,4 MA (Achse 1,145·2πR0, Ampère geprüft); Linienkraft max 353 MN/m; Leiterfeld max 28,4 T (Spule 2, 35,4 MA; Spulen 1–5 über 20 T), k_B echt 3,31 statt 2,0; Magnetenergie 1086 GJ (+114 %).
+- **Prüfung Opus an Rohdaten (P1/P3.json):** Eigenfeld Spule 2 ≈ 2·10⁻⁷·35,4 MA/0,41 m ≈ 17 T + Fremdfeld 8,5 T → Leiterfeld echt. Spulenlängen 44–68 m (mittl. Radius 7–11 m) erklären die Energie.
+- **Deutung:** Drei Modellfehler in Stufe 0 (eigenes Werkzeug): Torusformel statt Achslänge, festes k_B ohne Eigenfeld, Energie mit anliegenden Kreisspulen. Die Größe 21,1 m (B-077) und die Top-10-Größen (B-078) sind zu klein; Korrektur K2b.
+- Dateien: sim/kette_dk8/ (AUFTRAG_K2.md, ERGEBNIS_K2.md, k2/P1–P5.json, k2/bilder/), stellarator/k2_volle_groesse.py, video/bausteine/K2/.
+
+## B-078 Stufe 0 für alle Top 10: Formen mit höherem iota brauchen 12,6–16 m statt 21,1 m; die im Paarvergleich besten Formen sind die größten (2026-11-13, Opus) ⚠
+- **Frage:** Ist 21,1 m (DK8s6qwo, B-077) eine Eigenschaft aller guten Spulenformen oder nur dieser Form?
+- **Erwartung vorher** (sim/kette_top10/ERWARTUNG.md): hohes iota 17–20 m, kleines iota 19–23 m; Wandlast bindet nicht.
+- **Ergebnis (HTS):** D799qKH8 12,6 m, DGozX5fj 14,4, DmC2qkhi 14,7, DHTy2o9U 15,8, DBszvkku 16,0, DZrUR4dA 16,8, DGMtrTL2 18,9, DDWJg4NB 19,5, DK8s6qwo 21,1, DfXvrph2 21,2. Nb3Sn nur bei hohem iota machbar (23,5–27,3 m). Wandlast höchstens 1,41 MW/m².
+- **Vergleich:** Formen mit hohem iota kleiner als erwartet (−24 bis −40 % gegen DK8s6qwo). Unterschätzt waren Seitenverhältnis A und Spule–Plasma-Abstand: DK8s6qwo hat die größten Werte (8,85; 1,32 a).
+- **Deutung:** Zielkonflikt Spulenqualität gegen Größe: DK8s6qwo 0,69 Punkte / 21,1 m, DZrUR4dA 0,59 / 16,8 m, DGozX5fj 0,52 / 14,4 m. Entscheidung beim Autor vor K2. 0-D, ±30 %.
+- Dateien: sim/kette_top10/ (ERWARTUNG.md, ERGEBNIS.md, lauf.sh, Logs), sim/invers/<id8>_1GW/.
+
 ## B-077 Stufe 0 für DK8s6qwo: 1 GW braucht R0 21,1 m mit HTS, Nb3Sn nicht machbar; Einschluss und Leiterfeld binden, nicht die Wandlast (2026-11-12, Opus) ⚠
 - **Herkunft:** DK8s6qwo, Datensatzform unverändert (VMEC++-Gleichgewicht aus dem GX-Lauf), eigene Spulen (40, Abstand 1,32 a). Eingaben stellarator/dk8_stufe0_eingabe.py, Rechnung invers/stufe0_bilanz.py (Voreinstellungen = Annahmen).
 - **Werte (HTS):** R0 21,1 m, a 2,39 m, B0 10,0 T (Leiter 20 T), H_ISS04 1,298 (Grenze 1,3), Wandlast 0,79 MW/m², Spule–Plasma 3,15 m (nötig 1,3 m), 26,4 MA je Spule, Wickelpaket 0,81 m, Magnetenergie 507 GJ. Nb3Sn: nicht machbar bis R0 30 m.

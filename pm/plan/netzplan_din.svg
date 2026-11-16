@@ -27,6 +27,9 @@
 <path d="M1420,286.0 C1455.0,286.0 1420,217.0 1455.0,217.0 L2655.0,217.0 C2690,217.0 2655.0,148.0 2690,148.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
 <path d="M2620,148.0 C2655.0,148.0 2655.0,148.0 2690,148.0" fill="none" stroke="#c0392b" stroke-width="2.4" marker-end="url(#pr)"/>
 <path d="M820,286.0 C855.0,286.0 855.0,286.0 890,286.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M1120,286.0 C1155.0,286.0 1120,355.0 1155.0,355.0 L1455.0,355.0 C1490,355.0 1455.0,424.0 1490,424.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M1420,148.0 C1455.0,148.0 1455.0,424.0 1490,424.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
+<path d="M1720,424.0 C1755.0,424.0 1720,217.0 1755.0,217.0 L2955.0,217.0 C2990,217.0 2955.0,148.0 2990,148.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
 <path d="M1120,286.0 C1155.0,286.0 1120,217.0 1155.0,217.0 L2955.0,217.0 C2990,217.0 2955.0,148.0 2990,148.0" fill="none" stroke="#888" stroke-width="1.2" marker-end="url(#p)"/>
 <path d="M2920,148.0 C2955.0,148.0 2955.0,148.0 2990,148.0" fill="none" stroke="#c0392b" stroke-width="2.4" marker-end="url(#pr)"/>
 <path d="M3220,148.0 C3255.0,148.0 3255.0,148.0 3290,148.0" fill="none" stroke="#c0392b" stroke-width="2.4" marker-end="url(#pr)"/>
@@ -311,15 +314,34 @@
 <text x="928.3333333333334" y="245" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="928.3333333333334" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">0,75</text>
 <text x="1005.0" y="245" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="1005.0" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">0,5</text>
 <text x="1081.6666666666667" y="245" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="1081.6666666666667" y="259.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">1,25</text>
-<text x="918.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="918.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">9,75</text>
-<text x="976.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="976.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">9</text>
-<text x="1033.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="1033.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">9</text>
-<text x="1091.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="1091.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">10,25</text>
+<text x="918.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="918.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">8,75</text>
+<text x="976.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="976.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">8</text>
+<text x="1033.75" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="1033.75" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">1,5</text>
+<text x="1091.25" y="318.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="1091.25" y="333" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">9,25</text>
 <text x="898" y="279.5882352941176" font-size="12.5" font-weight="bold" fill="#444">V1</text>
 <text x="932" y="279.5882352941176" font-size="10.5">Storyboard Präsentationsvideo</text>
 <text x="932" y="292.5882352941176" font-size="10.5">festlegen (FUS-DOC-14), mit…</text>
 </g>
-<g><title>V2: Szenen rendern (PyVista/ParaView → Blender)</title>
+<g><title>V0: Teil A des Videos aus vorhandenem Material: Auslegung, Datensuche, Auswahl (Szenen A1–A3)</title>
+<rect x="1490" y="372" width="230" height="104" fill="#fafafa" stroke="#444" stroke-width="1.2"/>
+<line x1="1490" y1="402.5882352941176" x2="1720" y2="402.5882352941176" stroke="#444"/><line x1="1490" y1="445.4117647058824" x2="1720" y2="445.4117647058824" stroke="#444"/>
+<line x1="1566.6666666666667" y1="372" x2="1566.6666666666667" y2="402.5882352941176" stroke="#444"/>
+<line x1="1643.3333333333333" y1="372" x2="1643.3333333333333" y2="402.5882352941176" stroke="#444"/>
+<line x1="1547.5" y1="445.4117647058824" x2="1547.5" y2="476" stroke="#444"/>
+<line x1="1605.0" y1="445.4117647058824" x2="1605.0" y2="476" stroke="#444"/>
+<line x1="1662.5" y1="445.4117647058824" x2="1662.5" y2="476" stroke="#444"/>
+<text x="1528.3333333333333" y="383" font-size="8.5" fill="#777" text-anchor="middle">FAZ</text><text x="1528.3333333333333" y="397.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">2,75</text>
+<text x="1605.0" y="383" font-size="8.5" fill="#777" text-anchor="middle">D</text><text x="1605.0" y="397.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">1</text>
+<text x="1681.6666666666665" y="383" font-size="8.5" fill="#777" text-anchor="middle">FEZ</text><text x="1681.6666666666665" y="397.5882352941176" font-size="13" font-weight="bold" text-anchor="middle">3,75</text>
+<text x="1518.75" y="456.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SAZ</text><text x="1518.75" y="471" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">9,25</text>
+<text x="1576.25" y="456.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">GP</text><text x="1576.25" y="471" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">6,5</text>
+<text x="1633.75" y="456.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">FP</text><text x="1633.75" y="471" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">6,5</text>
+<text x="1691.25" y="456.4117647058824" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="1691.25" y="471" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">10,25</text>
+<text x="1498" y="417.5882352941176" font-size="12.5" font-weight="bold" fill="#444">V0</text>
+<text x="1532" y="417.5882352941176" font-size="10.5">Teil A des Videos aus</text>
+<text x="1532" y="430.5882352941176" font-size="10.5">vorhandenem Material:…</text>
+</g>
+<g><title>V2: Szenen rendern (PyVista/ParaView → Blender), Teil A + B</title>
 <rect x="2990" y="96" width="230" height="104" fill="#fdecea" stroke="#c0392b" stroke-width="2.2"/>
 <line x1="2990" y1="126.58823529411765" x2="3220" y2="126.58823529411765" stroke="#c0392b"/><line x1="2990" y1="169.41176470588235" x2="3220" y2="169.41176470588235" stroke="#c0392b"/>
 <line x1="3066.6666666666665" y1="96" x2="3066.6666666666665" y2="126.58823529411765" stroke="#c0392b"/>
@@ -336,7 +358,7 @@
 <text x="3191.25" y="180.41176470588235" font-size="8.5" fill="#777" text-anchor="middle">SEZ</text><text x="3191.25" y="195" font-size="13" font-weight="bold" text-anchor="middle" fill="#000">13,25</text>
 <text x="2998" y="141.58823529411765" font-size="12.5" font-weight="bold" fill="#c0392b">V2</text>
 <text x="3032" y="141.58823529411765" font-size="10.5">Szenen rendern</text>
-<text x="3032" y="154.58823529411765" font-size="10.5">(PyVista/ParaView → Blender)</text>
+<text x="3032" y="154.58823529411765" font-size="10.5">(PyVista/ParaView → Blender),…</text>
 </g>
 <g><title>V3: Schnitt, Begleittext DE/EN aus Ergebnisdateien</title>
 <rect x="3290" y="96" width="230" height="104" fill="#fdecea" stroke="#c0392b" stroke-width="2.2"/>

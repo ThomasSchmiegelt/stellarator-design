@@ -908,3 +908,135 @@ sim/invers/qi_* (Prüfläufe) sind eigene Zwischenstände, dürfen nach Bericht 
 - three.js 0.160.0 mit esbuild zu assets/h2/stack_viewer_offline.js gebündelt (file:// erlaubt keine ES-Module/CDN), Plotly 2.35.2 lokal statt CDN in turbulenz_3d.html.
 - Test: Chromium ohne Netz, Seite + Turbulenz 3D + Stack (three.js-Canvas erzeugt) laufen. Nur GitHub-Links brauchen Internet.
 - Bei Änderung der Online-Seite Offline-Fassung neu bauen (de/en kopieren, Importmap/Modul-Skript ersetzen).
+
+### 2026-11-13 09:01 Stufe 0 Top 10 (B-078), Push ed2ebb3
+- Gepusht: B-077, Netzplan DIN, dk8_stufe0_eingabe.py, Vortrag ohne Batterie (Commit ed2ebb3).
+- (b) erledigt: alle Top 10 durch Stufe 0, sim/kette_top10/ERGEBNIS.md. HTS 12,6 (D799qKH8) … 21,2 m; DK8s6qwo/DfXvrph2 die größten. Neustart: `systemd-run --user --scope sim/kette_top10/lauf.sh` (überspringt Fertiges).
+- Vor K2 offen: Kandidat beim Autor (DK8s6qwo 0,69/21,1 m, DZrUR4dA 0,59/16,8 m, DGozX5fj 0,52/14,4 m).
+- Neue Regel Nutzer (F-321): alle Rechnungen an Agenten verteilen, händisch pausier-/neustartbar, Token sparen.
+
+### 2026-11-13 09:30 Kandidat bestätigt, K2 an Sonnet
+- Autor: „DK8s6qwo bleibt“ (nach B-078). K2 läuft beim Sonnet-Agenten: Auftrag sim/kette_dk8/AUFTRAG_K2.md, Erwartung ERWARTUNG_K2.md (vorher, Opus), Ergebnis kommt nach ERGEBNIS_K2.md.
+- Pausieren: `~/bin/rechnung pause` / `weiter` (Scope k2-dk8). Neustart: Befehl in AUFTRAG_K2.md, fertige Pakete (sim/kette_dk8/k2/*.json) werden übersprungen.
+- Danach Opus: Deutung, Stichprobe, Befund B-079; Berichtskapitel DE/EN zu B-077/B-078/K2 an Sonnet.
+
+### 2026-11-13 09:36 K2 P1: Haltegrenze griff (B0 8,59 T statt 10 T)
+- Ursache (Opus geprüft): Stufe 0 rechnet B0 = μ0·N·I/(2πR0); die Achse von DK8s6qwo ist 1,145·2πR0 lang → Ampère 8,73 T Mittel. Modellfehler Stufe 0, Skalierung korrekt (Ampère-Kontrolle stimmt). Feldfehler 2,0e-4 wie erwartet.
+- Entscheidung: weiter mit 26,4 MA (Leitergrenze), P3 zusätzlich echtes Spitzenfeld am Leiter (k_B). Danach Stufe 0 mit Achslänge und echtem k_B korrigieren → neues R0 (vermutlich etwas größer). Sonnet rechnet P2–P5.
+
+### 2026-11-13 09:41 Video: ganzes Paket (Autor: „Auslegung, Datensuche, Auswahl, Berechnung, Modell, das ganze Paket auch mit Kühlung und Festigkeit“)
+- Storyboard FUS-DOC-14 Version 0.2: Teil A (A1 Auslegung, A2 Datensuche, A3 Auswahl) + Teil B (Szenen 1–6, Kühlung und Festigkeit Pflicht), 5–7 min (Annahme).
+- Szenenbausteine: jeder Vorgang K1–K10 legt Material in video/bausteine/<Vorgang>/ ab (Geometrie, Punkte, baustein.md). K2-Sonnet informiert.
+- Plan: neuer Vorgang V0 (Teil A aus vorhandenem Material, 1 AT, nach V1+K2); Dauer bleibt 14,75 AT. Netzplan/Zeitleiste/Wissensnetz neu.
+- Offen: wissensnetz.py prüft nur B-001…B-076 → B-077/B-078 Phase zuordnen (mit Doku-Auftrag an Sonnet).
+
+### 2026-11-13 09:50 K2 fertig (B-079), K2b an Sonnet
+- K2: Flächen/iota/Bauregeln gut; Leiterfeld 28,4 T (Grenze 20), B0 8,59 T, Energie 1086 GJ → Stufe 0 zu optimistisch (3 Modellfehler). Bilder sim/kette_dk8/k2/bilder/, Baustein video/bausteine/K2/.
+- K2b: Stufe 0 ↔ K2 iterieren (--f_I, --k_B) für alle Top 10, Auftrag sim/kette_dk8/AUFTRAG_K2b.md, Erwartung ERWARTUNG_K2b.md. Neustart: `systemd-run --user --scope --unit=k2b … sim/kette_k2b/lauf.sh`.
+- Danach ggf. Kandidatenfrage an den Autor (DK8s6qwo > 30 m → neu besprechen).
+
+### 2026-11-13 10:03 K2b divergiert → Fehlersuche Opus → K2c an Sonnet
+- K2b (sim/kette_k2b/ERGEBNIS.md): keine Form konvergiert, R0 läuft auf 24–43 m bzw. nicht machbar. Ursache (Opus): festes k_B im ganzen Raster von Stufe 0 = Verfahrensfehler im Auftrag K2b.
+- Physik (Überschlag Opus): R0 ∝ B0^-1,39 bei fester Leistung, Strom je Spule steigt mit R0, Eigenfeld ∝ √(I·j). DK8s6qwo mit 40 Spulen: j 40/30 keine Lösung, j 20 ≈ 36 m.
+- K2c: Leiterfeld als Modell im Raster (--spulenmodell), j frei, Spulenzahl grob; Auftrag/Erwartung sim/kette_dk8/AUFTRAG_K2c.md, ERWARTUNG_K2c.md. Danach Befund B-080 und Vorlage beim Autor.
+
+### 2026-11-13 10:56 Kandidat DGozX5fj (Autor), Spulen ohne Kreuzung → K2d an Sonnet
+- K2c (B-080): DK8s6qwo 34,5 m, DGozX5fj 22,5 m (HTS, 40 Spulen). Autor wählt DGozX5fj (Empfehlung Opus).
+- Nachträglich von Opus gemeldet: DGozX5fj hat 12 kreuzende Nachbarpaare (Montageregel verletzt; alle kleinen Formen 8–20, nur DK8s6qwo 0). Autor: „DGozX5fj, Spulen neu“.
+- K2d: neue Kreuzungsstrafe (stellarator/kreuzung_strafe.py, Option _x in k3_spulen), Größe kalibriert, K2 in Endgröße. Auftrag/Erwartung sim/kette_dgoz/. Neustart: Stapel sim/kette_dgoz/lauf.sh im Scope hermes-fusion-k2d.
+- Video: Szene A3 bekommt den Kandidatenwechsel (Größe gegen Spulengüte) als Geschichte.
+
+### 2026-11-13 11:50 K2d fertig (B-081)
+- DGozX5fj: Spulen ohne Kreuzung (Feldfehler unverändert 2,57e-4), aber kalibriert 34,7 m (j 15, B0 5 T). Ursache: Spulen laden weit aus (≈ 10 a), I_max/I_mittel 1,54.
+- Nächste Frage an den Autor: Spulen kompakter nachoptimieren (Länge/Ausdehnung begrenzen, Ströme angleichen, ggf. mehr Spulen) oder ~33 m annehmen und mit K5 weiter.
+- 2026-11-13 11:48 PI-Lauf: Schritt K2d (DGozX5fj Spulen ohne Kreuzung, Größe, K2) gerechnet, Bericht sim/kette_dgoz/BERICHT_PI_K2d.md (ungeprüft, Opus prüfen).
+
+### 2026-11-13 11:50 Weiterführen ohne Claude: pm/weiter_mit_pi.sh (Wunsch Autor)
+- Start losgelöst: `cd ~/hermes/fusion && setsid nohup bash pm/weiter_mit_pi.sh > pm/pi_lauf.log 2>&1 &`; anzeigen `bash pm/weiter_mit_pi.sh --zeigen`; anhalten `touch pm/STOP_PI`; pausieren `~/bin/rechnung pause|weiter`.
+- Rechnet nur freigegebene Schritte aus pm/warteschlange.tsv (fertiger Befehl + ERWARTUNG vorhanden), hält bei Fehler/Halt an. Danach PI (qwen-gross, ohne Werkzeuge) Bericht „Ergebnis gegen Erwartung“ + automatische Belegprüfung (pm/pi_belegpruefung.py). Protokoll pm/pi_protokoll.md.
+- Test 11:47: Bericht K2d in 75 s, 32/32 Zahlen belegt (sim/kette_dgoz/BERICHT_PI_K2d.md).
+- Regel für Opus: jeden neuen Auftrag gleich als Zeile in pm/warteschlange.tsv eintragen (Befehl, Erwartung, Ergebnis, Freigabe), damit PI übernehmen kann.
+
+### 2026-11-13 11:55 Ganze Kette für PI vorbereiten (Autor: „Bitte bereite alle weiteren Rechnungen vor, so dass PI die starten kann“)
+- sim/kandidat/kandidat.json = gemeinsame Eingabe (DGozX5fj, 34,7 m); nur K2e darf es ändern (Übernahmeregel in erwartung/K2e.md).
+- Erwartungen Opus für K2e, K3–K11, V0 in sim/kandidat/erwartung/ (vor der Rechnung).
+- Zwei Sonnet-Agenten bauen Skripte + Rauchtests (A: K2e, K3–K6, K11; B: K7–K10, V0), Auftrag sim/kandidat/AUFTRAG_KETTE.md. Danach führt Opus die Warteschlangenzeilen in pm/warteschlange.tsv zusammen; Start dann mit pm/weiter_mit_pi.sh.
+
+## Übergabe 2026-11-13 13:19 (Claude, opencode-Sitzung)
+- AGENTS.md im Repo-Root neu (Regeln für Agenten, Pflichtregeln, Umgebungen, Befehle, Doku-Konventionen). Nicht committet.
+- Recherche Fördergelder KI/Open Source/Bayern: docs/recherche/foerderung_ki_open_source/foerderung_ki_open_source.md (KI-generiert, Entwurf).
+  - BMFTR (bmftr.bund.de, erreichbar): KI-Strategie/Aktionsplan (1,6 Mrd. € Legislatur, 50 Mio a/Zentren, DFKI 11 Mio a, NHR 62,5 Mio a), Fusion (Aktionsplan Fusion >2 Mrd bis 2029, Förderprogramm „Fusion 2040“, 3 Phasen bis 2040er, Portal bmbf-fusionsforschung.de), Forschungszulage (steuerlich, themenoffen, FZulG ab 02.01.2020, kein Fördersatz in der Seite).
+  - Nicht erreichbar von diesem Host: BMWK (Bot-Abwehr), alle Bayern-Domänen (DNS/Fault/Timeout); foerderdatenbank.de = Cookie-Wand ohne Daten → keine Zahlen dokumentiert.
+  - Geprüft (2026-11-13, lokal): PDF „Förderprogramm Fusion 2040" heruntergeladen
+    → Strategiepapier, keine Förderrichtlinie; Verbund/PPP-Fokus; Antragsberechtigung
+    Einzelprojekt ohne Körperschaft = unwahrscheinlich (s. 3.3 im Dokument).
+  - Geprüft (2026-11-13, lokal): FZulG § 3 und § 6 Volltext belegt
+    (gesetze-im-internet.de, `quellen/fzulg_s*_Volltext.txt`). Fördersatz = § 25a EStG,
+    hier 404 → **bewusst ohne Fundstelle**.
+  - Offen: Bayerische Ebene (Autor per Browser); FZul-Fördersatz § 25a EStG verifizieren;
+    klare Antragsberechtigung Hobby-/Einzelprojekt (Bayern + Fusion 2040).
+- Protokoll: docs/projekt/08_ki_einsatz_protokoll.md um Zeile 2026-11-13 ergänzt.
+
+### 2026-11-13 19:30 K2e gestartet (Autor: „wir machen k2e“)
+- Erwartung K2e ergänzt: 48 statt 50 Spulen (nfp 2 + Symmetrie nur 4·n). Warteschlange zusammengeführt (Sicherung pm/warteschlange_vor_k2e.tsv): K2e Freigabe Autor, K3–K11/V0 „nein“ bis Opus K2e geprüft hat (K2e darf kandidat.json ändern).
+- Läuft: pm/weiter_mit_pi.sh, Scope hermes-fusion-pi-K2e-*, Log pm/pi_lauf.log, Ergebnis sim/kandidat/K2e/ERGEBNIS.md + PI-Bericht. Dauer geschätzt 1–2 h. Pause/weiter: ~/bin/rechnung pause|weiter; Abbruch: touch pm/STOP_PI.
+- Danach: Opus prüft K2e an Rohdaten (auswertung.json, kandidat_neu.json), dann K3–K11/V0 in pm/warteschlange.tsv freigeben und neu starten.
+- 2026-11-13 20:08 PI-Lauf: Schritt K2e (Spulen kompakter (Laenge 0,8/0,65, Stromverhaeltnis 1,2, 48 Spulen)) gerechnet, Bericht sim/kandidat/K2e/BERICHT_PI_K2e.md (ungeprüft, Opus prüfen).
+
+### 2026-11-13 20:25 K2e fertig und geprüft (B-082)
+- Regel übernahm A (40 Spulen, 30,4 m, Feldfehler 8,1e-4); kandidat.json = A, alt kandidat_2026-11-13.json.
+- Opus: C (48 Spulen, 27,6 m, 2,9e-4) besser, scheitert nur an rms-Flächenkriterium 0,02009 > 0,02 (halbe Periode, s 0,8) – Kriterium unscharf.
+- Offene Entscheidung Autor: A behalten oder C (Abweichung von Regel dokumentieren). K3–K11/V0 bleiben bis dahin „nein“ in pm/warteschlange.tsv.
+
+### 2026-11-13 20:32 Autor wählt K2e Variante C; Kette K2eP5–V0 freigegeben, NICHT gestartet (Autor: „heute nicht mehr starten“)
+- kandidat.json = C (R0 27,6 m, a 3,58, B0 5,9 T, 48 Spulen, I_mittel 23,7 MA, Wickelpaket 1,26 m) + Schlüssel groesse, spulen_vtk. Fassungen: kandidat_2026-11-13.json (K2d), kandidat_K2e_A.json.
+- Behoben: k2_volle_groesse.py P5 (feste 10 Felder → nb), Texte „40 Spulen“ dynamisch. K4/K6/K7/K8/K10 lasen fest sim/kette_dgoz → jetzt aus kandidat.json.
+- Neu: K2eP5 (sim/kandidat/K2e/lauf_p5_C.sh, Erwartung erwartung/K2eP5.md) vor K3; Erwartungen K3–V0 mit Nachtrag „Eingabe jetzt C“.
+- Start morgen: `cd ~/hermes/fusion && setsid nohup bash pm/weiter_mit_pi.sh > pm/pi_lauf.log 2>&1 < /dev/null &` (läuft alle freigegebenen Schritte; anhalten touch pm/STOP_PI).
+- Risiko K8: FEM mit 48 statt 40 Spulen, FEM_MEM 20G / Scope 22G evtl. knapp (bei 40 Spulen ~18 GB). Bei OOM: FEM_MEM=24G und Scope in weiter_mit_pi.sh anheben, K8 setzt fort.
+- K7: Erwartung/Segment für 34,7 m geschätzt (3°, 16 mm) – bei 27,6 m prüfen.
+- Hinweis PI-Befehl: ~/.local/bin/pi ist ein Wrapper auf ai-workspace/start_agent.sh (EMA-Agent), steht im PATH vor dem echten pi (~/.npm-global/bin/pi). Entscheidung Autor offen.
+- Laufend: nichts (keine Scopes, kein Modell geladen).
+
+### 2026-11-15 11:55 Kette K2eP5–V0 gestartet (Autor: „mach k7, dann starte die kette“)
+- K7 angepasst: Segmentbreite aus R0 (10°·10,4 m/R0 → 3,77° bei 27,6 m statt fest 3,0°), stellarator/k7_kuehlung.py; Nachtrag 2 in sim/kandidat/erwartung/K7.md; Test --test ok (φ 88,115–91,885).
+- K8 vorsorglich: FEM_MEM Standard 23G, wartet auf 23 GB frei (sim/kandidat/K8/lauf.sh; 48 Spulen ≈ 18 GB·48/40). Achtung: PI-Bericht lädt qwen-gross (~16,7 GB RAM) → K8 wartet, bis Ollama entlädt.
+- Läuft: pm/weiter_mit_pi.sh (Log pm/pi_lauf.log). Anhalten: touch pm/STOP_PI; Pause: ~/bin/rechnung pause|weiter; Neustart: setsid nohup bash pm/weiter_mit_pi.sh > pm/pi_lauf.log 2>&1 < /dev/null &  (fertige Schritte werden übersprungen).
+- K2eP5 fertig + von Opus geprüft: 48 Linien in baustein_k2/spulen_40.vtk, Linienkraft max 149 MN/m (k2_end/P3.json, Bild k2_linienkraft_de.png) = Erwartung.
+- Danach je Schritt: Opus prüft ERGEBNIS an Rohdaten; Tabellen/Berichtsentwürfe an sonnet-umsetzer. PI-Wrapper/EMA-Frage: Haiku-Prüfung läuft (nur lesen).
+- 2026-11-15 11:55 PI-Lauf: Schritt K2eP5 (K2e Nachtrag P5 Variante C (Bilder, Spulenlinien für K10)) gerechnet, Bericht sim/kandidat/K2e/lauf/C/k2_end/BERICHT_PI_K2eP5.md (ungeprüft, Opus prüfen).
+- 2026-11-15 12:10 PI-Wrapper (~/.local/bin/pi, Freigabe Autor): -p/--mode/ohne TTY → direkt echtes pi (Standard ollama/qwen-gross nur ohne --provider/--model); interaktiv und start_agent-Optionen (--weiter, --sitzung …) → wie bisher EMA/start_agent.sh. Sicherung pi.bak_2026-11-15. Sonnet umgesetzt, Opus geprüft (Trockentest PI_WRAPPER_TROCKEN=1). Offen: echter Test nach der Kette (EMA --mode rpc, interaktiv).
+- 2026-11-15 13:03 PI-Lauf: Schritt K3 (Alphateilchen im Spulenfeld) gerechnet, Bericht sim/kandidat/K3/BERICHT_PI_K3.md (ungeprüft, Opus prüfen).
+- 2026-11-15 13:04 PI-Lauf: Schritt K4 (Turbulenz GX in voller Groesse einordnen) gerechnet, Bericht sim/kandidat/K4/BERICHT_PI_K4.md (ungeprüft, Opus prüfen).
+- 2026-11-15 13:05 PI-Lauf: Schritt K5 (Platz Plasma-Spulen) gerechnet, Bericht sim/kandidat/K5/BERICHT_PI_K5.md (ungeprüft, Opus prüfen).
+- 2026-11-15 13:07 PI-Lauf: Schritt K6 (Waermebilanz und Wandlast) gerechnet, Bericht sim/kandidat/K6/BERICHT_PI_K6.md (ungeprüft, Opus prüfen).
+- 2026-11-15 16:25 PI-Lauf: Schritt K7 (Kühlung Erste Wand/Gefäß (FluidX3D)) gerechnet, Bericht sim/kandidat/K7/BERICHT_PI_K7.md (ungeprüft, Opus prüfen).
+
+## Übergabe 2026-11-15 16:25 (Opus) – K7 Abbruch behoben, K7 HALT
+- K7 brach 14:38 ab: stellarator/k7_kuehlung.py rief kuehlung_cfd.auswerten nie auf (Probelauf hatte es gemeldet). Eingefügt: Schritt 3b Auswertung; CFD wird übersprungen, wenn feld_*.bin da ist; auswerten und kuehlung_waerme bekommen jetzt env (FUSION_RAND_WOUT/FAKTOR), sonst alte Randfläche → leere Plasmaseite (IndexError 16:21).
+- Neustart 16:23 ohne neue Strömungsrechnung (CFD 5172 s, sim/kuehlung_segment/k7/cfd/). Ergebnis sim/kandidat/K7/ERGEBNIS.md: HALT, Wand max 1680/1146 °C (ohne/mit Rippen) > 550 °C (Annahme), dp 42 817 kPa, v Plasmaseite 0,119 m/s.
+- Opus-Prüfung: Auslegung nimmt K6-Spitze 1,464 MW/m² gleichmäßig auf 107,5 m² (157 MW je Segment, dT 10 K → 3766 kg/s, 53 m/s im 300-mm-Rohr; f12: 0,5 MW/m², 4,5 m/s). K6-Mittel 0,063 MW/m² (sim/kandidat/K6/ergebnis.json). Erwartung K7 („Wärmestrom kleiner als QA-Fall“) traf nicht zu: Spitze ist 2,9× f12. Entscheidung Autor offen (Mittel für Durchfluss + Spitze örtlich, oder Variante Kanal). Kette angehalten nach K7 (PI-Bericht K7 lief).
+- 2026-11-15 16:33 Opus: K7 Lauf 2 gestartet (Entscheidung Autor „a, dann kette weiter“): Durchfluss nach K6-Mittel, Spitze örtlich, Ordner sim/kuehlung_segment/k7_mittel; Lauf 1 archiviert (sim/kandidat/K7/ERGEBNIS_lauf1_spitze_flaechig.md); Befunde > 550 °C ohne HALT; Erwartung K7.md Nachtrag 3.
+- 2026-11-15 16:40 PI-Lauf: Schritt K7 (Kühlung Erste Wand/Gefäß (FluidX3D)) gerechnet, Bericht sim/kandidat/K7/BERICHT_PI_K7.md (ungeprüft, Opus prüfen).
+- 2026-11-15 16:43 Opus: K7 Lauf 2 fertig 16:39 (7 min): BEFUND Wand bei Mittellast 1441/886 °C (ohne/mit Rippen) > 550 °C (Annahme), dp 61,7 kPa (Erwartung 40–200 ✓), v Plasmaseite 0,002 m/s (Erwartung 0,005–0,02, darunter), Spitze örtlich 26 281 °C (Dittus-Boelter bei so kleiner v außerhalb Gültigkeit, nur Größenordnung). Quelle sim/kandidat/K7/ERGEBNIS.md. Deutung vorher trifft: Verteilung vorn (Plasmaseite fast nicht durchströmt) ist das Problem, nicht die Menge → nächste Variante Geometrie vorn (Kanal 10 mm, 1 m/s), Entscheidung Autor. Kette läuft weiter (K8 seit 16:40).
+- 2026-11-15 16:43 Opus Stichprobe K7 Lauf 2: stat.txt nicht stationär (Spalte 2 Eintritt 0,0326→0,0278 in den letzten 3 Messungen, nur 56 000 Schritte/38,9 s) → Zahlen vorläufig; längere t_phys nötig, falls Lauf 2 als Basis dient.
+- 2026-11-15 16:50 PI-Lauf: Schritt K8 (Tragwerk Elmer-FEM (p99 heißeste Spule)) gerechnet, Bericht sim/kandidat/K8/BERICHT_PI_K8.md (ungeprüft, Opus prüfen).
+- 2026-11-15 16:52 PI-Lauf: Schritt K9 (Was fehlt noch? (PI-Recherche mit Belegprüfung)) gerechnet, Bericht sim/kandidat/K9/BERICHT_PI_K9.md (ungeprüft, Opus prüfen).
+- 2026-11-15 17:07 Opus: K8 fertig (v0 829 MPa Spule 7, v1 Wände ×1,25 464 MPa Spule 31; u_max 232/64 mm; Erwartung 400–1000 MPa ✓; Auslenkung gegen 0,1 % Spulenlänge noch prüfen). K9 HALT: nur Bauteil 01, weil pi stdin (themen.tsv) leerlas → sim/kandidat/K9/lauf.sh pi-Aufruf < /dev/null; Lauf 1 archiviert, Neustart Kette.
+- 2026-11-15 17:08 Opus: K8 Auslenkung: 0,1 % der Spulenlänge = 51–88 mm (48 Spulen 51,3–87,7 m, sim/kandidat/K2e/lauf/C/baustein_k2/spulen_40.vtk); v1 u_max 64 mm liegt im Band, v0 232 mm darüber. Zuordnung u_max→Spule offen.
+- 2026-11-15 17:35 Opus: K9 Lauf 2 fertig 17:34: 10 Bauteile, 42 Belege bestätigt, 0 Fehler, 3 Zeilen „nicht gefunden“ (sim/kandidat/K9/ERGEBNIS.md). Kette weiter (K10).
+- 2026-11-15 17:35 PI-Lauf: Schritt K9 (Was fehlt noch? (PI-Recherche mit Belegprüfung)) gerechnet, Bericht sim/kandidat/K9/BERICHT_PI_K9.md (ungeprüft, Opus prüfen).
+- 2026-11-15 17:37 Opus: K10 Abbruch rc 2 (K5 aufbau_m ist Liste mit deutschen Namen, K10 erwartete dict) → stellarator/k10_anlage.py übersetzt Liste; Neustart Kette.
+- 2026-11-15 17:38 PI-Lauf: Schritt K10 (Gesamtanlage als Geometrie, Kollisionsprüfung) gerechnet, Bericht sim/kandidat/K10/BERICHT_PI_K10.md (ungeprüft, Opus prüfen).
+- 2026-11-15 17:38 Opus: K10 HALT (sim/kandidat/K10/ERGEBNIS.md): Spule–Aufbau frei min −0,32 m (100 Punkte), Spule–Spule −1,82 m (Paar 6/7), Kryostat 96,6×75,4 m. Prüfung: K10 nimmt K8-v1 wand_seite 1,0 m rundum (halbmass 1,89 m); zum Plasma hin ist v1 wand_innen 0,40 m → Spule–Aufbau wäre ≈ +0,28 m (Annahme, nicht gerechnet). Spule–Spule ist echt: Seitenwände 1,0 m der Verstärkung v1 passen bei 48 Spulen innen nicht. Zielkonflikt K2e (kompakt, 48) ↔ K8 (Wand). Entscheidung Autor. K11 nicht gestartet.
+- 2026-11-15 18:20 Opus: Varianten (Sonnet, sim/kandidat/K10/varianten/BERICHT_SONNET.md) an Rohdaten geprüft: V1 480 MPa Spule 26, alle Grenzen ok, Dehnung WP 0,214 %, Spule–Spule +0,10 m (Paar 6/7), Spule–Aufbau +0,32 m, 0 Durchdringungen. V3 (A, 40 Spulen) schlechter: 1233 MPa (v0) / 2203 MPa (Regel V1). V1 vorläufig als K8/K10-Ergebnis übernommen (Lauf 1 als ERGEBNIS_lauf1/_lauf_1), Kette K11/V0 gestartet. Offen: Wickelpaket K10 1,26 m (kandidat.json) vs K8 0,899 m (struktur); K8 „innen“ = Kurvenseite, K10 nimmt sie als Plasmaseite; Spulenlinien A abgeleitet (Annahme Sonnet).
+- 2026-11-15 18:22 PI-Lauf: Schritt K11 (Absprungbasis pruefen (Zusammenstellung)) gerechnet, Bericht sim/kandidat/K11/BERICHT_PI_K11.md (ungeprüft, Opus prüfen).
+- 2026-11-15 18:23 PI-Lauf: Schritt V0 (Video Teil A aus vorhandenem Material) gerechnet, Bericht sim/kandidat/V0/BERICHT_PI_V0.md (ungeprüft, Opus prüfen).
+- 2026-11-15 18:23 Opus: Kette durch. K11 (sim/kandidat/K11/ERGEBNIS.md): 2× „nein“ – Flächen geschlossen bis s 0,70 (≥ 0,8, Annahme; bekannte Abweichung C, B-082) und Alphaverlust 15 % (≤ 10 %, Setzung Opus, K3). V0: 3 Szenen 110 s (video/bausteine/V0/). Offen für Autor: V1 als Basis bestätigen; K7 Kühlung vorn (Verteilung); Alphaverlust; WP-Maß K8/K10.
+- 2026-11-15 19:21 Opus: K3 an Rohdaten geprüft (sim/kandidat/K3/lauf/auswertung.json = ERGEBNIS). K11 Zeile „K2e: übernommene Variante A“ falsch (auswertung.json Regelergebnis; Kandidat ist C) – korrigieren.
+- 2026-11-15 19:50 Opus: Autor unzufrieden mit V0 (nur Diagramme). Neues Video V1 (Teil B, gerenderte Geometrie: Auslegung → Plasma → Voxel → glatt → Festigkeit → Schnitt) beauftragt: sim/kandidat/erwartung/V1.md, sim/kandidat/V1/AUFTRAG.md, Sonnet läuft.
+
+- Uebergabe 2026-11-15 21:00 (Opus): V1-Video fertig (video/bausteine/V1/V1_gesamt.mp4, 90 s, 6 Szenen; ERGEBNIS sim/kandidat/V1/ERGEBNIS.md). Opus hat Vorschaubilder + Fußzeile angesehen. Offen: Freigabe Autor, Löschen frames/ + Verwerfungen 4,4 GB (nur nach Freigabe), K8 26,8 MA/0,90 m vs K2e 23,7 MA/1,26 m ungeklärt. ai_framework (GitHub, Autor) zum Ansehen installiert in cae_projekte/ai_framework_test, Server localhost:8780 (Scope aifw-test).
+- Uebergabe 2026-11-16 08:13 (Opus): V1 überarbeitet (98 s), alte Szenen *_v1.mp4. Offen: Szene 1 (Beschriftung?), Herkunft Feld der 12 Bahnen, Löschen Einzelbilder nach Freigabe.
+- Uebergabe 2026-11-16 09:32 (Opus): V1 Szene 1 gestrichen (Autor), Ruckeln Szene 3 behoben (fehlendes p.render(); nur alle 40 Bilder neu gezeichnet) + Encode-Überspringen umgangen; V1_gesamt.mp4 86 s, Szene 3 ohne Standbilder geprüft. Verworfene Dateien *_ruckel_verworfen*, Löschen nach Freigabe.
+- Uebergabe 2026-11-16 10:20 (Opus): V1 jetzt 70 s (Szenen 2, 3 neu, 5); offen Freigabe Autor + Löschen verworfener Fassungen/Einzelbilder.

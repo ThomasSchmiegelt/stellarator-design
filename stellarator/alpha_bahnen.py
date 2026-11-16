@@ -36,6 +36,15 @@ R0_U = 1.0294040771781494
 R0, B0 = 10.4, 6.5
 L = R0 / R0_U
 
+# K3 (Kandidat, 2026-11-13): andere Form/Spulen/Groesse ueber Umgebungsvariablen; ohne ALPHA_WOUT bleibt alles wie bisher (QA-Form, 10,4 m, 6,5 T).
+# Die Variablen werden von stellarator/k3_alpha.py gesetzt und von den gespawnten Prozessen geerbt.
+ALPHA_H = float(os.environ.get("ALPHA_H", "0.02"))          # Gitterweite Randklassifikator (Einheitsgeometrie)
+ALPHA_AUTO = bool(os.environ.get("ALPHA_AUTO_GRENZEN"))     # Interpolationsgrenzen aus der Randflaeche statt der festen QA-Werte
+if os.environ.get("ALPHA_WOUT"):
+    SPULEN = Path(os.environ["ALPHA_SPULEN"]); WOUT = Path(os.environ["ALPHA_WOUT"]); STUFE0 = Path(os.environ["ALPHA_STUFE0"])
+    AUS = Path(os.environ["ALPHA_AUS"]); R0_U = float(os.environ["ALPHA_R0U"]); R0 = float(os.environ["ALPHA_R0"]); B0 = float(os.environ["ALPHA_B0"])
+    L = R0 / R0_U
+
 _F = {}
 
 
@@ -64,11 +73,14 @@ def feld():
     from simsopt.field.tracing import SurfaceClassifier
     from simsopt.geo import SurfaceRZFourier
     w = wout(); bs = load(str(SPULEN)); Bu = achsfeld(bs, w)
-    f = InterpolatedField(bs, 4, [0.45, 1.45, 50], [0, 2 * np.pi / w["nfp"], 48], [0.0, 0.55, 30], True,
-                          nfp=w["nfp"], stellsym=True)
     rand = SurfaceRZFourier.from_wout(str(WOUT), s=1.0, range="full torus", nphi=64, ntheta=32)
+    rg, zg = [0.45, 1.45], 0.55
+    if ALPHA_AUTO:                                                # K3: Grenzen aus dem Rand + 0,06 (Einheitsgeometrie)
+        g = rand.gamma(); Rr = np.hypot(g[..., 0], g[..., 1]); rg = [float(Rr.min()) - 0.06, float(Rr.max()) + 0.06]; zg = float(np.abs(g[..., 2]).max()) + 0.06
+    f = InterpolatedField(bs, 4, [rg[0], rg[1], 50], [0, 2 * np.pi / w["nfp"], 48], [0.0, zg, 30], True,
+                          nfp=w["nfp"], stellsym=True)
     # Klassifikator: h = 0,02 (Einheitsgeometrie); h = 0,01 belegt etwa 9 GB je Prozess
-    _F.update(f=f, sc=SurfaceClassifier(rand, h=0.02, p=2), Bu=Bu, w=w, rand=rand)
+    _F.update(f=f, sc=SurfaceClassifier(rand, h=ALPHA_H, p=2), Bu=Bu, w=w, rand=rand)
     return _F
 
 

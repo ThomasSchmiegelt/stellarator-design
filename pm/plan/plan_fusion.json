@@ -1,8 +1,8 @@
 {
   "id": "fusion0001",
   "name": "Stellarator (KI-generiert)",
-  "created_at": 1794515005.2438776,
-  "updated_at": 1794515005.243878,
+  "created_at": 1794559270.0302272,
+  "updated_at": 1794559270.0302272,
   "tasks": [
     {
       "id": "H01",
@@ -593,7 +593,8 @@
       "successors": [
         "K3",
         "K5",
-        "K8"
+        "K8",
+        "V0"
       ],
       "resources": "Sonnet, Maschine",
       "resource_list": [
@@ -892,6 +893,7 @@
         "K0"
       ],
       "successors": [
+        "V0",
         "V2"
       ],
       "resources": "Opus, Mensch",
@@ -914,10 +916,41 @@
       "is_end": false
     },
     {
+      "id": "V0",
+      "name": "Teil A des Videos aus vorhandenem Material: Auslegung, Datensuche, Auswahl (Szenen A1–A3)",
+      "duration": 1,
+      "predecessors": [
+        "V1",
+        "K2"
+      ],
+      "successors": [
+        "V2"
+      ],
+      "resources": "Sonnet, Maschine",
+      "resource_list": [
+        {
+          "kind": "software",
+          "name": "Sonnet",
+          "qty": 1,
+          "rate": 0
+        },
+        {
+          "kind": "hardware",
+          "name": "Maschine",
+          "qty": 1,
+          "rate": 0
+        }
+      ],
+      "notes": "REQ-D09, Wunsch Autor 2026-11-13",
+      "is_start": false,
+      "is_end": false
+    },
+    {
       "id": "V2",
-      "name": "Szenen rendern (PyVista/ParaView → Blender)",
+      "name": "Szenen rendern (PyVista/ParaView → Blender), Teil A + B",
       "duration": 3,
       "predecessors": [
+        "V0",
         "V1",
         "K11"
       ],

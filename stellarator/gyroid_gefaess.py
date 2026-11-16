@@ -29,7 +29,10 @@ def randflaeche(R0: float = 10.4, n_th: int = 96, n_ph: int = 720, phi: np.ndarr
     from netCDF4 import Dataset
     ordner = PROJEKT / "sim" / "invers" / "qa_nfp2_A45"
     R0_s = json.loads((ordner / "stufe1.json").read_text())["kennzahlen"]["R0_m"]
-    with Dataset(str(next(ordner.glob("wout_*.nc")))) as w:
+    wout = next(ordner.glob("wout_*.nc"))
+    if os.environ.get("FUSION_RAND_WOUT"):        # neu (K7): andere Form; FUSION_RAND_FAKTOR = Massstab Einheitsform -> Meter (R0 wird ignoriert)
+        wout = Path(os.environ["FUSION_RAND_WOUT"]).expanduser(); R0 = float(os.environ["FUSION_RAND_FAKTOR"]); R0_s = 1.0
+    with Dataset(str(wout)) as w:
         rmnc, zmns, xm, xn = w["rmnc"][-1, :], w["zmns"][-1, :], w["xm"][:], w["xn"][:]
     th, ph = np.meshgrid(np.linspace(0, 2 * np.pi, n_th, endpoint=False), np.linspace(0, 2 * np.pi, n_ph, endpoint=False) if phi is None else np.asarray(phi, float),
                          indexing="ij")

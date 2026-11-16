@@ -37,7 +37,8 @@ FAELLE = {"d085_n8": (0.85, 8), "d085_n10": (0.85, 10), "d100_n8": (1.00, 8), "d
           "d100_n10": (1.00, 10), "d085_n6": (0.85, 6),
           "d085_n5": (0.85, 5),                                           # Plan B DATJ5FC… (nfp 4) wie A085 bei DjLe3eL6
           "d100_n5": (1.00, 5), "d100_n6": (1.00, 6), "d100_n4": (1.00, 4),
-          "d100_n7": (1.00, 7)}                                           # Suche spulenfreundlich (2026-11-09): nfp 3 -> 42 Spulen                     # Vergleich DATJ5FC im Bauraum (2026-11-08)
+          "d100_n7": (1.00, 7),
+          "d100_n12": (1.00, 12), "d100_n13": (1.00, 13)}                 # K2e (2026-11-13): 48 bzw. 52 Spulen bei nfp 2                                           # Suche spulenfreundlich (2026-11-09): nfp 3 -> 42 Spulen                     # Vergleich DATJ5FC im Bauraum (2026-11-08)
 
 
 def flaechen():
@@ -89,7 +90,7 @@ def lauf(fall, maxiter=2000, runden=int(os.environ.get("K3_RUNDEN", "2"))):
     if (AUS / f"{fall}.fertig").exists():
         print("fertig, uebersprungen:", fall); return
     weiter = fall.endswith("_w"); kern = fall[:-2] if weiter else fall
-    teile = kern.split("_"); kern = "_".join(teile[:2]); rb = 0.5; ss = 0.3; wt = 0.0; eben = False; vorlage = None; wr = 0.0; zeiger = False   # _p: ebene Spulen (CurvePlanarFourier); Varianten: _o<Ordnung>, _k<Biegeradius in 1/100 a>, _s<Spule-Spule in 1/100 a>, _lr, _t<Gewicht Verdrehung in 1e-11>
+    teile = kern.split("_"); kern = "_".join(teile[:2]); rb = 0.5; ss = 0.3; wt = 0.0; eben = False; vorlage = None; wr = 0.0; wx = 0.0; fL = None; qI = None; zeiger = False   # _p: ebene Spulen (CurvePlanarFourier); Varianten: _o<Ordnung>, _k<Biegeradius in 1/100 a>, _s<Spule-Spule in 1/100 a>, _lr, _t<Gewicht Verdrehung in 1e-11>
     laenge_ref = False                                            # _lr: Laengengrenze wie zwei_ringe (24,9 a je Spule, Proxima-Satz)
     for t in teile[2:]:
         if t == "lr":
@@ -108,6 +109,12 @@ def lauf(fall, maxiter=2000, runden=int(os.environ.get("K3_RUNDEN", "2"))):
             vorlage = Path(os.environ["K3_VORLAGE"]).resolve()
         elif t.startswith("r") and t[1:].isdigit():               # Montage (Nutzerregel): Strafe gegen Rücklauf, Gewicht k·1e-5, steigt bei Verletzung
             wr = int(t[1:]) * 1e-5
+        elif t.startswith("x") and t[1:].isdigit():               # Kreuzungsstrafe (K2d): Nachbarbahnen duerfen sich in der Abwicklung nicht kreuzen, Gewicht G·1e-4
+            wx = int(t[1:]) * 1e-4
+        elif t.startswith("L") and t[1:].isdigit():               # K2e: Laengengrenze = L/100 x Laenge der Referenz (K3_LAENGE_JE_SPULE je Spule, sonst Laenge der Vorlage)
+            fL = int(t[1:]) / 100
+        elif t.startswith("i") and t[1:].isdigit():               # K2e: Stromverhaeltnis I_max/I_mittel (Betrag, Basisspulen) <= i/100
+            qI = int(t[1:]) / 100
         elif t.startswith("t"):                                   # Baubarkeit (B-066): Strafe auf Torsion, eben = Torsion 0
             wt = int(t[1:]) * 1e-11
     d, n = FAELLE[kern]
@@ -135,6 +142,9 @@ def lauf(fall, maxiter=2000, runden=int(os.environ.get("K3_RUNDEN", "2"))):
     l_start = float(sum(CurveLength(c).J() for c in basis)); l_max = 1.25 * l_start
     if laenge_ref:                                                # wie zwei_ringe.optimieren: n * (Mittel Proxima-Satz + Umfangszuwachs)
         l_max = float(n * (np.mean(ref["ringe"]["ring0"]["laenge_basis_a"]) + 2 * np.pi * max(d - 0.85, 0)) * a)
+    if fL is not None:                                            # K2e: Laengengrenze relativ zur Referenz (altes Verhalten ohne _L unveraendert)
+        lref = float(os.environ["K3_LAENGE_JE_SPULE"]) * n if "K3_LAENGE_JE_SPULE" in os.environ else l_start
+        l_max = fL * lref
     roh = [Current(x / 1e5) for x in I0]
     if weiter:                                                    # Kurven und Stroeme aus dem fertigen Lauf
         from simsopt import load
@@ -155,7 +165,15 @@ def lauf(fall, maxiter=2000, runden=int(os.environ.get("K3_RUNDEN", "2"))):
     Jt = [LpCurveTorsion(c, 2, 0.0) for c in basis]               # nur mit _t aktiv (fest, ohne Steigerung)
     from stellarator.montage_strafe import RuecklaufStrafe, ruecklauf_zahl
     Jr = [RuecklaufStrafe(c, str(FORM)) for c in basis]             # nur mit _r aktiv
-    w = {"ss": 1e2, "sp": 1e2, "l": 1e-4, "k": 1e-5, "m": 1e-8, "r": wr}
+    Jq = None
+    if qI is not None:
+        from stellarator.strom_strafe import StromVerhaeltnis
+        Jq = StromVerhaeltnis(roh, qI)
+    Jx = None
+    if wx > 0:
+        from stellarator.kreuzung_strafe import KreuzungStrafe
+        Jx = KreuzungStrafe(kurv, str(FORM))
+    w = {"ss": 1e2, "sp": 1e2, "l": 1e-4, "k": 1e-5, "m": 1e-8, "r": wr, "x": wx, "q": 1e2}
     verlauf = []; t0 = time.time(); ringe_idx = [list(range(n))]
     for runde in range(runden):
         JF = (Jf + Weight(w["ss"]) * Jss + Weight(w["sp"]) * Jsp + Weight(w["l"]) * Jl
@@ -164,6 +182,10 @@ def lauf(fall, maxiter=2000, runden=int(os.environ.get("K3_RUNDEN", "2"))):
             JF = JF + Weight(wt) * sum(Jt)
         if wr > 0:
             JF = JF + Weight(w["r"]) * sum(Jr)
+        if Jx is not None:
+            JF = JF + Weight(w["x"]) * Jx
+        if Jq is not None:
+            JF = JF + Weight(w["q"]) * Jq
 
         def fun(x):
             JF.x = x
@@ -177,10 +199,15 @@ def lauf(fall, maxiter=2000, runden=int(os.environ.get("K3_RUNDEN", "2"))):
         rl = [ruecklauf_zahl(c.gamma(), str(FORM)) for c in basis]
         if wr > 0:
             verl["r"] = sum(rl) > 0
+        if Jx is not None:
+            verl["x"] = Jx.J() > 1e-6                                 # 0 = alle Nachbarabstaende >= 2 Grad (Annahme)
+        if Jq is not None:
+            verl["q"] = Jq.verhaeltnis() > 1.02 * qI
         zeile = {"runde": runde, "iter": int(res.nit), "meldung": str(res.message), "Jf": float(Jf.J()), "gewichte": dict(w),
                  "verletzt": [k for k, v in verl.items() if v], "zeit_s": time.time() - t0, "Bn_mittel": e["Bn_mittel"],
                  "Bn_max": e["Bn_max"], "spule_spule_min_a": e["spule_spule_min_a"], "biegeradius_min_a": e["biegeradius_min_a"],
-                 "abstand_a": e["ringe"]["ring0"]["abstand_plasma_a"], "ruecklauf_je_spule": rl}
+                 "abstand_a": e["ringe"]["ring0"]["abstand_plasma_a"], "ruecklauf_je_spule": rl, "kreuzung_P": (Jx.J() if Jx is not None else None),
+                 "strom_max_mittel": (Jq.verhaeltnis() if Jq is not None else None), "laenge_summe": float(sum(CurveLength(c).J() for c in basis)), "laenge_max": l_max}
         verlauf.append(zeile); (AUS / f"verlauf_{fall}.json").write_text(json.dumps(verlauf, indent=1)); print(json.dumps(zeile), flush=True)
         bs.save(str(AUS / f"biot_savart_{fall}.json"))                 # Zwischenstand je Runde
         if not any(verl.values()) and res.nit < maxiter:            # weiter, solange Grenzen verletzt oder Schrittgrenze erreicht

@@ -233,6 +233,8 @@ def struktur_netz(p: dict, po: Path, geo: dict):
         assert len(fak) == len(spulen), "wand_je_spule.json passt nicht zur Spulenzahl"
         for wk, fk in zip(W, fak):                                # danach greifen Biegegrenze, Entflechten, Huellengrenze
             for q in ("innen", "aussen", "links", "rechts"):
+                if q in ("links", "rechts") and not float(p.get("wand_adapt_seiten", 1)):   # Option (Opus 2026-11-15): 0 = Seitenwand nicht skalieren (Standard 1: unveraendert)
+                    continue
                 wk[q] = wk[q] * float(fk)
     if p.get("biegung") == "innenkontur":                         # Wand innen in der Kurve kappen (F-180)
         from .gehaeuse_netz import biegegrenze

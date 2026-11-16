@@ -59,7 +59,7 @@ def konvertiere(satz: Path, studie: str, a_m: float = 1.8, wout: Path | None = N
     s2 = {"quelle": "aus Satzpruefung (pruefung_satz.json), nicht von stufe2_spulen", "Bn_rel_mittel": pr["Bn_mittel"],
           "Bn_rel_max": pr["Bn_max"], "n_basis": nb, "n_spulen": len(coils)}
     (po / "stufe2.json").write_text(json.dumps(s2, indent=1))
-    (o / "plasma.json").write_text(json.dumps({"wout": str(wout.relative_to(ROOT)), "L": L, "nfp": nfp, "a_m": a_m,
+    (o / "plasma.json").write_text(json.dumps({"wout": (str(wout.relative_to(ROOT)) if wout.is_relative_to(ROOT) else str(wout)), "L": L, "nfp": nfp, "a_m": a_m,
                                               "herkunft": herkunft}, indent=1))
     subprocess.run([sys.executable, "-m", "stellarator.kopplung", "_geometrie", str(po)], cwd=ROOT, check=True)
     g = json.loads((po / "geometrie.json").read_text())

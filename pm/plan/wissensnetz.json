@@ -1135,7 +1135,8 @@
    "nachfolger": [
     "K3",
     "K5",
-    "K8"
+    "K8",
+    "V0"
    ],
    "wer": [
     "Sonnet",
@@ -1177,11 +1178,16 @@
    "kritisch": false,
    "von": "2026-11-17",
    "bis": "2026-11-18",
-   "status": "offen",
+   "status": "fertig",
    "req": [
     "REQ-F09"
    ],
-   "aus": []
+   "aus": [
+    {
+     "pfad": "sim/kandidat/K3/ERGEBNIS.md",
+     "vorhanden": true
+    }
+   ]
   },
   {
    "art": "Vorgang",
@@ -1205,11 +1211,16 @@
    "kritisch": false,
    "von": "2026-11-16",
    "bis": "2026-11-17",
-   "status": "offen",
+   "status": "fertig",
    "req": [
     "REQ-F11"
    ],
-   "aus": []
+   "aus": [
+    {
+     "pfad": "sim/kandidat/K4/ERGEBNIS.md",
+     "vorhanden": true
+    }
+   ]
   },
   {
    "art": "Vorgang",
@@ -1235,11 +1246,16 @@
    "kritisch": true,
    "von": "2026-11-17",
    "bis": "2026-11-18",
-   "status": "offen",
+   "status": "fertig",
    "req": [
     "REQ-F08"
    ],
-   "aus": []
+   "aus": [
+    {
+     "pfad": "sim/kandidat/K5/ERGEBNIS.md",
+     "vorhanden": true
+    }
+   ]
   },
   {
    "art": "Vorgang",
@@ -1264,11 +1280,16 @@
    "kritisch": true,
    "von": "2026-11-18",
    "bis": "2026-11-19",
-   "status": "offen",
+   "status": "fertig",
    "req": [
     "REQ-F10"
    ],
-   "aus": []
+   "aus": [
+    {
+     "pfad": "sim/kandidat/K6/ERGEBNIS.md",
+     "vorhanden": true
+    }
+   ]
   },
   {
    "art": "Vorgang",
@@ -1292,11 +1313,16 @@
    "kritisch": true,
    "von": "2026-11-19",
    "bis": "2026-11-24",
-   "status": "offen",
+   "status": "fertig",
    "req": [
     "REQ-F10"
    ],
-   "aus": []
+   "aus": [
+    {
+     "pfad": "sim/kandidat/K7/ERGEBNIS.md",
+     "vorhanden": true
+    }
+   ]
   },
   {
    "art": "Vorgang",
@@ -1322,12 +1348,17 @@
    "kritisch": false,
    "von": "2026-11-18",
    "bis": "2026-11-23",
-   "status": "offen",
+   "status": "fertig",
    "req": [
     "REQ-F06",
     "REQ-F07"
    ],
-   "aus": []
+   "aus": [
+    {
+     "pfad": "sim/kandidat/K8/ERGEBNIS.md",
+     "vorhanden": true
+    }
+   ]
   },
   {
    "art": "Vorgang",
@@ -1351,9 +1382,14 @@
    "kritisch": false,
    "von": "2026-11-18",
    "bis": "2026-11-19",
-   "status": "offen",
+   "status": "fertig",
    "req": [],
-   "aus": []
+   "aus": [
+    {
+     "pfad": "sim/kandidat/K9/ERGEBNIS.md",
+     "vorhanden": true
+    }
+   ]
   },
   {
    "art": "Vorgang",
@@ -1379,9 +1415,14 @@
    "kritisch": true,
    "von": "2026-11-24",
    "bis": "2026-11-26",
-   "status": "offen",
+   "status": "fertig",
    "req": [],
-   "aus": []
+   "aus": [
+    {
+     "pfad": "sim/kandidat/K10/ERGEBNIS.md",
+     "vorhanden": true
+    }
+   ]
   },
   {
    "art": "Vorgang",
@@ -1407,11 +1448,16 @@
    "kritisch": true,
    "von": "2026-11-26",
    "bis": "2026-11-27",
-   "status": "offen",
+   "status": "fertig",
    "req": [
     "REQ-F13"
    ],
-   "aus": []
+   "aus": [
+    {
+     "pfad": "sim/kandidat/K11/ERGEBNIS.md",
+     "vorhanden": true
+    }
+   ]
   },
   {
    "art": "Vorgang",
@@ -1422,6 +1468,7 @@
     "K0"
    ],
    "nachfolger": [
+    "V0",
     "V2"
    ],
    "wer": [
@@ -1431,7 +1478,7 @@
    "notiz": "REQ-D09",
    "es": 0.75,
    "ef": 1.25,
-   "puffer": 9.0,
+   "puffer": 8.0,
    "kritisch": false,
    "von": "2026-11-13",
    "bis": "2026-11-16",
@@ -1443,10 +1490,40 @@
   },
   {
    "art": "Vorgang",
+   "id": "V0",
+   "name": "Teil A des Videos aus vorhandenem Material: Auslegung, Datensuche, Auswahl (Szenen A1–A3)",
+   "dauer": 1,
+   "vorgaenger": [
+    "V1",
+    "K2"
+   ],
+   "nachfolger": [
+    "V2"
+   ],
+   "wer": [
+    "Sonnet",
+    "Maschine"
+   ],
+   "notiz": "REQ-D09, Wunsch Autor 2026-11-13",
+   "es": 2.75,
+   "ef": 3.75,
+   "puffer": 6.5,
+   "kritisch": false,
+   "von": "2026-11-17",
+   "bis": "2026-11-18",
+   "status": "offen",
+   "req": [
+    "REQ-D09"
+   ],
+   "aus": []
+  },
+  {
+   "art": "Vorgang",
    "id": "V2",
-   "name": "Szenen rendern (PyVista/ParaView → Blender)",
+   "name": "Szenen rendern (PyVista/ParaView → Blender), Teil A + B",
    "dauer": 3,
    "vorgaenger": [
+    "V0",
     "V1",
     "K11"
    ],
@@ -2040,7 +2117,8 @@
    "status_lastenheft": "neu 2026-11-12",
    "phasen": [],
    "vorgaenge": [
-    "V1"
+    "V1",
+    "V0"
    ],
    "befunde": []
   },
@@ -3426,7 +3504,7 @@
  ],
  "pruefung": {
   "phasen": 13,
-  "vorgaenge": 19,
+  "vorgaenge": 20,
   "befunde_gesamt": 76,
   "befunde_zugeordnet": 76,
   "befunde_fehlend": [],

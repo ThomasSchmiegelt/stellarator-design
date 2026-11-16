@@ -26,8 +26,9 @@ K8;"Tragwerk: Gehäuse, Verbinder, Elmer-FEM; Spannung p99 heißeste Spule, Dehn
 K9;Was fehlt noch? Recherche Bauteilliste (Divertor, Kryostat, Zugänge, Vakuum, Montage), grobe Maße;1;K5;PI,Opus;3.75;4.75;3.0;Szene 5
 K10;Gesamtanlage: alle Schichten als Geometrie zusammenführen (CAD/Voxel), Kollisionsprüfung;2;K7,K8,K9;Sonnet,Maschine;7.75;9.75;0.0;Szene 6
 K11;Absprungbasis prüfen: alle Grenzen zugleich? Anforderungsverfolgung, Befund;0.5;K3,K4,K10;Opus;9.75;10.25;0.0;REQ-F13
-V1;Storyboard Präsentationsvideo festlegen (FUS-DOC-14), mit Autor abstimmen;0.5;K0;Opus,Mensch;0.75;1.25;9.0;REQ-D09
-V2;Szenen rendern (PyVista/ParaView → Blender);3;V1,K11;Sonnet,Maschine;10.25;13.25;0.0;Einzelbilder erst nach Freigabe löschen
+V1;Storyboard Präsentationsvideo festlegen (FUS-DOC-14), mit Autor abstimmen;0.5;K0;Opus,Mensch;0.75;1.25;8.0;REQ-D09
+V0;Teil A des Videos aus vorhandenem Material: Auslegung, Datensuche, Auswahl (Szenen A1–A3);1;V1,K2;Sonnet,Maschine;2.75;3.75;6.5;REQ-D09, Wunsch Autor 2026-11-13
+V2;Szenen rendern (PyVista/ParaView → Blender), Teil A + B;3;V0,V1,K11;Sonnet,Maschine;10.25;13.25;0.0;Einzelbilder erst nach Freigabe löschen
 V3;Schnitt, Begleittext DE/EN aus Ergebnisdateien;1;V2;Sonnet,Opus;13.25;14.25;0.0;nur Name im Bild
 B1;Berichtskapitel DE/EN, README, Prozessdoku;2;K11;Sonnet,Opus;10.25;12.25;2.0;REQ-D10
 B2;Freigabe und Veröffentlichung durch Autor;0.5;V3,B1;Mensch;14.25;14.75;0.0;nur Mensch
